@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+
+/* Zkuste nastavit Inter jako hlavní font pro celé tělo */
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  /* Můžete zkusit i: font-family: 'Poppins', sans-serif; */
+  /* Nebo: font-family: 'Source Sans Pro', sans-serif; */
+}
+
+/* Použijte Poppins pro nadpisy, abyste je odlišil */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600; /* Můžete zkusit i 700 pro výraznější nadpisy */
+}
+
+/* Source Sans Pro by mohl být dobrý pro delší textové bloky */
+p, li, span {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+}
+
+/* Případně specifické elementy s Interem */
+button, .nav-link {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+}

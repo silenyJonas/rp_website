@@ -1,0 +1,242 @@
+header {
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+  padding: 8px 0;
+  box-sizing: border-box;
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+
+  width: 580px;
+  max-width: 580px;
+  min-width: 580px;
+
+  height: 64px;
+
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  animation: fadeInDown 0.8s ease-out forwards;
+
+  transition: all 0.4s ease-in-out,
+              border-radius 0.4s ease-in-out,
+              top 0.4s ease-in-out,
+              transform 0.4s ease-in-out,
+              height 0.4s ease-in-out,
+              width 0.4s ease-in-out,
+              max-width 0.4s ease-in-out,
+              min-width 0.4s ease-in-out,
+              padding 0.4s ease-in-out,
+              box-shadow 0.4s ease-in-out;
+
+  border-radius: 50px;
+}
+
+/* Kľúčové snímky pre animáciu headeru */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) translateX(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+}
+
+/* --- STAV PŘI SCROLLOVÁNÍ --- */
+header.scrolled {
+  padding: 4px 20px;
+  box-sizing: border-box;
+
+  height: 40px;
+
+  /* ZMĚNA: Použijeme auto pro width, ale omezenou max-width. */
+  /* Vypočítáme to na základě obsahu nav ul s gridem */
+  width: auto;
+  /* Pro výpočet max-width: 4 sloupce (links) * 130px (šířka linku) + 2*20px (padding headeru) */
+  /* mezery (gap) v rámci gridu se do šířky elementu nepočítají, pokud nejsou explicitně přes grid-template-columns nastaveny */
+  max-width: calc(4 * 130px + 2 * 20px); /* Původní link šířka 130px + header padding */
+  min-width: calc(4 * 130px + 2 * 20px); /* Pro konzistenci */
+
+  top: 0;
+
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%; /* Nav zabere plnou šířku headeru */
+  height: 100%;
+  padding: 0;
+  box-sizing: border-box;
+  transition: max-width 0.4s ease-in-out;
+}
+
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  /* ZMĚNA: Přechod na CSS Grid */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 stejně široké sloupce */
+  /* ZMĚNA: gap přesouváme na grid-column-gap */
+  grid-column-gap: 15px; /* Mezera mezi sloupci */
+
+  position: relative; /* Pro absolutní pozicování indikátoru */
+  height: 100%;
+
+  /* NOVÉ: Centrování gridu uvnitř nav (která je flex) */
+  place-items: center; /* Centruje obsah v každé buňce gridu */
+  width: 100%; /* Důležité: ul zabere celou šířku dostupnou v nav */
+
+  transition: grid-column-gap 0.4s ease-in-out; /* Animujeme gap */
+}
+
+header.scrolled nav ul {
+  grid-column-gap: 8px; /* Menší mezera pro scrolovaný stav */
+}
+
+
+nav ul li {
+  /* Aby <li> nezabíralo extra prostor, pokud by ovlivňovalo zarovnání */
+  width: 100%; /* li zabere celou šířku své grid buňky */
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+nav ul li a {
+  color: #a0a0a0;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+
+  /* ZMĚNA: Šířka odkazu by nyní měla být dynamická (100% rodiče) */
+  /* Ale pro aktivní indikátor ji budeme potřebovat fixní, nebo ji vypočteme. */
+  /* Pro účely animace indikátoru se spoléháme na její getBoundingClientRect().width */
+  width: 130px; /* Ponecháváme pevnou šířku odkazů pro konzistenci indikátoru */
+  height: 48px;
+
+  border-radius: 24px;
+
+  transition: color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease,
+              font-size 0.6s ease-in-out,
+              height 0.4s ease-in-out,
+              border-radius 0.4s ease-in-out, width 0.4s ease-in-out;
+  background-color: transparent;
+  box-shadow: none;
+  text-wrap: nowrap;
+  position: relative;
+  z-index: 2;
+}
+
+header.scrolled nav ul li a {
+  font-size: 0.9rem;
+  height: 32px;
+  border-radius: 12px;
+}
+
+
+nav ul li a:hover {
+  color: #9b59b6;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+nav ul li a.active {
+  color: #e0e0e0;
+  font-weight: 700;
+}
+
+/* *** POHYBLIVÝ INDIKÁTOR S VÝRAZNOU FIALOVOU ZÁŘÍ *** */
+.active-indicator {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%); /* Centrování vertikálně */
+  /* Šířka bude nastavena v JS na šířku aktivního odkazu */
+  height: 48px;
+  background-color: #8e44ad;
+
+  border-radius: 24px;
+
+  box-shadow: 0 4px 20px rgba(142, 68, 173, 0.6);
+  z-index: 1;
+  opacity: 1;
+
+  /* ZMĚNA: left je nyní animovaný pomocí translateX */
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+              border-radius 0.4s ease-in-out,
+              height 0.4s ease-in-out,
+              width 0.4s ease-in-out,
+              transform 0.4s ease-in-out; /* Důležité animovat transform */
+}
+
+header.scrolled .active-indicator {
+  height: 32px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(142, 68, 173, 0.4);
+}
+
+
+.active-indicator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #8e44ad, transparent 60%);
+  filter: blur(100px);
+  transform: translate(-50%, -50%);
+  opacity: 0.8;
+  z-index: -1;
+  animation: pulseGlow 4s ease-in-out infinite alternate;
+
+  transition: width 0.4s ease-in-out, height 0.4s ease-in-out,
+              filter 0.4s ease-in-out, opacity 0.4s ease-in-out,
+              transform 0.4s ease-in-out;
+}
+
+header.scrolled .active-indicator::after {
+  width: 200px;
+  height: 200px;
+  filter: blur(70px);
+  opacity: 0.6;
+}
+
+/* Animace pro pulzující záři */
+@keyframes pulseGlow {
+  0% {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.7;
+  }
+}

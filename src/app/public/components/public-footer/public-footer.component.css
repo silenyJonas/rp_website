@@ -1,0 +1,116 @@
+.public-footer {
+  background-color: #121212; /* Téměř černá pro pozadí footeru */
+  color: #a0a0a0; /* Světle šedá pro text */
+  padding: 40px 20px 20px; /* Více paddingu nahoře, méně dole */
+  font-size: 0.95rem;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3); /* Jemný stín nahoru */
+  
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap; /* Pro zalomení na menších obrazovkách */
+  justify-content: space-between;
+  max-width: 1200px; /* Stejná nebo podobná šířka jako hlavní obsah */
+  margin: 0 auto 30px;
+  gap: 20px; /* Mezera mezi sekcemi */
+}
+
+.footer-section {
+  flex: 1; /* Sekce se roztáhnou */
+  min-width: 200px; /* Minimální šířka pro zalomení */
+  margin-bottom: 20px; /* Mezera mezi sekcemi, pokud se zalomí */
+}
+
+.footer-section h3 {
+  color: #9b59b6; /* Fialová pro nadpisy sekcí */
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.footer-section p,
+.footer-section ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.footer-section a {
+  color: #a0a0a0;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+  color: #9b59b6; /* Fialová na hover */
+  text-decoration: underline;
+}
+
+.social-links {
+  margin-top: 15px;
+}
+
+.social-links a {
+  font-size: 1.8rem;
+  margin-right: 15px;
+  color: #666666; /* Tmavší šedá pro ikony */
+  transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+  color: #9b59b6; /* Fialová na hover */
+}
+
+/* Styl pro nenápadný Admin Login odkaz */
+.admin-login-link {
+  font-size: 0.85rem; /* Menší font */
+  opacity: 0.7; /* Lehce průhledný */
+  margin-top: 10px; /* Odsazení od ostatních linků */
+  display: inline-block; /* Pro správné odsazení */
+}
+
+.admin-login-link:hover {
+  opacity: 1; /* Plná viditelnost na hover */
+  color: #9b59b6; /* Fialová barva na hover */
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(142, 68, 173, 0.1); /* Jemný fialový oddělovač */
+  font-size: 0.8rem;
+  color: #666666; /* Ještě tmavší šedá pro copyright */
+}
+
+/* Responzivní úpravy */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column; /* Sekce pod sebou */
+    align-items: center;
+  }
+
+  .footer-section {
+    min-width: unset; /* Zruší minimální šířku */
+    width: 100%; /* Plná šířka */
+    text-align: center;
+  }
+
+  .social-links {
+    display: flex;
+    justify-content: center; /* Vycentruje ikony */
+  }
+
+  .footer-section h3 {
+    margin-bottom: 10px;
+  }
+
+  .footer-section ul li {
+    margin-bottom: 5px;
+  }
+}

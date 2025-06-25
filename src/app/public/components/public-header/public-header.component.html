@@ -1,0 +1,11 @@
+<header [class.scrolled]="scrolled">
+  <nav>
+    <ul>
+      <li><a routerLink="/home" routerLinkActive="active" #homeLink>Home</a></li>
+      <li><a routerLink="/services" routerLinkActive="active" #servicesLink>Services</a></li>
+      <li><a routerLink="/shop" routerLinkActive="active" #shopLink>Shop</a></li>
+      <li><a routerLink="/academy" routerLinkActive="active" #academyLink>Academy</a></li>
+      <div class="active-indicator" [ngStyle]="indicatorStyle"></div>
+    </ul>
+  </nav>
+</header>
