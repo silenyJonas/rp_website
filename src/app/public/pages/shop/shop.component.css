@@ -1,0 +1,25 @@
+.main-content{
+    width: 100vw;
+    height: 120vh;
+   
+    background-color: #cacaca;
+    background-image: 
+        repeating-linear-gradient(
+            45deg,
+            #e0e0e0 0px, 
+            #e0e0e0 1px, 
+            transparent 1px, 
+            transparent 20px 
+        ),
+        repeating-linear-gradient(
+            135deg, 
+            #e0e0e0 0px,
+            #e0e0e0 1px,
+            transparent 1px,
+            transparent 20px
+        );
+}
+/* .main-content{
+    width: 100vw;
+    height: 120vh;
+} */
