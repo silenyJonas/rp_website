@@ -1,25 +1,301 @@
-.main-content{
-    width: 100vw;
-    height: 120vh;
-   
-    background-color: #838282;
-    background-image: 
-        repeating-linear-gradient(
-            45deg,
-            #e0e0e0 0px, 
-            #e0e0e0 1px, 
-            transparent 1px, 
-            transparent 20px 
-        ),
-        repeating-linear-gradient(
-            135deg, 
-            #e0e0e0 0px,
-            #e0e0e0 1px,
-            transparent 1px,
-            transparent 20px
-        );
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e0e0e0;
+    background-color: #11111f; /* Tmavší základní pozadí */
 }
-/* .main-content{
+
+.main-content {
     width: 100vw;
-    height: 120vh;
-} */
+    background-color: #0e0e1f; /* Trochu tmavší pozadí pro sekce pod hero, aby byl kontrast */
+}
+
+/* --- Hero Section Styling --- */
+.hero-section {
+    position: relative; 
+    width: 100%;
+    height: 100vh; 
+    overflow: hidden; 
+    background:
+        /* 1. Vrstva: Radiální gradient pro centrální záři (jemnější a širší) */
+        radial-gradient(
+            ellipse at center,
+            rgba(128, 0, 128, 0.05) 15%,
+            rgba(128, 0, 128, 0.02) 30%,
+            rgba(17, 17, 31, 0) 50%
+        ),
+        /* 2. Vrstva: Opakující se lineární gradient pro vodorovné linky mřížky (stejná intenzita) */
+        repeating-linear-gradient(
+            to bottom,
+            transparent,
+            transparent 49px,
+            rgba(128, 0, 128, 0.4) 50px
+        ),
+        /* 3. Vrstva: Opakující se lineární gradient pro svislé linky mřížky (stejná intenzita) */
+        repeating-linear-gradient(
+            to right,
+            transparent,
+            transparent 49px,
+            rgba(128, 0, 128, 0.4) 50px
+        );
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+/* Pseudo-element pro dodatečný mlžný/vinětovací efekt */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(17, 17, 31, 0.98) 80%);
+    z-index: 1;
+}
+
+.hero-section .cables-and-bubbles {
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2; 
+    /* NOVÉ: Počáteční stav pro animaci */
+    opacity: 0;
+    /* NOVÉ: Aplikace animace */
+    animation: fadeInSvg 2s ease-out 1s forwards; /* 2s trvání, 1s zpoždění (1000ms) */
+}
+
+/* --- Services Section Styling --- */
+.services-sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 60px 40px;
+    background-color: #0e0e1f;
+    box-shadow: inset 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.service-card {
+    background-color: #1a1a2e;
+    border: 1px solid rgba(0, 188, 212, 0.3);
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0, 188, 212, 0.3), 0 0 20px rgba(0, 188, 212, 0.5);
+}
+
+.service-card h3 {
+    font-size: 1.8em;
+    color: #00bcd4;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.service-link {
+    display: inline-block;
+    background-color: #00bcd4;
+    color: #1a1a2e;
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.service-link:hover {
+    background-color: #0097a7;
+    transform: scale(1.05);
+}
+
+/* --- Contact Section Styling --- */
+.contact-section {
+    background-color: #1a1a2e;
+    padding: 80px 40px;
+    text-align: center;
+    border-top: 1px solid rgba(0, 188, 212, 0.2);
+}
+
+.contact-section h2 {
+    font-size: 3em;
+    color: #00bcd4;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+}
+
+.contact-button {
+    display: inline-block;
+    background-color: #00bcd4;
+    color: #1a1a2e;
+    padding: 15px 40px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.contact-button:hover {
+    background-color: #0097a7;
+    transform: translateY(-5px) scale(1.02);
+}
+
+/* --- SVG-Specific Styles and Animations --- */
+
+/* NOVÉ: Definice keyframes pro fade-in animaci */
+@keyframes fadeInSvg {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Text inside SVG bubbles */
+.cables-and-bubbles .svg-text {
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    fill: #a0a0a0; 
+}
+
+/* Keyframe Animations for Pulsing Glow */
+@keyframes pulse-glow-purple {
+    0% { filter: drop-shadow(0px 0px 5px rgba(128, 0, 128, 0.4)); }
+    50% { filter: drop-shadow(0px 0px 10px rgba(128, 0, 128, 0.6)); }
+    100% { filter: drop-shadow(0px 0px 5px rgba(128, 0, 128, 0.4)); }
+}
+
+@keyframes pulse-glow-blue {
+    0% { filter: drop-shadow(0px 0px 5px rgba(0, 87, 146, 0.4)); }
+    50% { filter: drop-shadow(0px 0px 10px rgba(0, 87, 146, 0.6)); }
+    100% { filter: drop-shadow(0px 0px 5px rgba(0, 87, 146, 0.4)); }
+}
+
+@keyframes pulse-glow-green {
+    0% { filter: drop-shadow(0px 0px 5px rgba(0, 105, 92, 0.4)); }
+    50% { filter: drop-shadow(0px 0px 10px rgba(0, 105, 92, 0.6)); }
+    100% { filter: drop-shadow(0px 0px 5px rgba(0, 105, 92, 0.4)); }
+}
+
+@keyframes pulse-glow-red {
+    0% { filter: drop-shadow(0px 0px 5px rgba(183, 28, 28, 0.4)); }
+    50% { filter: drop-shadow(0px 0px 10px rgba(183, 28, 28, 0.6)); }
+    100% { filter: drop-shadow(0px 0px 5px rgba(183, 28, 28, 0.4)); }
+}
+
+/* Base style for bubble target (where the glow originates) */
+.bubble-target {
+    transition: filter 5s ease-out; 
+    cursor: pointer; 
+    filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.001)); /* Téměř neviditelný stín */
+}
+
+/* Apply pulsing animation to each bubble */
+.bubble-1 {
+    animation: pulse-glow-purple 2s infinite alternate ease-in-out;
+}
+.bubble-2 {
+    animation: pulse-glow-blue 2s infinite alternate ease-in-out;
+}
+.bubble-3 {
+    animation: pulse-glow-green 2s infinite alternate ease-in-out;
+}
+.bubble-4 {
+    animation: pulse-glow-red 2s infinite alternate ease-in-out;
+}
+
+/* Hover effect for bubbles (overrides pulse animation) */
+.bubble-target:hover {
+    animation: none; /* Zastaví pulzující animaci */
+    filter: 
+        drop-shadow(0px 0px 15px rgba(128, 0, 128, 0.9)) 
+        drop-shadow(0px 0px 25px rgba(128, 0, 128, 0.7))
+        drop-shadow(0px 0px 40px rgba(128, 0, 128, 0.5));
+}
+
+/* Specific hover glow colors for each bubble (overrides general .bubble-target:hover) */
+.bubble-1:hover { /* Purple */
+    filter: 
+        drop-shadow(0px 0px 15px rgba(128, 0, 128, 0.9)) 
+        drop-shadow(0px 0px 25px rgba(128, 0, 128, 0.7))
+        drop-shadow(0px 0px 40px rgba(128, 0, 128, 0.5));
+}
+
+.bubble-2:hover { /* Blue */
+    filter: 
+        drop-shadow(0px 0px 15px rgba(0, 87, 146, 0.9)) 
+        drop-shadow(0px 0px 25px rgba(0, 87, 146, 0.7))
+        drop-shadow(0px 0px 40px rgba(0, 87, 146, 0.5));
+}
+
+.bubble-3:hover { /* Green */
+    filter: 
+        drop-shadow(0px 0px 15px rgba(0, 105, 92, 0.9)) 
+        drop-shadow(0px 0px 25px rgba(0, 105, 92, 0.7))
+        drop-shadow(0px 0px 40px rgba(0, 105, 92, 0.5));
+}
+
+.bubble-4:hover { /* Red */
+    filter: 
+        drop-shadow(0px 0px 15px rgba(183, 28, 28, 0.9)) 
+        drop-shadow(0px 0px 25px rgba(183, 28, 28, 0.7))
+        drop-shadow(0px 0px 40px rgba(183, 28, 28, 0.5));
+}
+/* ------------ */
+.server-img-wrp{
+    width: 100vw;
+    height: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.server-img-wrp svg{
+    width: 50%;
+    padding-left: 125px;
+    margin-top: 160px;
+    z-index: 1000;
+}
+
+/* --- Media Queries for Responsiveness --- */
+@media (max-width: 768px) {
+    .contact-section h2 {
+        font-size: 2.5em;
+    }
+    .services-sections {
+        padding: 40px 20px;
+    }
+    .service-card {
+        padding: 20px;
+    }
+    .service-card h3 {
+        font-size: 1.5em;
+    }
+    .contact-section {
+        padding: 60px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-section h2 {
+        font-size: 2em;
+    }
+    .services-sections {
+        grid-template-columns: 1fr;
+        padding: 30px 15px;
+    }
+    .service-card {
+        padding: 15px;
+    }
+}

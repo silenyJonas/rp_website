@@ -1,13 +1,22 @@
-/* src/styles.css */
-
-/* Zkuste nastavit Inter jako hlavní font pro celé tělo */
-body {
-  font-family: 'Inter', sans-serif;
-  margin: 0;
-  /* Můžete zkusit i: font-family: 'Poppins', sans-serif; */
-  /* Nebo: font-family: 'Source Sans Pro', sans-serif; */
+/* GLOBAL CSS RESET */
+html {
+    box-sizing: border-box; /* Zajišťuje, že padding a border jsou součástí width/height */
+    overflow-x: hidden;    /* Zabrání horizontálnímu scrollování na úrovni html */
 }
 
+*, *::before, *::after {
+    box-sizing: inherit; /* Všechny elementy dědí box-sizing od html */
+}
+
+body {
+    margin: 0;             /* Odstraní výchozí margin prohlížeče */
+    padding: 0;            /* Odstraní výchozí padding */
+    width: 100vw;          /* Nastaví šířku přesně na viewport */
+    overflow-x: hidden;    /* Zabrání horizontálnímu scrollování na úrovni body */
+    background-color: #11111f;
+}
+
+/* Ostatní styly... */
 /* Použijte Poppins pro nadpisy, abyste je odlišil */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Poppins', sans-serif;

@@ -1,33 +1,31 @@
-header { 
-  background-color: #1a1a1a; 
-  color: #e0e0e0; 
-  padding: 8px 0; 
-  box-sizing: border-box; 
-
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); 
-
-  width: 700px; 
-  max-width: 700px; 
-  min-width: 700px; 
-
-  height: 64px; 
-
-  position: fixed; 
-  top: 30px; 
-  left: 50%; 
-  transform: translateX(-50%); 
-  z-index: 1000; 
-
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  overflow: hidden; 
-  animation: fadeInDown 0.8s ease-out forwards; 
-
-  transition: all 0.4s ease-in-out; 
-
-  border-radius: 50px; 
-} 
+header{
+    /* background-color: #1a1a1a; */
+    background-color: rgba(26, 26, 26, 0.5);
+    outline: 3px solid #2f2f2f;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #e0e0e0;
+    padding: 8px 0;
+    box-sizing: border-box;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    width: 700px;
+    max-width: 700px;
+    min-width: 700px;
+    height: 64px;
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    animation: _ngcontent-ng-c3157433726_fadeInDown 0.8s ease-out forwards;
+    transition: all 0.4s ease-in-out;
+    border-radius: 50px;
+    z-index: 99999;
+}
 
 @keyframes fadeInDown { 
   from { 
