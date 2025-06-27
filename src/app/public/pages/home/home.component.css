@@ -2,15 +2,11 @@ body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #e0e0e0;
-    background-color: #11111f; /* Tmavší základní pozadí */
 }
-
 .main-content {
     width: 100vw;
-    background-color: #0e0e1f; /* Trochu tmavší pozadí pro sekce pod hero, aby byl kontrast */
 }
-
-/* --- Hero Section Styling --- */
+/* --------------------HERO SEKCE---------------------- */
 .hero-section {
     position: relative; 
     width: 100%;
@@ -42,8 +38,6 @@ body {
     background-position: center center;
     background-repeat: no-repeat;
 }
-
-/* Pseudo-element pro dodatečný mlžný/vinětovací efekt */
 .hero-section::before {
     content: '';
     position: absolute;
@@ -54,7 +48,6 @@ body {
     background: radial-gradient(ellipse at center, transparent 40%, rgba(17, 17, 31, 0.98) 80%);
     z-index: 1;
 }
-
 .hero-section .cables-and-bubbles {
     position: absolute; 
     top: 0;
@@ -67,92 +60,6 @@ body {
     /* NOVÉ: Aplikace animace */
     animation: fadeInSvg 2s ease-out 1s forwards; /* 2s trvání, 1s zpoždění (1000ms) */
 }
-
-/* --- Services Section Styling --- */
-.services-sections {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    padding: 60px 40px;
-    background-color: #0e0e1f;
-    box-shadow: inset 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.service-card {
-    background-color: #1a1a2e;
-    border: 1px solid rgba(0, 188, 212, 0.3);
-    border-radius: 10px;
-    padding: 30px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.service-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 25px rgba(0, 188, 212, 0.3), 0 0 20px rgba(0, 188, 212, 0.5);
-}
-
-.service-card h3 {
-    font-size: 1.8em;
-    color: #00bcd4;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.service-link {
-    display: inline-block;
-    background-color: #00bcd4;
-    color: #1a1a2e;
-    padding: 12px 25px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    margin-top: 20px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.service-link:hover {
-    background-color: #0097a7;
-    transform: scale(1.05);
-}
-
-/* --- Contact Section Styling --- */
-.contact-section {
-    background-color: #1a1a2e;
-    padding: 80px 40px;
-    text-align: center;
-    border-top: 1px solid rgba(0, 188, 212, 0.2);
-}
-
-.contact-section h2 {
-    font-size: 3em;
-    color: #00bcd4;
-    margin-bottom: 30px;
-    text-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
-}
-
-.contact-button {
-    display: inline-block;
-    background-color: #00bcd4;
-    color: #1a1a2e;
-    padding: 15px 40px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.2em;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.contact-button:hover {
-    background-color: #0097a7;
-    transform: translateY(-5px) scale(1.02);
-}
-
-/* --- SVG-Specific Styles and Animations --- */
-
-/* NOVÉ: Definice keyframes pro fade-in animaci */
 @keyframes fadeInSvg {
     0% {
         opacity: 0;
@@ -161,48 +68,37 @@ body {
         opacity: 1;
     }
 }
-
-/* Text inside SVG bubbles */
 .cables-and-bubbles .svg-text {
     font-family: "Source Sans Pro", sans-serif;
     font-size: 0.8rem;
     font-weight: 700;
     fill: #a0a0a0; 
 }
-
-/* Keyframe Animations for Pulsing Glow */
 @keyframes pulse-glow-purple {
     0% { filter: drop-shadow(0px 0px 5px rgba(128, 0, 128, 0.4)); }
     50% { filter: drop-shadow(0px 0px 10px rgba(128, 0, 128, 0.6)); }
     100% { filter: drop-shadow(0px 0px 5px rgba(128, 0, 128, 0.4)); }
 }
-
 @keyframes pulse-glow-blue {
     0% { filter: drop-shadow(0px 0px 5px rgba(0, 87, 146, 0.4)); }
     50% { filter: drop-shadow(0px 0px 10px rgba(0, 87, 146, 0.6)); }
     100% { filter: drop-shadow(0px 0px 5px rgba(0, 87, 146, 0.4)); }
 }
-
 @keyframes pulse-glow-green {
     0% { filter: drop-shadow(0px 0px 5px rgba(0, 105, 92, 0.4)); }
     50% { filter: drop-shadow(0px 0px 10px rgba(0, 105, 92, 0.6)); }
     100% { filter: drop-shadow(0px 0px 5px rgba(0, 105, 92, 0.4)); }
 }
-
 @keyframes pulse-glow-red {
     0% { filter: drop-shadow(0px 0px 5px rgba(183, 28, 28, 0.4)); }
     50% { filter: drop-shadow(0px 0px 10px rgba(183, 28, 28, 0.6)); }
     100% { filter: drop-shadow(0px 0px 5px rgba(183, 28, 28, 0.4)); }
 }
-
-/* Base style for bubble target (where the glow originates) */
 .bubble-target {
     transition: filter 5s ease-out; 
     cursor: pointer; 
     filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.001)); /* Téměř neviditelný stín */
 }
-
-/* Apply pulsing animation to each bubble */
 .bubble-1 {
     animation: pulse-glow-purple 2s infinite alternate ease-in-out;
 }
@@ -215,8 +111,6 @@ body {
 .bubble-4 {
     animation: pulse-glow-red 2s infinite alternate ease-in-out;
 }
-
-/* Hover effect for bubbles (overrides pulse animation) */
 .bubble-target:hover {
     animation: none; /* Zastaví pulzující animaci */
     filter: 
@@ -224,36 +118,30 @@ body {
         drop-shadow(0px 0px 25px rgba(128, 0, 128, 0.7))
         drop-shadow(0px 0px 40px rgba(128, 0, 128, 0.5));
 }
-
-/* Specific hover glow colors for each bubble (overrides general .bubble-target:hover) */
 .bubble-1:hover { /* Purple */
     filter: 
         drop-shadow(0px 0px 15px rgba(128, 0, 128, 0.9)) 
         drop-shadow(0px 0px 25px rgba(128, 0, 128, 0.7))
         drop-shadow(0px 0px 40px rgba(128, 0, 128, 0.5));
 }
-
 .bubble-2:hover { /* Blue */
     filter: 
         drop-shadow(0px 0px 15px rgba(0, 87, 146, 0.9)) 
         drop-shadow(0px 0px 25px rgba(0, 87, 146, 0.7))
         drop-shadow(0px 0px 40px rgba(0, 87, 146, 0.5));
 }
-
 .bubble-3:hover { /* Green */
     filter: 
         drop-shadow(0px 0px 15px rgba(0, 105, 92, 0.9)) 
         drop-shadow(0px 0px 25px rgba(0, 105, 92, 0.7))
         drop-shadow(0px 0px 40px rgba(0, 105, 92, 0.5));
 }
-
 .bubble-4:hover { /* Red */
     filter: 
         drop-shadow(0px 0px 15px rgba(183, 28, 28, 0.9)) 
         drop-shadow(0px 0px 25px rgba(183, 28, 28, 0.7))
         drop-shadow(0px 0px 40px rgba(183, 28, 28, 0.5));
 }
-/* ------------ */
 .server-img-wrp{
     width: 100vw;
     height: 1000px;
@@ -267,35 +155,412 @@ body {
     margin-top: 160px;
     z-index: 1000;
 }
-
-/* --- Media Queries for Responsiveness --- */
-@media (max-width: 768px) {
-    .contact-section h2 {
-        font-size: 2.5em;
-    }
-    .services-sections {
-        padding: 40px 20px;
-    }
-    .service-card {
-        padding: 20px;
-    }
-    .service-card h3 {
-        font-size: 1.5em;
-    }
-    .contact-section {
-        padding: 60px 20px;
-    }
+/* --------------------HERO SEKCE KONEC---------------------- */
+/* --------------------SECTIONS SEKCE ---------------------- */
+/* --------------------CONECTOR CAST V SECTION SEKCE ---------------------- */
+/* Kontejner pro celý konektor */
+.connector {
+    display: flex;
+    align-items: center;
+    background-color: #4A405A; /* Jemná šedo-fialová */
+    border-radius: 2px;
+    box-shadow: none;
+    width: 40px;
+    height: 20px;
+    position: relative;
+    overflow: hidden;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
-@media (max-width: 480px) {
-    .contact-section h2 {
-        font-size: 2em;
-    }
-    .services-sections {
-        grid-template-columns: 1fr;
-        padding: 30px 15px;
-    }
-    .service-card {
-        padding: 15px;
-    }
+/* Vstupní oblast pro drát zleva */
+.connector-recessed-entry {
+    width: 6px;
+    height: 100%;
+    background-color: #383042; /* Tmavší šedo-fialová pro hloubku */
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    box-shadow: inset -1px 0 2px rgba(74, 64, 90, 0.7); /* Stín s nádechem barvy konektoru */
+    flex-shrink: 0;
+}
+
+/* Hlavní tělo zásuvky s otvory */
+.connector-body {
+    flex-grow: 1;
+    height: 100%;
+    background-color: #4A405A; /* Stejná jako základní barva konektoru */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1px 3px 1px 1px;
+    box-sizing: border-box;
+    position: relative;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: none;
+}
+
+/* Otvory pro kolíky */
+.socket-hole {
+    width: 4px;
+    height: 7px;
+    background-color: #2F283F; /* Velmi tmavá šedo-fialová pro otvory */
+    border-radius: 1px;
+    box-shadow: inset 0 0 2px rgba(47, 40, 63, 0.8); /* Stín otvoru s nádechem barvy otvoru */
+    margin: 0.5px 0;
+}
+
+/* Zemnící otvor (větší, uprostřed) */
+.socket-ground-hole {
+    width: 5px;
+    height: 3px;
+    background-color: #2F283F; /* Velmi tmavá šedo-fialová pro otvory */
+    border-radius: 1px;
+    box-shadow: inset 0 0 2px rgba(47, 40, 63, 0.8); /* Stín otvoru s nádechem barvy otvoru */
+    margin-top: 2px;
+}
+
+/* Boční hřeben/výstupek na pravé straně - stále skrytý */
+.connector-side-ridge {
+    display: none;
+}
+/* --------------------CONECTOR CAST V SECTION SEKCE KONEC --------------- */
+/* --------------------OBAL LINKU V SECTION SEKCE KONEC --------------- */
+.i-1 {
+    width: 100%;
+    border: 3px solid #2f2f2f;
+    border-bottom-left-radius: 100px;
+    border-top-left-radius: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden; /* Important for clipping content that might extend outside */
+    z-index: 1;
+}
+
+/* Purple overlay on the entire .i-1 - Bude přepsáno pro každý links-wrapper níže */
+.i-1::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(128, 0, 128, 0.4); /* Default fialová, přepsáno níže */
+    z-index: 2;
+    transition: opacity 0.5s ease-out;
+    pointer-events: none;
+    border-bottom-left-radius: 100px;
+    border-top-left-radius: 100px;
+}
+
+/* On hover of .i-1, the purple layer disappears */
+.i-1:hover::after {
+    opacity: 0;
+}
+
+/* Main background of .i-1 */
+.i-1-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+}
+
+.i-11 {
+    width: calc(100% - 30px);
+    height: calc(100% - 30px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* Crucial for absolute positioning of children */
+    z-index: 3;
+}
+
+.icon-border-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: 3px solid #2f2f2f;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.icon-wrapper {
+    height: 100%;
+    width: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background-color: transparent;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 3;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: backdrop-filter 0.5s ease-out, box-shadow 0.5s ease-out;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    border: 3px solid #2f2f2f;
+    background-color: #1a1a2e;
+    color: #9a9a9b;
+    font-family: 'HighSansSerif7', sans-serif;
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0; /* Keeps the right edge fixed */
+    /* ZVĚTŠENÍ ŠÍŘKY text-wrapper, aby se vešel nejdelší nadpis a umožnilo zarovnání */
+    left: calc(100% - 850px - 15px); /* Upraveno pro větší odsazení a prostor pro text */
+    margin-right: -15px; /* Keep this to account for the initial offset */
+    
+    /* Initial skew state */
+    transform: skewX(-15deg);
+    transform-origin: bottom left;
+
+    /* Initial border-radius for the skewed shape */
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+    /* Animations for 'left', 'margin-right', 'transform' and 'border-radius' */
+    transition: left 0.2s ease-out, 
+                margin-right 0.2s ease-out, 
+                transform 0.4s ease-out,
+                border-top-left-radius 0.4s ease-out, 
+                border-bottom-left-radius 0.4s ease-out;
+    
+    overflow: hidden; /* Important to hide content that moves out or expands */
+}
+
+/* Container for text elements */
+.text {
+    width: 100%;
+    height: 100%;
+    position: relative; /* Reference for absolute positioning of text-in */
+}
+
+/* Inner container for all text elements (content-container, learn-more-text) */
+.text-in {
+    position: absolute;
+    top: 50%; /* Vertically center the entire block */
+    left: 0; /* Start from the left of .text */
+    width: 100%; /* Fill parent width */
+    height: auto; /* Height adjusts to content */
+    transform: translateY(-50%); /* Adjust for vertical centering */
+    
+    /* Zde již není padding-left ani flexbox, to se přesunulo do .content-container */
+    padding-right: 200px; /* Space from right edge for "Zjistit více" */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* NOVÝ KONTENJER pro hlavní text a bullet pointy */
+.content-container {
+    display: flex; /* Použijeme flexbox pro uspořádání main-text a bullet-points vedle sebe */
+    align-items: center; /* Vertikálně je zarovnáme ve středu */
+    width: 100%; /* Vyplní šířku .text-in */
+    position: relative; /* Pro přesné umístění uvnitř .text-in */
+    
+    /* Počáteční pozice: toto odsazení zajistí, že nadpisy a body začínají vizuálně stejně */
+    left: 15px; /* Počáteční odsazení zleva uvnitř .text-in (experimentální hodnota) */
+    transition: left 0.2s ease-out; /* Animace pro posun při hoveru */
+}
+
+.main-text {
+    /* "Webový vývoj" - visible by default, positioned by flexbox */
+    font-size: 1em; /* Uses the font-size of .text-wrapper */
+    color: #9a9a9b;
+    white-space: nowrap; /* Prevent wrapping */
+    
+    /* Nastavíme fixní šířku pro hlavní text */
+    width: 500px; /* Upraveno pro "Desktopový vývoj" a jednotné zarovnání */
+    /* ZAROVNÁNÍ DOPRAVA */
+    text-align: right; /* Zarovná text doprava uvnitř jeho pevné šířky */
+    
+    flex-shrink: 0; /* Prevents text from shrinking */
+    font-family: 'HighSansSerif7', sans-serif;
+    font-size: 8.2em;
+    font-weight: normal;
+}
+
+.bullet-points {
+    display: flex;
+    flex-direction: column; /* Stack bullet items vertically */
+    justify-content: center; /* Center bullet items vertically within their container */
+    
+    /* margin-left pro vytvoření konzistentního prostoru za main-text s pevnou šířkou */
+    margin-left: 20px; /* Mezera mezi main-text a bullet pointy */
+    
+    opacity: 1; /* Visible by default */
+    transform: skewX(15deg); /* Kompenzační skew zůstává */
+    transform-origin: center center; 
+    transition: transform 0.4s ease-out; /* Pouze přechod pro skew */
+    pointer-events: auto;
+    font-size: 0.25em; 
+    color: #9a9a9b; 
+    flex-shrink: 0; 
+}
+
+.bullet-item {
+    padding-left: 15px; /* Indent for bullet effect */
+    position: relative;
+    white-space: nowrap;
+    margin-bottom: 5px; /* Space between bullet points */
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.bullet-item:last-child {
+    margin-bottom: 0; /* No margin below the last bullet item */
+}
+
+.bullet-item::before {
+    content: '• '; /* Custom bullet point character */
+    position: absolute;
+    left: 0;
+    color: #800080; /* Color for the bullet - will be overridden by specific colors */
+    font-weight: bold;
+}
+
+
+.learn-more-text {
+    position: absolute; /* Absolute for independent positioning */
+    top: 50%;
+    right: 200px; /* Target position: 200px from the right edge of .text-in */
+    transform: translateY(-50%) translateX(100%); /* Start hidden to the right */
+    opacity: 0; /* Hidden */
+    
+    color: #800080; /* Will be overridden by specific colors */
+    
+    white-space: nowrap; /* Prevent text wrapping */
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out; /* Animation */
+    font-family: 'HighSansSerif7', sans-serif;
+    font-size: 5.2em;
+    font-weight: normal;
+}
+
+
+.i-1:hover .icon-wrapper {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+}
+
+.i-1:hover .text-wrapper {
+    left: 0; /* Expands to the full left edge of parent */
+    margin-right: -15px;
+    transform: skewX(0deg); /* Removes skew */
+    border-top-left-radius: 82px;
+    border-bottom-left-radius: 82px;
+}
+
+/* --- HOVER EFFECTS PRO TEXTY --- */
+
+/* Když je .i-1 v hover stavu (a .text-wrapper se posunul na left: 0), posuneme .content-container */
+.i-1:hover .content-container {
+    left: 250px; /* Posune obsah (hlavní text a bullet pointy) na 250px od levého okraje expanded .text-wrapper */
+}
+
+/* NEW: When .text-wrapper is not skewed (on hover), .bullet-points should also not be skewed. */
+.i-1:hover .bullet-points {
+    transform: skewX(0deg); /* Remove compensation skew */
+}
+
+.i-1:hover .text-in .learn-more-text {
+    transform: translateY(-50%) translateX(0); /* Slides into view */
+    opacity: 1; /* Becomes visible */
+}
+/* --------------------OBAL LINKU V SECTION SEKCE KONEC --------------- */
+
+.contact-section {
+    width: 100vw;
+    height: auto;
+    display: flex;
+    flex-direction: column; /* Položky se skládají pod sebe */
+    /* Změna pro zarovnání obsahu na křížové ose (horizontálně, když je flex-direction: column) */
+    align-items: flex-end; /* Zarovná položky doprava */
+}
+.links-wrapper{
+    width: calc(100vw - 400px);
+    height: auto;
+    margin-bottom: 40px;
+    /* Důležité: Nastavíme cursor na default, aby prvky uvnitř dědily tento kurzor, pokud nejsou explicitně přepsány */
+    cursor: default;
+}
+.link-wrapper-1,.link-wrapper-2, .link-wrapper-3, .link-wrapper-4 {
+    width: 100%;
+    height: 200px;
+    display: flex;
+}
+.connector-wrapper{
+    display: flex;
+    align-items: center;
+    width: auto;
+    margin-right: -2px;
+}
+
+/* --- BAREVNÁ SCHÉMATA PRO JEDNOTLIVÉ LINKS-WRAPPERY --- */
+
+/* První links-wrapper: Fialová */
+.links-wrapper:nth-child(1) .i-1::after {
+    background-color: rgba(128, 0, 128, 0.4); /* Fialová */
+}
+.links-wrapper:nth-child(1) .bullet-item::before {
+    color: #800080; /* Tmavší fialová */
+}
+.links-wrapper:nth-child(1) .learn-more-text {
+    color: #800080; /* Tmavší fialová */
+}
+
+/* Druhý links-wrapper: Zelená */
+.links-wrapper:nth-child(2) .i-1::after {
+    background-color: rgba(0, 128, 0, 0.4); /* Zelená */
+}
+.links-wrapper:nth-child(2) .bullet-item::before {
+    color: #008000; /* Tmavší zelená */
+}
+.links-wrapper:nth-child(2) .learn-more-text {
+    color: #008000; /* Tmavší zelená */
+}
+
+/* Třetí links-wrapper: Modrá */
+.links-wrapper:nth-child(3) .i-1::after {
+    background-color: rgba(0, 0, 255, 0.4); /* Modrá */
+}
+.links-wrapper:nth-child(3) .bullet-item::before {
+    color: #0000FF; /* Tmavší modrá */
+}
+.links-wrapper:nth-child(3) .learn-more-text {
+    color: #0000FF; /* Tmavší modrá */
+}
+
+/* Čtvrtý links-wrapper: Červená */
+/* Pokud máte v HTML pouze 3 links-wrapper, můžete tento blok smazat. */
+/* Pokud jich máte 4, ujistěte se, že HTML obsahuje 4 odkazy. */
+.links-wrapper:nth-child(4) .i-1::after {
+    background-color: rgba(255, 0, 0, 0.4); /* Červená */
+}
+.links-wrapper:nth-child(4) .bullet-item::before {
+    color: #FF0000; /* Tmavší červená */
+}
+.links-wrapper:nth-child(4) .learn-more-text {
+    color: #FF0000; /* Tmavší červená */
 }

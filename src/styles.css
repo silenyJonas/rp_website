@@ -1,36 +1,161 @@
-/* GLOBAL CSS RESET */
 html {
-    box-sizing: border-box; /* Zajišťuje, že padding a border jsou součástí width/height */
-    overflow-x: hidden;    /* Zabrání horizontálnímu scrollování na úrovni html */
+    box-sizing: border-box; 
+    overflow-x: hidden; 
+    /* Stylování scrollbaru pro Webkit prohlížeče na úrovni HTML */
+    &::-webkit-scrollbar {
+        width: 4px; /* ZÚŽENO NA 4PX pro menší tloušťku */
+        height: 4px; /* ZÚŽENO NA 4PX */
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(17, 17, 31, 0.2); /* Pozadí tracku je JEŠTĚ PRŮHLEDNĚJŠÍ */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, rgba(138, 43, 226, 0.4), rgba(0, 191, 255, 0.4)); /* Barvy s VÝRAZNĚ MENŠÍ PRŮHLEDNOSTÍ */
+        border-radius: 10px; 
+        border: 1px solid rgba(17, 17, 31, 0.2); /* Tenčí a PRŮHLEDNĚJŠÍ okraj */
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, rgba(153, 50, 204, 0.6), rgba(30, 144, 255, 0.6)); /* Mírně výraznější při najetí, ale stále decentní */
+    }
+
+    &::-webkit-scrollbar-button {
+        display: none;
+    }
 }
+/* Styly pro Firefox na úrovni HTML */
+/* html {
+    scrollbar-width: thin;
+    scrollbar-color: linear-gradient(135deg, rgba(138, 43, 226, 0.4), rgba(0, 191, 255, 0.4)) rgba(17, 17, 31, 0.2);
+} */
+
 
 *, *::before, *::after {
-    box-sizing: inherit; /* Všechny elementy dědí box-sizing od html */
+    box-sizing: inherit;
+}
+
+.blue{
+    background-color: blue;
+}
+.green{
+    background-color: green;
+}
+.black{
+    background-color: black;
+}
+.yellow{
+    background-color: yellow;
+}
+.white{
+    background-color: white;
+}
+.red{
+    background-color: red;
 }
 
 body {
-    margin: 0;             /* Odstraní výchozí margin prohlížeče */
-    padding: 0;            /* Odstraní výchozí padding */
-    width: 100vw;          /* Nastaví šířku přesně na viewport */
-    overflow-x: hidden;    /* Zabrání horizontálnímu scrollování na úrovni body */
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    overflow-x: hidden;
     background-color: #11111f;
+    /* Změna kurzoru na křížek pro celé tělo */
+    cursor: crosshair;
+
+    /* Stylování scrollbaru pro Webkit prohlížeče na úrovni BODY - pro konzistenci */
+    &::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(17, 17, 31, 0.2);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, rgba(138, 43, 226, 0.4), rgba(0, 191, 255, 0.4));
+        border-radius: 10px;
+        border: 1px solid rgba(17, 17, 31, 0.2);
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, rgba(153, 50, 204, 0.6), rgba(30, 144, 255, 0.6));
+    }
+
+    &::-webkit-scrollbar-button {
+        display: none;
+    }
 }
 
-/* Ostatní styly... */
-/* Použijte Poppins pro nadpisy, abyste je odlišil */
+/* --- */
+
+/* Pro všechny odkazy */
+a {
+    cursor: pointer;
+}
+
+/* Pro všechna tlačítka */
+button {
+    cursor: pointer;
+}
+
+/* Pro vstupy formulářů a textové oblasti */
+input, textarea {
+    cursor: text;
+}
+
+/* Pro prvky s možností tažení (draggable) */
+[draggable="true"] {
+    cursor: grab;
+}
+
+/* Obecně pro všechny prvky, které mají být klikatelné, ale nejsou to a nebo button */
+/* Pokud máte vlastní klikatelné divy, p nebo jiné prvky, přidejte je sem */
+.clickable-div { /* Příklad třídy pro klikatelný div */
+    cursor: pointer;
+}
+/* Styly pro Firefox na úrovni BODY */
+/* body {
+    scrollbar-width: thin;
+    scrollbar-color: linear-gradient(135deg, rgba(138, 43, 226, 0.4), rgba(0, 191, 255, 0.4)) rgba(17, 17, 31, 0.2);
+} */
+
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600; /* Můžete zkusit i 700 pro výraznější nadpisy */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600; 
 }
-
-/* Source Sans Pro by mohl být dobrý pro delší textové bloky */
 p, li, span {
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 400;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+}
+button, .nav-link {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
 }
 
-/* Případně specifické elementy s Interem */
-button, .nav-link {
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
+@font-face {
+    font-family: 'DhuwurLoroRegular';
+    src: url('assets/fonts/DhuwurLoroRegular-KGno.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'DhuwurRegular';
+    src: url('assets/fonts/DhuwurRegular-nZ4Y.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'HighSansSerif7';
+    src: url('assets/fonts/HighSansSerif7-xZeR.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'ValderoRegular';
+    src: url('assets/fonts/ValderoRegular-Vd06.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
