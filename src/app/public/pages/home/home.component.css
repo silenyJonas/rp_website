@@ -3,9 +3,41 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #e0e0e0;
 }
+
+/* UVODNI HEADER */
+
+.header-0{
+width: 100vw;
+display: flex;
+justify-content: center;
+}
+.h-wrp{
+    opacity: 0;
+    margin-top: 130px;
+    margin-bottom: -230px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+     animation: fadeInSvg 1.5s ease-out 1s forwards; /* 2s trvání, 1s zpoždění (1000ms) */
+}
+.header-0-1{
+        font-family: "Source Sans Pro", sans-serif;
+    font-size: 5.8rem;
+    font-weight: 700;
+    color: #e0e0e0;
+}
+.header-0-2{
+        font-family: "Source Sans Pro", sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #e0e0e0;
+}
+/* UVODNI HEADER KONEC */
+
 .main-content {
     width: 100vw;
 }
+
 /* --------------------HERO SEKCE---------------------- */
 .hero-section {
     position: relative; 
@@ -50,25 +82,25 @@ body {
 }
 .hero-section .cables-and-bubbles {
     position: absolute; 
-    top: 0;
+    top: 50;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 2; 
+    z-index: 1000; 
     /* NOVÉ: Počáteční stav pro animaci */
     opacity: 0;
     /* NOVÉ: Aplikace animace */
-    animation: fadeInSvg 2s ease-out 1s forwards; /* 2s trvání, 1s zpoždění (1000ms) */
+    animation: fadeInSvg 3.5s ease-out 1s forwards; /* 2s trvání, 1s zpoždění (1000ms) */
 }
 .cables-vertical-1 {
     position: absolute; 
-    top: 400px;
-    left: 750px;
+    top: 500px;
+    left: 800px;
     z-index: 2; 
     /* NOVÉ: Počáteční stav pro animaci */
     opacity: 0;
     /* NOVÉ: Aplikace animace */
-    animation: fadeInSvg 2s ease-out 1s forwards; /* 2s trvání, 1s zpoždění (1000ms) */
+    animation: fadeInSvg 3.5s ease-out 1s forwards; /* 2s trvání, 1s zpoždění (1000ms) */
 }
 @keyframes fadeInSvg {
     0% {
@@ -153,16 +185,16 @@ body {
         drop-shadow(0px 0px 40px rgba(183, 28, 28, 0.5));
 }
 .server-img-wrp{
-    width: 100vw;
-    height: 1000px;
+    /* width: 100vw;
+    height: 1000px; */
     display: flex;
     justify-content: center;
     align-items: center;
 }
 .server-img-wrp svg{
-    width: 50%;
+    width: 40%;
     padding-left: 125px;
-    margin-top: 160px;
+    margin-top: 210px;
     z-index: 1000;
 }
 /* --------------------HERO SEKCE KONEC---------------------- */
@@ -226,11 +258,16 @@ body {
 }
 /* NAŠE SLUŽBY HEADER */
 .header-container {
+    position: relative;
     display: flex;
     align-items: center; /* Zarovná text a SVG ikonku vertikálně na střed */
     justify-content: flex-start; /* Zarovná obsah doleva */
-    margin-left: 515px;
+    opacity: 0; /* Začíná neviditelné */
+    animation: fadeInSvg 1.5s ease-out 1s forwards;
+    z-index: 1100;
+    margin-left: 570px;
 }
+
 
 .header-1 {
     font-family: "Source Sans Pro", sans-serif;
@@ -300,6 +337,11 @@ body {
 
 /* --------------------CONECTOR CAST V SECTION SEKCE KONEC --------------- */
 /* --------------------OBAL LINKU V SECTION SEKCE KONEC --------------- */
+.services-sections{
+    margin-top: -1300px;
+
+
+}
 .i-1 {
     width: 100%;
     border: 3px solid #2f2f2f;
@@ -537,7 +579,8 @@ body {
     flex-direction: column; /* Položky se skládají pod sebe */
     /* Změna pro zarovnání obsahu na křížové ose (horizontálně, když je flex-direction: column) */
     align-items: flex-end; /* Zarovná položky doprava */
-    margin-top: 200px;
+        position: relative;
+    z-index: 1000;
 }
 .links-wrapper{
     width: calc(100vw - 400px);
@@ -594,3 +637,43 @@ body {
 .links-wrapper:nth-child(4) .learn-more-text {
     color: #FF0000; /* Tmavší červená */
 }
+/* KABELY VELKE */
+.svg-container {
+    top: 0;
+    left: 0;
+    width: 100vw;   /* Šířka 100% viewportu */
+    height: 100vh;  /* Výška 100% viewportu - pro plnou výšku */
+    pointer-events: none; /* Umožní interakci s obsahem pod SVG, pokud by tam nějaký byl */
+    z-index: 0; /* Pokud by byl nějaký další obsah, SVG je pod ním */
+}
+
+/* Styly pro samotné SVG plátno */
+.dynamic-cables-from-image {
+    margin-top: -300px;
+    display: block; /* Zajišťuje, že se chová jako blokový element */
+    width: 100%; /* SVG element vyplní celý .svg-container */
+    height: 100%; /* SVG element vyplní celý .svg-container */
+    visibility: visible;
+    opacity: 1;
+    position: relative;
+    z-index: 999;
+}
+
+/* Styly pro jednotlivé dráty v SVG */
+.cable {
+    fill: none;
+    stroke-width: 2.5px; /* Tloušťka 4px */
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.cable-red { stroke: #b71c1c; }
+.cable-green { stroke: #00695c; }
+.cable-blue { stroke: #005792; }
+.cable-purple { stroke: #800080; }
+
+/* Pokud by byla potřeba animace, zde je připravený keyframe */
+@keyframes fadeInSvg {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+/* KABELY VELKE KONEC */
