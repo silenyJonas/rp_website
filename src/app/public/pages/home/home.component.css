@@ -257,6 +257,54 @@ justify-content: center;
     display: none;
 }
 /* NAŠE SLUŽBY HEADER */
+
+.dynamic-cables-from-image {
+    display: block;
+    /* width a height SVG plátna zůstávají 100% kontejneru,
+       skutečné "zmenšení" se děje změnou viewBoxu nebo úpravou souřadnic v HTML */
+    width: 100%;
+    height: 100%;
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Styly pro jednotlivé dráty v SVG */
+.cable {
+    fill: none;
+    stroke-width: 3.5px; /* Zmenšená tloušťka kabelu pro dojem menšího vzhledu */
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    /* Ponecháno tečkování, pokud bylo dříve aplikováno v CSS */
+}
+
+/* Ponechány původní barvy kabelů, jak jsi si přál */
+.cable-red { stroke: #e74c3c; }   
+.cable-green { stroke: #27ae60; } 
+.cable-blue { stroke: #3498db; }  
+.cable-purple { stroke: #9b59b6; }
+
+/* Styly pro konektorové boxy */
+.connector-box {
+    fill: #1a1a2e; /* Tmavší fialová pro konektory */
+    stroke: #302d2e; /* Světlejší fialový obrys */
+    stroke-width: 0.5px; /* Zmenšený obrys */
+    rx: 2.5px; /* Zmenšené zaoblení */
+    ry: 2.5px; /* Zmenšené zaoblení */
+    pointer-events: none;
+}
+
+/* Styly pro svítící tečky */
+.glowing-dot {
+    fill: #e0b4ff; /* Světle fialová pro tečky */
+    /* Pro glow efekt je potřeba SVG filtr v HTML <defs> nebo CSS box-shadow (kompatibilita se může lišit) */
+    /* box-shadow: 0 0 3px #e0b4ff, 0 0 6px #e0b4ff; */ /* Zmenšený glow */
+}
+
+/* Pokud by byla potřeba animace, zde je připravený keyframe */
+@keyframes fadeInSvg {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
 .header-container {
     position: relative;
     display: flex;
@@ -317,7 +365,7 @@ justify-content: center;
 /* Styly pro SVG server ikonu - sladěné s novým, tmavším fialovým schématem */
 .server-icon rect {
     /* fill: #262638; TMAVŠÍ FIALOVÝ NÁDECH pro tělo serveru */
-    stroke: #6b2e91; /* TMAVŠÍ FIALOVÝ border, jako u headeru */
+    stroke: #302d2e; /* TMAVŠÍ FIALOVÝ border, jako u headeru */
     stroke-width: 1.5;
 }
 .server-icon .inner-panel {
@@ -337,11 +385,7 @@ justify-content: center;
 
 /* --------------------CONECTOR CAST V SECTION SEKCE KONEC --------------- */
 /* --------------------OBAL LINKU V SECTION SEKCE KONEC --------------- */
-.services-sections{
-    margin-top: -1300px;
 
-
-}
 .i-1 {
     width: 100%;
     border: 3px solid #2f2f2f;
@@ -581,6 +625,8 @@ justify-content: center;
     align-items: flex-end; /* Zarovná položky doprava */
         position: relative;
     z-index: 1000;
+    opacity: 0;
+      animation: fadeInSvg 3.5s ease-out 1s forwards; 
 }
 .links-wrapper{
     width: calc(100vw - 400px);
@@ -649,14 +695,15 @@ justify-content: center;
 
 /* Styly pro samotné SVG plátno */
 .dynamic-cables-from-image {
-    margin-top: -300px;
+    margin-top: -260px;
     display: block; /* Zajišťuje, že se chová jako blokový element */
     width: 100%; /* SVG element vyplní celý .svg-container */
     height: 100%; /* SVG element vyplní celý .svg-container */
     visibility: visible;
-    opacity: 1;
+    opacity: 0;
     position: relative;
     z-index: 999;
+     animation: fadeInSvg 3.5s ease-out 1s forwards; 
 }
 
 /* Styly pro jednotlivé dráty v SVG */
@@ -677,3 +724,27 @@ justify-content: center;
     100% { opacity: 1; }
 }
 /* KABELY VELKE KONEC */
+/* ---------------- stats ------------------ */
+.stats-wrp{
+    display: flex;
+    justify-content: end;
+}
+.stats{
+    display: flex;
+    font-family: "Source Sans Pro", sans-serif;
+    color: #9c9c9d;
+    margin-top: -300px;
+}
+.s-1-h, .s-2-h, .s-3-h{
+    font-size: 10rem;
+}
+.s-1-t, .s-2-t, .s-3-t{
+    font-size: 2rem;
+}
+/* ---------------- stats konec ------------------ */
+
+
+
+/* ZACATEKO KONTAKT */
+
+/* KONEC KONTAKT */
