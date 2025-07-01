@@ -60,6 +60,16 @@ body {
     /* NOVÉ: Aplikace animace */
     animation: fadeInSvg 2s ease-out 1s forwards; /* 2s trvání, 1s zpoždění (1000ms) */
 }
+.cables-vertical-1 {
+    position: absolute; 
+    top: 400px;
+    left: 750px;
+    z-index: 2; 
+    /* NOVÉ: Počáteční stav pro animaci */
+    opacity: 0;
+    /* NOVÉ: Aplikace animace */
+    animation: fadeInSvg 2s ease-out 1s forwards; /* 2s trvání, 1s zpoždění (1000ms) */
+}
 @keyframes fadeInSvg {
     0% {
         opacity: 0;
@@ -158,7 +168,6 @@ body {
 /* --------------------HERO SEKCE KONEC---------------------- */
 /* --------------------SECTIONS SEKCE ---------------------- */
 /* --------------------CONECTOR CAST V SECTION SEKCE ---------------------- */
-/* Kontejner pro celý konektor */
 .connector {
     display: flex;
     align-items: center;
@@ -172,8 +181,6 @@ body {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
-
-/* Vstupní oblast pro drát zleva */
 .connector-recessed-entry {
     width: 6px;
     height: 100%;
@@ -183,8 +190,6 @@ body {
     box-shadow: inset -1px 0 2px rgba(74, 64, 90, 0.7); /* Stín s nádechem barvy konektoru */
     flex-shrink: 0;
 }
-
-/* Hlavní tělo zásuvky s otvory */
 .connector-body {
     flex-grow: 1;
     height: 100%;
@@ -200,8 +205,6 @@ body {
     border-bottom-right-radius: 0;
     box-shadow: none;
 }
-
-/* Otvory pro kolíky */
 .socket-hole {
     width: 4px;
     height: 7px;
@@ -210,8 +213,6 @@ body {
     box-shadow: inset 0 0 2px rgba(47, 40, 63, 0.8); /* Stín otvoru s nádechem barvy otvoru */
     margin: 0.5px 0;
 }
-
-/* Zemnící otvor (větší, uprostřed) */
 .socket-ground-hole {
     width: 5px;
     height: 3px;
@@ -220,11 +221,83 @@ body {
     box-shadow: inset 0 0 2px rgba(47, 40, 63, 0.8); /* Stín otvoru s nádechem barvy otvoru */
     margin-top: 2px;
 }
-
-/* Boční hřeben/výstupek na pravé straně - stále skrytý */
 .connector-side-ridge {
     display: none;
 }
+/* NAŠE SLUŽBY HEADER */
+.header-container {
+    display: flex;
+    align-items: center; /* Zarovná text a SVG ikonku vertikálně na střed */
+    justify-content: flex-start; /* Zarovná obsah doleva */
+    margin-left: 515px;
+}
+
+.header-1 {
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 700;
+    color: #9c9c9d; /* Světlejší barva textu */
+    background-color: #1a1a2e; /* Původní barva pozadí */
+    /* Vracíme standardní border, který se teď bude sám zkosením kopírovat */
+    border: 3px solid #302d2e; /* TMAVŠÍ FIALOVÝ border */
+    
+    height: 60px; /* Pevná výška */
+    display: flex;
+    align-items: center;
+    padding: 0 65px; /* Horizontální padding pro text */
+    font-size: 1.25em; /* Velikost textu */
+    white-space: nowrap; /* Zabrání zalomení textu */
+    font-weight: 700;
+    /* Odstraňujeme border-right: none;, protože border bude po celém obvodu */
+    /* Odstraňujeme clip-path: polygon(...); */
+    
+    position: relative; /* Stále potřebné pro z-index */
+    z-index: 2; /* Zajistí, že header-1 bude nad SVG serverem */
+    box-shadow: 0 4px 15px rgba(107, 46, 145, 0.4); /* TMAVŠÍ FIALOVÝ stín */
+
+    /* Klíčové pro zkosení obou stran a vytvoření kosodélníku */
+    transform: skewX(-15deg); /* Zkosí celý element */
+    /* transform-origin: top left; -- Není potřeba, default je střed */
+}
+
+/* Normalizace textu, aby se nezkosil */
+.header-1 span {
+    transform: skewX(15deg); /* Zkosí text zpět do roviny */
+    display: inline-block; /* Důležité pro transformaci textu */
+}
+
+/* Pravidla pro pseudo-elementy ::before a ::after jsou nyní zcela odstraněna,
+   protože border kopíruje zkosení automaticky díky transformaci elementu. */
+
+.server-icon {
+    width: 138px; /* Šířka SVG elementu */
+    height: 60px; /* Výška SVG elementu */
+    margin-left: -20px; /* Důležité pro plynulé navázání a zakrytí borderu */
+    z-index: 1; /* Zajistí, že SVG bude pod header-1 */
+    overflow: hidden; /* Skryje části SVG, které jsou oříznuté clipPath */
+    z-index: 2;
+}
+
+/* Styly pro SVG server ikonu - sladěné s novým, tmavším fialovým schématem */
+.server-icon rect {
+    /* fill: #262638; TMAVŠÍ FIALOVÝ NÁDECH pro tělo serveru */
+    stroke: #6b2e91; /* TMAVŠÍ FIALOVÝ border, jako u headeru */
+    stroke-width: 1.5;
+}
+.server-icon .inner-panel {
+    fill: #1e1e2c; /* JEŠTĚ TMAVŠÍ ODSTÍN FIALOVÉ pro vnitřní panel */
+    stroke: #5a277a; /* TMAVŠÍ FIALOVÝ border pro panel */
+    stroke-width: 0.5;
+}
+.server-icon circle {
+    r: 3;
+}
+.server-icon line {
+    stroke: #a0a0a0; /* Neutrální šedá pro anténky */
+    stroke-width: 1.5;
+}
+
+/* NAŠE SLUŽBY HEADER KONEC*/
+
 /* --------------------CONECTOR CAST V SECTION SEKCE KONEC --------------- */
 /* --------------------OBAL LINKU V SECTION SEKCE KONEC --------------- */
 .i-1 {
@@ -239,8 +312,6 @@ body {
     overflow: hidden; /* Important for clipping content that might extend outside */
     z-index: 1;
 }
-
-/* Purple overlay on the entire .i-1 - Bude přepsáno pro každý links-wrapper níže */
 .i-1::after {
     content: '';
     position: absolute;
@@ -255,13 +326,9 @@ body {
     border-bottom-left-radius: 100px;
     border-top-left-radius: 100px;
 }
-
-/* On hover of .i-1, the purple layer disappears */
 .i-1:hover::after {
     opacity: 0;
 }
-
-/* Main background of .i-1 */
 .i-1-background {
     position: absolute;
     top: 0;
@@ -272,7 +339,6 @@ body {
     background-position: center;
     z-index: 0;
 }
-
 .i-11 {
     width: calc(100% - 30px);
     height: calc(100% - 30px);
@@ -282,7 +348,6 @@ body {
     position: relative; /* Crucial for absolute positioning of children */
     z-index: 3;
 }
-
 .icon-border-overlay {
     position: absolute;
     top: 0;
@@ -295,7 +360,6 @@ body {
     z-index: 4;
     pointer-events: none;
 }
-
 .icon-wrapper {
     height: 100%;
     width: auto;
@@ -313,7 +377,6 @@ body {
     justify-content: center;
     align-items: center;
 }
-
 .text-wrapper {
     height: 100%;
     display: flex;
@@ -349,15 +412,11 @@ body {
     
     overflow: hidden; /* Important to hide content that moves out or expands */
 }
-
-/* Container for text elements */
 .text {
     width: 100%;
     height: 100%;
     position: relative; /* Reference for absolute positioning of text-in */
 }
-
-/* Inner container for all text elements (content-container, learn-more-text) */
 .text-in {
     position: absolute;
     top: 50%; /* Vertically center the entire block */
@@ -370,8 +429,6 @@ body {
     padding-right: 200px; /* Space from right edge for "Zjistit více" */
     box-sizing: border-box; /* Include padding in width calculation */
 }
-
-/* NOVÝ KONTENJER pro hlavní text a bullet pointy */
 .content-container {
     display: flex; /* Použijeme flexbox pro uspořádání main-text a bullet-points vedle sebe */
     align-items: center; /* Vertikálně je zarovnáme ve středu */
@@ -382,7 +439,6 @@ body {
     left: 15px; /* Počáteční odsazení zleva uvnitř .text-in (experimentální hodnota) */
     transition: left 0.2s ease-out; /* Animace pro posun při hoveru */
 }
-
 .main-text {
     /* "Webový vývoj" - visible by default, positioned by flexbox */
     font-size: 1em; /* Uses the font-size of .text-wrapper */
@@ -399,7 +455,6 @@ body {
     font-size: 8.2em;
     font-weight: normal;
 }
-
 .bullet-points {
     display: flex;
     flex-direction: column; /* Stack bullet items vertically */
@@ -417,7 +472,6 @@ body {
     color: #9a9a9b; 
     flex-shrink: 0; 
 }
-
 .bullet-item {
     padding-left: 15px; /* Indent for bullet effect */
     position: relative;
@@ -427,11 +481,9 @@ body {
     font-size: 1rem;
     font-weight: 700;
 }
-
 .bullet-item:last-child {
     margin-bottom: 0; /* No margin below the last bullet item */
 }
-
 .bullet-item::before {
     content: '• '; /* Custom bullet point character */
     position: absolute;
@@ -439,8 +491,6 @@ body {
     color: #800080; /* Color for the bullet - will be overridden by specific colors */
     font-weight: bold;
 }
-
-
 .learn-more-text {
     position: absolute; /* Absolute for independent positioning */
     top: 50%;
@@ -456,14 +506,11 @@ body {
     font-size: 5.2em;
     font-weight: normal;
 }
-
-
 .i-1:hover .icon-wrapper {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
 }
-
 .i-1:hover .text-wrapper {
     left: 0; /* Expands to the full left edge of parent */
     margin-right: -15px;
@@ -471,25 +518,18 @@ body {
     border-top-left-radius: 82px;
     border-bottom-left-radius: 82px;
 }
-
 /* --- HOVER EFFECTS PRO TEXTY --- */
-
-/* Když je .i-1 v hover stavu (a .text-wrapper se posunul na left: 0), posuneme .content-container */
 .i-1:hover .content-container {
     left: 250px; /* Posune obsah (hlavní text a bullet pointy) na 250px od levého okraje expanded .text-wrapper */
 }
-
-/* NEW: When .text-wrapper is not skewed (on hover), .bullet-points should also not be skewed. */
 .i-1:hover .bullet-points {
     transform: skewX(0deg); /* Remove compensation skew */
 }
-
 .i-1:hover .text-in .learn-more-text {
     transform: translateY(-50%) translateX(0); /* Slides into view */
     opacity: 1; /* Becomes visible */
 }
 /* --------------------OBAL LINKU V SECTION SEKCE KONEC --------------- */
-
 .contact-section {
     width: 100vw;
     height: auto;
@@ -497,6 +537,7 @@ body {
     flex-direction: column; /* Položky se skládají pod sebe */
     /* Změna pro zarovnání obsahu na křížové ose (horizontálně, když je flex-direction: column) */
     align-items: flex-end; /* Zarovná položky doprava */
+    margin-top: 200px;
 }
 .links-wrapper{
     width: calc(100vw - 400px);
@@ -516,10 +557,7 @@ body {
     width: auto;
     margin-right: -2px;
 }
-
 /* --- BAREVNÁ SCHÉMATA PRO JEDNOTLIVÉ LINKS-WRAPPERY --- */
-
-/* První links-wrapper: Fialová */
 .links-wrapper:nth-child(1) .i-1::after {
     background-color: rgba(128, 0, 128, 0.4); /* Fialová */
 }
@@ -529,8 +567,6 @@ body {
 .links-wrapper:nth-child(1) .learn-more-text {
     color: #800080; /* Tmavší fialová */
 }
-
-/* Druhý links-wrapper: Zelená */
 .links-wrapper:nth-child(2) .i-1::after {
     background-color: rgba(0, 128, 0, 0.4); /* Zelená */
 }
@@ -540,8 +576,6 @@ body {
 .links-wrapper:nth-child(2) .learn-more-text {
     color: #008000; /* Tmavší zelená */
 }
-
-/* Třetí links-wrapper: Modrá */
 .links-wrapper:nth-child(3) .i-1::after {
     background-color: rgba(0, 0, 255, 0.4); /* Modrá */
 }
@@ -551,10 +585,6 @@ body {
 .links-wrapper:nth-child(3) .learn-more-text {
     color: #0000FF; /* Tmavší modrá */
 }
-
-/* Čtvrtý links-wrapper: Červená */
-/* Pokud máte v HTML pouze 3 links-wrapper, můžete tento blok smazat. */
-/* Pokud jich máte 4, ujistěte se, že HTML obsahuje 4 odkazy. */
 .links-wrapper:nth-child(4) .i-1::after {
     background-color: rgba(255, 0, 0, 0.4); /* Červená */
 }
