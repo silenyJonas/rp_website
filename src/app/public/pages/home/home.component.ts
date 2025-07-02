@@ -23,6 +23,10 @@ export class HomeComponent {
     aiapp: 'assets/images/backgrounds/service-ai.jpg',
   };
 
+  phone_icon: string = 'assets/images/icons/call.png';
+  mail_icon: string = 'assets/images/icons/mail.png';
+  send_icon: string = 'assets/images/icons/send.png';
+
   hoverState: { [key: string]: boolean } = {
     webapp: false,
     website: false,
