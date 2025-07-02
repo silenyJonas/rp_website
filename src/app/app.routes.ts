@@ -23,7 +23,14 @@ export const routes: Routes = [
         path: 'academy',
         loadComponent: () => import('./public/pages/academy/academy.component').then(m => m.AcademyComponent)
       },
-      // Zde mohou být další veřejné routy
+      {
+        path: 'tos',
+        loadComponent: () => import('./public/pages/tos/tos.component').then(m => m.TosComponent)
+      },
+      {
+        path: 'privacy-policy',
+        loadComponent: () => import('./public/pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent)
+      },
     ]
   },
   // 2. Login stránka - samostatná, bez public/admin layoutu
