@@ -1066,6 +1066,7 @@ button[type="submit"]:active {
 }
 
 .c-img-wrp {
+    margin-top: 40px;
 }
 
 .c-img-wrp-i {

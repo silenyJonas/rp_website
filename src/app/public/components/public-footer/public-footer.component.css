@@ -1,116 +1,149 @@
+/* --- FOOTER SEKCE --- */
 .public-footer {
-  background-color: #121212; /* Téměř černá pro pozadí footeru */
-  color: #a0a0a0; /* Světle šedá pro text */
-  padding: 40px 20px 20px; /* Více paddingu nahoře, méně dole */
-  font-size: 0.95rem;
-  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3); /* Jemný stín nahoru */
-  
+    background-color: #1a1a2e; /* Tmavé fialové pozadí, ladí s formulářem */
+    color: #e0e0e0; /* Světlá barva textu pro kontrast */
+    padding: 60px 40px 20px; /* Více paddingu nahoře a po stranách, méně dole */
+    border-top: 3px solid rgba(116, 068, 128, 0.4); /* Jemný oddělovač nahoře */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
+    z-index: 100; /* Ujistěte se, že je footer nad ostatním obsahem */
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5); /* Jemný stín nahoru */
 }
-
+a{
+    text-decoration: none;
+    color: #b39ddb;
+}
 .footer-content {
-  display: flex;
-  flex-wrap: wrap; /* Pro zalomení na menších obrazovkách */
-  justify-content: space-between;
-  max-width: 1200px; /* Stejná nebo podobná šířka jako hlavní obsah */
-  margin: 0 auto 30px;
-  gap: 20px; /* Mezera mezi sekcemi */
+    display: flex;
+    flex-wrap: wrap; /* Umožní zalomení sekcí na menších obrazovkách */
+    justify-content: space-between; /* Rozprostře sekce rovnoměrně */
+    max-width: 1200px; /* Maximální šířka obsahu footeru */
+    margin: 0 auto; /* Centrování obsahu */
+    gap: 30px; /* Mezera mezi sekcemi */
 }
 
 .footer-section {
-  flex: 1; /* Sekce se roztáhnou */
-  min-width: 200px; /* Minimální šířka pro zalomení */
-  margin-bottom: 20px; /* Mezera mezi sekcemi, pokud se zalomí */
+    flex: 1; /* Každá sekce zaujme stejný prostor */
+    min-width: 220px; /* Minimální šířka před zalomením */
+    margin-bottom: 30px; /* Mezera pod sekcemi na menších obrazovkách */
 }
 
 .footer-section h3 {
-  color: #9b59b6; /* Fialová pro nadpisy sekcí */
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+    color: #a67dff; /* Jasnější fialová pro nadpisy sekcí */
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
-.footer-section p,
+.footer-section p {
+    font-size: 0.95em;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    color: #c5aaff; /* Světlejší fialová pro běžný text */
+}
+
 .footer-section ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .footer-section ul li {
-  margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
-.footer-section a {
-  color: #a0a0a0;
-  text-decoration: none;
-  transition: color 0.3s ease;
+/* Styly pro VŠECHNY odkazy v seznamech */
+.footer-section ul li a {
+    color: #b39ddb; /* Tmavší fialová pro všechny odkazy v seznamech */
+    text-decoration: none;
+    font-size: 0.95em;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-block; /* Pro transformaci */
+    font-weight: normal; /* Zruší případné tučné písmo */
+    text-shadow: none; /* Zruší případný text-shadow */
 }
 
-.footer-section a:hover {
-  color: #9b59b6; /* Fialová na hover */
-  text-decoration: underline;
+.footer-section ul li a:hover {
+    color: #a67dff; /* Změna barvy na světlejší fialovou při najetí */
+    transform: translateX(5px); /* Jemný posun doprava */
 }
 
+/* --- Styly pro OBRÁZKOVÉ sociální ikony --- */
 .social-links {
-  margin-top: 15px;
+    margin-top: 15px;
+    display: flex;
+    gap: 15px; /* Mezera mezi ikonami */
 }
 
 .social-links a {
-  font-size: 1.8rem;
-  margin-right: 15px;
-  color: #666666; /* Tmavší šedá pro ikony */
-  transition: color 0.3s ease;
+    display: inline-block; /* Důležité pro efekty na img */
+    line-height: 1; /* Pomáhá zarovnání */
 }
 
-.social-links a:hover {
-  color: #9b59b6; /* Fialová na hover */
+.social-links img {
+    width: 32px; /* Pevná velikost ikon */
+    height: 32px;
+    vertical-align: middle; /* Pro lepší zarovnání */
+    transition: filter 0.3s ease; /* Plynulá animace záře a jasu */
+    /* FILTRY ÚPLNĚ ODSTRANĚNY - ikony budou mít původní barvu */
 }
 
-/* Styl pro nenápadný Admin Login odkaz */
-.admin-login-link {
-  font-size: 0.85rem; /* Menší font */
-  opacity: 0.7; /* Lehce průhledný */
-  margin-top: 10px; /* Odsazení od ostatních linků */
-  display: inline-block; /* Pro správné odsazení */
+.social-links a:hover img {
+    /* Zvýraznění při najetí: jen zesvětlení a fialová záře */
+    filter: brightness(1.2) drop-shadow(0 0 10px rgba(166, 125, 255, 0.8)); /* Zesvětlení a výraznější fialová záře */
 }
 
-.admin-login-link:hover {
-  opacity: 1; /* Plná viditelnost na hover */
-  color: #9b59b6; /* Fialová barva na hover */
-}
 
+/* Spodní část footeru s copyrightem */
 .footer-bottom {
-  text-align: center;
-  padding-top: 20px;
-  border-top: 1px solid rgba(142, 68, 173, 0.1); /* Jemný fialový oddělovač */
-  font-size: 0.8rem;
-  color: #666666; /* Ještě tmavší šedá pro copyright */
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(47, 47, 47, 0.5); /* Jemnější oddělovač */
+    font-size: 0.85em;
+    color: #9a9a9b; /* Jemnější šedá pro copyright text */
 }
 
-/* Responzivní úpravy */
+/* --- Responzivní úpravy --- */
 @media (max-width: 768px) {
-  .footer-content {
-    flex-direction: column; /* Sekce pod sebou */
-    align-items: center;
-  }
+    .footer-content {
+        flex-direction: column; /* Sekce se stackují vertikálně */
+        align-items: center; /* Centrování obsahu */
+        text-align: center;
+    }
 
-  .footer-section {
-    min-width: unset; /* Zruší minimální šířku */
-    width: 100%; /* Plná šířka */
-    text-align: center;
-  }
+    .footer-section {
+        margin-bottom: 20px;
+    }
 
-  .social-links {
-    display: flex;
-    justify-content: center; /* Vycentruje ikony */
-  }
+    .footer-section ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centrování odkazů */
+    }
 
-  .footer-section h3 {
-    margin-bottom: 10px;
-  }
+    .social-links {
+        justify-content: center; /* Centrování sociálních ikon */
+    }
+}
 
-  .footer-section ul li {
-    margin-bottom: 5px;
-  }
+@media (max-width: 480px) {
+    .public-footer {
+        padding: 40px 20px 15px;
+    }
+
+    .footer-section h3 {
+        font-size: 1.3em;
+    }
+
+    .footer-section p,
+    .footer-section ul li a {
+        font-size: 0.9em;
+    }
+
+    .social-links img {
+        width: 28px; /* Mírně menší ikony na mobilu */
+        height: 28px;
+    }
 }
