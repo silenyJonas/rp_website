@@ -1,3 +1,43 @@
 <div class="main-content">
- 
+    <div class="content-wrp">
+        <div class="filter-wrp">
+    <form class="finder" (submit)="onSearch($event)">
+        <input type="text" placeholder="Název" class="search-input" name="searchInput">
+        <button type="submit" class="search-button" aria-label="Najít">
+            <img [src]="search_icon" alt="">
+        </button>
+    </form>
+
+    <form class="filter" (submit)="onFilter($event)">
+        
+
+        <div class="filter-group">
+            <label for="sort-order">Seřadit dle:</label>
+            <select name="sortOrder" id="sort-order" [(ngModel)]="selectedSortOrder">
+                <option value="">-- Výchozí --</option>
+                <option value="az">A-Z</option>
+                <option value="za">Z-A</option>
+                <option value="price-desc">Od nejdražšího</option>
+                <option value="price-asc">Od nejlevnějšího</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="category-filter">Kategorie:</label>
+            <select name="categoryFilter" id="category-filter" [(ngModel)]="selectedCategory">
+                <option value="">-- Všechny kategorie --</option>
+                <option value="cat1">Kategorie 1</option>
+                <option value="cat2">Kategorie 2</option>
+                <option value="cat3">Kategorie 3</option>
+                <option value="cat4">Kategorie 4</option>
+            </select>
+        </div>
+
+        <button type="submit" class="filter-button">Filtrovat</button>
+    </form>
+</div>
+        <div class="prod-wrp">
+
+        </div>
+    </div>
 </div>
