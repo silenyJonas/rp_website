@@ -40,6 +40,26 @@
         </div>
         <button type="submit" class="filter-button">Filtrovat</button>
     </form>
+<div class="money-form-wrp">
+    <form class="money-form" action="">
+        <div class="currency-slider-track" #currencySliderTrack>
+            <span
+                class="currency-label"
+                data-currency="czk"
+                (click)="selectCurrency('czk')"
+                [ngClass]="{'active': currentCurrency === 'czk'}"
+            >CZK</span>
+            <span
+                class="currency-label"
+                data-currency="eur"
+                (click)="selectCurrency('eur')"
+                [ngClass]="{'active': currentCurrency === 'eur'}"
+            >EUR</span>
+            <div class="currency-slider" #currencySlider></div>
+        </div>
+    </form>
+</div>
+
 </div>
         <div class="prod-wrp ">
             <div class="pages-wrp">

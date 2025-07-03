@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, AfterViewInit, QueryList, ElementRef, ViewChildren, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, OnInit, HostListener, AfterViewInit, QueryList, ElementRef, ViewChildren, ChangeDetectorRef, NgZone, ViewChild } from '@angular/core';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
@@ -13,6 +13,7 @@ import { filter } from 'rxjs/operators';
   templateUrl: './public-header.component.html',
   styleUrls: ['./public-header.component.css']
 })
+
 export class PublicHeaderComponent implements OnInit, AfterViewInit {
   @ViewChildren('homeLink, servicesLink, shopLink, academyLink')
   navLinks!: QueryList<ElementRef<HTMLAnchorElement>>;
@@ -21,17 +22,26 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit {
   scrolled: boolean = false;
   private resizeObserver: ResizeObserver | undefined;
 
-  showIndicator: boolean = false; // Řídí opacitu indikátoru
-  isAnimatingTransition: boolean = false; // Pomocná proměnná pro stav animace
+  cz_flag_link: string = 'assets/images/icons/czech-republic.png';
+  sk_flag_link: string = 'assets/images/icons/slovakia.png';
+  en_flag_link: string = 'assets/images/icons/united-kingdom.png';
+
+  showIndicator: boolean = false;
+  isAnimatingTransition: boolean = false;
   private animationTimeout: any;
 
   private readonly LINK_WIDTH = 130;
   private readonly GAP_DEFAULT = 15;
   private readonly GAP_SCROLLED = 8;
-  
+
   private readonly INDICATOR_ANIMATION_DURATION = 400; // ms (0.4s)
 
   private currentActiveRoute: string | null = null;
+
+  @ViewChild('langSliderTrack') langSliderTrack!: ElementRef;
+  // @ViewChild('langSlider') langSlider!: ElementRef; // Odstraněno: Referencujeme slider, který už neexistuje
+
+  currentLanguage: string = 'cz'; // Výchozí aktivní jazyk
 
   constructor(
     private router: Router,
@@ -48,12 +58,31 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit {
       this.handleRouteChange();
     });
 
-    this.scheduleUpdate(false); 
+    this.scheduleUpdate(false);
     this.initResizeObserver();
+
+    // Načtení preferovaného jazyka z localStorage nebo nastavení výchozího
+    const storedLang = localStorage.getItem('selectedLanguage');
+    if (storedLang) {
+      this.currentLanguage = storedLang;
+    }
   }
 
   ngAfterViewInit(): void {
-    this.scheduleUpdate(false); 
+    this.scheduleUpdate(false);
+    // Aktualizace aktivního jazyka po vykreslení, slider už neaktualizujeme
+    this.ngZone.runOutsideAngular(() => {
+        requestAnimationFrame(() => {
+            if (this.langSliderTrack) { // Zkontrolovat jen track, slider už není potřeba
+                this.ngZone.run(() => {
+                    this.updateLanguageSelectionStyle(); // Nová metoda jen pro stylování
+                    this.cdr.detectChanges();
+                });
+            } else {
+                console.error('ngAfterViewInit: Element `#langSliderTrack` nebyl nalezen. Zkontrolujte HTML.');
+            }
+        });
+    });
   }
 
   private handleRouteChange(): void {
@@ -63,46 +92,40 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit {
         return linkRoute && this.currentActiveRoute?.startsWith(linkRoute);
     });
 
-    // 1. Odebereme aktivní a zvýrazněné třídy ze všech odkazů
     this.navLinks.forEach(link => {
         link.nativeElement.classList.remove('active');
         link.nativeElement.classList.remove('highlight-text');
     });
 
-    // 2. Okamžitě přidáme třídu pro "spuštění dolů" na VŠECHNY odkazy, které se mají animovat dolů
     this.navLinks.forEach(link => {
-        link.nativeElement.classList.add('is-clicked-animating'); 
+        link.nativeElement.classList.add('is-clicked-animating');
     });
 
-    // 3. OKAMŽITĚ zvýrazníme text cílového odkazu (žádné zpoždění)
     if (targetLink) {
         targetLink.classList.add('highlight-text');
     }
-    this.cdr.detectChanges(); // Zajistíme aktualizaci DOM
+    this.cdr.detectChanges();
 
-    // 4. Nastavíme indikátor pro animaci
     this.showIndicator = true;
     this.isAnimatingTransition = true;
-    this.scheduleUpdate(true); // PONECHÁME forceAnimate na true pro tuto navigaci
+    this.scheduleUpdate(true);
 
-    // 5. Nastavíme timeout pro konec animace indikátoru a aplikaci finálního aktivního stavu
     clearTimeout(this.animationTimeout);
     this.animationTimeout = setTimeout(() => {
       this.showIndicator = false;
       this.isAnimatingTransition = false;
-      
+
       this.navLinks.forEach(link => {
-        // Odebereme třídy pro animaci po dokončení
-        link.nativeElement.classList.remove('is-clicked-animating'); 
-        link.nativeElement.classList.remove('highlight-text'); // Odebereme highlight-text až teď
+        link.nativeElement.classList.remove('is-clicked-animating');
+        link.nativeElement.classList.remove('highlight-text');
       });
 
       if (targetLink) {
-          targetLink.classList.add('active'); // Třída active převezme bílou barvu textu
+          targetLink.classList.add('active');
       }
 
-      this.cdr.detectChanges(); 
-    }, this.INDICATOR_ANIMATION_DURATION); 
+      this.cdr.detectChanges();
+    }, this.INDICATOR_ANIMATION_DURATION);
   }
 
   private scheduleUpdate(forceAnimate: boolean = false): void {
@@ -122,7 +145,7 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit {
     const headerElement = document.querySelector('header');
     if (headerElement) {
       this.resizeObserver = new ResizeObserver(entries => {
-        this.scheduleUpdate(false); // Při změně velikosti headeru (např. při scrollu) neforceAnimujeme, ale necháme CSS transition
+        this.scheduleUpdate(false);
       });
       this.resizeObserver.observe(headerElement);
     }
@@ -142,33 +165,30 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit {
     if (window.scrollY > scrollThreshold) {
       if (!this.scrolled) {
         this.scrolled = true;
-        this.scheduleUpdate(true); // VŽDY animujeme indikátor při změně scrolled stavu
+        this.scheduleUpdate(true);
       }
     } else {
       if (this.scrolled) {
         this.scrolled = false;
-        this.scheduleUpdate(true); // VŽDY animujeme indikátor při změně scrolled stavu
+        this.scheduleUpdate(true);
       }
     }
   }
 
   updateIndicatorPosition(forceAnimate: boolean = false): void {
     const allLinks = this.navLinks.map(link => link.nativeElement);
-    
+
     let targetLinkElement: HTMLAnchorElement | undefined;
 
-    // Pokud probíhá animace nebo je indikátor viditelný, najdeme link podle aktivní routy
     if (this.showIndicator || this.isAnimatingTransition) {
         targetLinkElement = allLinks.find(link => {
             const linkRoute = link.getAttribute('routerLink');
             return linkRoute && this.currentActiveRoute?.startsWith(linkRoute);
         });
     } else {
-        // Jinak najdeme link s třídou 'active'
         targetLinkElement = allLinks.find(link => link.classList.contains('active'));
     }
 
-    // Pokud stále není nalezen cílový link (např. při prvním načtení stránky), pokusíme se ho najít podle router.url
     if (!targetLinkElement) {
       targetLinkElement = allLinks.find(link => {
         const linkRoute = link.getAttribute('routerLink');
@@ -182,36 +202,64 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit {
 
       if (targetLinkIndex !== -1) {
         const translateX_value = (targetLinkIndex * this.LINK_WIDTH) + (targetLinkIndex * currentGap);
-        
+
         this.indicatorStyle = {
           width: `${this.LINK_WIDTH}px`,
-          height: this.scrolled ? '32px' : '48px', // Výška indikátoru sleduje scrolled stav
-          opacity: this.showIndicator ? 1 : 0, // Opacitu ovládá showIndicator
+          height: this.scrolled ? '32px' : '48px',
+          opacity: this.showIndicator ? 1 : 0,
           transform: `translateX(${translateX_value}px) translateY(-50%)`
         };
 
-        // Zde je klíčová změna: Pokud forceAnimate není true, ale indikátor by se měl hýbat (např. při scrollu),
-        // pak zachováme transition. Jinak ji vypneme.
-        if (!forceAnimate && !this.scrolled && !this.isAnimatingTransition) { // Pouze pokud není animace a není scrollováno
-             this.indicatorStyle.transition = 'none';
+        if (!forceAnimate && !this.scrolled && !this.isAnimatingTransition) {
+               this.indicatorStyle.transition = 'none';
         } else {
-             const duration = `${this.INDICATOR_ANIMATION_DURATION / 1000}s`;
-             this.indicatorStyle.transition = `all ${duration} cubic-bezier(0.25, 0.8, 0.25, 1), 
-                                                border-radius ${duration} ease-in-out, 
-                                                height ${duration} ease-in-out, 
-                                                width ${duration} ease-in-out, 
-                                                transform ${duration} cubic-bezier(0.25, 0.8, 0.25, 1)`;
+               const duration = `${this.INDICATOR_ANIMATION_DURATION / 1000}s`;
+               this.indicatorStyle.transition = `all ${duration} cubic-bezier(0.25, 0.8, 0.25, 1),
+                                                 border-radius ${duration} ease-in-out,
+                                                 height ${duration} ease-in-out,
+                                                 width ${duration} ease-in-out,
+                                                 transform ${duration} cubic-bezier(0.25, 0.8, 0.25, 1)`;
         }
       }
     } else {
       this.indicatorStyle = {
         opacity: 0,
         width: '0px',
-        height: '0px', 
+        height: '0px',
         transform: `translateX(0px) translateY(-50%)`,
         transition: 'none'
       };
       console.warn('No active link found for indicator. Hiding indicator.');
     }
+  }
+
+  selectLanguage(language: string): void {
+    console.log(`Jazyk změněn na: ${language}`);
+
+    if (this.currentLanguage !== language) {
+      this.currentLanguage = language;
+      localStorage.setItem('selectedLanguage', language);
+      this.updateLanguageSelectionStyle(); // Voláme jen pro aplikaci CSS tříd
+    }
+  }
+
+  // Přejmenovaná metoda, která již neaktualizuje slider, ale jen aplikuje CSS třídy
+  private updateLanguageSelectionStyle(): void {
+    console.log('updateLanguageSelectionStyle: Spuštěna, aktuální jazyk:', this.currentLanguage);
+    if (!this.langSliderTrack) {
+      console.error('updateLanguageSelectionStyle: Element `#langSliderTrack` nebyl nalezen. Zkontrolujte HTML.');
+      return;
+    }
+
+    const sliderTrackElement = this.langSliderTrack.nativeElement;
+
+    // Najdeme všechny labely a aplikujeme/odebereme třídu 'active'
+    sliderTrackElement.querySelectorAll('.lang-label').forEach((label: HTMLElement) => {
+      if (label.dataset['lang'] === this.currentLanguage) {
+        label.classList.add('active');
+      } else {
+        label.classList.remove('active');
+      }
+    });
   }
 }

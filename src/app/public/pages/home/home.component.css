@@ -309,27 +309,35 @@ justify-content: center;
     font-weight: 700;
     color: #9c9c9d; /* Světlejší barva textu */
     background-color: #1a1a2e; /* Původní barva pozadí */
-    /* Vracíme standardní border, který se teď bude sám zkosením kopírovat */
     border: 3px solid #302d2e; /* TMAVŠÍ FIALOVÝ border */
-    
+
     height: 60px; /* Pevná výška */
     display: flex;
     align-items: center;
     padding: 0 65px; /* Horizontální padding pro text */
     font-size: 1.25em; /* Velikost textu */
     white-space: nowrap; /* Zabrání zalomení textu */
-    font-weight: 700;
-    /* Odstraňujeme border-right: none;, protože border bude po celém obvodu */
-    /* Odstraňujeme clip-path: polygon(...); */
-    
+
     position: relative; /* Stále potřebné pro z-index */
     z-index: 2; /* Zajistí, že header-1 bude nad SVG serverem */
     box-shadow: 0 4px 15px rgba(107, 46, 145, 0.4); /* TMAVŠÍ FIALOVÝ stín */
 
     /* Klíčové pro zkosení obou stran a vytvoření kosodélníku */
     transform: skewX(-15deg); /* Zkosí celý element */
-    /* transform-origin: top left; -- Není potřeba, default je střed */
+
+    /* --- Přidáno pro plynulou animaci záře --- */
+    transition: box-shadow 0.4s ease-out; /* Plynulý přechod pouze pro stín */
 }
+
+.header-1:hover {
+    /* Velká záře při najetí myší */
+    box-shadow: 0 0 40px 10px rgba(166, 125, 255, 0.8), /* Větší a světlejší fialová záře */
+                0 0 20px rgba(166, 125, 255, 0.6); /* Sekundární, menší záře pro hloubku */
+    /* Můžete zvážit mírnou změnu barvy pozadí nebo okraje, pokud by to vylepšilo efekt */
+    /* background-color: #2a2a3e; */
+    /* border-color: #a67dff; */
+}
+
 .header-1 span {
     transform: skewX(15deg); /* Zkosí text zpět do roviny */
     display: inline-block; /* Důležité pro transformaci textu */
@@ -1106,6 +1114,7 @@ button[type="submit"]:active {
     border-radius: 15px; /* Zaoblené rohy pro hlavní kontejner formuláře */
     overflow: hidden; /* Důležité pro zaoblené rohy vnitřních divů */
     animation: scaleIn 0.8s ease-out forwards; /* Animace při zobrazení */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .tel-wrp, .mail-wrp {
@@ -1152,3 +1161,6 @@ button[type="submit"]:active {
 /* ZACATEKO KONTAKT */
 
 /* KONEC KONTAKT */
+/* svg zazre a bubliny */
+
+/* svg zazre a bublinykonec */

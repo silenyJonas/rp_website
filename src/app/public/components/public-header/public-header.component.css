@@ -197,3 +197,69 @@ header.scrolled .active-indicator {
   border-radius: 8px; 
   box-shadow: 0 2px 10px rgba(142, 68, 173, 0.4); 
 }
+
+/* PREPINAC JAZYKU */
+/* Umístění wrapperu v pravém horním rohu */
+.lang-wrp {
+    position: fixed; /* Zůstane na místě při scrollu */
+    right: 20px; /* Odsazení od pravého okraje */
+    top: 20px; /* Odsazení od horního okraje */
+    z-index: 99999; /* Zajistí, že bude nad ostatním obsahem */
+    display: flex;
+    justify-content: flex-end; /* Zarovnání obsahu doprava */
+}
+
+.lang-form {
+    width: 150px; /* Šířka formuláře, aby se vešly 3 vlajky */
+    height: 40px; /* Výška */
+    background-color: rgba(26, 26, 46, 0.2);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 3px solid #2f2f2f;
+    border-radius: 9999px; /* Zaoblené rohy */
+    display: flex;
+    align-items: center;
+    padding: 0 5px; /* Vnitřní odsazení od okrajů */
+    position: relative;
+    overflow: hidden; /* Skryje slider, když je mimo - i když není, je to dobrá praxe */
+}
+
+.lang-slider-track { /* Přejmenováno na lang-flags-container nebo podobně by bylo přesnější, ale zachováváme pro minimalizaci změn */
+    display: flex;
+    justify-content: space-around; /* Rovnoměrně rozprostře vlajky */
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative; /* Stále potřebné pro z-index children */
+    z-index: 1; /* Vlajky budou nad pozadím form */
+}
+
+.lang-label {
+    display: flex; /* Použijeme flexbox pro centrování vlajky */
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1; /* Každá vlajka zabere stejný díl prostoru */
+    height: 100%;
+    cursor: pointer;
+    transition: transform 0.2s ease-out; /* Animace pro mírné zvětšení vlajky */
+    position: relative;
+    z-index: 2; /* Vlajka musí být nad čímkoli jiným v tracku */
+    padding: 0 5px; /* Přidáme horizontální padding k labelu */
+}
+
+.lang-label img {
+    --flag-size: 28px; /* CSS proměnná pro velikost vlajky */
+    width: var(--flag-size); /* Velikost ikony vlajky */
+    height: var(--flag-size);
+    border-radius: 50%; /* Aby vlajka byla kulatá */
+    object-fit: cover; /* Zajistí, že vlajka vyplní kruh */
+    border: 2px solid transparent; /* Průhledný rámeček pro aktivní stav */
+    transition: border-color 0.3s ease-out, filter 0.3s ease-out, transform 0.3s ease-out; /* Animace pro border, filter a transform */
+    filter: grayscale(80%); /* Ztlumí neaktivní vlajky */
+}
+
+.lang-label.active img {
+    border-color: #a67dff; /* Fialový rámeček pro aktivní vlajku */
+    filter: grayscale(0%); /* Plná barva pro aktivní vlajku */
+    transform: scale(1.1); /* Mírné zvětšení aktivní vlajky */
+}
