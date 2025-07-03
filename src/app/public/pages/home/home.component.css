@@ -934,7 +934,9 @@ justify-content: center;
     flex-direction: column;
     /* justify-content: space-between; */ /* Odebráno, pokud způsobuje problémy s výškou */
     /* Místo space-between použijeme margin-bottom na prvcích, nebo flex-grow na form-group */
-       background-color: #1a1a2e;
+       /* background-color: #1a1a2e; */
+           background-color: rgba(026, 026, 046, 0.5);
+    backdrop-filter: blur(2px);
     border: 3px solid rgba(116, 068, 128, 0.4);
     border-radius: 15px; /* Zaoblené rohy pro hlavní kontejner formuláře */
     overflow: hidden; /* Důležité pro zaoblené rohy vnitřních divů */
@@ -1098,11 +1100,11 @@ button[type="submit"]:active {
     width:81%;
     font-family: "Source Sans Pro", sans-serif;
     color: #9a9a9b;
-       background-color: #1a1a2e;
+                 background-color: rgba(026, 026, 046, 0.5);
+    backdrop-filter: blur(2px);
     border: 3px solid rgba(116, 068, 128, 0.4);
     border-radius: 15px; /* Zaoblené rohy pro hlavní kontejner formuláře */
     overflow: hidden; /* Důležité pro zaoblené rohy vnitřních divů */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Jemný stín pro zvýraznění */
     animation: scaleIn 0.8s ease-out forwards; /* Animace při zobrazení */
 }
 
@@ -1120,7 +1122,6 @@ button[type="submit"]:active {
     justify-content: center;
     align-items: center;
     color: #ffffff; /* Barva ikon */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .tel-icon.blue {

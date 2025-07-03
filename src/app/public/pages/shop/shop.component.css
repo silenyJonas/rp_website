@@ -1,195 +1,166 @@
+/* --- Důležité: Nastavení pro HTML a BODY --- */
+/* Zajistí, že celá stránka je rolovatelná a není omezována */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh; /* Zajistí, že body je minimálně vysoké jako viewport, aby se mohlo rolovat */
+    overflow-x: hidden; /* Zabrání horizontálnímu scrollování */
+    /* Ujistěte se, že zde není žádný overflow: hidden nebo jiné vlastnosti, které by bránily scrollování */
+}
+
+
 .main-content{
     position: relative;
     width: 100%;
-    height: 100vh;
-    overflow: hidden;
+    height: auto; /* Změněno z 100vh na auto, aby sticky fungoval správně */
+    /* overflow: hidden; -- Odstraněno nebo změněno, aby sticky fungoval */
     background: radial-gradient(ellipse at center, rgba(128, 0, 128, 0.05) 15%, rgba(128, 0, 128, 0.02) 30%, rgba(17, 17, 31, 0) 50%), repeating-linear-gradient(to bottom, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px), repeating-linear-gradient(to right, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px);
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
     display: flex;
     justify-content: center;
+    margin-bottom: 50px;
 }
 .main-content::before{
-        content: "";
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100%; /* Toto se vztahuje k main-content */
     background: radial-gradient(ellipse at center, transparent 40%, rgba(17, 17, 31, 0.98) 80%);
     z-index: 1;
 }
+.header-1{
+    color: #fff;
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+    color: #979797;
+    padding-top: 150px;
+    font-size: 4rem;
+    font-weight: 700;
+    /* --- Animace pro header-1 --- */
+    opacity: 0; /* Začíná neviditelně */
+    transform: translateY(-20px); /* Začíná mírně nad pozicí */
+    animation: fadeInSlideDown 0.8s ease-out 0.2s forwards; /* Spustí se s mírným zpožděním */
+}
 .content-wrp{
-    width: 1500px;
+    width: 1700px;
     height: auto;
     position: relative;
     z-index: 5;
-    padding-top: 200px;
+    display: flex;
+    align-items: flex-start; /* Důležité pro sticky ve flexboxu */
+    margin-bottom: 150px;
 }
-/* --- Základní struktura kontejneru pro filtry --- */
+/* -----------FILTER STYLY ----------- */
 .filter-wrp {
-    width: 20%; /* Ponecháno původní šířka */
-    min-width: 250px; /* Aby se na menších obrazovkách nesmrštilo moc */
-    padding: 15px; /* Vnitřní odsazení pro vzdušnost */
-    box-sizing: border-box; /* Zajišťuje, že padding je uvnitř šířky */
+    min-width: 250px;
+    box-sizing: border-box;
     font-family: "Source Sans Pro", sans-serif;
+    margin: 20px;
+    position: sticky;
+    top: 200px;
+    height: fit-content;
+    z-index: 2; /* Ujistěte se, že je nad ostatním obsahem */
+    /* --- Animace pro filter-wrp --- */
+    opacity: 0; /* Začíná neviditelně */
+    transform: translateY(30px); /* Začíná mírně pod pozicí */
+    animation: fadeInSlideUp 0.8s ease-out 0.4s forwards; /* Spustí se s mírným zpožděním */
 }
 
-/* Prod-wrp není ve vašem HTML, ale pokud ho používáte někde jinde: */
-.prod-wrp {
-    width: 80%;
-    height: auto;
-    /* Můžete přidat display: flex na rodiče filter-wrp a prod-wrp,
-       aby se vyrovnaly vedle sebe */
-}
 
 /* --- Sekce pro vyhledávání (finder) --- */
 .finder {
-    display: flex; /* Flexbox pro zarovnání inputu a tlačítka */
-    align-items: center; /* Vertikální zarovnání na střed */
-    background-color: #1a1a2e;
+    display: flex;
+    align-items: center;
+    background-color: rgba(26, 26, 46, 0.2); /* Použijte správnou RGBA syntaxi */
+    backdrop-filter: blur(8px);
     border: 3px solid #2f2f2f;
-    border-radius: 25px; /* Zaoblené rohy pro celý vyhledávač */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /* Jemnější stín */
-    margin-bottom: 20px; /* Více místa pod vyhledávačem */
-    overflow: hidden; /* Důležité pro zaoblení vnitřních prvků */
-    padding-left: 15px; /* Odsazení textu od kraje */
+    border-radius: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    margin-bottom: 20px;
+    overflow: hidden;
+    padding-left: 15px;
     height: 47px;
 }
 
 .finder .search-input {
-    flex-grow: 1; /* Input zabere veškerý dostupný prostor */
-    border: none; /* Odstranění výchozích ohraničení */
-    background-color: transparent; /* Průhledné pozadí */
+    flex-grow: 1;
+    border: none;
+    background-color: transparent;
     color: #979797;
     font-size: 1em;
-    padding: 10px 0; /* Vertikální odsazení */
-    outline: none; /* Odstranění focus obrysu */
+    padding: 10px 0;
+    outline: none;
 }
 
 .finder .search-input::placeholder {
-    color: #b39ddb; /* Tmavší fialová pro placeholder */
+    color: #b39ddb;
 }
 
 .finder .search-button {
     height: 47px;
     width: 47px;
     margin-right: -3px;
-    border-radius: 99999px; /* Pro dokonalý kruh */
+    border-radius: 99999px;
     border: 3px solid #2f2f2f;
-    background-color: #131322; /* Původní tmavší barva */
-    /* Pro delší a plynulejší přechod */
+    background-color: #131322;
     transition: background-color 0.3s ease, box-shadow 0.6s ease;
-    display: flex; /* Pro centrování SVG ikony */
+    display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
 }
 
 .finder .search-button:hover {
-    background-color: #3b3b5c; /* Trochu světlejší odstín původní barvy při najetí */
-    /* Tmavší a výraznější stín s větším rozmazáním */
-    box-shadow: 0 0 20px rgba(166, 125, 255, 0.4); /* Fialová záře, nižší alpha pro tmavší efekt */
+    background-color: #3b3b5c;
+    box-shadow: 0 0 20px rgba(166, 125, 255, 0.4);
 }
 .search-button img{
     height: 70%;
 }
 
-
-
-
 /* --- Sekce pro filtrování (filter) --- */
 .filter {
-    /* Odstraněna původní pevná výška height: 250px; - flexbox to zajistí dynamicky */
-    background-color: #1a1a2e;
+    background-color: rgba(26, 26, 46, 0.2); /* Použijte správnou RGBA syntaxi */
+    backdrop-filter: blur(8px);
     border: 3px solid #2f2f2f;
     border-radius: 25px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /* Jemnější stín */
-    padding: 25px; /* Větší vnitřní odsazení pro přehlednost */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    padding: 25px;
     display: flex;
-    flex-direction: column; /* Položky pod sebou */
-    gap: 20px; /* Mezera mezi skupinami filtrů */
+    flex-direction: column;
+    gap: 20px;
 }
 
 .filter .filter-group {
     display: flex;
-    flex-direction: column; /* Label a input pod sebou */
-    gap: 8px; /* Mezera mezi labelem a inputem */
+    flex-direction: column;
+    gap: 8px;
 }
 
 .filter .filter-group label {
-    color: #979797; /* Jasnější fialová pro popisky */
+    color: #979797;
     font-size: 0.95em;
     font-weight: 600;
-}
-
-/* Styly pro range input (posuvník) */
-.filter input[type="range"] {
-    width: 100%;
-    -webkit-appearance: none; /* Skryje výchozí vzhled */
-    appearance: none;
-    height: 8px;
-    background: #2f2f2f; /* Tmavší dráha posuvníku */
-    border-radius: 5px;
-    outline: none;
-    margin-top: 5px;
-}
-
-.filter input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px; /* Velikost táhla */
-    height: 20px;
-    background: #a67dff; /* Jasnější fialová pro táhlo */
-    border-radius: 50%; /* Kulaté táhlo */
-    cursor: grab;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    border: 2px solid #e0e0e0; /* Světlejší okraj */
-}
-
-.filter input[type="range"]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    background: #a67dff;
-    border-radius: 50%;
-    cursor: grab;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    border: 2px solid #e0e0e0;
-}
-
-.filter input[type="range"]::-webkit-slider-thumb:hover {
-    background-color: #c5aaff;
-    box-shadow: 0 0 8px rgba(166, 125, 255, 0.6); /* Fialová záře */
-}
-
-.filter input[type="range"]::-moz-range-thumb:hover {
-    background-color: #c5aaff;
-    box-shadow: 0 0 8px rgba(166, 125, 255, 0.6);
-}
-
-.filter .range-value-display { /* Změnil jsem ID na třídu pro lepší znovupoužitelnost */
-    color: #e0e0e0; /* Barva pro zobrazenou hodnotu */
-    font-size: 0.9em;
-    text-align: right;
-    display: block; /* Zajišťuje, že je na vlastním řádku */
-    margin-top: -5px; /* Posune hodnotu blíž k posuvníku */
 }
 
 /* Styly pro select boxy */
 .filter select {
     width: 100%;
     padding: 10px 15px;
-    background-color: #2f2f2f; /* Tmavší pozadí pro select */
-    border: 1px solid #444; /* Jemný okraj */
-    border-radius: 8px; /* Mírně zaoblené rohy */
-    color: #979797; /* Barva textu */
+    background-color: #2f2f2f;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #979797;
     font-size: 0.95em;
-    appearance: none; /* Skryje výchozí šipku */
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     cursor: pointer;
-    /* Vlastní SVG šipka (Base64 encoded) */
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23a67dff" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
     background-repeat: no-repeat;
     background-position: right 10px center;
@@ -200,19 +171,19 @@
 
 .filter select:hover,
 .filter select:focus {
-    border-color: #a67dff; /* Změna barvy okraje při najetí/focusu */
-    box-shadow: 0 0 5px rgba(166, 125, 255, 0.4); /* Jemná fialová záře */
+    border-color: #a67dff;
+    box-shadow: 0 0 5px rgba(166, 125, 255, 0.4);
 }
 
 .filter select option {
-    background-color: #1a1a2e; /* Tmavé pozadí pro možnosti */
-    color: #e0e0e0; /* Světlá barva textu pro možnosti */
+    background-color: #1a1a2e;
+    color: #e0e0e0;
 }
 
 /* Styly pro tlačítko Filtrovat */
 .filter .filter-button {
-    background-color: #a67dff; /* Jasnější fialová */
-    color: #1a1a2e; /* Tmavý text na tlačítku */
+    background-color: #a67dff;
+    color: #1a1a2e;
     border: none;
     padding: 12px 20px;
     border-radius: 8px;
@@ -220,11 +191,139 @@
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    margin-top: 10px; /* Více místa nahoře */
+    margin-top: 10px;
 }
 
 .filter .filter-button:hover {
-    background-color: #c5aaff; /* Světlejší fialová při najetí */
-    box-shadow: 0 0 15px rgba(166, 125, 255, 0.6); /* Výraznější fialová záře */
+    background-color: #c5aaff;
+    box-shadow: 0 0 15px rgba(166, 125, 255, 0.6);
+}
+.result{
+    color: #979789;
+}
+/* -----------FILTER STYLY KONEC ----------- */
+/* ------------PRODUKTY ZOBRAZENI --------------- */
+.prod-wrp {
+    width: 1100px;
+    height: 800px;
+    background-color: rgba(26, 26, 46, 0.2); /* Použijte správnou RGBA syntaxi */
+    backdrop-filter: blur(8px);
+    border: 3px solid #2f2f2f;
+    border-radius: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    margin-top: 20px;
+    /* --- Animace pro prod-wrp --- */
+    opacity: 0; /* Začíná neviditelně */
+    transform: translateY(30px); /* Začíná mírně pod pozicí */
+    animation: fadeInSlideUp 0.8s ease-out 0.6s forwards; /* Spustí se s větším zpožděním */
+}
+.pages-wrp{
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+.pages{
+    display: flex;
+}
+.left-arrow, .right-arrow{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    height: 30px;
+    width: 30px;
+    border-radius: 9999px;
+    border: 3px solid #2f2f2f;
+    background-color: #1a1a2e;
+    color: #9a9a9b;
+    font-family: "HighSansSerif7", sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
 }
 
+.left-arrow:hover,
+.right-arrow:hover {
+    background-color: #3b3b5c;
+    border-color: #a67dff;
+    box-shadow: 0 0 15px rgba(166, 125, 255, 0.6);
+    color: #a67dff;
+}
+
+
+.pages-count{
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.page-1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    height: 30px;
+    width: 30px;
+    border-radius: 9999px;
+    border: 3px solid #2f2f2f;
+    background-color: #222231;
+    color: #9a9a9b;
+    font-family: "Source Sans Pro", sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+.page-1:hover {
+    background-color: #3b3b5c;
+    border-color: #a67dff;
+    box-shadow: 0 0 15px rgba(166, 125, 255, 0.6);
+    color: #a67dff;
+}
+
+.right-arrow{
+    transform: rotate(180deg);
+}
+.prods{
+    height: 100%;
+    margin-top: 100px;
+}
+.msg-wrp{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.icon-wrp{
+    width: 200px;
+    height: 200px;
+}
+.icon-wrp svg{
+    margin-right: -60px;
+}
+.msg-text{
+    color: #9a9a9b;
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 1.5rem;
+    margin-top: 40px;
+}
+/* ------------PRODUKTY ZOBRAZENI KONEC --------------- */
+
+/* --- Keyframe animace pro najetí shora dolů --- */
+@keyframes fadeInSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px); /* Začíná mírně nad */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Končí v původní pozici */
+    }
+}
+
+/* --- Keyframe animace pro najetí zdola nahoru --- */
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px); /* Začíná mírně pod */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Končí v původní pozici */
+    }
+}
