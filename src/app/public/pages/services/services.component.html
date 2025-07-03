@@ -1,3 +1,47 @@
 <div class="main-content">
- 
+  <div class="main-content-inner">
+    <div class="tech-buttons">
+      <button
+        *ngFor="let tech of technologies"
+        class="tech-button"
+        [class.active]="currentTech === tech.id"
+        (click)="selectTech(tech.id)">
+        {{ tech.name }}
+      </button>
+    </div>
+
+    <div class="content-display">
+      <div
+        *ngIf="currentTech === 'web-dev'"
+        class="content-wrapper visible">
+        <div class="content-item">
+          <h2>Webový vývoj</h2>
+        </div>
+      </div>
+
+      <div
+        *ngIf="currentTech === 'desktop-dev'"
+        class="content-wrapper visible">
+        <div class="content-item">
+            <h2>Desktopový vývoj</h2>
+        </div>
+      </div>
+
+      <div
+        *ngIf="currentTech === 'mobile-dev'"
+        class="content-wrapper visible">
+        <div class="content-item">
+            <h2>Mobilní vývoj</h2>
+        </div>
+      </div>
+
+      <div
+        *ngIf="currentTech === 'ai-dev'"
+        class="content-wrapper visible">
+        <div class="content-item">
+            <h2>AI vývoj</h2>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
