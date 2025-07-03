@@ -31,6 +31,10 @@ export const routes: Routes = [
         path: 'privacy-policy',
         loadComponent: () => import('./public/pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent)
       },
+      {
+        path: 'references',
+        loadComponent: () => import('./public/pages/references/references.component').then(m => m.ReferencesComponent)
+      },
     ]
   },
   // 2. Login stránka - samostatná, bez public/admin layoutu

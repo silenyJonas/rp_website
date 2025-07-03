@@ -1,0 +1,35 @@
+/* --- Důležité: Nastavení pro HTML a BODY --- */
+/* Zajistí, že celá stránka je rolovatelná a není omezována */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh; /* Zajistí, že body je minimálně vysoké jako viewport, aby se mohlo rolovat */
+    overflow-x: hidden; /* Zabrání horizontálnímu scrollování */
+    /* Ujistěte se, že zde není žádný overflow: hidden nebo jiné vlastnosti, které by bránily scrollování */
+}
+
+
+.main-content{
+    position: relative;
+    width: 100%;
+    height: auto; /* Změněno z 100vh na auto, aby sticky fungoval správně */
+    /* overflow: hidden; -- Odstraněno nebo změněno, aby sticky fungoval */
+    background: radial-gradient(ellipse at center, rgba(128, 0, 128, 0.05) 15%, rgba(128, 0, 128, 0.02) 30%, rgba(17, 17, 31, 0) 50%), repeating-linear-gradient(to bottom, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px), repeating-linear-gradient(to right, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+.main-content::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* Toto se vztahuje k main-content */
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(17, 17, 31, 0.98) 80%);
+    z-index: 1;
+}

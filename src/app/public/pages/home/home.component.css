@@ -12,13 +12,25 @@ display: flex;
 justify-content: center;
 }
 .h-wrp{
-    opacity: 0;
     margin-top: 130px;
     margin-bottom: -230px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    animation: fadeInSvg 1.5s ease-out 1s forwards; /* 2s trvání, 1s zpoždění (1000ms) */
+    opacity: 0; /* Začíná neviditelně */
+    transform: translateY(-20px); /* Začíná mírně nad pozicí */
+    animation: fadeInSlideDown 0.8s ease-out 0.5s forwards;
+    
+}
+@keyframes fadeInSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px); /* Začíná mírně nad */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Končí v původní pozici */
+    }
 }
 .header-0-1{
         font-family: "Source Sans Pro", sans-serif;
