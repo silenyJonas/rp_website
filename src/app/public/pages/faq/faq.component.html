@@ -1,3 +1,21 @@
 <div class="main-content">
+  <div class="faq-section">
+    <div class="header-1">Často kladené otázky</div>
 
+    <div class="faq-container">
+      <div *ngFor="let item of faqItems; let i = index"
+           class="faq-item animated-faq-item"
+           [ngClass]="{'active': item.isActive}"
+           [style.animation-delay]="i * 0.1 + 's'"> <div class="faq-question" (click)="toggleFaq(item)">
+          <h3>{{ item.question }}</h3>
+          <div class="faq-indicator">
+            <span class="faq-arrow" [ngClass]="{'rotated': item.isActive}">&gt;</span>
+          </div>
+        </div>
+        <div class="faq-answer" (click)="toggleFaq(item)">
+          <p>{{ item.answer }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -35,6 +35,10 @@ export const routes: Routes = [
         path: 'references',
         loadComponent: () => import('./public/pages/references/references.component').then(m => m.ReferencesComponent)
       },
+      {
+        path: 'faq',
+        loadComponent: () => import('./public/pages/faq/faq.component').then(m => m.FaqComponent)
+      },
     ]
   },
   // 2. Login stránka - samostatná, bez public/admin layoutu

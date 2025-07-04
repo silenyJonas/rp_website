@@ -37,12 +37,16 @@ justify-content: center;
     font-size: 5.8rem;
     font-weight: 700;
     color: #e0e0e0;
+    text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+
 }
 .header-0-2{
         font-family: "Source Sans Pro", sans-serif;
     font-size: 1.8rem;
     font-weight: 700;
     color: #e0e0e0;
+    text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+
 }
 /* UVODNI HEADER KONEC */
 
@@ -393,6 +397,7 @@ justify-content: center;
     position: relative;
     overflow: hidden; /* Important for clipping content that might extend outside */
     z-index: 1;
+    cursor: pointer;
 }
 .i-1::after {
     content: '';

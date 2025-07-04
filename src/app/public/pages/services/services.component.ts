@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Potřebné pro *ngFor, *ngIf
-
+import { RouterLink } from '@angular/router';
 interface Technology {
   id: string;
   name: string;
@@ -9,7 +9,7 @@ interface Technology {
 @Component({
   selector: 'app-main-content',
   standalone: true,
-  imports: [CommonModule], // CommonModule je stále potřeba pro *ngFor a *ngIf
+  imports: [CommonModule, RouterLink], // CommonModule je stále potřeba pro *ngFor a *ngIf
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

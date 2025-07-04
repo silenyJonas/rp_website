@@ -1,2 +1,38 @@
 <div class="main-content">
+  <div class="projects-section">
+    <div class="header-1">Top 10 dokončených projektů</div>
+
+    <div class="projects-container">
+      <div class="projects-header animated-project-item" [style.animation-delay]="'0s'">
+        <div class="project-title-header">Název projektu</div>
+        <div class="project-duration-header">Doba plnění</div>
+        <div class="project-client-header">Zadavatel</div>
+      </div>
+
+      <div *ngFor="let project of projects; let i = index"
+           class="project-item animated-project-item"
+           [ngClass]="{'active': project.isActive}"
+           [style.animation-delay]="(i + 1) * 0.1 + 's'"> <div class="project-overview" (click)="toggleProject(project)">
+          <div class="project-title">{{ project.name }}</div>
+          <div class="project-duration">{{ project.duration }}</div>
+          <div class="project-client">{{ project.client }}</div>
+          <div class="project-toggle-icon">
+            <span class="arrow" [ngClass]="{'rotated': project.isActive}">&gt;</span>
+          </div>
+        </div>
+
+        <div class="project-description" (click)="toggleProject(project)">
+          <p>{{ project.description }}</p>
+        </div>
+      </div>
+    </div>
+      <div class="button-wrp">
+        <div class="button">
+          <p class="ref-text">Chcete vidět více?</p>
+          <a href="https://www.regiopartner.cz/archiv-ukoncenych-projektu-1404041473.html" class="ref-button" target="_blank">Zde je celý seznam</a>
+        </div>
+      </div>
+
+
+  </div>
 </div>

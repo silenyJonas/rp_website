@@ -45,6 +45,8 @@ html, body {
     opacity: 0; /* Začíná neviditelně */
     transform: translateY(-20px); /* Začíná mírně nad pozicí */
     animation: fadeInSlideDown 0.8s ease-out 0.2s forwards; /* Spustí se s mírným zpožděním */
+    text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+    
 }
 .content-wrp{
     width: 1700px;
