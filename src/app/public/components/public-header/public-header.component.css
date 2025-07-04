@@ -202,64 +202,124 @@ header.scrolled .active-indicator {
 /* Umístění wrapperu v pravém horním rohu */
 .lang-wrp {
     position: fixed; /* Zůstane na místě při scrollu */
-    right: 20px; /* Odsazení od pravého okraje */
-    top: 20px; /* Odsazení od horního okraje */
+    right: 10px; /* Odsazení od pravého okraje */
+    top: 10px; /* Odsazení od horního okraje */
     z-index: 99999; /* Zajistí, že bude nad ostatním obsahem */
     display: flex;
     justify-content: flex-end; /* Zarovnání obsahu doprava */
+    align-items: center; /* Vertikálně zarovná položky ve středu */
+    gap: 15px; /* Mezera mezi odkazy a jazykovým formulářem */
 }
 
+/* Styly pro navigační odkazy "Realizované projekty" a "FAQ" */
+.lang-wrp .nav-link {
+    color: #a0a0a0;
+    text-decoration: none; /* Odstraní podtržení */
+    font-size: 0.85em; /* Velikost písma */
+    font-weight: 600;
+    padding: 8px 15px; /* Odsazení kolem textu */
+    border-radius: 20px; /* Zaoblené rohy */
+    transition: all 0.3s ease; /* Plynulé animace */
+    white-space: nowrap; /* Zabrání zalamování textu odkazu */
+    background-color: rgba(26, 26, 26, 0.5); /* Původní tmavé pozadí */
+    outline: 3px solid #2f2f2f; /* Původní tmavý rámeček (outline) */
+    backdrop-filter: blur(8px);
+}
+
+.lang-wrp .nav-link:hover {
+    outline: 3px solid #a67dff; /* KLÍČOVÁ ZMĚNA: Rámeček se zbarví do fialova */
+    background-color: rgba(107, 46, 145, 0.7); /* Fialové pozadí při najetí */
+    color: white; /* Bílý text při najetí */
+    transform: translateY(-2px); /* Mírné posunutí nahoru */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.8); /* Silnější fialová záře */
+}
+
+/* Stávající styly pro formulář a jazykový přepínač (bez změn) */
 .lang-form {
-    width: 150px; /* Šířka formuláře, aby se vešly 3 vlajky */
-    height: 40px; /* Výška */
+    width: 150px;
+    height: 40px;
     background-color: rgba(26, 26, 46, 0.2);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     border: 3px solid #2f2f2f;
-    border-radius: 9999px; /* Zaoblené rohy */
+    border-radius: 9999px;
     display: flex;
     align-items: center;
-    padding: 0 5px; /* Vnitřní odsazení od okrajů */
+    padding: 0 5px;
     position: relative;
-    overflow: hidden; /* Skryje slider, když je mimo - i když není, je to dobrá praxe */
+    overflow: hidden;
 }
 
-.lang-slider-track { /* Přejmenováno na lang-flags-container nebo podobně by bylo přesnější, ale zachováváme pro minimalizaci změn */
+.lang-slider-track {
     display: flex;
-    justify-content: space-around; /* Rovnoměrně rozprostře vlajky */
+    justify-content: space-around;
     align-items: center;
     width: 100%;
     height: 100%;
-    position: relative; /* Stále potřebné pro z-index children */
-    z-index: 1; /* Vlajky budou nad pozadím form */
+    position: relative;
+    z-index: 1;
 }
 
 .lang-label {
-    display: flex; /* Použijeme flexbox pro centrování vlajky */
+    display: flex;
     justify-content: center;
     align-items: center;
-    flex-grow: 1; /* Každá vlajka zabere stejný díl prostoru */
+    flex-grow: 1;
     height: 100%;
     cursor: pointer;
-    transition: transform 0.2s ease-out; /* Animace pro mírné zvětšení vlajky */
+    transition: transform 0.2s ease-out;
     position: relative;
-    z-index: 2; /* Vlajka musí být nad čímkoli jiným v tracku */
-    padding: 0 5px; /* Přidáme horizontální padding k labelu */
+    z-index: 2;
+    padding: 0 5px;
 }
 
 .lang-label img {
-    --flag-size: 28px; /* CSS proměnná pro velikost vlajky */
-    width: var(--flag-size); /* Velikost ikony vlajky */
+    --flag-size: 28px;
+    width: var(--flag-size);
     height: var(--flag-size);
-    border-radius: 50%; /* Aby vlajka byla kulatá */
-    object-fit: cover; /* Zajistí, že vlajka vyplní kruh */
-    border: 2px solid transparent; /* Průhledný rámeček pro aktivní stav */
-    transition: border-color 0.3s ease-out, filter 0.3s ease-out, transform 0.3s ease-out; /* Animace pro border, filter a transform */
-    filter: grayscale(80%); /* Ztlumí neaktivní vlajky */
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease-out, filter 0.3s ease-out, transform 0.3s ease-out;
+    filter: grayscale(80%);
 }
 
 .lang-label.active img {
-    border-color: #a67dff; /* Fialový rámeček pro aktivní vlajku */
-    filter: grayscale(0%); /* Plná barva pro aktivní vlajku */
-    transform: scale(1.1); /* Mírné zvětšení aktivní vlajky */
+    border-color: #a67dff;
+    filter: grayscale(0%);
+    transform: scale(1.1);
+}
+
+/* Responzivní úpravy pro .lang-wrp */
+@media (max-width: 768px) {
+    .lang-wrp {
+        flex-direction: column; /* Změní na sloupec na mobilu */
+        right: 15px;
+        top: 15px;
+        align-items: flex-end; /* Zarovná položky vpravo v režimu sloupce */
+        gap: 10px; /* Menší mezera na mobilu */
+    }
+
+    .lang-wrp .nav-link {
+        font-size: 0.95em;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .lang-wrp {
+        right: 10px;
+        top: 10px;
+    }
+    .lang-wrp .nav-link {
+        font-size: 0.9em;
+        padding: 5px 10px;
+    }
+    .lang-form {
+        width: 120px;
+        height: 35px;
+    }
+    .lang-label img {
+        --flag-size: 24px;
+    }
 }

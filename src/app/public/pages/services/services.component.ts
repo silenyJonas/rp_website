@@ -24,6 +24,16 @@ export class ServicesComponent implements OnInit {
     { id: 'ai-dev', name: 'AI vývoj' }
   ];
 
+
+  tech_img: any[] = [
+    {name:'C#' , path:'assets/images/services-img/csharp.png'},
+    {name:'AngularJS' , path:'assets/images/services-img/angular.png'},
+    {name:'MySQL' , path:'assets/images/services-img/mysql.png'},
+    {name:'.NET' , path:'assets/images/services-img/net.png'},
+    {name:'PHP' , path:'assets/images/services-img/php.png'},
+    {name:'React' , path:'assets/images/services-img/react.png'},
+  ]
+
   currentTech: string = 'web-dev'; // ID aktuálně vybrané technologie
 
   constructor(private cdr: ChangeDetectorRef) { }

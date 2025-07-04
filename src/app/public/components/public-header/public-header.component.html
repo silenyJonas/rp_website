@@ -11,6 +11,12 @@
   </nav>
 </header>
 <div class="lang-wrp">
+    <a routerLink="/realized-projects" class="nav-link">
+      Realizované projekty
+    </a>
+    <a routerLink="/faq" class="nav-link">
+      FAQ
+    </a>
       <form class="lang-form" action="">
           <div class="lang-slider-track" #langSliderTrack>
               <span class="lang-label" data-lang="cz" (click)="selectLanguage('cz')" [ngClass]="{'active': currentLanguage === 'cz'}">
@@ -24,4 +30,5 @@
               </span>
               </div>
       </form>
+      
   </div>

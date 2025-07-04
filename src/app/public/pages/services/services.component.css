@@ -76,69 +76,167 @@ html, body {
     box-shadow: 0 0 15px rgba(166, 125, 255, 0.7), 0 0 25px rgba(166, 125, 255, 0.4);
     transform: translateY(-5px);
 }
+/* -------KONTENT DISPLAY ---------- */
+/* --- Základní kontejner pro zobrazení obsahu (content-display) --- */
 .content-display {
-    width: 1200px;
-    min-height: 600px;
+    width: 1200px; /* **ZACHOVÁNO: Šířka hlavního kontejneru** */
+    max-width: 90vw; /* Zajistí responzivitu na menších obrazovkách */
+    min-height: 600px; /* Minimální výška */
     background-color: rgba(26, 26, 46, 0.2);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     border: 3px solid #2f2f2f;
     border-radius: 20px;
-    padding: 30px;
-    display: flex; /* Důležité pro centrování inner content-wrapperu */
+    padding: 30px; /* **DŮLEŽITÉ: Padding zde, ne ve wrapperu** */
+    display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
+    text-align: center; /* Výchozí zarovnání textu */
     font-size: 1.3em;
     color: #f0f0f0;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     position: relative;
-    overflow: hidden; /* Skryje přetékající obsah při animaci */
+    overflow: hidden;
     z-index: 2;
-
 }
+
+/* --- Kontejner pro viditelný obsah (content-wrapper) --- */
 .content-wrapper {
-    position: absolute; /* Důležité: absolutní pozice pro překrývání */
-    width: 100%; /* Plná šířka rodiče */
-    height: 100%; /* Plná výška rodiče */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    position: absolute; /* Překrývá se navzájem */
+    width: 100%; /* Plná šířka .content-display */
+    height: 100%; /* Plná výška .content-display */
+    display: flex; /* Bude držet content-item */
+    flex-direction: column; /* Pro případ, že by content-item byl pod sebou */
+    justify-content: center; /* Centrování obsahu uvnitř wrapperu */
     align-items: center;
-    padding: 30px; /* Aby se text nepřekrýval s okrajem .content-display */
+    /* ODSTRANĚNO: padding: 30px; - padding je nyní na .content-display */
     box-sizing: border-box;
 
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out; /* Animace pro celý wrapper */
-    pointer-events: none; /* Důležité: zabrání interakci s neviditelnými wrappery */
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    pointer-events: none;
 }
-.content-wrapper.visible {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto; /* Povolí interakci s viditelným wrapperem */
-}
-.content-display {
-    /* ... (ostatní styly) ... */
-    position: relative; /* Důležité pro absolutní pozicování content-wrapperů */
-    overflow: hidden; /* Skryje přetékající obsah při animaci */
-}
-.content-wrapper {
-    position: absolute; /* Důležité: absolutní pozice pro překrývání */
-    width: 100%;
-    height: 100%;
-    /* ... (ostatní styly zarovnání a paddingu) ... */
 
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out; /* Animace pro celý wrapper */
-    pointer-events: none; /* Důležité: zabrání interakci s neviditelnými wrappery */
-}
 .content-wrapper.visible {
     opacity: 1;
     transform: translateY(0);
-    pointer-events: auto; /* Povolí interakci s viditelným wrapperem */
+    pointer-events: auto;
 }
+
+/* --- Kontejner pro rozdělení obsahu (content-item) --- */
+.content-item {
+    display: flex; /* **KLÍČOVÉ: Rozdělí na levou a pravou stranu** */
+    height: 100%; /* Vyplní dostupnou výšku .content-wrapper */
+    width: 100%; /* Vyplní dostupnou šířku .content-wrapper */
+    gap: 30px; /* Mezera mezi levou a pravou sekcí */
+    align-items: flex-start; /* **NOVÉ: Zarovnává položky nahoře** */
+    justify-content: center; /* Centrování, pokud je šířka menší */
+    flex-wrap: wrap; /* Umožní zalomení na nový řádek na menších obrazovkách */
+    overflow-y: auto; /* Povolí scroll, pokud se obsah nevejde (pro případ, že bude hodně tech ikon) */
+    padding-right: 10px; /* Aby se scrollbar nelepil na okraj */
+}
+
+/* --- Levá strana: Hlavní informace (services-info) --- */
+.services-info {
+    flex-grow: 1; /* Povolí roztáhnutí */
+    flex-basis: 65%; /* **ZABERE 65% ŠÍŘKY na desktopu** */
+    min-width: 300px; /* Minimální šířka pro text */
+    text-align: left; /* Zarovnání textu doleva */
+    padding-right: 20px; /* Mezera od pravého panelu */
+    box-sizing: border-box;
+}
+
+.services-info h2 {
+    color: #a67dff;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 2.2em; /* Větší nadpis */
+    line-height: 1.2;
+    text-align: center; /* Centrování nadpisu */
+}
+
+.services-info p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    font-size: 1.1em;
+}
+
+.services-info .features-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.services-info .features-list li {
+    background-color: rgba(107, 46, 145, 0.1);
+    border-left: 3px solid #a67dff;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    text-align: left;
+    font-size: 1em;
+    color: #e0e0e0;
+}
+
+
+/* --- Pravá strana: Ikony technologií (services-icons-sidebar) --- */
+.services-icons-sidebar {
+    flex-shrink: 0; /* Zabraňuje zmenšování panelu */
+    flex-basis: 25%; /* **ZABERE 25% ŠÍŘKY na desktopu** */
+    min-width: 180px; /* Minimální šířka pro panel ikon */
+    height: 100%; /* Vyplní výšku */
+    border-radius: 10px;
+    padding: 20px 15px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrování obsahu v panelu */
+    text-align: center;
+}
+
+.services-icons-sidebar .services-header {
+    color: #979797;
+    font-size: 1.2em;
+    font-weight: 700;
+    font-family: "Source Sans Pro", sans-serif;
+    margin-bottom: 20px;
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* KLÍČOVÁ ZMĚNA: Vždy dva sloupce */
+    gap: 15px; /* Mezera mezi ikonami */
+    width: 100%; /* Vyplní šířku sidebar */
+    justify-items: center; /* Centruje ikony v mřížce */
+}
+
+.tech-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: #c0c0c0;
+    font-size: 0.85em;
+    font-weight: 500;
+}
+
+.tech-item img {
+    width: 70px; /* Velikost ikony */
+    height: 70px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 5px rgba(166, 125, 255, 0.4)); /* Jemná záře ikon */
+    transition: transform 0.2s ease;
+}
+
+.tech-item img:hover {
+    transform: scale(1.1); /* Zvětšení ikony při najetí */
+}
+
+
+
+/* SLUZBY WEB */
+
 /* ----------------SLUZBY ZACATEK KONEC------------- */
 /* ------------SPOLUPRACE ZACATEK -------------- */
 .header-2{
@@ -150,8 +248,6 @@ html, body {
     font-weight: 700;
     padding-top: 60px;
 }
-/* Kontejner pro cop - jak jste definoval */
-/* Kontejner pro cop - jak jste definoval */
 .cop-wrp {
     width: 100%;
     min-height: 400px;
@@ -161,8 +257,6 @@ html, body {
     padding-top: 50px;
     box-sizing: border-box;
 }
-
-/* Samotný div.cop - bez pozadí */
 .cop {
     min-height: 400px;
     width: 1200px;
@@ -171,8 +265,6 @@ html, body {
     justify-content: center;
     align-items: center;
 }
-
-/* Hlavní kontejner pro diagram */
 .workflow-diagram {
     display: flex;
     flex-wrap: wrap; /* Umožní zalomení na menších obrazovkách */
@@ -181,8 +273,6 @@ html, body {
     width: 100%;
     gap: 15px; /* Mezera mezi kroky a šipkami na menších obrazovkách */
 }
-
-/* Styl pro jednotlivý krok (zůstává stejný) */
 .workflow-step {
     display: flex;
     flex-direction: column;
@@ -196,21 +286,17 @@ html, body {
     color: #e0e0e0;
     font-size: 1em;
 }
-
 .workflow-step h3 {
     color: #a67dff;
     margin-top: 15px;
     margin-bottom: 8px;
     font-size: 1.4em;
 }
-
 .workflow-step p {
     font-size: 0.95em;
     line-height: 1.4;
     color: #b0b0b0;
 }
-
-/* Styl pro kruhovou ikonu (zůstává stejný) */
 .icon-circle {
     width: 170px;
     height: 70px;
@@ -219,11 +305,6 @@ html, body {
     align-items: center;
     padding-bottom: 100px;
 }
-
-
-
-
-/* --- Styly pro SVG šipky --- */
 .svg-arrow-container {
     display: flex; /* Aby SVG bylo centrované */
     justify-content: center;
@@ -233,16 +314,13 @@ html, body {
     width: 100px; /* Upravte podle délky šipky */
     margin: 0 10px; /* Mezera od kroků */
 }
-
 .workflow-arrow {
     width: 100%; /* Vyplní šířku kontejneru */
     height: auto; /* Zachová poměr stran */
     overflow: visible; /* Umožní, aby hroty šipek nepřesahovaly viewBox */
 }
-
 /* ------------SPOLUPRACE ZACATEK KONEC-------------- */
 /* ----------REFERENCE ZACATEK---------- */
-/* --- Gradientová separační čára --- */
 .gradient-line-separator {
     width: 80%;
     height: 2px; /* Výška čáry */
@@ -259,8 +337,6 @@ html, body {
     margin-left: auto;
     margin-right: auto;
 }
-
-/* --- Sekce reference --- */
 .references-section {
     width: 100%;
     display: flex;
@@ -268,7 +344,6 @@ html, body {
     box-sizing: border-box;
     padding-top: 30px;
 }
-
 .references-content {
     display: flex;
     flex-wrap: wrap;
@@ -279,9 +354,10 @@ html, body {
     width: 100%;
     font-family: "Source Sans Pro", sans-serif;
     color: #979797;
+    margin-bottom: -40px;
+    position: relative;
+    z-index: 99;
 }
-
-/* Text reference */
 .ref-text {
     margin: 0;
     color: #979797;
@@ -291,8 +367,6 @@ html, body {
     text-align: center;
     white-space: nowrap;
 }
-
-/* Tlačítko */
 .ref-button {
     display: inline-flex;
     align-items: center;
@@ -309,7 +383,6 @@ html, body {
     cursor: pointer;
     white-space: nowrap;
 }
-
 .ref-button:hover {
     background-color: #7d35ae;
     border-color: #c09fff;
@@ -320,7 +393,6 @@ html, body {
     display: flex;
     justify-content: center;
 }
-
 /* ----------REFERENCE ZACATEK KONEC---------- */
 /* ------------KONTAKT FORM ------------ */
 .form-wrp {
@@ -356,8 +428,6 @@ html, body {
     z-index: 0; /* Z-index pro samotný kontejner */
         height: 1000px;
 }
-
-/* Pseudo-element ::before pro hlavní gradient pozadí (pod obsahem) */
 .form-wrp::before {
     content: "";
     position: absolute;
@@ -373,8 +443,6 @@ html, body {
     z-index: -1; /* Umístí pod obsah .form-wrp */
     pointer-events: none;
 }
-
-/* Nový pseudo-element ::after pro pulzující fialovou mřížku/okraj */
 .form-wrp::after {
     content: '';
     position: absolute;
@@ -405,8 +473,6 @@ html, body {
     animation: animateBorder 10s linear infinite, pulseGlow 3.5s ease-in-out infinite alternate;
     z-index: -2; /* Ještě níže, aby byl pod ::before a pod samotným obsahem .form-wrp */
 }
-
-/* Animace pro rotaci gradientu okraje */
 @keyframes animateBorder {
     0% {
         background-position: 0% 0%;
@@ -415,8 +481,6 @@ html, body {
         background-position: 250% 250%; /* Posun gradientu */
     }
 }
-
-/* Animace pro pulzující záři okraje */
 @keyframes pulseGlow {
     0% {
         box-shadow: 0 0 15px #6f42c1, 0 0 30px #a67dff;
@@ -431,8 +495,6 @@ html, body {
         opacity: 0.6;
     }
 }
-
-/* Hlavní wrapper pro formulář a kontaktní sekci */
 .form {
     display: flex;
     margin-top: -150px;
@@ -442,7 +504,6 @@ html, body {
 
  
 }
-
 @keyframes scaleIn {
     from {
         opacity: 0;
@@ -453,9 +514,6 @@ html, body {
         transform: scale(1);
     }
 }
-
-
-/* Levá část - kontaktní formulář */
 .contact-form {
     height: auto; /* Necháme výšku přizpůsobit obsahu */
     min-height: 100%; /* Zajistí, že se roztáhne na celou výšku .form */
@@ -475,7 +533,6 @@ html, body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Jemný stín pro zvýraznění */
     animation: scaleIn 0.8s ease-out forwards; /* Animace při zobrazení */
 }
-
 .contact-form h2 {
     text-align: center;
     color: #e0e0e0;
@@ -485,7 +542,6 @@ html, body {
     font-weight: 600;
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
 }
-
 .contact-form h4 {
     text-align: center;
     color: #b39ddb; /* Světlejší fialová */
@@ -495,14 +551,11 @@ html, body {
     font-weight: 400;
     letter-spacing: 0.5px;
 }
-
-/* Styly pro skupiny formulářových prvků */
 .form-group {
     margin-bottom: 15px; /* Mírně zmenšené mezery */
     position: relative;
     /* flex-grow: 1; */ /* Můžete zkusit přidat flex-grow, pokud chcete, aby se mezery rovnoměrně roztáhly */
 }
-
 .form-group label {
     display: block;
     margin-bottom: 7px; /* Mírně zmenšená mezera */
@@ -511,8 +564,6 @@ html, body {
     font-size: 0.95em;
     transition: color 0.3s ease;
 }
-
-/* Styly pro inputy, select a textarea */
 .form-group input[type="email"],
 .form-group input[type="tel"],
 .form-group select,
@@ -528,7 +579,6 @@ html, body {
     transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
     font-family: "Source Sans Pro", sans-serif;
 }
-
 .form-group input[type="email"]:focus,
 .form-group input[type="tel"]:focus,
 .form-group select:focus,
@@ -538,15 +588,11 @@ html, body {
     border-color: #a67dff; /* Světlejší fialová při fokusu */
     box-shadow: 0 0 0 3px rgba(134, 94, 220, 0.3); /* Jemná fialová záře */
 }
-
-/* Styly pro placeholder text */
 .form-group input::placeholder,
 .form-group textarea::placeholder {
     color: #b39ddb;
     opacity: 0.7;
 }
-
-/* Styly pro select box */
 .form-group select {
     appearance: none; /* Odstraní výchozí styl šipky */
     -webkit-appearance: none;
@@ -555,14 +601,10 @@ html, body {
     background-position: right 10px center; /* Mírně upravená pozice šipky */
     background-size: 18px; /* Mírně zmenšená šipka */
 }
-
-/* Styly pro textarea */
 .form-group textarea {
     resize: vertical; /* Povolí změnu velikosti pouze vertikálně */
     min-height: 90px; /* Mírně zmenšená minimální výška */
 }
-
-/* Styly pro tlačítko odeslání */
 button[type="submit"] {
     width: 100%;
     padding: 14px 20px; /* Mírně zmenšený padding */
@@ -578,19 +620,15 @@ button[type="submit"] {
     text-transform: uppercase;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
-
 button[type="submit"]:hover {
     background: linear-gradient(45deg, #c3a1ff, #8a5acd); /* Mírně světlejší při najetí */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6); /* Výraznější stín a záře */
     transform: translateY(-2px); /* Mírné posunutí nahoru */
 }
-
 button[type="submit"]:active {
     transform: translateY(0);
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
-
-/* Pravá část - ikonový wrapper (beze změny rozměrů) */
 .icon-wrp {
     display: flex;
     flex-direction: column;
@@ -598,23 +636,15 @@ button[type="submit"]:active {
     margin-left: 100px;
     width: 100%;
 }
-
 .c-img-wrp {
     margin-top: 40px;
 }
-
 .c-img-wrp-i {
     transition: transform 0.3s ease;
 }
-
-.c-img-wrp-i.yellow {
-    /* background-color: #ffeb3b; Konkrétní žlutá */
-}
-
 .c-img-wrp-i:hover {
     transform: scale(1.05); /* Jemná animace při najetí */
 }
-
 .submit{
     display: flex;
     justify-content: center;
@@ -624,14 +654,8 @@ button[type="submit"]:active {
     height: 30px;
     width: 30px;
 }
-
-
-
-
 .form-group label{
     font-family: "Source Sans Pro", sans-serif;
     color: #e0e0e0;
 }
-
-
 /* ------------KONTAKT FORM ZACATEK ------------ */
