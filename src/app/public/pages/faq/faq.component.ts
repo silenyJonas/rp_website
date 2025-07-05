@@ -19,6 +19,9 @@ interface FaqItem {
 })
 export class FaqComponent implements OnInit {
 
+  ig_icon:string = 'assets/images/icons/ig.png'
+  fb_icon:string = 'assets/images/icons/fb.png'
+
   faqItems: FaqItem[] = [
     { id: 1, question: 'Co všechno umíte vyvinout?', answer: 'Specializujeme se na širokou škálu vývoje, včetně **webových aplikací**, responzivních webových stránek, e-shopů, mobilních aplikací (iOS/Android) a custom softwarových řešení na míru. Ať už potřebujete cokoliv, najdeme efektivní řešení.', isActive: false },
     { id: 2, question: 'Jak dlouho trvá vývoj webové stránky?', answer: 'Délka vývoje závisí na komplexnosti projektu. Jednoduchá prezentační webová stránka může být hotová za **2-4 týdny**, zatímco rozsáhlejší e-shop nebo webová aplikace může trvat **2-4 měsíce** i déle. Vždy vám poskytneme realistický odhad po úvodní konzultaci.', isActive: false },

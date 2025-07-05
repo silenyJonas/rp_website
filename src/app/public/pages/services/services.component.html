@@ -2,75 +2,197 @@
   Naše služby
 </div>
 <div class="main-content">
+
   <div class="main-content-inner">
+
     <div class="tech-buttons">
       <button
         *ngFor="let tech of technologies"
-        class="tech-button"
+        class="tech-button" [class]="tech.id"
         [class.active]="currentTech === tech.id"
         (click)="selectTech(tech.id)">
         {{ tech.name }}
       </button>
     </div>
 
+
     <div class="content-display">
 
-
-      <div
-  *ngIf="currentTech === 'web-dev'"
-  class="content-wrapper visible"
->
+<div *ngIf="currentTech === 'web-dev'" class="content-wrapper visible">
   <div class="content-item">
-    <div class="services-info">
-      <h2>Webový vývoj</h2>
-      <p>
-        Nabízíme komplexní řešení pro webové projekty, od responzivních stránek až po robustní webové aplikace. Specializujeme se na moderní technologie a optimalizaci pro uživatelskou zkušenost.
-      </p>
-      <ul class="features-list">
-        <li>Vývoj na míru</li>
-        <li>Responzivní design pro všechna zařízení</li>
-        <li>Optimalizace pro vyhledávače (SEO)</li>
-        <li>Integrace API a externích služeb</li>
-        <li>Redakční systémy (CMS)</li>
-      </ul>
-    </div>
+    <div class="content-top-section">
+      <div class="services-info-text"> <div class="ser-h">Webový vývoj</div>
+        <p>
+          V digitálním světě je silná online prezentace klíčová. Nabízíme <strong>komplexní řešení webového vývoje</strong>, od moderních a <strong>responzivních webových stránek</strong> šitých na míru, až po složité a robustní <strong>webové aplikace</strong>. Specializujeme se na využití nejnovějších technologií, abychom zajistili <strong>optimální výkon, bezpečnost a vynikající uživatelskou zkušenost</strong> pro každého návštěvníka.
+        </p>
+        <p>
+          Nezáleží na tom, zda potřebujete firemní prezentaci, e-shop, portál nebo komplexní interní systém – s námi získáte <strong>digitální řešení, které roste s vaším podnikáním</strong> a efektivně oslovuje vaše cílové publikum. Klademe důraz na čistý kód, modulární architekturu a snadnou rozšiřitelnost.
+        </p>
+      
+      </div>
 
-    <div class="services-icons-sidebar"> <div class="services-header">Technologie:</div>
-      <div class="tech-grid"> <div *ngFor="let item of tech_img" class="tech-item">
-          <img [src]="item.path" [alt]="item.name">
-          <span>{{item.name}}</span> </div>
+      <div class="services-icons-sidebar">
+        <div class="services-header">S čím rádi pracujeme:</div>
+        <div class="services-header-2">Ale umíme mnohem víc</div>
+        <div class="tech-grid">
+          <div *ngFor="let item of webTechImages" class="tech-item">
+            <img [src]="item.path" [alt]="item.name">
+            <span>{{item.name}}</span>
+          </div>
+        </div>
       </div>
     </div>
+
+<ul class="features-list">
+    <div class="get-h">
+          Co s námi získáte a MNOHEM VÍC:
+        </div>
+  <li><strong>Vývoj na míru</strong>: Tvoříme jedinečná webová řešení přesně podle vašich potřeb a cílů, od začátku do konce.</li>
+  <li><strong>Responzivní design</strong>: Zaručujeme perfektní zobrazení a funkčnost na všech zařízeních – desktop, tablet i mobil.</li>
+  <li><strong>Optimalizace pro vyhledávače (SEO)</strong>: Implementujeme nejlepší praktiky SEO přímo do kódu pro lepší viditelnost ve vyhledávačích.</li>
+  <li><strong>Integrace API a externích služeb</strong>: Bezproblémové propojení s platebními bránami, CRM systémy, sociálními sítěmi a dalšími nástroji.</li>
+  <li><strong>Intuitivní Redakční systémy (CMS)</strong>: Umožníme vám snadnou správu obsahu webu bez technických znalostí.</li>
+  <li><strong>Vysoká bezpečnost</strong>: Chráníme vaše data a uživatele pomocí moderních bezpečnostních protokolů a postupů.</li>
+  <li><strong>Škálovatelnost a výkon</strong>: Navrhujeme systémy, které zvládnou růst vaší návštěvnosti a budoucí rozšíření funkcí.</li>
+  <li><strong>Interaktivní uživatelské rozhraní (UI/UX)</strong>: Zaměřujeme se na plynulé a příjemné používání pro vaše klienty.</li>
+  <li><strong>Pravidelná údržba a podpora</strong>: Zajišťujeme dlouhodobou funkčnost a aktualizaci vašeho webového řešení.</li>
+</ul>
   </div>
 </div>
 
 
 
 
-
-      <div
-        *ngIf="currentTech === 'desktop-dev'"
-        class="content-wrapper visible">
-        <div class="content-item">
-            <h2>Desktopový vývoj</h2>
-        </div>
+<div *ngIf="currentTech === 'desktop-dev'" class="content-wrapper visible">
+  <div class="content-item">
+    <div class="content-top-section">
+      <div class="services-info-text">
+        <div class="ser-h">Desktopový vývoj</div>
+        <p>
+          Přinášíme <strong>výkonné a spolehlivé desktopové aplikace</strong> navržené pro Windows, macOS nebo Linux. Ať už potřebujete nástroj pro interní procesy, specializovaný software pro vaši niku, nebo robustní analytickou aplikaci, zajistíme <strong>optimalizovaný výkon, intuitivní uživatelské rozhraní a maximální bezpečnost</strong>.
+        </p>
+        <p>
+          Naše řešení jsou šitá na míru specifickým potřebám vašeho podnikání, což zaručuje <strong>zvýšení produktivity, automatizaci úkolů a efektivnější správu dat</strong>. S důrazem na stabilitu a snadnou údržbu vytváříme aplikace, které jsou připraveny na výzvy dnešního digitálního světa a rostou s vašimi požadavky.
+        </p>
       </div>
 
-      <div
-        *ngIf="currentTech === 'mobile-dev'"
-        class="content-wrapper visible">
-        <div class="content-item">
-            <h2>Mobilní vývoj</h2>
+      <div class="services-icons-sidebar">
+         <div class="services-header">S čím rádi pracujeme:</div>
+        <div class="services-header-2">Ale umíme mnohem víc</div>
+        <div class="tech-grid">
+          <div *ngFor="let item of desktopTechImages" class="tech-item">
+            <img [src]="item.path" [alt]="item.name">
+            <span>{{item.name}}</span>
+          </div>
         </div>
+      </div>
+    </div>
+
+    <ul class="features-list">
+      <div class="get-h">
+        Co s námi získáte a MNOHEM VÍC:
+      </div>
+      <li><strong>Aplikace na míru</strong>: Vyvíjíme desktopové aplikace přesně podle vašich specifických požadavků a firemních procesů.</li>
+      <li><strong>Vysoký výkon a stabilita</strong>: Zaměřujeme se na optimalizaci a robustní architekturu pro bezproblémový chod.</li>
+      <li><strong>Intuitivní uživatelské rozhraní (UI/UX)</strong>: Navrhujeme aplikace, které jsou snadno použitelné a maximalizují efektivitu práce.</li>
+      <li><strong>Integrace s hardwarem a systémy</strong>: Možnost propojení s periferiemi, databázemi a jinými firemními systémy.</li>
+      <li><strong>Offline funkcionalita</strong>: Aplikace mohou fungovat i bez stálého připojení k internetu, což zvyšuje flexibilitu.</li>
+      <li><strong>Vylepšená bezpečnost dat</strong>: Implementujeme silné šifrování a bezpečnostní protokoly pro ochranu citlivých informací.</li>
+      <li><strong>Pravidelné aktualizace a podpora</strong>: Zajišťujeme dlouhodobou údržbu, aktualizace a technickou podporu.</li>
+      <li><strong>Multiplatformní řešení</strong>: Možnost vývoje pro Windows, macOS nebo Linux podle vašich potřeb.</li>
+      <li><strong>Správa licencí a distribuce</strong>: Pomoc s nastavením distribuce a licenčního modelu pro vaši aplikaci.</li>
+    </ul>
+  </div>
+</div>
+
+<div *ngIf="currentTech === 'mobile-dev'" class="content-wrapper visible">
+  <div class="content-item">
+    <div class="content-top-section">
+      <div class="services-info-text">
+        <div class="ser-h">Mobilní vývoj</div>
+        <p>
+          Žijeme v éře mobilních zařízení, kde je přímá interakce se zákazníky i efektivní správa interních procesů klíčová. Nabízíme <strong>kompletní řešení pro mobilní aplikace</strong>, ať už potřebujete nativní aplikace pro <strong>iOS (iPhone, iPad)</strong> a <strong>Android</strong>, nebo efektivní <strong>cross-platform řešení</strong>, která osloví širší publikum s jedním kódem.
+        </p>
+        <p>
+          Náš záběr sahá od <strong>komerčních aplikací pro veřejné App Store a Google Play</strong> až po <strong>specializované interní systémy</strong>. Vyvíjíme mobilní CRM řešení, nástroje pro správu úkolů, terénní sběr dat, mobilní přístup k podnikovým systémům a mnoho dalšího. Zaměřujeme se na aplikace, které jsou nejen vizuálně atraktivní a snadno použitelné, ale také <strong>výkonné, bezpečné a optimalizované pro konkrétní mobilní platformy a firemní prostředí</strong>. Od prvotního návrhu UI/UX až po nasazení a publikaci (ať už v obchodech, nebo interní distribuci), jsme vaším partnerem pro digitální inovaci, která drží krok s mobilním světem.
+        </p>
       </div>
 
-      <div
-        *ngIf="currentTech === 'ai-dev'"
-        class="content-wrapper visible">
-        <div class="content-item">
-            <h2>AI vývoj</h2>
+      <div class="services-icons-sidebar">
+         <div class="services-header">S čím rádi pracujeme:</div>
+        <div class="services-header-2">Ale umíme mnohem víc</div>
+        <div class="tech-grid">
+          <div *ngFor="let item of mobileTechImages" class="tech-item">
+            <img [src]="item.path" [alt]="item.name">
+            <span>{{item.name}}</span>
+          </div>
         </div>
       </div>
+    </div>
+
+    <ul class="features-list">
+      <div class="get-h">
+        Co s námi získáte a MNOHEM VÍC:
+      </div>
+      <li><strong>Aplikace pro veřejnost i interní potřeby</strong>: Vývoj komerčních aplikací pro App Store/Google Play i specializovaných firemních řešení (např. mobilní CRM, správu procesů).</li>
+      <li><strong>Nativní vývoj</strong>: Využíváme plný potenciál iOS a Android platforem pro maximální výkon a uživatelský zážitek.</li>
+      <li><strong>Cross-platform vývoj</strong>: Efektivní řešení s jedním kódem pro iOS i Android, které šetří čas a náklady.</li>
+      <li><strong>Intuitivní UI/UX design</strong>: Zaměřujeme se na jednoduché a poutavé rozhraní, které uživatelé milují.</li>
+      <li><strong>Integrace s cloudovými službami a API</strong>: Bezproblémové propojení s externími daty, službami a backendem.</li>
+      <li><strong>Push notifikace</strong>: Implementace pro efektivní komunikaci s uživateli a udržení jejich angažovanosti.</li>
+      <li><strong>Offline režim</strong>: Funkčnost aplikace i bez připojení k internetu pro lepší dostupnost v terénu.</li>
+      <li><strong>Optimalizace výkonu a spotřeby baterie</strong>: Zajišťujeme, že vaše aplikace běží hladce a šetří energii zařízení.</li>
+      <li><strong>Bezpečnost dat a uživatelů</strong>: Prioritizujeme ochranu citlivých informací a soukromí, důležité pro veřejné i firemní aplikace.</li>
+      <li><strong>Nasazení a distribuce</strong>: Pomoc s celým procesem od přípravy až po schválení a vydání (veřejné obchody) nebo interní distribuci v rámci firmy.</li>
+    </ul>
+  </div>
+</div>
+
+<div *ngIf="currentTech === 'ai-dev'" class="content-wrapper visible">
+  <div class="content-item">
+    <div class="content-top-section">
+      <div class="services-info-text">
+        <div class="ser-h">Vývoj AI Řešení</div>
+        <p>
+          Využijte potenciál <strong>umělé inteligence</strong> pro transformaci vašeho podnikání a procesů. Specializujeme se na <strong>integraci a implementaci pokročilých AI služeb a API</strong> přímo do vašich stávajících i nových projektů. Pomůžeme vám efektivně využít to nejlepší z dostupných AI technologií pro <strong>automatizaci, zlepšení výkonnosti a získání hlubších datových vhledů</strong>, které vám dají konkurenční výhodu.
+        </p>
+        <p>
+          Implementujeme AI do CRM systémů, automatizujeme zákaznickou podporu pomocí chatbotů, personalizujeme obsah, provádíme prediktivní analýzu, nebo optimalizujeme interní procesy. Naše řešení AI jsou navržena tak, aby přinášela <strong>konkrétní a měřitelné výsledky</strong>, zefektivnila vaše operace a posunula vaši firmu vpřed v digitální éře. Zaměřujeme se na praktické využití AI, které vám přinese okamžitou hodnotu a podpoří váš růst.
+        </p>
+      </div>
+
+      <div class="services-icons-sidebar">
+         <div class="services-header">S čím rádi pracujeme:</div>
+        <div class="services-header-2">Ale umíme mnohem víc</div>
+        <div class="tech-grid">
+          <div *ngFor="let item of aiTechImages" class="tech-item">
+            <img [src]="item.path" [alt]="item.name">
+            <span>{{item.name}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="features-list">
+  <div class="get-h">
+    Co s námi získáte a MNOHEM VÍC:
+  </div>
+  <li><strong>Integrace AI API</strong>: Propojíme vaše systémy s předními AI službami (např. rozpoznávání řeči, analýza obrazu, NLP, generování textu).</li>
+  <li><strong>Inteligentní automatizace</strong>: Zefektivnění opakujících se úkolů a rozhodovacích procesů pomocí chytrých algoritmů.</li>
+  <li><strong>Chatboti a asistenti</strong>: Implementace inteligentních chatbotů pro vylepšení zákaznické podpory a interní komunikace.</li>
+  <li><strong>Personalizace a doporučení</strong>: Využití AI pro dynamické přizpůsobení obsahu a služeb uživatelům, zvyšující angažovanost.</li>
+  <li><strong>Prediktivní analýza</strong>: Přesné předpovídání budoucích trendů a chování zákazníků pro optimalizaci strategií.</li>
+  <li><strong>Zlepšení efektivity</strong>: Identifikace úzkých hrdel a optimalizace pracovních postupů pro snížení nákladů.</li>
+  <li><strong>Optimalizace vyhledávání</strong>: Chytré vyhledávací funkce a automatické kategorizování obsahu pro lepší dostupnost informací.</li>
+  <li><strong>Analýza dat s AI</strong>: Transformace komplexních dat na srozumitelné vhledy pro strategické rozhodování.</li>
+  <li><strong>Bezpečnost a etika AI</strong>: Důraz na zodpovědné a bezpečné nasazení AI řešení s ohledem na ochranu dat.</li>
+  <li><strong>Školení a podpora</strong>: Poskytujeme školení a nepřetržitou podporu pro hladký chod AI řešení.</li>
+</ul>
+  </div>
+</div>
+
+
+      
     </div>
   </div>
 

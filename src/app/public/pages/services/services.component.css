@@ -41,6 +41,9 @@ html, body {
     font-size: 4rem;
     font-weight: 700;
     text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+     opacity: 0; /* Začíná neviditelně */
+    transform: translateY(-20px); /* Začíná mírně nad pozicí */
+    animation: fadeInSlideDown 0.8s ease-out 0.2s forwards;
 
 }
 /* ----------------SLUZBY ZACATEK------------- */
@@ -78,41 +81,41 @@ html, body {
     transform: translateY(-5px);
 }
 /* -------KONTENT DISPLAY ---------- */
-/* --- Základní kontejner pro zobrazení obsahu (content-display) --- */
+/* -------KONTENT DISPLAY ---------- */
 .content-display {
-    width: 1200px; /* **ZACHOVÁNO: Šířka hlavního kontejneru** */
-    max-width: 90vw; /* Zajistí responzivitu na menších obrazovkách */
-    min-height: 600px; /* Minimální výška */
+    width: 1200px;
     background-color: rgba(26, 26, 46, 0.2);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     border: 3px solid #2f2f2f;
     border-radius: 20px;
-    padding: 30px; /* **DŮLEŽITÉ: Padding zde, ne ve wrapperu** */
+    padding: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center; /* Výchozí zarovnání textu */
-    font-size: 1.3em;
+    text-align: center;
     color: #f0f0f0;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* Kept for visual effects, content will push height */
     z-index: 2;
+    height: auto; /* Allow content to dictate height */
+    min-height: 500px; /* Ensures it doesn't collapse too much */
+
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlideUp 0.8s ease-out 0.2s forwards;
 }
 
-/* --- Kontejner pro viditelný obsah (content-wrapper) --- */
 .content-wrapper {
-    position: absolute; /* Překrývá se navzájem */
-    width: 100%; /* Plná šířka .content-display */
-    height: 100%; /* Plná výška .content-display */
-    display: flex; /* Bude držet content-item */
-    flex-direction: column; /* Pro případ, že by content-item byl pod sebou */
-    justify-content: center; /* Centrování obsahu uvnitř wrapperu */
+    position: static; /* Changed from absolute to static to allow it to push content-display's height */
+    width: 100%;
+    height: auto; /* Changed from 100% to auto */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    /* ODSTRANĚNO: padding: 30px; - padding je nyní na .content-display */
     box-sizing: border-box;
-
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.4s ease-out, transform 0.4s ease-out;
@@ -123,117 +126,182 @@ html, body {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out, height 0.4s ease-out; /* Added height transition */
 }
 
-/* --- Kontejner pro rozdělení obsahu (content-item) --- */
 .content-item {
-    display: flex; /* **KLÍČOVÉ: Rozdělí na levou a pravou stranu** */
-    height: 100%; /* Vyplní dostupnou výšku .content-wrapper */
-    width: 100%; /* Vyplní dostupnou šířku .content-wrapper */
-    gap: 30px; /* Mezera mezi levou a pravou sekcí */
-    align-items: flex-start; /* **NOVÉ: Zarovnává položky nahoře** */
-    justify-content: center; /* Centrování, pokud je šířka menší */
-    flex-wrap: wrap; /* Umožní zalomení na nový řádek na menších obrazovkách */
-    overflow-y: auto; /* Povolí scroll, pokud se obsah nevejde (pro případ, že bude hodně tech ikon) */
-    padding-right: 10px; /* Aby se scrollbar nelepil na okraj */
+    display: flex;
+    flex-direction: column;
+    height: auto; /* Changed from 100% to auto */
+    width: 100%;
+    gap: 30px;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-y: visible; /* CRUCIAL CHANGE: Allow content to overflow this container, pushing parent's height */
 }
 
-/* --- Levá strana: Hlavní informace (services-info) --- */
-.services-info {
-    flex-grow: 1; /* Povolí roztáhnutí */
-    flex-basis: 65%; /* **ZABERE 65% ŠÍŘKY na desktopu** */
-    min-width: 300px; /* Minimální šířka pro text */
-    text-align: left; /* Zarovnání textu doleva */
-    padding-right: 20px; /* Mezera od pravého panelu */
-    box-sizing: border-box;
+/* --- NEW: Wrapper for the top section (paragraphs + icons) --- */
+.content-top-section {
+    display: flex;
+    width: 100%; /* Take full width of content-item */
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
-.services-info h2 {
-    color: #a67dff;
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 2.2em; /* Větší nadpis */
-    line-height: 1.2;
-    text-align: center; /* Centrování nadpisu */
-}
 
-.services-info p {
-    margin-bottom: 15px;
-    line-height: 1.6;
-    font-size: 1.1em;
-}
-
-.services-info .features-list {
-    list-style: none;
-    padding: 0;
-    margin-top: 20px;
-}
-
-.services-info .features-list li {
-    background-color: rgba(107, 46, 145, 0.1);
-    border-left: 3px solid #a67dff;
-    padding: 10px 15px;
-    margin-bottom: 8px;
-    border-radius: 5px;
+/* --- Left Side: Main information (services-info-text - RENAMED) --- */
+.services-info-text { /* Renamed from .services-info */
+    flex-grow: 1;
+    flex-basis: 65%;
+    min-width: 300px;
     text-align: left;
-    font-size: 1em;
-    color: #e0e0e0;
+    padding: 25px;
+    box-sizing: border-box;
+    -webkit-backdrop-filter: blur(5px);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlideUp 0.8s ease-out 0.2s forwards;
+    height: auto; /* Ensure this doesn't constrain its height */
 }
 
 
-/* --- Pravá strana: Ikony technologií (services-icons-sidebar) --- */
+
+.ser-h {
+    font-family: "Source Sans Pro", sans-serif;
+    color: #9e9e9e;
+    font-size: 2rem;
+    font-weight: 700;
+    text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+}
+
+.services-info-text p {
+    margin-bottom: 25px;
+    line-height: 1.7;
+    font-size: 1.2em;
+    color: #c0c0c0;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.get-h{
+    text-align: start;
+    color: #a67dff;
+    font-size: 1.3em;
+    font-weight: 700;
+    font-family: "Source Sans Pro", sans-serif;
+    margin-bottom: 25px;
+    margin-top: 25px;
+    text-shadow: 0 0 8px rgba(166, 125, 255, 0.3);
+}
+/* --- Features list (ul.features-list) - UPRAVENO --- */
+.features-list {
+    list-style: none;
+    padding-left: 20px;
+    padding-right: 20px;
+    
+    margin-top: 0; /* No top margin here, gap handles spacing */
+    width: 100%; /* **STRETCHES FULL WIDTH** */
+    max-width: 100%; /* Ensure it doesn't exceed 100% on small screens */
+    margin-top: -75px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlideUp 0.8s ease-out 0.3s forwards;
+    height: auto; /* Ensure this doesn't constrain its height */
+}
+
+.features-list li {
+    background-color: rgba(107, 46, 145, 0.15);
+    border-left: 4px solid #a67dff;
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 1.05em;
+    color: #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease-out;
+}
+
+.features-list li:hover {
+    background-color: rgba(107, 46, 145, 0.25);
+    border-left-color: #c09fff;
+    transform: translateX(5px);
+}
+
+
+/* --- Right Side: Technology Icons (services-icons-sidebar) --- */
 .services-icons-sidebar {
-    flex-shrink: 0; /* Zabraňuje zmenšování panelu */
-    flex-basis: 25%; /* **ZABERE 25% ŠÍŘKY na desktopu** */
-    min-width: 180px; /* Minimální šířka pro panel ikon */
-    height: 100%; /* Vyplní výšku */
+    flex-shrink: 0;
+    flex-basis: 25%;
+    min-width: 180px;
+    height: auto;
     border-radius: 10px;
     padding: 20px 15px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centrování obsahu v panelu */
+    align-items: center;
     text-align: center;
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlideUp 0.8s ease-out 0.3s forwards;
+    height: auto; /* Ensure this doesn't constrain its height */
 }
 
+
+
 .services-icons-sidebar .services-header {
-    color: #979797;
-    font-size: 1.2em;
+    color: #a67dff;
+    font-size: 1.3em;
     font-weight: 700;
     font-family: "Source Sans Pro", sans-serif;
-    margin-bottom: 20px;
+    text-shadow: 0 0 8px rgba(166, 125, 255, 0.3);
+    margin-bottom: 5px;
+    
+
+}
+
+.services-header-2{
+    font-family: "Source Sans Pro", sans-serif;
+        font-size: 1em;
+    color: #c0c0c0;
+    margin-bottom: 25px;
+
 }
 
 .tech-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* KLÍČOVÁ ZMĚNA: Vždy dva sloupce */
-    gap: 15px; /* Mezera mezi ikonami */
-    width: 100%; /* Vyplní šířku sidebar */
-    justify-items: center; /* Centruje ikony v mřížce */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    width: 100%;
+    justify-items: center;
 }
 
 .tech-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
-    color: #c0c0c0;
-    font-size: 0.85em;
-    font-weight: 500;
+    gap: 8px;
+    color: #e0e0e0;
+    font-size: 0.9em;
+    font-weight: 600;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 .tech-item img {
-    width: 70px; /* Velikost ikony */
-    height: 70px;
+    width: 75px;
+    height: 75px;
     object-fit: contain;
-    filter: drop-shadow(0 0 5px rgba(166, 125, 255, 0.4)); /* Jemná záře ikon */
-    transition: transform 0.2s ease;
+    filter: drop-shadow(0 0 7px rgba(166, 125, 255, 0.6));
+    transition: transform 0.2s ease, filter 0.3s ease;
 }
 
 .tech-item img:hover {
-    transform: scale(1.1); /* Zvětšení ikony při najetí */
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 12px rgba(166, 125, 255, 0.9));
 }
-
 
 
 /* SLUZBY WEB */
@@ -248,6 +316,9 @@ html, body {
     font-size: 4rem;
     font-weight: 700;
     padding-top: 60px;
+        opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlideUp 0.8s ease-out 0.6s forwards;
 }
 .cop-wrp {
     width: 100%;
@@ -257,6 +328,9 @@ html, body {
     align-items: center;
     padding-top: 50px;
     box-sizing: border-box;
+        opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlideUp 0.8s ease-out 0.6s forwards;
 }
 .cop {
     min-height: 400px;
@@ -358,6 +432,9 @@ html, body {
     margin-bottom: -40px;
     position: relative;
     z-index: 99;
+        opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlideUp 0.8s ease-out 0.6s forwards;
 }
 .ref-text {
     margin: 0;
@@ -395,6 +472,9 @@ html, body {
 .gradient-seep-wrp{
     display: flex;
     justify-content: center;
+        opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlideUp 0.8s ease-out 0.6s forwards;
 }
 /* ----------REFERENCE ZACATEK KONEC---------- */
 /* ------------KONTAKT FORM ------------ */
@@ -430,6 +510,9 @@ html, body {
     background-repeat: no-repeat;
     z-index: 0; /* Z-index pro samotný kontejner */
         height: 1000px;
+            opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlideUp 0.8s ease-out 0.6s forwards;
 }
 .form-wrp::before {
     content: "";
@@ -661,4 +744,46 @@ button[type="submit"]:active {
     font-family: "Source Sans Pro", sans-serif;
     color: #e0e0e0;
 }
+
+.web-dev{
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInSlideDown 0.8s ease-out 0.4s forwards; /* První, zpoždění 0.2s */
+}
+.desktop-dev{
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInSlideDown 0.8s ease-out 0.6s forwards; /* Druhý, zpoždění 0.4s */
+}
+.mobile-dev{
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInSlideDown 0.8s ease-out 0.8s forwards; /* Třetí, zpoždění 0.6s */
+}
+.ai-dev{
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInSlideDown 0.8s ease-out 1s forwards; /* Čtvrtý, zpoždění 0.8s */
+}
+
 /* ------------KONTAKT FORM ZACATEK ------------ */
+@keyframes fadeInSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px); /* Začíná mírně nad */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Končí v původní pozici */
+    }
+}
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px); /* Začíná mírně pod */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Končí v původní pozici */
+    }
+}

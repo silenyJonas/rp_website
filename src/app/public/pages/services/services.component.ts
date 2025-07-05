@@ -25,14 +25,44 @@ export class ServicesComponent implements OnInit {
   ];
 
 
-  tech_img: any[] = [
+
+  webTechImages: any[] = [
     {name:'C#' , path:'assets/images/services-img/csharp.png'},
-    {name:'AngularJS' , path:'assets/images/services-img/angular.png'},
-    {name:'MySQL' , path:'assets/images/services-img/mysql.png'},
-    {name:'.NET' , path:'assets/images/services-img/net.png'},
+    {name:'TypeScript' , path:'assets/images/services-img/ts.png'},
+    {name:'Java' , path:'assets/images/services-img/java.png'},
+    {name:'Python' , path:'assets/images/services-img/py.png'},
     {name:'PHP' , path:'assets/images/services-img/php.png'},
-    {name:'React' , path:'assets/images/services-img/react.png'},
+    {name:'PostgreSQL' , path:'assets/images/services-img/postgresql.png'},
   ]
+
+    desktopTechImages: any[] = [
+    {name:'C#' , path:'assets/images/services-img/csharp.png'},
+    {name:'C++' , path:'assets/images/services-img/cpp.png'},
+    {name:'Java' , path:'assets/images/services-img/java.png'},
+    {name:'Python' , path:'assets/images/services-img/py.png'},
+    {name:'Rust' , path:'assets/images/services-img/rust.png'},
+    {name:'PostgreSQL' , path:'assets/images/services-img/postgresql.png'},
+  ]
+
+    mobileTechImages : any[] = [
+    {name:'C#' , path:'assets/images/services-img/csharp.png'},
+    {name:'TypeScript' , path:'assets/images/services-img/ts.png'},
+    {name:'Swift' , path:'assets/images/services-img/swift.png'},
+    {name:'Kotlin' , path:'assets/images/services-img/kotlin.png'},
+    {name:'SQLite' , path:'assets/images/services-img/sqlite.png'},
+    {name:'PostgreSQL' , path:'assets/images/services-img/postgresql.png'},
+  ]
+
+
+    aiTechImages: any[] = [
+    {name:'C++' , path:'assets/images/services-img/cpp.png'},
+    {name:'Python' , path:'assets/images/services-img/py.png'},
+    {name:'Java' , path:'assets/images/services-img/java.png'},
+    {name:'JavaScript' , path:'assets/images/services-img/js.png'},
+    {name:'Rust' , path:'assets/images/services-img/rust.png'},
+    {name:'Go' , path:'assets/images/services-img/go.png'},
+  ]
+  
 
   currentTech: string = 'web-dev'; // ID aktuálně vybrané technologie
 

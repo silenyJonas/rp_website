@@ -97,7 +97,7 @@
     /* animation-delay se nastavuje v HTML dynamicky */
 }
 
-/* --- Keyframe animace pro jednotlivé FAQ položky --- */
+/* --- Keyframe animace pro jednotlivé FAQ položky a další animované prvky --- */
 @keyframes fadeInSlideDownItem {
     from {
         opacity: 0;
@@ -113,7 +113,8 @@
 .faq-item.active {
     background-color: rgba(107, 46, 145, 0.3); /* Fialový nádech při aktivaci */
     border-color: #a67dff; /* Fialový rámeček při aktivaci */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(166, 125, 255, 0.6); /* Silnější záře */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 10px rgba(166, 125, 255, 0.5);
+
 }
 
 .faq-question {
@@ -123,13 +124,14 @@
     padding: 18px 25px;
     cursor: pointer; /* Zajistí "ručičku" */
     background-color: transparent;
-    transition: background-color 0.3s ease-out;
+    transition: background-color 0.3s ease-out, border-color 0.3s ease-out; /* Přidán transition pro border-color */
     position: relative;
     z-index: 2;
 }
 
 .faq-question:hover {
-    background-color: rgba(107, 46, 145, 0.1); /* Jemný hover efekt */
+    background-color: rgba(107, 46, 145, 0.2); /* Mírný hover efekt, konzistentní s projekty */
+    border-color: rgba(166, 125, 255, 0.6); /* Jemně fialový okraj */
 }
 
 .faq-question h3 {
@@ -173,16 +175,21 @@
 .faq-answer {
     max-height: 0;
     overflow: hidden;
-    padding: 0 25px;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 0; /* Začíná bez horního paddingu */
+    padding-bottom: 0; /* Začíná bez spodního paddingu */
     box-sizing: border-box;
     color: #c0c0c0;
     font-size: 1.05em;
     line-height: 1.6;
-    /* cursor: pointer; -- ODSTRANĚNO: Nechceme ručičku, když si uživatel čte odpověď */
-
-    /* --- ČISTÝ SLIDE EFEKT PRO OTEVÍRÁNÍ/ZAVÍRÁNÍ ODPOVĚDI --- */
+    cursor: pointer;
     transition: max-height 0.4s ease-in-out,
-                padding 0.4s ease-in-out;
+                padding-top 0.4s ease-in-out,
+                padding-bottom 0.4s ease-in-out,
+                border-top 0.4s ease-in-out;
+    border-top: 1px solid transparent; /* Výchozí stav je průhledná hranice */
+
 }
 
 .faq-answer p {
@@ -193,70 +200,75 @@
 .faq-item.active .faq-answer {
     max-height: 500px;
     padding-bottom: 20px;
+    padding-top: 10px; /* Padding nad textem popisu se objeví */
+    border-top: 1px solid rgba(166, 125, 255, 0.2);
 }
 
-/* --- Responsive adjustments (beze změny) --- */
-@media (max-width: 768px) {
-    .header-1 {
-        font-size: 3rem;
-        padding-top: 80px;
-        padding-bottom: 30px;
-    }
-    .faq-section {
-        max-width: 100%;
-        padding: 0 15px;
-    }
-    .faq-question {
-        padding: 15px 20px;
-    }
-    .faq-question h3 {
-        font-size: 1.2em;
-        padding-right: 15px;
-    }
-    .faq-indicator {
-        width: 35px;
-        height: 35px;
-    }
-    .faq-arrow {
-        font-size: 1.4em;
-    }
-    .faq-answer {
-        padding: 0 20px;
-        font-size: 0.95em;
-    }
-    .faq-item.active .faq-answer {
-        padding-bottom: 15px;
-    }
+/* WRITE US -------------- */
+.write-us-wrp {
+     display: flex
+;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 50px;
+    padding: 25px 35px;
+    /* background-color: rgba(26, 26, 46, 0.3); */
+    /* border: 2px solid #2f2f2f; */
+    /* border-radius: 12px; */
+    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); */
+    -webkit-backdrop-filter: blur(5px);
+    /* backdrop-filter: blur(5px); */
+    z-index: 10;
+    max-width: 700px;
+    text-align: center;
+    transition: all 0.3s ease-out;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: _ngcontent-ng-c2306478343_fadeInSlideDownItem 0.6s ease-out 0.8s forwards;
 }
 
-@media (max-width: 480px) {
-    .header-1 {
-        font-size: 2.2em;
-        padding-top: 60px;
-    }
-    .faq-question {
-        padding: 12px 15px;
-    }
-    .faq-question h3 {
-        font-size: 1.1em;
-        padding-right: 10px;
-    }
-    .faq-indicator {
-        width: 30px;
-        height: 30px;
-    }
-    .faq-arrow {
-        font-size: 1.2em;
-    }
-    .faq-answer {
-        padding: 0 15px;
-        font-size: 0.9em;
-    }
+
+.write-us-text {
+    font-family: "Source Sans Pro", sans-serif;
+    color: #9e9e9e; /* Changed color to be consistent with other text, lighter than #9e9e9e */
+    font-size: 1.2em; /* Větší a čitelnější text */
+    font-weight: 600; /* Tučnější text */
+    text-shadow: 0 0 10px rgba(158, 158, 158, 0.4);
+    white-space: nowrap; /* Zabrání zalomení textu, pokud se vejde */
 }
 
+.write-us-icons {
+    display: flex;
+    gap: 20px; /* Mezera mezi jednotlivými ikonami */
+}
+
+.icon-wrp {
+    display: inline-block; /* Důležité pro efekty na img */
+    line-height: 1; /* Pomáhá zarovnání */
+}
+
+.write-us-icons img {
+    width: 40px; /* Velikost ikon */
+    height: 40px;
+    vertical-align: middle; /* Pro lepší vertikální zarovnání */
+    transition: filter 0.3s ease, transform 0.2s ease; /* Plynulá animace záře a mírného posunu */
+}
+
+.icon-wrp:hover img {
+    /* Zvýraznění při najetí: zesvětlení a fialová záře */
+    filter: brightness(1.2) drop-shadow(0 0 12px rgba(166, 125, 255, 0.8)); /* Zesvětlení a výraznější fialová záře */
+    transform: translateY(-3px); /* Mírný posun nahoru pro interaktivitu */
+}
+
+
+/* WRITE US KONEC-------------- */
 /* --- Ponechány vaše původní @keyframes animace pro ostatní prvky --- */
 /* --- Keyframe animace pro najetí shora dolů (pro HEADER) --- */
-@keyframes fadeInSlideDown { /* ZDE PŮVODNÍ NÁZEV ZŮSTÁVÁ */
+/* This specific keyframe is redundant if fadeInSlideDownHeader is used everywhere for headers. */
+/* It's good practice to consolidate or ensure unique names. */
+@keyframes fadeInSlideDown {
     from {
         opacity: 0;
         transform: translateY(-20px);
@@ -278,9 +290,3 @@
         transform: translateY(0);
     }
 }
-
-/* PONECHÁNO PRO KOMPATIBILITU S VAŠÍM KÓDEM, ALE DOPORUČUJEME ZKONTROLOVAT, KDE JE POUŽITO. */
-/* NAPŘÍKLAD VÁŠ .header-1 TEĎ POUŽÍVÁ fadeInSlideDownHeader. */
-/* POKUD MÁTE NĚKDE JINDE `animation: fadeInSlideDown ...` BEZ `Header` NAZVU, BUDE SE VZTAHOVAT TATO. */
-/* JE DŮLEŽITÉ SI UVĚDOMIT, ŽE S TOUTO ZMĚNOU MÁTE DVĚ ANIMACE S PODOBNÝM NÁZVEM. */
-/* DOPORUČUJI ZMĚNIT VŠECHNY, ABY BYLY JEDINEČNÉ, NAPŘ. `fadeInSlideDownHeader` A `fadeInSlideDownFaqItem`. */
