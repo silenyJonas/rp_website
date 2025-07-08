@@ -249,7 +249,42 @@ header.scrolled .active-indicator {
     position: relative;
     overflow: hidden;
 }
-
+.contact-wrp{
+     position: fixed; /* Zůstane na místě při scrollu */
+    right: 10px; /* Odsazení od pravého okraje */
+    top: 50px; /* Odsazení od horního okraje */
+    z-index: 99999; /* Zajistí, že bude nad ostatním obsahem */
+    display: flex;
+    justify-content: flex-end; /* Zarovnání obsahu doprava */
+    align-items: center; /* Vertikálně zarovná položky ve středu */
+    gap: 15px; /* Mezera mezi odkazy a jazykovým formulářem */
+    margin-top: 5px;
+}
+.contact-link{
+    color: #a0a0a0;
+    text-decoration: none; /* Odstraní podtržení */
+    font-size: 0.85em; /* Velikost písma */
+    font-weight: 600;
+    padding: 8px 15px; /* Odsazení kolem textu */
+    border-radius: 20px; /* Zaoblené rohy */
+    transition: all 0.3s ease; /* Plynulé animace */
+    white-space: nowrap; /* Zabrání zalamování textu odkazu */
+    background-color: rgba(26, 26, 26, 0.5); /* Původní tmavé pozadí */
+    border: 3px solid #2f2f2f; /* Původní tmavý rámeček (outline) */
+    backdrop-filter: blur(8px);
+    font-family: "Source Sans Pro", sans-serif;
+    display: flex;
+    gap: 20px;
+    height: 40px;
+}
+.contact-link img{
+  height: 100%;
+  width: 100%;
+}
+.contact-mail-wrp, .contact-tel-wrp{
+  display: flex;
+  gap: 10px
+}
 .lang-slider-track {
     display: flex;
     justify-content: space-around;

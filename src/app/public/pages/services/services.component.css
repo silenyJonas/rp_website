@@ -93,7 +93,6 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
     color: #f0f0f0;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     position: relative;
@@ -183,52 +182,172 @@ html, body {
     color: #c0c0c0;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
-
+.get-h-wrp{
+    width: 100%;
+    margin-top: -60px;
+    opacity: 0; /* Začíná neviditelně */
+    transform: translateY(-20px); /* Začíná mírně nad pozicí */
+    animation: fadeInSlideUp 0.6s ease-out forwards;
+}
 .get-h{
     text-align: start;
     color: #a67dff;
     font-size: 1.3em;
     font-weight: 700;
     font-family: "Source Sans Pro", sans-serif;
-    margin-bottom: 25px;
-    margin-top: 25px;
     text-shadow: 0 0 8px rgba(166, 125, 255, 0.3);
+    padding-left: 25px;
 }
-/* --- Features list (ul.features-list) - UPRAVENO --- */
-.features-list {
-    list-style: none;
-    padding-left: 20px;
-    padding-right: 20px;
-    
-    margin-top: 0; /* No top margin here, gap handles spacing */
-    width: 100%; /* **STRETCHES FULL WIDTH** */
-    max-width: 100%; /* Ensure it doesn't exceed 100% on small screens */
-    margin-top: -75px;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInSlideUp 0.8s ease-out 0.3s forwards;
-    height: auto; /* Ensure this doesn't constrain its height */
+/* --------------CO S NAMI ZISKATE ---------- */
+
+.faq-section {
+    width: 100%;
+    max-width: 900px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 10;
 }
 
-.features-list li {
-    background-color: rgba(107, 46, 145, 0.15);
-    border-left: 4px solid #a67dff;
-    padding: 12px 20px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    text-align: left;
-    font-size: 1.05em;
+.faq-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Mezera mezi FAQ položkami */
+    width: 100%;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.faq-item {
+    background-color: rgba(26, 26, 46, 0.2); /* Průhledné pozadí */
+    border: 2px solid #2f2f2f;
+    border-radius: 22.5px; /* Nový, jemnější border-radius */
+    overflow: hidden; /* Důležité pro skrytí přečnívajícího obsahu při sbalení */
+    transition: all 0.3s ease-out; /* Plynulý přechod pro pozadí/rámeček */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    position: relative;
+    /* Odstraněny animace fadeInSlideUp z předchozích verzí */
+ 
+}
+
+/* --- NOVÁ TŘÍDA PRO ANIMACI NAČÍTÁNÍ FAQ POLOŽKY --- */
+.animated-faq-item {
+    opacity: 0; /* Začíná neviditelně */
+    transform: translateY(-20px); /* Začíná mírně nad pozicí */
+    animation: fadeInSlideUp 0.6s ease-out forwards; /* Použijeme novou animaci */
+    /* animation-delay se nastavuje v HTMLF dynamicky */
+}
+
+/* --- Keyframe animace pro jednotlivé FAQ položky a další animované prvky --- */
+@keyframes fadeInSlideDownItem {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.faq-item.active {
+    background-color: rgba(107, 46, 145, 0.3); /* Fialový nádech při aktivaci */
+    border-color: #a67dff; /* Fialový rámeček při aktivaci */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 10px rgba(166, 125, 255, 0.5);
+
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 5px;
+    cursor: pointer; /* Zajistí "ručičku" */
+    background-color: transparent;
+    transition: background-color 0.3s ease-out, border-color 0.3s ease-out; /* Přidán transition pro border-color */
+    position: relative;
+    z-index: 2;
+}
+
+.faq-question:hover {
+    background-color: rgba(107, 46, 145, 0.2); /* Mírný hover efekt, konzistentní s projekty */
+    border-color: rgba(166, 125, 255, 0.6); /* Jemně fialový okraj */
+}
+
+.faq-question h3 {
+    margin: 0;
+    font-size: 1.2em;
     color: #e0e0e0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    transition: all 0.2s ease-out;
+    font-weight: 600;
+    padding-right: 20px;
+     
+    padding-left: 10px;
 }
 
-.features-list li:hover {
-    background-color: rgba(107, 46, 145, 0.25);
-    border-left-color: #c09fff;
-    transform: translateX(5px);
+/* --- Styly pro fialový kruh a šipku --- */
+.faq-indicator {
+    width: 35px;
+    height: 35px;
+    background-color: #a67dff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease-out;
+    flex-shrink: 0;
 }
 
+.faq-item.active .faq-indicator {
+    background-color: #8a5acd;
+}
+
+.faq-arrow {
+    font-size: 1.6em;
+    font-weight: bold;
+    color: white;
+    transition: transform 0.3s ease-out;
+    display: inline-block;
+}
+
+.faq-item.active .faq-arrow {
+    transform: rotate(90deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    padding-left: 15px;
+    padding-right: 25px;
+    padding-top: 0; /* Začíná bez horního paddingu */
+    padding-bottom: 0; /* Začíná bez spodního paddingu */
+    box-sizing: border-box;
+    color: #c0c0c0;
+    font-size: 1.05em;
+    line-height: 1.6;
+    cursor: pointer;
+    transition: max-height 0.4s ease-in-out,
+                padding-top 0.4s ease-in-out,
+                padding-bottom 0.4s ease-in-out,
+                border-top 0.4s ease-in-out;
+    border-top: 1px solid transparent; /* Výchozí stav je průhledná hranice */
+
+}
+
+.faq-answer p {
+    margin-top: 0;
+    margin-bottom: 0px;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px;
+    padding-bottom: 15px;
+    padding-top: 15px; /* Padding nad textem popisu se objeví */
+    border-top: 1px solid rgba(166, 125, 255, 0.2);
+}
+
+
+/* ------------CO S NAMI ZISKATE KONEC ------------- */
 
 /* --- Right Side: Technology Icons (services-icons-sidebar) --- */
 .services-icons-sidebar {
@@ -781,6 +900,16 @@ button[type="submit"]:active {
     from {
         opacity: 0;
         transform: translateY(30px); /* Začíná mírně pod */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Končí v původní pozici */
+    }
+}
+@keyframes fadeInSlideRight {
+    from {
+        opacity: 0;
+        transform: translateX(-20px); /* Začíná mírně nad */
     }
     to {
         opacity: 1;
