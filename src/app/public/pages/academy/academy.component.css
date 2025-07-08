@@ -1,25 +1,30 @@
-.main-content{
-    width: 100vw;
-    height: 120vh;
-   
-    background-color: #d5d3d3;
-    background-image: 
-        repeating-linear-gradient(
-            45deg,
-            #e0e0e0 0px, 
-            #e0e0e0 1px, 
-            transparent 1px, 
-            transparent 20px 
-        ),
-        repeating-linear-gradient(
-            135deg, 
-            #e0e0e0 0px,
-            #e0e0e0 1px,
-            transparent 1px,
-            transparent 20px
-        );
+.main-content {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 800px;
+    box-sizing: border-box;
+    padding-bottom: 50px;
+
+    /* Background styly - beze změny */
+    background: radial-gradient(ellipse at center, rgba(128, 0, 128, 0.05) 15%, rgba(128, 0, 128, 0.02) 30%, rgba(17, 17, 31, 0) 50%),
+                repeating-linear-gradient(to bottom, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px),
+                repeating-linear-gradient(to right, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
-/* .main-content{
-    width: 100vw;
-    height: 120vh;
-} */
+
+.main-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(17, 17, 31, 0.98) 80%);
+    z-index: 1;
+}

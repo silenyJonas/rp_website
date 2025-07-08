@@ -238,7 +238,7 @@ header.scrolled .active-indicator {
 .lang-form {
     width: 150px;
     height: 40px;
-    background-color: rgba(26, 26, 46, 0.2);
+    background-color: rgba(26, 26, 46, 0.5);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     border: 3px solid #2f2f2f;
@@ -258,7 +258,7 @@ header.scrolled .active-indicator {
     justify-content: flex-end; /* Zarovnání obsahu doprava */
     align-items: center; /* Vertikálně zarovná položky ve středu */
     gap: 15px; /* Mezera mezi odkazy a jazykovým formulářem */
-    margin-top: 5px;
+    margin-top: 10px;
 }
 .contact-link{
     color: #a0a0a0;
@@ -323,6 +323,27 @@ header.scrolled .active-indicator {
     border-color: #a67dff;
     filter: grayscale(0%);
     transform: scale(1.1);
+}
+
+.logo-wrp{
+    position: fixed; /* Zůstane na místě při scrollu */
+    left: 10px; /* Odsazení od pravého okraje */
+    top: 10px; /* Odsazení od horního okraje */
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+    z-index: 99999; /* Zajistí, že bude nad ostatním obsahem */
+    background-color: rgba(26, 26, 26, 0.5);
+    outline: 3px solid #2f2f2f;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.logo-wrp img{
+  width: 80%;
+  height: 80%;
 }
 
 /* Responzivní úpravy pro .lang-wrp */

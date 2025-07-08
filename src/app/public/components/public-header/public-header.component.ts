@@ -27,7 +27,7 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit {
   en_flag_link: string = 'assets/images/icons/united-kingdom.png';
   tel_icon: string = 'assets/images/icons/call.png';
   mail_icon: string = 'assets/images/icons/mail.png';
-
+  logo: string = 'assets/images/logos/logo.png';
 
   showIndicator: boolean = false;
   isAnimatingTransition: boolean = false;
