@@ -28,3 +28,499 @@
     background: radial-gradient(ellipse at center, transparent 40%, rgba(17, 17, 31, 0.98) 80%);
     z-index: 1;
 }
+.header-1 {
+    color: #fff;
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+    color: #979797;
+    padding-top: 125px;
+    font-size: 4rem;
+    font-weight: 700;
+    text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+}
+/* -----------KURZY WRP ---------- */
+.courses-wrp{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    margin-top: 20px;
+}
+.courses-wrp-1{
+    width: 1400px;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+}
+.web-course-wrp{
+    width: 49%;
+
+    background-color: rgba(26, 26, 46, 0.2);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 3px solid #2f2f2f;
+    border-radius: 20px;
+    color: #f0f0f0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+}
+.desktop-course-wrp{
+    width: 49%;
+
+    background-color: rgba(26, 26, 46, 0.2);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 3px solid #2f2f2f;
+    border-radius: 20px;
+    color: #f0f0f0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+}
+.header-course{
+    width: 100%;
+    text-align: center;
+    color: #a67dff;
+    font-size: 1.3em;
+    font-weight: 700;
+    font-family: "Source Sans Pro", sans-serif;
+    text-shadow: 0 0 8px rgba(166, 125, 255, 0.3);
+    padding-bottom: 15px;
+
+}
+.text-1{
+    font-family: "Source Sans Pro", sans-serif;
+    color: #c0c0c0; 
+    padding-bottom: 10px;
+}
+.p-wrp{
+    padding: 15px;
+}
+.info-wrp{
+    display: flex;
+    padding-top: 35px;
+    min-height: 170px;
+}
+.i-when, .i-what, .i-where{
+    width: 33%;
+    height: 174px;
+}
+.i-header-1{
+    width: 100%;
+    text-align: center;
+    font-size: 1.2rem;
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+    color: #979797;
+    font-weight: 700;
+    text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+}
+.sep {
+    position: relative; /* Důležité pro absolutní pozicování pseudo-elementů */
+    height: 140px; /* Nastavte výšku oddělovače dle potřeby */
+}
+
+.sep::before,
+.sep::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    height: 100%; /* Výška čáry, shodná s výškou .sep */
+    width: 3px; /* Šířka vertikální čáry */
+    background: linear-gradient(to bottom,
+        rgba(107, 46, 145, 0) 0%,      /* Úplně průhledná nahoře */
+        rgba(166, 125, 255, 0.7) 20%,  /* Začátek syté fialové */
+        #a67dff 50%,                   /* Střed syté fialové */
+        rgba(166, 125, 255, 0.7) 80%,  /* Konec syté fialové */
+        rgba(107, 46, 145, 0) 100%     /* Úplně průhledná dole */
+    );
+    z-index: 1; /* Zajistí, že čáry jsou nad pozadím, ale pod obsahem .sep, pokud by tam byl */
+}
+
+.sep::before {
+    left: 0; /* Umístí čáru na levý okraj */
+}
+
+.sep::after {
+    right: 0; /* Umístí čáru na pravý okraj */
+}
+
+.i-inside{
+    width: 100%;
+    padding: 5px;
+}
+.line{
+    display: flex;
+    gap: 5px;
+    padding: 3px;
+    align-items: center;
+    font-family: "Source Sans Pro", sans-serif;
+    color: #979797;
+}
+.i-i-img{
+    height: 20px;
+    width: 20px;
+}
+
+.i-i-img img{
+    width: 100%;
+    height: 100%;
+}
+/* -----------KURZY WRP KONEC ---------- */
+/* ---------TIMELINE ZACATEK------- */
+
+/* ---------TIMELINE KONEC------- */
+/* .diff-wrp{
+    width: 100%;
+    min-height: 200px;
+}
+.diff-ins{
+    width: 100%;
+    min-height: 200px;
+}
+.diff-line{
+    display: flex;
+    width: 100%;
+    height: 50px;
+    gap: 15px;
+}
+.ball{
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.diff-header{
+    height: 100%;
+    width: calc(100% - 50px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+} */
+ /* Základní kontejner sekce */
+/* Základní kontejner sekce */
+
+.timeline-section-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e0e0e0;
+    max-width: 900px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    overflow: hidden; /* Pro animace */
+}
+
+.timeline-header {
+    text-align: center;
+    font-size: 3.5rem;
+    color: #a67dff;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(166, 125, 255, 0.5);
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInSlideDown 0.8s ease-out 0.2s forwards;
+}
+
+.timeline-intro {
+    text-align: center;
+    font-size: 1.2em;
+    color: #c0c0c0;
+    margin-bottom: 50px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInSlideDown 0.8s ease-out 0.4s forwards;
+}
+
+/* Nový kontejner pro všechny "zarážky" */
+.diff-wrp {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-left: 25px; /* Odsazení pro celou časovou osu */
+    position: relative;
+    /* .diff-wrp::before je odstraněn, protože čáry jsou nyní na .diff-ins */
+}
+
+
+/* Jednotlivá "zarážka" */
+.diff-ins {
+    width: 100%;
+    position: relative;
+    padding-bottom: 20px; /* Mezera mezi položkami, kterou vyplní spojovací čára */
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlideUp 0.6s ease-out forwards;
+    
+}
+
+.diff-ins:last-child {
+    padding-bottom: 0; /* Poslední položka nemá mezeru pod sebou */
+}
+
+/* Vertikální čára PŘED kuličkou (horní část) */
+.diff-ins::before {
+    content: '';
+    position: absolute;
+    left: 25px; /* Zarovnáno se středem kuličky */
+    top: 0;
+    width: 2px; /* Šířka čáry */
+    height: 25px; /* Polovina výšky kuličky */
+    box-sizing: border-box; /* Zahrnout border do šířky/výšky */
+    border-left: 2px solid #6f42c1; /* Původní plná čára */
+    z-index: 0; /* Pod kuličkou */
+    transition: border-left 0.3s ease; /* Animace změny stylu border */
+}
+
+/* Vertikální čára ZA kuličkou (spodní část, spojuje s další) */
+.diff-ins::after {
+    content: '';
+    position: absolute;
+    left: 25px; /* Zarovnáno se středem kuličky */
+    top: 25px; /* Začíná od středu kuličky */
+    width: 2px; /* Šířka čáry */
+    height: calc(100% - 25px); /* Zbytek výšky položky */
+    box-sizing: border-box; /* Zahrnout border do šířky/výšky */
+    border-left: 2px solid #6f42c1; /* Původní plná čára */
+    z-index: 0; /* Pod kuličkou */
+    transition: border-left 0.3s ease; /* Animace změny stylu border */
+}
+
+/* První položka - horní čára je odstraněna */
+.diff-ins:first-child::before {
+    border-left: none; /* Odstraní border pro první položku */
+    height: 0; /* Zajistí, že se nezobrazí */
+}
+
+/* Poslední položka - spodní čára je odstraněna */
+.diff-ins:last-child::after {
+    border-left: none; /* Odstraní border pro poslední položku */
+    height: 0; /* Zajistí, že se nezobrazí */
+}
+
+/* Aktivní stav: čára se změní na přerušovanou */
+.diff-ins.active-item::before,
+.diff-ins.active-item::after {
+    border-left: 2px dashed #a67dff; /* Změní na přerušovanou fialovou čáru */
+}
+
+
+/* Řádek s kuličkou a nadpisem */
+.diff-line {
+    display: flex;
+    align-items: center; /* Zarovnání kuličky a nadpisu na střed */
+    width: 100%;
+    height: 50px; /* Pevná výška pro nadpisový řádek */
+    gap: 15px;
+    cursor: pointer;
+    background-color: rgba(26, 26, 46, 0.2); /* Jemné pozadí */
+    overflow: hidden; /* Pro zaoblené rohy */
+
+}
+
+.diff-line:hover {
+}
+
+/* Kulička s číslem */
+.ball {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #a67dff; /* Fialová kulička */
+    border-radius: 50%;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.2em;
+    flex-shrink: 0; /* Zabrání zmenšení */
+    z-index: 1; /* Nad vertikální čárou */
+    border: 2px solid #6f42c1;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.ball.active-ball {
+    background-color: #c09fff; /* Světlejší fialová při aktivním stavu */
+    border-color: #a67dff;
+}
+
+/* Kontejner pro nadpis a šipku */
+.diff-header {
+    height: 100%;
+    width: calc(100% - 50px - 15px); /* Šířka: 100% - šířka kuličky - mezera */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 20px; /* Odsazení od šipky */
+    padding-left: 20px;
+    background-color: rgba(26, 26, 46, 0.2);
+    border: 2px solid #2f2f2f;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 9999px;
+
+    
+}
+
+.diff-c-header h3 {
+    margin: 0;
+    font-size: 1em;
+    color: #e0e0e0;
+    font-weight: bold;
+    text-align: left;
+}
+.diff-c-header-1{
+    width: 100%;
+    color: #a67dff;
+    font-size: 1.1em;
+    padding-top: 15px;
+    font-weight: 700;
+    font-family: "Source Sans Pro", sans-serif;
+    text-shadow: 0 0 8px rgba(166, 125, 255, 0.3);
+}
+.diff-c-list{
+    padding-left: 25px;
+    color: #c0c0c0;
+}
+.des-wrp{
+    display: flex;
+}
+.s-1{
+    width: 50%;
+}
+.duration-wrp{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding-top: 15px;
+}
+.diff-c-header-2{
+    color: #a67dff;
+    font-size: 1.1em;
+    font-weight: 700;
+    font-family: "Source Sans Pro", sans-serif;
+    text-shadow: 0 0 8px rgba(166, 125, 255, 0.3);
+}
+.duration-text{
+        font-size: 0.95em;
+    color: #c0c0c0;
+}
+.diff-c-icon-wrp{
+    display: flex;
+    margin-top: 16px;
+    gap: 30px
+}
+.diff-c-icon{
+    width: 50px;
+    height: auto;
+
+}
+.diff-c-icon img{
+    width: 50px;
+    height: 50px;
+}
+.diff-con-text{
+    text-align: center;
+}
+.diff-arrow {
+    font-size: 1.2em;
+    color: #a67dff;
+    transition: transform 0.3s ease;
+    display: block;
+    flex-shrink: 0;
+}
+
+.diff-arrow.rotated {
+    transform: rotate(90deg); /* Otočí šipku doprava */
+}
+
+/* Rozbalitelný obsah */
+.diff-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+    padding: 0 75px; /* Počáteční odsazení */
+    background-color: rgba(26, 26, 46, 0.1); /* Jemné pozadí pro rozbalený obsah */
+    border-radius: 0 0 12px 12px; /* Zaoblené spodní rohy */
+}
+
+.diff-answer.active-answer {
+    max-height: 500px; /* Dostatečně velká hodnota pro zobrazení veškerého obsahu */
+    padding-left: 75px;
+    padding-right: 25px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    
+
+}
+
+.content-1-wrp {
+    margin: 0;
+    font-size: 0.95em;
+    line-height: 1.6;
+    color: #c0c0c0;
+}
+
+
+
+/* Responzivní úpravy */
+@media (max-width: 768px) {
+    .timeline-header {
+        font-size: 2.5rem;
+    }
+    .diff-wrp {
+        padding-left: 15px; /* Menší odsazení pro mobil */
+    }
+    /* Upravit pozice pseudo-elementů pro mobil */
+    .diff-ins::before {
+        left: 39px;
+    }
+    .diff-ins::after {
+        left: 39px;
+    }
+    .ball {
+        width: 40px;
+        height: 40px;
+        font-size: 1em;
+    }
+    .diff-line {
+        height: 40px;
+        gap: 10px;
+    }
+    .diff-header {
+        width: calc(100% - 40px - 10px);
+        padding-right: 10px;
+    }
+    .diff-c-header h3 {
+        font-size: 1em;
+    }
+    .diff-arrow {
+        font-size: 1em;
+    }
+    .diff-answer {
+        padding: 0 15px;
+    }
+    .diff-answer.active-answer {
+        padding: 10px 15px 15px;
+    }
+}
+
+/* Keyframe animace (již definované v předchozích CSS, ale pro úplnost) */
+@keyframes fadeInSlideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
