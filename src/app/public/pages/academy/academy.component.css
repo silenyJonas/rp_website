@@ -37,6 +37,9 @@
     font-size: 4rem;
     font-weight: 700;
     text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+     opacity: 0; /* Start hidden for animation */
+    transform: translateY(-20px); /* Start slightly above */
+    animation: fadeInSlideDown 0.8s ease-out 0.2s forwards; /* Example animation for header */
 }
 /* -----------KURZY WRP ---------- */
 .courses-wrp{
@@ -68,6 +71,10 @@
     position: relative;
     overflow: hidden;
     z-index: 2;
+
+     opacity: 0; /* Start hidden for animation */
+    transform: translateY(30px); /* Start slightly below */
+    animation: fadeInSlideUp 0.4s ease-out forwards; /* Apply animation */
 }
 .desktop-course-wrp{
     width: 49%;
@@ -82,6 +89,10 @@
     position: relative;
     overflow: hidden;
     z-index: 2;
+
+     opacity: 0; /* Start hidden for animation */
+    transform: translateY(30px); /* Start slightly below */
+    animation: fadeInSlideUp 0.8s ease-out forwards; /* Apply animation */
 }
 .header-course{
     width: 100%;
@@ -257,9 +268,7 @@
     width: 100%;
     position: relative;
     padding-bottom: 20px; /* Mezera mezi položkami, kterou vyplní spojovací čára */
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInSlideUp 0.6s ease-out forwards;
+ 
     
 }
 
@@ -360,7 +369,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-right: 20px; /* Odsazení od šipky */
+    padding-right: 3px; /* Odsazení od šipky */
     padding-left: 20px;
     background-color: rgba(26, 26, 46, 0.2);
     border: 2px solid #2f2f2f;
@@ -369,6 +378,11 @@
     border-radius: 9999px;
 
     
+}
+.diff-header:hover {
+    background-color: rgba(107, 46, 145, 0.2); /* Mírný hover efekt, konzistentní s projekty */
+    border-color: rgba(166, 125, 255, 0.6);
+    transition: background-color 0.5s ease, border-color 0.5s ease; /* Zpomalené rozsvícení */
 }
 
 .diff-c-header h3 {
@@ -433,10 +447,16 @@
 }
 .diff-arrow {
     font-size: 1.2em;
-    color: #a67dff;
+    color: #FFF;
+    height: 40px;
+    width: 40px;
+    background-color:#a67dff;
+    border-radius: 9999px;
+    line-height: 40px;
     transition: transform 0.3s ease;
     display: block;
     flex-shrink: 0;
+    text-align: center;
 }
 
 .diff-arrow.rotated {
@@ -532,13 +552,30 @@
     text-align: center;
     font-family: "Source Sans Pro", sans-serif;
     color: #979797;
-    padding-top: 125px;
-    padding-top: 40px;
+    padding-top: 40px; /* Consolidated from two padding-top properties */
     font-size: 3rem;
     font-weight: 700;
     text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+    /* Animation for the header itself */
+    opacity: 0; /* Start hidden for animation */
+    transform: translateY(-20px); /* Start slightly above */
+    animation: fadeInSlideDown 0.8s ease-out 0.2s forwards; /* Example animation for header */
 }
-
+.header-3 {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+    color: #979797;
+    font-size: 3rem;
+    font-weight: 700;
+    text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+    padding-bottom: 30px;
+    /* Animation for the header itself */
+    opacity: 0; /* Start hidden for animation */
+    transform: translateY(-20px); /* Start slightly above */
+    animation: fadeInSlideDown 0.8s ease-out 0.2s forwards; /* Example animation for header */
+}
 .prices-wrp {
     font-family: "Source Sans Pro", sans-serif;
     width: 100%;
@@ -569,7 +606,23 @@
     display: flex;
     flex-direction: column;
 
+    /* --- ADDED ANIMATION PROPERTIES --- */
+    opacity: 0; /* Start hidden for animation */
+    transform: translateY(30px); /* Start slightly below */
+    animation: fadeInSlideUp 0.6s ease-out forwards; /* Apply animation */
 }
+
+/* Delay for each card to create a staggered effect */
+.price-card:nth-child(1) {
+    animation-delay: 0.2s; /* Adjust delay as needed */
+}
+.price-card:nth-child(2) {
+    animation-delay: 0.4s; /* Adjust delay as needed */
+}
+.price-card:nth-child(3) {
+    animation-delay: 0.6s; /* Adjust delay as needed */
+}
+
 
 /* Price Header Strip */
 .price-header-strip {
@@ -600,10 +653,9 @@
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
     
-        background-color: rgba(26, 26, 46, 0.2);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-
+background-color: rgba(026, 026, 046, 0.5);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
 
     border-right: 3px solid #2f2f2f;
     border-bottom: 3px solid #2f2f2f;
@@ -645,78 +697,16 @@
     position: relative;
     overflow: hidden; /* Důležité pro oříznutí mřížky */
     /* Původní mřížkové a radiální gradienty pozadí */
-    background: radial-gradient(
-                ellipse at center,
-                rgba(128, 0, 128, 0.05) 15%,
-                rgba(128, 0, 128, 0.02) 30%,
-                rgba(17, 17, 31, 0) 50%
-            ),
-            repeating-linear-gradient(
-                to bottom,
-                transparent,
-                transparent 49px,
-                rgba(128, 0, 128, 0.4) 50px
-            ),
-            repeating-linear-gradient(
-                to right,
-                transparent,
-                transparent 49px,
-                rgba(128, 0, 128, 0.4) 50px
-            );
+    
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    z-index: 0; /* Z-index pro samotný kontejner */
-        height: 1000px;
-            opacity: 0;
+    z-index: 2; /* Z-index pro samotný kontejner */
+    opacity: 0;
     transform: translateY(30px);
     animation: fadeInSlideUp 0.8s ease-out 0.6s forwards;
 }
-.form-wrp::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(
-                ellipse at center,
-                transparent 40%,
-                rgba(17, 17, 31, 0.98) 80%
-            );
-    z-index: -1; /* Umístí pod obsah .form-wrp */
-    pointer-events: none;
-}
-.form-wrp::after {
-    content: '';
-    position: absolute;
-    top: -8px; /* Mírně více přesahuje */
-    left: -8px;
-    right: -8px;
-    bottom: -8px;
-    border-radius: 45px; /* O něco větší zaoblení než vnitřní .form */
-    background: conic-gradient(from 0deg at 50% 50%,
-        #6f42c1 0%, /* Střední fialová */
-        #a67dff 10%, /* Světlejší fialová */
-        #6f42c1 20%,
-        #3d1466 30%, /* Tmavší fialová */
-        #a67dff 40%,
-        #6f42c1 50%,
-        #3d1466 60%,
-        #a67dff 70%,
-        #6f42c1 80%,
-        #3d1466 90%,
-        #6f42c1 100%);
-    background-size: 250% 250%; /* Pro výraznější animaci posunu gradientu */
-    mask: linear-gradient(black, black) content-box,
-          linear-gradient(black, black);
-    mask-composite: exclude;
-    -webkit-mask-composite: xor; /* Pro Safari */
-    mask-border: 1px solid transparent; /* Pouze pro masku, ne pro viditelný border */
-    filter: blur(10px); /* Výraznější rozostření okraje pro efekt rozplývání */
-    animation: animateBorder 10s linear infinite, pulseGlow 3.5s ease-in-out infinite alternate;
-    z-index: -2; /* Ještě níže, aby byl pod ::before a pod samotným obsahem .form-wrp */
-}
+
 @keyframes animateBorder {
     0% {
         background-position: 0% 0%;
@@ -741,7 +731,6 @@
 }
 .form {
     display: flex;
-    margin-top: -150px;
     /* KLÍČOVÁ ZMĚNA: Výška je nyní automatická s minimální výškou */
     height: auto; /* Necháme výšku přizpůsobit obsahu */
     min-height: 500px; /* Minimální výška, aby se zachoval vzhled */
@@ -768,8 +757,8 @@
     flex-direction: column;
     /* justify-content: space-between; */ /* Odebráno, pokud způsobuje problémy s výškou */
     /* Místo space-between použijeme margin-bottom na prvcích, nebo flex-grow na form-group */
-       /* background-color: #1a1a2e; */
-           background-color: rgba(026, 026, 046, 0.5);
+        /* background-color: #1a1a2e; */
+            background-color: rgba(026, 026, 046, 0.5);
     backdrop-filter: blur(2px);
     border: 3px solid rgba(116, 068, 128, 0.4);
     border-radius: 15px; /* Zaoblené rohy pro hlavní kontejner formuláře */
@@ -908,4 +897,3 @@ button[type="submit"]:active {
     transform: translateY(-20px);
     animation: fadeInSlideDown 0.8s ease-out 0.4s forwards; /* První, zpoždění 0.2s */
 }
-/* -----------KONTAKT FORM KONEC --------- */

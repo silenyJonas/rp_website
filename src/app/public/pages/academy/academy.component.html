@@ -434,23 +434,31 @@
 </div>
         </div>
     </div>
-
+    <div class="header-3">
+    Kontakt
+</div>
 <div class="form-wrp">
            <div class="form">
                            <form class="contact-form">
-            <h2>UPRAVIT POZADI UPRAVIT POZADI</h2>
-            <h4>AT TO NEVYPADA PODIVNE</h4>
+            <h2>Zanechte kontakt pro konzultaci</h2>
+            <h4>Odezva do 24 hodin</h4>
             <div class="form-group">
-                <label for="theme">Téma:</label>
+                <label for="theme">Okruh:</label>
                 <select id="theme" name="theme" required>
-                    <option selected value="web-development">Webový vývoj</option>
-                    <option value="desktop-development">Desktopový vývoj</option>
-                    <option value="mobile-development">Mobilní vývoj</option>
-                    <option value="ai-development">AI vývoj</option>
-                    <option value="other">Jiné</option>
+                    <option selected value="desktop-development">Desktopový vývoj</option>
+                    <option value="web-development">Webový vývoj</option>
                 </select>
             </div>
-            
+
+            <div class="form-group">
+                <label for="diff">Obtížnost:</label>
+                <select id="diff" name="diff" required>
+                    <option selected value="begginer">Začátečník (11-17 let)</option>
+                    <option value="advanced">Pokročilý (13-17 let)</option>
+                    <option value="expert">Expert (14-17 let)</option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="email">E-mail:</label>
                 <input type="email" id="email" name="email" required>
@@ -459,11 +467,6 @@
             <div class="form-group">
                 <label for="phone">Telefon (nepovinné):</label>
                 <input type="tel" id="phone" name="phone">
-            </div>
-            
-            <div class="form-group">
-                <label for="message">Stručný popis zadání:</label>
-                <textarea id="message" name="message" rows="5" required></textarea>
             </div>
             
             <button type="submit">Odeslat</button>

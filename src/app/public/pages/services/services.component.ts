@@ -153,7 +153,7 @@ export class ServicesComponent implements OnInit {
     {name:'C++' , path:'assets/images/services-img/cpp.png'},
     {name:'Java' , path:'assets/images/services-img/java.png'},
     {name:'Python' , path:'assets/images/services-img/py.png'},
-    {name:'Rust' , path:'assets/images/services-img/rust.png'},
+    {name:'SQLite' , path:'assets/images/services-img/sqlite.png'},
     {name:'PostgreSQL' , path:'assets/images/services-img/postgresql.png'},
   ]
   mobileServices: Item[] = [
