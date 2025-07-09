@@ -524,3 +524,97 @@
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
+/* -------------CENY ------------ */
+/* Pricing Section - General */
+.header-2 {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+    color: #979797;
+    padding-top: 125px;
+    padding-top: 40px;
+    font-size: 3rem;
+    font-weight: 700;
+    text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+}
+
+.prices-wrp {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px; /* Added padding for spacing */
+    box-sizing: border-box; /* Ensures padding doesn't increase total width */
+    position: relative;
+    z-index: 2;
+}
+
+.prices-wrp-1 {
+    width: 1400px;
+    max-width: 100%; /* Ensure it's responsive */
+    display: flex;
+    justify-content: space-around;
+    gap: 30px; /* Space between cards */
+    flex-wrap: wrap; /* Allow cards to wrap on smaller screens */
+}
+
+/* Individual Price Card */
+.price-card {
+    background-color: #fff; /* White background for the card body */
+    border-radius: 10px; /* Slightly rounded corners */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Soft shadow for depth */
+    overflow: hidden; /* Ensures header strip's border-radius is respected */
+    flex: 1; /* Allows cards to grow and shrink */
+    min-width: 280px; /* Minimum width for cards before wrapping */
+    max-width: 400px; /* Max width to prevent cards from becoming too wide */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Price Header Strip */
+.price-header-strip {
+    background-color: #5b3aff; /* Your primary violet color */
+    color: #fff;
+    font-size: 1.3em; /* Slightly larger text for header */
+    font-weight: bold;
+    padding: 20px 15px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Price Content Area */
+.price-content {
+    padding: 30px 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertically center content */
+    align-items: center; /* Horizontally center content */
+    flex-grow: 1; /* Allows content area to take available space */
+}
+
+/* Price Amount (e.g., 1899) */
+.price-amount {
+    font-size: 3.5em; /* Large font size for the main price */
+    font-weight: 800; /* Extra bold */
+    color: #5b3aff; /* Your primary violet color */
+    margin-bottom: 10px;
+    line-height: 1; /* Adjust line height to prevent extra space */
+}
+
+.price-amount .currency {
+    font-size: 0.4em; /* Smaller font for Kč/měsíc */
+    font-weight: normal; /* Normal weight for currency text */
+    vertical-align: super; /* Slightly raise the currency text */
+}
+
+/* Price Note (e.g., * Platíte každý měsíc) */
+.price-note {
+    font-size: 0.9em;
+    color: #666; /* Slightly lighter color for notes */
+    margin-top: 15px; /* Space above the note */
+}
+
+
+/* -------------CENY KONEC ------------ */
