@@ -96,7 +96,7 @@ export class AcademyComponent implements OnInit {
   desktopTimelineItems: TimelineItem[] = [
     {
       id: 1,
-      title: 'Začátečník (9-17 let)',
+      title: 'Začátečník (11-17 let)',
       content: 'Tento kurz je určen pro děti, které nemají žádné předchozí zkušenosti s programováním. Naučíme se základní koncepty logiky, algoritmů a řešení problémů pomocí vizuálního programování (např. Scratch) a jednoduchých textových příkazů. Děti si vytvoří své první interaktivní příběhy a hry.',
       isActive: false,
       themes: [
@@ -107,13 +107,13 @@ export class AcademyComponent implements OnInit {
         'Miniprojekty: Jednoduchá kalkulačka, Generátor náhodných čísel'
       ],
       newThings: [
-        ['Python', 'assets/images/icons/curses/python.png'],
-        ['Blockly', 'assets/images/icons/curses/blockly.png'] // Example, replace with actual icon
+        ['Scratch', 'assets/images/icons/curses/scratch.png'], 
+        ['Python', 'assets/images/icons/curses/py.png']
       ],
     },
     {
       id: 2,
-      title: 'Pokročilý (11-17 let)',
+      title: 'Pokročilý (13-17 let)',
       content: 'Navazuje na základy a prohlubuje znalosti v konkrétním programovacím jazyce (např. úvod do Pythonu s tkinter nebo C# s WinForms). Zaměříme se na tvorbu grafických uživatelských rozhraní (GUI), práci s událostmi, ukládání dat do souborů a objektově orientované programování.',
       isActive: false,
       themes: [
@@ -124,13 +124,13 @@ export class AcademyComponent implements OnInit {
         'Miniprojekty: Jednoduchý textový editor, Malovací program'
       ],
       newThings: [
-        ['Python (Tkinter)', 'assets/images/icons/curses/python.png'],
-        ['C# (WinForms)', 'assets/images/icons/curses/csharp.png'] // Example, replace with actual icon
+        ['C#', 'assets/images/icons/curses/csharp.png'],
+        ['MSSQL', 'assets/images/icons/curses/mssql.png'] // Example, replace with actual icon
       ],
     },
     {
       id: 3,
-      title: 'Expert (12-17 let)',
+      title: 'Expert (14-17 let)',
       content: 'Pro ty, kteří již mají solidní základy a chtějí se stát skutečnými experty. Budeme pracovat na komplexních desktopových aplikacích, řešit optimalizaci výkonu, práci s externími knihovnami a týmovou spolupráci na větších projektech. Cílem je vytvořit robustní a uživatelsky přívětivé aplikace.',
       isActive: false,
       themes: [
@@ -142,7 +142,7 @@ export class AcademyComponent implements OnInit {
         'Projekty: Správce úkolů s databází, Jednoduchá 2D hra'
       ],
       newThings: [
-        ['PyQt', 'assets/images/icons/curses/python.png'], // Example, replace with actual icon
+        ['C++', 'assets/images/icons/curses/cpp.png'], // Example, replace with actual icon
         ['SQLite', 'assets/images/icons/curses/sqlite.png'] // Example, replace with actual icon
       ],
     },
