@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Raw_request_commission;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -13,11 +14,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+            // Spustí seeder pro produkty
+        $this->call(Raw_request_commission::class);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Volitelně můžete přidat i další seedery, např. pro uživatele
+        // \App\Models\User::factory(10)->create(); // Příklad pro 10 uživatelů
+        // \App\Models\User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
     }
 }

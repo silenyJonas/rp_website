@@ -1,0 +1,1219 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Počítač: 127.0.0.1
+-- Vytvořeno: Čtv 10. čec 2025, 09:44
+-- Verze serveru: 10.4.32-MariaDB
+-- Verze PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Databáze: `joncl_stranky`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `addresses`
+--
+
+CREATE TABLE `addresses` (
+  `address_id` bigint(20) UNSIGNED NOT NULL,
+  `customer_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `address_line_1` varchar(255) NOT NULL,
+  `address_line_2` varchar(255) DEFAULT NULL,
+  `city` varchar(100) NOT NULL,
+  `state_province` varchar(100) DEFAULT NULL,
+  `postal_code` varchar(20) NOT NULL,
+  `country` varchar(100) NOT NULL,
+  `address_type` varchar(50) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_changed_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `affiliate_statistics`
+--
+
+CREATE TABLE `affiliate_statistics` (
+  `statistics_id` int(10) UNSIGNED NOT NULL,
+  `coupon_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `employee_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `event_date` date NOT NULL DEFAULT curdate(),
+  `click_count` int(11) NOT NULL DEFAULT 0,
+  `order_count` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `revenue_generated` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `attribute_values`
+--
+
+CREATE TABLE `attribute_values` (
+  `attribute_value_id` int(10) UNSIGNED NOT NULL,
+  `attribute_id` int(10) UNSIGNED NOT NULL,
+  `value_name` varchar(255) NOT NULL,
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `business_logs`
+--
+
+CREATE TABLE `business_logs` (
+  `business_log_id` int(10) UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `origin` varchar(255) DEFAULT NULL,
+  `event_type` varchar(50) NOT NULL,
+  `module` varchar(100) NOT NULL,
+  `description` varchar(1000) NOT NULL,
+  `affected_entity_type` varchar(50) DEFAULT NULL,
+  `affected_entity_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `user_login_id` int(10) UNSIGNED DEFAULT NULL,
+  `context_data` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `categories`
+--
+
+CREATE TABLE `categories` (
+  `category_id` bigint(20) UNSIGNED NOT NULL,
+  `category_name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `parent_category_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_changed_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` datetime DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `coupons`
+--
+
+CREATE TABLE `coupons` (
+  `coupon_id` bigint(20) UNSIGNED NOT NULL,
+  `coupon_code` varchar(50) NOT NULL,
+  `percent_sale` decimal(5,2) NOT NULL,
+  `minimum_order_amount` decimal(10,2) DEFAULT NULL,
+  `max_discount_amount` decimal(10,2) DEFAULT NULL,
+  `valid_from` date NOT NULL,
+  `valid_to` date NOT NULL,
+  `used_count` int(11) NOT NULL DEFAULT 0,
+  `max_uses` int(11) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_changed_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` datetime DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `customers`
+--
+
+CREATE TABLE `customers` (
+  `customer_id` bigint(20) UNSIGNED NOT NULL,
+  `user_login_id` int(10) UNSIGNED DEFAULT NULL,
+  `company_name` varchar(255) DEFAULT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `phone_number` varchar(50) DEFAULT NULL,
+  `billing_address_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `shipping_address_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_changed_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` datetime DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `employees`
+--
+
+CREATE TABLE `employees` (
+  `employee_id` bigint(20) UNSIGNED NOT NULL,
+  `user_login_id` int(10) UNSIGNED NOT NULL,
+  `function_id` int(10) UNSIGNED NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `telephone` varchar(50) DEFAULT NULL,
+  `birthday_date` date DEFAULT NULL,
+  `start_date` date NOT NULL DEFAULT curdate(),
+  `end_date` date DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_changed_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `employee_functions`
+--
+
+CREATE TABLE `employee_functions` (
+  `function_id` int(10) UNSIGNED NOT NULL,
+  `function_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `entity_audit_logs`
+--
+
+CREATE TABLE `entity_audit_logs` (
+  `audit_log_id` int(10) UNSIGNED NOT NULL,
+  `entity_type` varchar(100) NOT NULL,
+  `entity_id` varchar(255) NOT NULL,
+  `action_type` varchar(50) NOT NULL,
+  `user_login_id` int(10) UNSIGNED DEFAULT NULL,
+  `changed_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `ip_address` varchar(45) DEFAULT NULL,
+  `old_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`old_data`)),
+  `new_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`new_data`))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(10) UNSIGNED NOT NULL,
+  `customer_id` bigint(20) UNSIGNED NOT NULL,
+  `coupon_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `employee_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `order_identification_number` varchar(255) NOT NULL,
+  `order_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(50) NOT NULL DEFAULT 'Pending',
+  `total_amount` decimal(10,2) NOT NULL,
+  `shipping_cost` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `tax_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `discount_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_changed_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` datetime DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `order_item_id` int(10) UNSIGNED NOT NULL,
+  `order_id` int(10) UNSIGNED NOT NULL,
+  `product_variant_id` int(10) UNSIGNED NOT NULL,
+  `quantity` int(10) UNSIGNED NOT NULL DEFAULT 1,
+  `unit_price_at_purchase` decimal(10,2) NOT NULL,
+  `dph_rate_at_purchase` decimal(5,4) NOT NULL,
+  `subtotal` decimal(10,2) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `order_shipping_details`
+--
+
+CREATE TABLE `order_shipping_details` (
+  `order_shipping_id` int(10) UNSIGNED NOT NULL,
+  `order_id` int(10) UNSIGNED NOT NULL,
+  `shipping_method_id` int(10) UNSIGNED DEFAULT NULL,
+  `shipping_address_id` bigint(20) UNSIGNED NOT NULL,
+  `tracking_number` varchar(255) DEFAULT NULL,
+  `shipped_date` datetime DEFAULT NULL,
+  `delivered_date` datetime DEFAULT NULL,
+  `shipping_status` varchar(50) NOT NULL DEFAULT 'Pending',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_changed_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `payment_methods`
+--
+
+CREATE TABLE `payment_methods` (
+  `payment_method_id` int(10) UNSIGNED NOT NULL,
+  `method_name` varchar(100) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `permissions`
+--
+
+CREATE TABLE `permissions` (
+  `permission_id` int(10) UNSIGNED NOT NULL,
+  `permission_name` varchar(100) NOT NULL,
+  `description` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `products`
+--
+
+CREATE TABLE `products` (
+  `product_id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `base_price` decimal(10,2) NOT NULL,
+  `dph_rate` decimal(5,4) NOT NULL,
+  `sku` varchar(50) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_changed_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` datetime DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `products_categories`
+--
+
+CREATE TABLE `products_categories` (
+  `product_id` int(10) UNSIGNED NOT NULL,
+  `category_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `product_attributes`
+--
+
+CREATE TABLE `product_attributes` (
+  `attribute_id` int(10) UNSIGNED NOT NULL,
+  `attribute_name` varchar(100) NOT NULL,
+  `display_name` varchar(100) DEFAULT NULL,
+  `is_variant_attribute` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `product_reviews`
+--
+
+CREATE TABLE `product_reviews` (
+  `review_id` int(10) UNSIGNED NOT NULL,
+  `product_id` int(10) UNSIGNED NOT NULL,
+  `customer_id` bigint(20) UNSIGNED NOT NULL,
+  `rating` tinyint(3) UNSIGNED NOT NULL,
+  `comment` text DEFAULT NULL,
+  `review_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `is_approved` tinyint(1) NOT NULL DEFAULT 0,
+  `approved_by_employee_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `product_variant_attribute_values`
+--
+
+CREATE TABLE `product_variant_attribute_values` (
+  `product_variant_id` int(10) UNSIGNED NOT NULL,
+  `attribute_value_id` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `product_variant_combinations`
+--
+
+CREATE TABLE `product_variant_combinations` (
+  `product_variant_id` int(10) UNSIGNED NOT NULL,
+  `product_id` int(10) UNSIGNED NOT NULL,
+  `sku` varchar(100) NOT NULL,
+  `price_adjustment` decimal(10,2) DEFAULT 0.00,
+  `stock_quantity` int(11) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `image_url` varchar(255) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_changed_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `product_variant_custom_attributes`
+--
+
+CREATE TABLE `product_variant_custom_attributes` (
+  `custom_attribute_id` int(10) UNSIGNED NOT NULL,
+  `product_variant_id` int(10) UNSIGNED NOT NULL,
+  `attribute_key` varchar(255) NOT NULL,
+  `attribute_value` text DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `raw_request_commission`
+--
+
+CREATE TABLE `raw_request_commission` (
+  `id` int(11) NOT NULL,
+  `thema` varchar(255) NOT NULL,
+  `contact_email` varchar(255) NOT NULL,
+  `contact_phone` varchar(255) DEFAULT NULL,
+  `order_description` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'Nově zadané',
+  `priority` varchar(255) NOT NULL DEFAULT 'Neutrální',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_changed_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `deleted_at` datetime NOT NULL,
+  `is_deleted` tinyint(4) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `refund_requests`
+--
+
+CREATE TABLE `refund_requests` (
+  `refund_id` int(10) UNSIGNED NOT NULL,
+  `order_id` int(10) UNSIGNED NOT NULL,
+  `description` text NOT NULL,
+  `status` varchar(50) NOT NULL DEFAULT 'Pending',
+  `result` tinyint(1) DEFAULT NULL,
+  `refund_amount` decimal(10,2) DEFAULT NULL,
+  `processed_by_employee_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `internal_note` text DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_changed_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` datetime DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `requests`
+--
+
+CREATE TABLE `requests` (
+  `request_id` int(10) UNSIGNED NOT NULL,
+  `request_type_id` bigint(20) UNSIGNED NOT NULL,
+  `customer_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `employee_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `contact_name` varchar(255) NOT NULL,
+  `contact_email` varchar(255) NOT NULL,
+  `contact_phone` varchar(50) DEFAULT NULL,
+  `description` text NOT NULL,
+  `status` varchar(50) NOT NULL DEFAULT 'New',
+  `priority` varchar(20) NOT NULL DEFAULT 'Normal',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_changed_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` datetime DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `request_types`
+--
+
+CREATE TABLE `request_types` (
+  `request_type_id` bigint(20) UNSIGNED NOT NULL,
+  `request_type` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `roles`
+--
+
+CREATE TABLE `roles` (
+  `role_id` int(10) UNSIGNED NOT NULL,
+  `role_name` varchar(50) NOT NULL,
+  `description` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `role_permissions`
+--
+
+CREATE TABLE `role_permissions` (
+  `role_id` int(10) UNSIGNED NOT NULL,
+  `permission_id` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `shipping_methods`
+--
+
+CREATE TABLE `shipping_methods` (
+  `shipping_method_id` int(10) UNSIGNED NOT NULL,
+  `method_name` varchar(100) NOT NULL,
+  `base_cost` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `estimated_delivery_days` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `system_logs`
+--
+
+CREATE TABLE `system_logs` (
+  `system_log_id` int(10) UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `origin` varchar(255) DEFAULT NULL,
+  `event_type` varchar(50) NOT NULL,
+  `module` varchar(100) NOT NULL,
+  `description` varchar(1000) NOT NULL,
+  `context_data` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `system_settings`
+--
+
+CREATE TABLE `system_settings` (
+  `setting_id` int(10) UNSIGNED NOT NULL,
+  `setting_key` varchar(255) NOT NULL,
+  `setting_value` text DEFAULT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `last_updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_by_user_id` int(10) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `transactions`
+--
+
+CREATE TABLE `transactions` (
+  `transaction_id` int(10) UNSIGNED NOT NULL,
+  `order_id` int(10) UNSIGNED NOT NULL,
+  `payment_method_id` int(10) UNSIGNED DEFAULT NULL,
+  `transaction_amount` decimal(10,2) NOT NULL,
+  `currency` varchar(5) NOT NULL DEFAULT 'CZK',
+  `transaction_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(50) NOT NULL,
+  `payment_gateway_id` varchar(255) DEFAULT NULL,
+  `payment_gateway_response` text DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `user_login`
+--
+
+CREATE TABLE `user_login` (
+  `user_login_id` int(10) UNSIGNED NOT NULL,
+  `user_email` varchar(255) NOT NULL,
+  `user_password_hash` varchar(255) NOT NULL,
+  `user_password_salt` varchar(255) NOT NULL,
+  `last_login_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_changed_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` datetime DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `user_roles`
+--
+
+CREATE TABLE `user_roles` (
+  `user_login_id` int(10) UNSIGNED NOT NULL,
+  `role_id` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Indexy pro exportované tabulky
+--
+
+--
+-- Indexy pro tabulku `addresses`
+--
+ALTER TABLE `addresses`
+  ADD PRIMARY KEY (`address_id`),
+  ADD KEY `idx_addresses_customer_id` (`customer_id`);
+
+--
+-- Indexy pro tabulku `affiliate_statistics`
+--
+ALTER TABLE `affiliate_statistics`
+  ADD PRIMARY KEY (`statistics_id`),
+  ADD KEY `idx_affiliate_statistics_coupon_id` (`coupon_id`),
+  ADD KEY `idx_affiliate_statistics_employee_id` (`employee_id`);
+
+--
+-- Indexy pro tabulku `attribute_values`
+--
+ALTER TABLE `attribute_values`
+  ADD PRIMARY KEY (`attribute_value_id`),
+  ADD UNIQUE KEY `uq_attribute_value_name` (`attribute_id`,`value_name`),
+  ADD KEY `idx_attribute_values_attribute_id` (`attribute_id`);
+
+--
+-- Indexy pro tabulku `business_logs`
+--
+ALTER TABLE `business_logs`
+  ADD PRIMARY KEY (`business_log_id`),
+  ADD KEY `idx_business_logs_affected_entity` (`affected_entity_type`,`affected_entity_id`),
+  ADD KEY `idx_business_logs_user_login_id` (`user_login_id`);
+
+--
+-- Indexy pro tabulku `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`category_id`),
+  ADD UNIQUE KEY `category_name` (`category_name`),
+  ADD UNIQUE KEY `uq_categories_name` (`category_name`),
+  ADD KEY `idx_categories_parent_category_id` (`parent_category_id`);
+
+--
+-- Indexy pro tabulku `coupons`
+--
+ALTER TABLE `coupons`
+  ADD PRIMARY KEY (`coupon_id`),
+  ADD UNIQUE KEY `coupon_code` (`coupon_code`),
+  ADD UNIQUE KEY `uq_coupons_coupon_code` (`coupon_code`);
+
+--
+-- Indexy pro tabulku `customers`
+--
+ALTER TABLE `customers`
+  ADD PRIMARY KEY (`customer_id`),
+  ADD UNIQUE KEY `user_login_id` (`user_login_id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `uq_customers_email` (`email`),
+  ADD UNIQUE KEY `uq_customers_user_login_id` (`user_login_id`),
+  ADD KEY `idx_customers_billing_address_id` (`billing_address_id`),
+  ADD KEY `idx_customers_shipping_address_id` (`shipping_address_id`);
+
+--
+-- Indexy pro tabulku `employees`
+--
+ALTER TABLE `employees`
+  ADD PRIMARY KEY (`employee_id`),
+  ADD UNIQUE KEY `user_login_id` (`user_login_id`),
+  ADD UNIQUE KEY `uq_employees_user_login_id` (`user_login_id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `uq_employees_email` (`email`),
+  ADD KEY `idx_employees_function_id` (`function_id`);
+
+--
+-- Indexy pro tabulku `employee_functions`
+--
+ALTER TABLE `employee_functions`
+  ADD PRIMARY KEY (`function_id`),
+  ADD UNIQUE KEY `function_name` (`function_name`),
+  ADD UNIQUE KEY `uq_employee_function_name` (`function_name`);
+
+--
+-- Indexy pro tabulku `entity_audit_logs`
+--
+ALTER TABLE `entity_audit_logs`
+  ADD PRIMARY KEY (`audit_log_id`),
+  ADD KEY `idx_audit_entity` (`entity_type`,`entity_id`),
+  ADD KEY `idx_audit_user_login_id` (`user_login_id`);
+
+--
+-- Indexy pro tabulku `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`),
+  ADD UNIQUE KEY `order_identification_number` (`order_identification_number`),
+  ADD UNIQUE KEY `uq_orders_identification_number` (`order_identification_number`),
+  ADD KEY `idx_orders_customer_id` (`customer_id`),
+  ADD KEY `idx_orders_coupon_id` (`coupon_id`),
+  ADD KEY `idx_orders_employee_id` (`employee_id`);
+
+--
+-- Indexy pro tabulku `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`order_item_id`),
+  ADD KEY `idx_order_items_order_id` (`order_id`),
+  ADD KEY `idx_order_items_product_variant_id` (`product_variant_id`);
+
+--
+-- Indexy pro tabulku `order_shipping_details`
+--
+ALTER TABLE `order_shipping_details`
+  ADD PRIMARY KEY (`order_shipping_id`),
+  ADD UNIQUE KEY `order_id` (`order_id`),
+  ADD UNIQUE KEY `uq_order_shipping_order_id` (`order_id`),
+  ADD KEY `idx_osd_shipping_method_id` (`shipping_method_id`),
+  ADD KEY `idx_osd_shipping_address_id` (`shipping_address_id`);
+
+--
+-- Indexy pro tabulku `payment_methods`
+--
+ALTER TABLE `payment_methods`
+  ADD PRIMARY KEY (`payment_method_id`),
+  ADD UNIQUE KEY `method_name` (`method_name`),
+  ADD UNIQUE KEY `uq_payment_method_name` (`method_name`);
+
+--
+-- Indexy pro tabulku `permissions`
+--
+ALTER TABLE `permissions`
+  ADD PRIMARY KEY (`permission_id`),
+  ADD UNIQUE KEY `permission_name` (`permission_name`),
+  ADD UNIQUE KEY `uq_permission_name` (`permission_name`);
+
+--
+-- Indexy pro tabulku `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`product_id`),
+  ADD UNIQUE KEY `sku` (`sku`),
+  ADD UNIQUE KEY `uq_products_sku` (`sku`);
+
+--
+-- Indexy pro tabulku `products_categories`
+--
+ALTER TABLE `products_categories`
+  ADD PRIMARY KEY (`product_id`,`category_id`),
+  ADD KEY `idx_products_categories_product_id` (`product_id`),
+  ADD KEY `idx_products_categories_category_id` (`category_id`);
+
+--
+-- Indexy pro tabulku `product_attributes`
+--
+ALTER TABLE `product_attributes`
+  ADD PRIMARY KEY (`attribute_id`),
+  ADD UNIQUE KEY `attribute_name` (`attribute_name`),
+  ADD UNIQUE KEY `uq_product_attribute_name` (`attribute_name`);
+
+--
+-- Indexy pro tabulku `product_reviews`
+--
+ALTER TABLE `product_reviews`
+  ADD PRIMARY KEY (`review_id`),
+  ADD UNIQUE KEY `uq_customer_product_review` (`product_id`,`customer_id`),
+  ADD KEY `idx_product_reviews_product_id` (`product_id`),
+  ADD KEY `idx_product_reviews_customer_id` (`customer_id`),
+  ADD KEY `idx_product_reviews_approved_by_employee_id` (`approved_by_employee_id`);
+
+--
+-- Indexy pro tabulku `product_variant_attribute_values`
+--
+ALTER TABLE `product_variant_attribute_values`
+  ADD PRIMARY KEY (`product_variant_id`,`attribute_value_id`),
+  ADD KEY `idx_pvav_product_variant_id` (`product_variant_id`),
+  ADD KEY `idx_pvav_attribute_value_id` (`attribute_value_id`);
+
+--
+-- Indexy pro tabulku `product_variant_combinations`
+--
+ALTER TABLE `product_variant_combinations`
+  ADD PRIMARY KEY (`product_variant_id`),
+  ADD UNIQUE KEY `sku` (`sku`),
+  ADD KEY `idx_pvc_product_id` (`product_id`);
+
+--
+-- Indexy pro tabulku `product_variant_custom_attributes`
+--
+ALTER TABLE `product_variant_custom_attributes`
+  ADD PRIMARY KEY (`custom_attribute_id`),
+  ADD UNIQUE KEY `uq_variant_custom_attribute` (`product_variant_id`,`attribute_key`),
+  ADD KEY `idx_pvca_product_variant_id` (`product_variant_id`);
+
+--
+-- Indexy pro tabulku `raw_request_commission`
+--
+ALTER TABLE `raw_request_commission`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexy pro tabulku `refund_requests`
+--
+ALTER TABLE `refund_requests`
+  ADD PRIMARY KEY (`refund_id`),
+  ADD KEY `idx_refund_requests_order_id` (`order_id`),
+  ADD KEY `idx_refund_requests_processed_by_employee_id` (`processed_by_employee_id`);
+
+--
+-- Indexy pro tabulku `requests`
+--
+ALTER TABLE `requests`
+  ADD PRIMARY KEY (`request_id`),
+  ADD KEY `idx_requests_request_type_id` (`request_type_id`),
+  ADD KEY `idx_requests_customer_id` (`customer_id`),
+  ADD KEY `idx_requests_employee_id` (`employee_id`);
+
+--
+-- Indexy pro tabulku `request_types`
+--
+ALTER TABLE `request_types`
+  ADD PRIMARY KEY (`request_type_id`),
+  ADD UNIQUE KEY `request_type` (`request_type`),
+  ADD UNIQUE KEY `uq_request_type_name` (`request_type`);
+
+--
+-- Indexy pro tabulku `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`role_id`),
+  ADD UNIQUE KEY `role_name` (`role_name`),
+  ADD UNIQUE KEY `uq_role_name` (`role_name`);
+
+--
+-- Indexy pro tabulku `role_permissions`
+--
+ALTER TABLE `role_permissions`
+  ADD PRIMARY KEY (`role_id`,`permission_id`),
+  ADD KEY `idx_rp_role_id` (`role_id`),
+  ADD KEY `idx_rp_permission_id` (`permission_id`);
+
+--
+-- Indexy pro tabulku `shipping_methods`
+--
+ALTER TABLE `shipping_methods`
+  ADD PRIMARY KEY (`shipping_method_id`),
+  ADD UNIQUE KEY `method_name` (`method_name`),
+  ADD UNIQUE KEY `uq_shipping_method_name` (`method_name`);
+
+--
+-- Indexy pro tabulku `system_logs`
+--
+ALTER TABLE `system_logs`
+  ADD PRIMARY KEY (`system_log_id`);
+
+--
+-- Indexy pro tabulku `system_settings`
+--
+ALTER TABLE `system_settings`
+  ADD PRIMARY KEY (`setting_id`),
+  ADD UNIQUE KEY `setting_key` (`setting_key`),
+  ADD KEY `idx_system_settings_updated_by` (`updated_by_user_id`);
+
+--
+-- Indexy pro tabulku `transactions`
+--
+ALTER TABLE `transactions`
+  ADD PRIMARY KEY (`transaction_id`),
+  ADD KEY `idx_transactions_order_id` (`order_id`),
+  ADD KEY `idx_transactions_payment_method_id` (`payment_method_id`);
+
+--
+-- Indexy pro tabulku `user_login`
+--
+ALTER TABLE `user_login`
+  ADD PRIMARY KEY (`user_login_id`),
+  ADD UNIQUE KEY `user_email` (`user_email`),
+  ADD UNIQUE KEY `uq_user_login_email` (`user_email`);
+
+--
+-- Indexy pro tabulku `user_roles`
+--
+ALTER TABLE `user_roles`
+  ADD PRIMARY KEY (`user_login_id`,`role_id`),
+  ADD KEY `idx_ur_user_login_id` (`user_login_id`),
+  ADD KEY `idx_ur_role_id` (`role_id`);
+
+--
+-- AUTO_INCREMENT pro tabulky
+--
+
+--
+-- AUTO_INCREMENT pro tabulku `addresses`
+--
+ALTER TABLE `addresses`
+  MODIFY `address_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `affiliate_statistics`
+--
+ALTER TABLE `affiliate_statistics`
+  MODIFY `statistics_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `attribute_values`
+--
+ALTER TABLE `attribute_values`
+  MODIFY `attribute_value_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `business_logs`
+--
+ALTER TABLE `business_logs`
+  MODIFY `business_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `category_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `coupons`
+--
+ALTER TABLE `coupons`
+  MODIFY `coupon_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `customer_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `employees`
+--
+ALTER TABLE `employees`
+  MODIFY `employee_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `employee_functions`
+--
+ALTER TABLE `employee_functions`
+  MODIFY `function_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `entity_audit_logs`
+--
+ALTER TABLE `entity_audit_logs`
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `order_shipping_details`
+--
+ALTER TABLE `order_shipping_details`
+  MODIFY `order_shipping_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `payment_methods`
+--
+ALTER TABLE `payment_methods`
+  MODIFY `payment_method_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `permissions`
+--
+ALTER TABLE `permissions`
+  MODIFY `permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `products`
+--
+ALTER TABLE `products`
+  MODIFY `product_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `product_attributes`
+--
+ALTER TABLE `product_attributes`
+  MODIFY `attribute_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `product_reviews`
+--
+ALTER TABLE `product_reviews`
+  MODIFY `review_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `product_variant_combinations`
+--
+ALTER TABLE `product_variant_combinations`
+  MODIFY `product_variant_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `product_variant_custom_attributes`
+--
+ALTER TABLE `product_variant_custom_attributes`
+  MODIFY `custom_attribute_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `raw_request_commission`
+--
+ALTER TABLE `raw_request_commission`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `refund_requests`
+--
+ALTER TABLE `refund_requests`
+  MODIFY `refund_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `requests`
+--
+ALTER TABLE `requests`
+  MODIFY `request_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `request_types`
+--
+ALTER TABLE `request_types`
+  MODIFY `request_type_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `shipping_methods`
+--
+ALTER TABLE `shipping_methods`
+  MODIFY `shipping_method_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `system_logs`
+--
+ALTER TABLE `system_logs`
+  MODIFY `system_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `system_settings`
+--
+ALTER TABLE `system_settings`
+  MODIFY `setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pro tabulku `user_login`
+--
+ALTER TABLE `user_login`
+  MODIFY `user_login_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- Omezení pro exportované tabulky
+--
+
+--
+-- Omezení pro tabulku `addresses`
+--
+ALTER TABLE `addresses`
+  ADD CONSTRAINT `fk_addresses_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `affiliate_statistics`
+--
+ALTER TABLE `affiliate_statistics`
+  ADD CONSTRAINT `fk_affiliate_statistics_coupon_id` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`coupon_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_affiliate_statistics_employee_id` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`employee_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `attribute_values`
+--
+ALTER TABLE `attribute_values`
+  ADD CONSTRAINT `fk_attribute_values_attribute_id` FOREIGN KEY (`attribute_id`) REFERENCES `product_attributes` (`attribute_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `business_logs`
+--
+ALTER TABLE `business_logs`
+  ADD CONSTRAINT `fk_business_logs_user_login_id` FOREIGN KEY (`user_login_id`) REFERENCES `user_login` (`user_login_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `categories`
+--
+ALTER TABLE `categories`
+  ADD CONSTRAINT `fk_categories_parent_category_id` FOREIGN KEY (`parent_category_id`) REFERENCES `categories` (`category_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `customers`
+--
+ALTER TABLE `customers`
+  ADD CONSTRAINT `fk_customers_billing_address_id` FOREIGN KEY (`billing_address_id`) REFERENCES `addresses` (`address_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_customers_shipping_address_id` FOREIGN KEY (`shipping_address_id`) REFERENCES `addresses` (`address_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_customers_user_login_id` FOREIGN KEY (`user_login_id`) REFERENCES `user_login` (`user_login_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `employees`
+--
+ALTER TABLE `employees`
+  ADD CONSTRAINT `fk_employees_function_id` FOREIGN KEY (`function_id`) REFERENCES `employee_functions` (`function_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_employees_user_login_id` FOREIGN KEY (`user_login_id`) REFERENCES `user_login` (`user_login_id`) ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `entity_audit_logs`
+--
+ALTER TABLE `entity_audit_logs`
+  ADD CONSTRAINT `fk_audit_user_login_id` FOREIGN KEY (`user_login_id`) REFERENCES `user_login` (`user_login_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `fk_orders_coupon_id` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`coupon_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_orders_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_orders_employee_id` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`employee_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `fk_order_items_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_order_items_product_variant_id` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variant_combinations` (`product_variant_id`) ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `order_shipping_details`
+--
+ALTER TABLE `order_shipping_details`
+  ADD CONSTRAINT `fk_osd_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_osd_shipping_address_id` FOREIGN KEY (`shipping_address_id`) REFERENCES `addresses` (`address_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_osd_shipping_method_id` FOREIGN KEY (`shipping_method_id`) REFERENCES `shipping_methods` (`shipping_method_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `products_categories`
+--
+ALTER TABLE `products_categories`
+  ADD CONSTRAINT `fk_products_categories_category_id` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_products_categories_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `product_reviews`
+--
+ALTER TABLE `product_reviews`
+  ADD CONSTRAINT `fk_product_reviews_approved_by_employee_id` FOREIGN KEY (`approved_by_employee_id`) REFERENCES `employees` (`employee_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_product_reviews_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_product_reviews_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `product_variant_attribute_values`
+--
+ALTER TABLE `product_variant_attribute_values`
+  ADD CONSTRAINT `fk_pvav_attribute_value_id` FOREIGN KEY (`attribute_value_id`) REFERENCES `attribute_values` (`attribute_value_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_pvav_product_variant_id` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variant_combinations` (`product_variant_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `product_variant_combinations`
+--
+ALTER TABLE `product_variant_combinations`
+  ADD CONSTRAINT `fk_pvc_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `product_variant_custom_attributes`
+--
+ALTER TABLE `product_variant_custom_attributes`
+  ADD CONSTRAINT `fk_pvca_product_variant_id` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variant_combinations` (`product_variant_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `refund_requests`
+--
+ALTER TABLE `refund_requests`
+  ADD CONSTRAINT `fk_refund_requests_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_refund_requests_processed_by_employee_id` FOREIGN KEY (`processed_by_employee_id`) REFERENCES `employees` (`employee_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `requests`
+--
+ALTER TABLE `requests`
+  ADD CONSTRAINT `fk_requests_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_requests_employee_id` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`employee_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_requests_request_type_id` FOREIGN KEY (`request_type_id`) REFERENCES `request_types` (`request_type_id`) ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `role_permissions`
+--
+ALTER TABLE `role_permissions`
+  ADD CONSTRAINT `fk_rp_permission_id` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`permission_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_rp_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `system_settings`
+--
+ALTER TABLE `system_settings`
+  ADD CONSTRAINT `fk_system_settings_updated_by_user_id` FOREIGN KEY (`updated_by_user_id`) REFERENCES `user_login` (`user_login_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `transactions`
+--
+ALTER TABLE `transactions`
+  ADD CONSTRAINT `fk_transactions_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_transactions_payment_method_id` FOREIGN KEY (`payment_method_id`) REFERENCES `payment_methods` (`payment_method_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Omezení pro tabulku `user_roles`
+--
+ALTER TABLE `user_roles`
+  ADD CONSTRAINT `fk_ur_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_ur_user_login_id` FOREIGN KEY (`user_login_id`) REFERENCES `user_login` (`user_login_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
