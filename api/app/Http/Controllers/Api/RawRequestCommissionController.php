@@ -9,17 +9,33 @@ use App\Http\Requests\UpdateRawRequestCommissionRequest;
 use App\Http\Resources\RawRequestCommissionResource;
 use Illuminate\Http\JsonResponse;
 
+use Illuminate\Http\Request; // <-- ZAJISTĚTE, ŽE TOTO JE IMPORTED
+use Illuminate\Support\Facades\Log; // <-- ZAJISTĚTE, ŽE TOTO JE IMPORTED
+use Illuminate\Support\Facades\Auth;
+
 class RawRequestCommissionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    // public function index(): JsonResponse
+    // {
+    //     return RawRequestCommissionResource::collection(
+    //         RawRequestCommission::all()
+    //     )->response();
+    // }
+    public function index(Request $request): JsonResponse // <-- ZAJISTĚTE, ŽE ZDE JE Request $request
     {
+        // --- DEBUG KÓD ZAČÁTEK ---
+         Log::info('Auth check result: ' . Auth::check());
+        Log::info('User ID: ' . (Auth::user() ? Auth::user()->id : 'N/A'));
+        // --- DEBUG KÓD KONEC ---
+
         return RawRequestCommissionResource::collection(
             RawRequestCommission::all()
         )->response();
     }
+
 
     /**
      * Store a newly created resource in storage.

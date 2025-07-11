@@ -17,7 +17,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy { // Implementuje
   userEmail: string | null = null; // Proměnná pro uložení e-mailu uživatele
   isLoggedIn: boolean = false; // Proměnná pro sledování stavu přihlášení
   private authSubscription: Subscription | undefined; // Pro správu odběru
-currentDate: Date = new Date(); 
+  currentDate: Date = new Date(); 
   constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {

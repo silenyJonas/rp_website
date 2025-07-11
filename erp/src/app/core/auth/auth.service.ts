@@ -9,8 +9,7 @@ import { tap, catchError, switchMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  // --- TOTO JE TA ZMĚNA! ---
-  private baseUrl = '/api'; // Místo 'http://localhost:8000/api'
+  private baseUrl = '/api';
 
   private _isLoggedIn = new BehaviorSubject<boolean>(this.hasToken());
   isLoggedIn$ = this._isLoggedIn.asObservable();
@@ -35,8 +34,11 @@ export class AuthService {
       switchMap(() => this.http.post<any>(`${this.baseUrl}/login`, credentials, { withCredentials: true })),
       tap({
         next: (response: any) => {
+          console.log(response);
           sessionStorage.setItem('isLoggedIn', 'true');
-          sessionStorage.setItem('userEmail', response.user.email);
+          // --- ZMĚNA ZDE! ---
+          sessionStorage.setItem('userEmail', response.user.user_email); // Změněno z .email na .user_email
+          // -----------------
           this._isLoggedIn.next(true);
           console.log('Přihlášení úspěšné:', response);
         },
@@ -96,7 +98,10 @@ export class AuthService {
 
     return this.http.get<any>(`${this.baseUrl}/user`, { withCredentials: true }).pipe(
       tap({
-        next: () => this._isLoggedIn.next(true),
+        next: (response: any) => { // Zde také zkontrolovat, zda je user_email k dispozici, pokud ho používáte k něčemu jinému než jen k zobrazení.
+          sessionStorage.setItem('userEmail', response.user.user_email); // Aktualizujeme email při checkAuth
+          this._isLoggedIn.next(true);
+        },
         error: (error: HttpErrorResponse) => {
           console.warn('Uživatel není ověřen API (session vypršela nebo je neplatná).', error);
           this.logout();
