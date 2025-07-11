@@ -3,18 +3,17 @@
 namespace Database\Factories;
 
 use App\Models\RawRequestCommission;
-use Database\Seeders\RawRequestCommissionSeeder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\RawRequestCommission>
  */
-class ProductFactory extends Factory
+class RawRequestCommissionFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
-     * @var string
+     * @var class-string<\App\Models\RawRequestCommission>
      */
     protected $model = RawRequestCommission::class;
 
@@ -26,13 +25,12 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'thema' => $this->faker->sentence(rand(2, 4)), // Krátké téma
-            'contact_email' => $this->faker->safeEmail(), // Bezpečný náhodný e-mail
-            'contact_phone' => $this->faker->optional()->phoneNumber(), // Telefon (někdy null)
-            'order_description' => $this->faker->paragraphs(rand(2, 4), true), // Delší popis objednávky
-            'status' => $this->faker->randomElement(['Nově zadané', 'Zpracovává se', 'Dokončeno', 'Zrušeno']), // Náhodný stav
-            'priority' => $this->faker->randomElement(['Nízká', 'Neutrální', 'Vysoká']), // Náhodná priorita
+            'thema' => $this->faker->sentence(rand(2, 4)),
+            'contact_email' => $this->faker->unique()->safeEmail(), // Použij unique() zde
+            'contact_phone' => $this->faker->optional()->phoneNumber(),
+            'order_description' => $this->faker->paragraphs(rand(2, 4), true),
+            'status' => $this->faker->randomElement(['Nově zadané', 'Zpracovává se', 'Dokončeno', 'Zrušeno']),
+            'priority' => $this->faker->randomElement(['Nízká', 'Neutrální', 'Vysoká']),
         ];
     }
-
 }

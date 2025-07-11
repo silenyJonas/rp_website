@@ -1,0 +1,15 @@
+<!-- src/app/user-request/user-request.component.html -->
+<div class="user-request-container">
+
+  <!-- Používáme GenericTableComponent -->
+  <app-generic-table
+    [apiEndpoint]="apiEndpoint"        
+    [tableCaption]="'Seznam požadavků na provize'" 
+    [columns]="userRequestColumns" 
+    [data]="data"                       
+    [isLoading]="isLoading"             
+    >
+  </app-generic-table>
+
+  <!-- Zde můžete přidat další specifický obsah pro UserRequestComponent -->
+</div>

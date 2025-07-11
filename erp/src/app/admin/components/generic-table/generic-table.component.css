@@ -1,0 +1,81 @@
+/* Responsive table container */
+.table-responsive {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  max-width: 100%;
+}
+
+/* Compact table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  font-size: 0.85rem; /* Smaller font */
+  table-layout: auto;
+}
+
+caption {
+  caption-side: top;
+  font-weight: bold;
+  text-align: left;
+  padding: 0.4rem;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 0.9rem;
+}
+
+/* Base styling for table cells */
+th, td {
+  padding: 0.4rem 0.6rem; /* Smaller padding */
+  text-align: left;
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+thead {
+  background-color: #f1f1f1;
+}
+
+tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+tr:hover {
+  background-color: #f0f8ff; /* Light blue background on hover */
+}
+
+/* Base paragraph style (reconciled) */
+p {
+  font-style: normal;
+  color: #444;
+  margin: 0;
+  padding: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* Styl pro obrázky v buňce tabulky */
+.table-cell-image {
+  max-width: 50px;
+  max-height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Styly pro "žádná data" zprávu */
+.no-data-msg {
+  color: #888;
+  font-style: italic;
+  font-size: 0.85rem;
+  padding-left: 15px;
+  text-align: center; /* Centrujeme zprávu */
+}
+
+/* Odstraněny: .btn-wrp, .caption-content-wrapper, .table-controls, .search-bar, .search-input,
+   th.sortable, .header-content, .sort-icon, .table-row-clickable, .action-cell,
+   .shadow-background, .ins-sh, .dialog-wrp, .detail-dialog-wrp atd.
+   Zůstaly jen základní styly pro samotnou tabulku. */

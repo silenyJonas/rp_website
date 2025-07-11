@@ -1,0 +1,51 @@
+<div class="table-responsive">
+  <table>
+    <caption *ngIf="tableCaption">
+      <div class="caption-content-wrapper">
+        <div class="caption-text">
+          {{ tableCaption }}
+        </div>
+        </div>
+    </caption>
+    <thead>
+      <tr>
+        <th *ngFor="let col of columnDefinitions">
+          <ng-container>
+            <span class="header-content">
+              {{ col.header }}
+              </span>
+          </ng-container>
+        </th>
+        </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="data && data.length > 0; else noDataContent">
+        <tr *ngFor="let item of data">
+          <ng-container *ngFor="let col of columnDefinitions">
+            <td *ngIf="!col.hidden">
+              <ng-container [ngSwitch]="col.type">
+                <ng-container *ngSwitchCase="'image'">
+                  <img [src]="getCellValue(item, col)" alt="Obrázek" class="table-cell-image" *ngIf="getCellValue(item, col)">
+                  <span *ngIf="!getCellValue(item, col)">Není obrázek</span>
+                </ng-container>
+                <ng-container *ngSwitchCase="'link'">
+                  <a [href]="getCellValue(item, col)" target="_blank">{{ getCellValue(item, col) }}</a>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  {{ getCellValue(item, col) }}
+                </ng-container>
+              </ng-container>
+            </td>
+          </ng-container>
+          </tr>
+      </ng-container>
+      <ng-template #noDataContent>
+        <tr>
+          <td [attr.colspan]="columnDefinitions.length" class="no-data-msg">
+            Nebyla nalezena žádná data.
+          </td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
+</div>

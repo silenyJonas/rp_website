@@ -1,33 +1,19 @@
 <div class="login-container">
   <h2>Admin Login</h2>
+
+  
   <form (ngSubmit)="onLogin()">
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input
-        type="text"
-        id="username"
-        name="username"
-        [(ngModel)]="username"
-        required
-        autocomplete="username"
-      >
-    </div>
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        [(ngModel)]="password"
-        required
-        autocomplete="current-password"
-      >
-    </div>
-
-    <button type="submit">Login</button>
-
-    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
-  </form>
+  <div>
+    <label for="email">E-mail:</label>
+    <input type="email" id="email" [(ngModel)]="email" name="email" required>
+  </div>
+  <div>
+    <label for="password">Heslo:</label>
+    <input type="password" id="password" [(ngModel)]="password" name="password" required>
+  </div>
+  <button type="submit">Přihlásit se</button>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+</form>
 
   <div class="back-to-home">
     <a routerLink="/home" class="home-button">Zpět domů</a>

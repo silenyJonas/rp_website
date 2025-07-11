@@ -6,19 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRawRequestCommissionRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -26,16 +18,14 @@ class StoreRawRequestCommissionRequest extends FormRequest
             'contact_email' => ['required', 'email', 'max:255'],
             'contact_phone' => ['nullable', 'string', 'max:255'],
             'order_description' => ['required', 'string', 'max:255'],
-            'status' => ['nullable', 'string', 'in:Nově zadané,Zpracovává se,Dokončeno,Zrušeno'], // nebo uprav dle povolených stavů
-            'priority' => ['nullable', 'string', 'in:Nízká,Neutrální,Vysoká'],
+            // Přidáme 'sometimes' pravidlo pro volitelná pole,
+            // která mají další validační pravidla.
+            // Zajišťuje, že pravidlo 'in' se aplikuje jen, když je pole přítomno.
+            'status' => ['sometimes', 'nullable', 'string', 'in:Nově zadané,Zpracovává se,Dokončeno,Zrušeno'],
+            'priority' => ['sometimes', 'nullable', 'string', 'in:Nízká,Neutrální,Vysoká'],
         ];
     }
 
-    /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
     public function messages(): array
     {
         return [

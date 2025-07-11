@@ -41,6 +41,7 @@ return [
     | Session Encryption
     |--------------------------------------------------------------------------
     |
+    |
     | This option allows you to easily specify that all of your session data
     | should be encrypted before it's stored. All encryption is performed
     | automatically by Laravel and you may use the session like normal.
@@ -129,7 +130,7 @@ return [
 
     'cookie' => env(
         'SESSION_COOKIE',
-        Str::snake((string) env('APP_NAME', 'laravel')).'_session'
+        Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
     ),
 
     /*
@@ -156,7 +157,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN'),
+      'domain' => env('SESSION_DOMAIN', null), // <<<<<<< DŮLEŽITÉ: Mělo by být null pro localhost
 
     /*
     |--------------------------------------------------------------------------
@@ -169,7 +170,8 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    'secure' => env('SESSION_SECURE_COOKIE', false), // MUSÍ BÝT false, pokud je Laravel na HTTP
+    'same_site' => env('SESSION_SAMESITE', 'lax'), // Zkuste 'lax' nebo 'none' // <<<<<<< DŮLEŽITÉ: Pro vývoj na HTTP MUSÍ být false
 
     /*
     |--------------------------------------------------------------------------
@@ -199,7 +201,6 @@ return [
     |
     */
 
-    'same_site' => env('SESSION_SAME_SITE', 'lax'),
 
     /*
     |--------------------------------------------------------------------------

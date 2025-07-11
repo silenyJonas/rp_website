@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User; // Důležité: Tady referencujeme tvůj model App\Models\User
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -11,6 +12,13 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var class-string<\App\Models\User>
+     */
+    protected $model = User::class; // <<<<< Ujisti se, že toto odkazuje na tvůj App\Models\User
+
     /**
      * The current password being used by the factory.
      */
@@ -24,11 +32,16 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            // <<<<< ZMĚNA: Používáme user_email a user_password_hash
+            'user_email' => $this->faker->unique()->safeEmail(),
+            'user_password_hash' => static::$password ??= Hash::make('password'),
+            'user_password_salt' => '', // Bcrypt integruje salt, takže může být prázdné
+            'last_login_at' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
+            'is_deleted' => false,
+            // 'remember_token' => Str::random(10), // <<<<< Pokud nemáš v DB, zakomentuj
         ];
     }
 
@@ -38,7 +51,7 @@ class UserFactory extends Factory
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
+                // 'email_verified_at' => null, // <<<<< Pokud nemáš, zakomentuj
         ]);
     }
 }

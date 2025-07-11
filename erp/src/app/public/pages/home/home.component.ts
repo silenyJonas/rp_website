@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-
+import { PublicDataService } from '../../services/public-data.service';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -9,7 +10,8 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink
+    RouterLink,
+    FormsModule
   ]
 })
 export class HomeComponent {
@@ -34,7 +36,14 @@ export class HomeComponent {
     graphicdesign: false,
   };
 
-  constructor() { }
+  formData = {
+    thema: 'web-development', // Nastavení výchozí hodnoty pro select
+    contact_email: '',
+    contact_phone: '', // Změna na 'phone' - váš HTML input má name="contact_email" ale label="Telefon"
+    order_description: ''
+  };
+
+  constructor(private publicDataService: PublicDataService) { }
 
   getHeroBackground(): string {
     return `url('${this.heroBackgroundImageUrl}')`;
@@ -52,11 +61,6 @@ export class HomeComponent {
     };
   }
 
-  /**
-   * Vrací styly pro text nadpisu (barva, text-shadow).
-   * Nadpis je vždy plně viditelný, při najetí se změní barva a přidá stín.
-   * @param serviceName Název služby.
-   */
   getTextStyles(serviceName: string) {
     const isHovered = this.hoverState[serviceName];
     return {
@@ -66,11 +70,6 @@ export class HomeComponent {
     };
   }
 
-  /**
-   * Vrací styly pro šipku (barva, transform).
-   * Šipka je vždy plně viditelná, při najetí se změní barva a posune se.
-   * @param serviceName Název služby.
-   */
   getArrowStyles(serviceName: string) {
     const isHovered = this.hoverState[serviceName];
     return {
@@ -84,4 +83,40 @@ export class HomeComponent {
   setHoverState(serviceName: string, isHovering: boolean) {
     this.hoverState[serviceName] = isHovering;
   }
+onSubmit(): void {
+    // Ověření, zda data existují (volitelné, ale dobrá praxe)
+    if (!this.formData.contact_email || !this.formData.order_description) {
+      console.error('Prosím vyplňte všechna povinná pole.');
+      // Zde můžete zobrazit chybovou zprávu uživateli
+      return;
+    }
+
+    console.log(this.formData)
+
+    this.publicDataService.submitContactForm(this.formData).subscribe({
+      next: (response) => {
+        console.log('Formulář odeslán úspěšně!', response);
+        // Zde můžete přidat logiku pro zobrazení zprávy uživateli
+        alert('Váš požadavek byl úspěšně odeslán! Budeme vás kontaktovat do 24 hodin.');
+        // Volitelně resetujte formulář po úspěšném odeslání
+        this.resetForm();
+      },
+      error: (error) => {
+        console.error('Chyba při odesílání formuláře:', error);
+        // Zde můžete přidat logiku pro zobrazení chybové zprávy uživateli
+        alert('Při odesílání formuláře nastala chyba. Zkuste to prosím znovu.');
+      }
+    });
+  }
+
+  // Pomocná metoda pro resetování formuláře
+  resetForm(): void {
+    this.formData = {
+      thema: 'web-development',
+      contact_email: '',
+      contact_phone: '',
+      order_description: ''
+    };
+  }
+  
 }
