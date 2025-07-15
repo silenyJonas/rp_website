@@ -2,65 +2,45 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-// Důležité: Importujte AuthController z jeho správného namespace
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RawRequestCommissionController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
-
 // --- Veřejné routy (nevyžadují autentizaci) ---
 
-// Routa pro získání CSRF cookie (vyžadováno Laravel Sanctum pro SPA autentizaci)
-// Angular frontend by měl volat tuto routu před prvním POST požadavkem (např. login).
+// Routa pro získání CSRF cookie (pro tokeny již není striktně nutná, ale může zůstat)
+// Toto volání je primárně pro session-based Sanctum, ale neškodí ho ponechat.
+// Pro tokeny se nebude používat pro autentizaci.
 Route::get('/sanctum/csrf-cookie', function (Request $request) {
-    // <<<<<<<<<<<< ZMĚNA ZDE! Vracíme prázdný JSON s 204 No Content
     return response()->json([], 204);
 });
 
-// Routa pro přihlášení uživatele
-// Tato routa přijímá přihlašovací údaje (email, password) a ověřuje je.
+// Routa pro přihlášení uživatele.
+// Zde se po úspěšném ověření credentials vygeneruje a vrátí API token (Bearer token).
 Route::post('/login', [AuthController::class, 'login']);
 
 
-// --- Chráněné routy (vyžadují autentizaci pomocí Sanctum) ---
+// --- Chráněné routy (vyžadují autentizaci pomocí Bearer Tokenu) ---
 
-// Všechny routy uvnitř této této skupiny budou chráněny middlewarem 'auth:sanctum'.
-// To znamená, že uživatel musí být přihlášen, aby k nim měl přístup.
+// Všechny routy uvnitř této skupiny budou chráněny middlewarem 'auth:sanctum'.
+// JAK JSME DISKUTOVALI: Laravel Sanctum je balíček, který podporuje jak session, tak API tokeny.
+// Když klient pošle Bearer token v hlavičce 'Authorization', 'auth:sanctum' middleware
+// automaticky ověří tento token proti tabulce 'personal_access_tokens'.
+// Tedy, validace pro tyto routy BUDE probíhat přes tokeny, ne přes session.
 Route::middleware('auth:sanctum')->group(function () {
 
-    // Routa pro odhlášení uživatele
+    // Routa pro odhlášení uživatele.
+    // Zde se token uživatele zneplatní na straně serveru.
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // Routa pro získání informací o aktuálně přihlášeném uživateli
-    // (používá se pro kontrolu stavu přihlášení z Angularu)
+    // Routa pro získání informací o aktuálně přihlášeném uživateli.
+    // Uživatel je identifikován na základě Bearer tokenu.
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    // Alternativně můžete použít metodu v AuthControlleru:
-    // Route::get('/user', [AuthController::class, 'user']);
 
-
-    // API Resource routy pro RawRequestCommissionController
-    // TOTO JE JEDINÉ MÍSTO, KDE BY MĚLA BÝT TATO ROUTA DEFINOVÁNA.
-    // 'raw_request_commissions' je správné, protože je to množné číslo.
+    // API Resource routy pro RawRequestCommissionController.
+    // Přístup k těmto routám bude povolen pouze s platným Bearer tokenem.
     Route::apiResource('raw_request_commissions', RawRequestCommissionController::class);
 
-    // Pokud máte další API resource, přidejte je sem, např.:
-    // Route::apiResource('some_other_resource', SomeOtherController::class);
+    // Pokud máte další API resource, přidejte je sem
 });
-
-// --- DŮLEŽITÉ: Odstraněné duplicitní nebo nesprávně umístěné routy ---
-// Tyto routy jsou zakomentované, protože jsou duplicitní nebo by neměly být mimo 'auth:sanctum' skupinu.
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-// Route::apiResource('raw_request_commissions', RawRequestCommissionController::class);

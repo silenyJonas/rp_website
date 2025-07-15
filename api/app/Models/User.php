@@ -6,25 +6,56 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens; // <--- Důležité: Přidat tento use statement pro Sanctum
+use Laravel\Sanctum\HasApiTokens; // <-- Důležité: Tento use statement je správný a potřebný
 
+/**
+ * 
+ *
+ * @property int $user_login_id
+ * @property string $user_email
+ * @property string $user_password_hash
+ * @property string $user_password_salt
+ * @property \Illuminate\Support\Carbon|null $last_login_at
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property bool $is_deleted
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @property-read int|null $tokens_count
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsDeleted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereLastLoginAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserLoginId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserPasswordHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserPasswordSalt($value)
+ * @mixin \Eloquent
+ */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable; // <--- Přidat HasApiTokens sem
+    use HasApiTokens, HasFactory, Notifiable; // <-- Použití traitu HasApiTokens je správné
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'user_login'; // <-- ZMĚNA: Název tvé tabulky pro přihlášení
+    protected $table = 'user_login'; // <-- Název vaší tabulky pro přihlášení
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'user_login_id'; // <-- ZMĚNA: Tvůj primární klíč
+    protected $primaryKey = 'user_login_id'; // <-- Váš primární klíč
 
     /**
      * The attributes that are mass assignable.
@@ -32,9 +63,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_email',         // <-- ZMĚNA: Tvůj sloupec pro e-mail
-        'user_password_hash', // <-- ZMĚNA: Tvůj sloupec pro hash hesla
-        'user_password_salt', // <--- Přidat, pokud používáš salt samostatně
+        'user_email',           // <-- Váš sloupec pro e-mail
+        'user_password_hash',   // <-- Váš sloupec pro hash hesla
+        'user_password_salt',   // <--- Pokud používáte salt samostatně
     ];
 
     /**
@@ -43,8 +74,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'user_password_hash', // <-- ZMĚNA: Skrýt hash hesla
-        'user_password_salt', // <-- ZMĚNA: Skrýt salt
+        'user_password_hash', // <-- Skrýt hash hesla
+        'user_password_salt', // <-- Skrýt salt
         // 'remember_token',   // Můžeš zakomentovat, pokud ho nemáš v DB
     ];
 
@@ -55,12 +86,12 @@ class User extends Authenticatable
      */
     protected $casts = [
         // 'email_verified_at' => 'datetime', // Můžeš zakomentovat, pokud nepoužíváš ověření e-mailu
-        'last_login_at' => 'datetime',       // <-- Přidat, pokud máš
+        'last_login_at' => 'datetime',        // <-- Pokud máte
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',          // <-- Přidat, pokud máš
-        'is_deleted' => 'boolean',           // <-- Přidat, pokud máš
-        // 'password' => 'hashed', // <-- TOTO ODSTRANIT! Tvoji metodu getAuthPassword() použijeme pro hash hesla
+        'deleted_at' => 'datetime',           // <-- Pokud máte
+        'is_deleted' => 'boolean',            // <-- Pokud máte
+        // 'password' => 'hashed', // <-- TOTO ODSTRANIT! Vaši metodu getAuthPassword() použijeme pro hash hesla
     ];
 
     // --- KLÍČOVÉ METODY PRO AUTENTIZACI ---
@@ -73,7 +104,7 @@ class User extends Authenticatable
      */
     public function getAuthIdentifierName()
     {
-        return 'user_email'; // <-- ZMĚNA: Tvůj sloupec pro e-mail
+        return 'user_email'; // <-- Váš sloupec pro e-mail
     }
 
     /**
@@ -83,7 +114,7 @@ class User extends Authenticatable
      */
     public function getAuthIdentifier()
     {
-        return $this->user_email; // <-- ZMĚNA: Vracíme hodnotu z tvého e-mailového sloupce
+        return $this->user_email; // <-- Vracíme hodnotu z vašeho e-mailového sloupce
     }
 
     /**
@@ -94,7 +125,7 @@ class User extends Authenticatable
      */
     public function getAuthPassword()
     {
-        return $this->user_password_hash; // <-- ZMĚNA: Tvůj sloupec s hashovaným heslem
+        return $this->user_password_hash; // <-- Váš sloupec s hashovaným heslem
     }
 
     /**

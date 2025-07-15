@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Api; // <-- Důležité: tento namespace už tam je, ověřte si ho
+namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller; // <-- Toto už tam je
-use Illuminate\Http\Request; // <-- Toto už tam je
-use Illuminate\Support\Facades\Auth; // <-- PŘIDAT TENTO IMPORT
-use Illuminate\Support\Facades\Hash; // <-- PŘIDAT TENTO IMPORT (pokud budete hashovat hesla)
-use App\Models\User; // <-- PŘIDAT TENTO IMPORT, odkazuje na váš upravený User model
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User; // Import vašeho User modelu
+use Illuminate\Support\Facades\Log; // Pro diagnostiku
 
 class AuthController extends Controller
 {
     /**
-     * Handle an incoming authentication request.
+     * Zpracuje příchozí požadavek na autentizaci.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
@@ -19,19 +20,28 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email', // V Angularu posíláme 'email'
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // Pokus o přihlášení.
-        // Auth::attempt automaticky použije metodu getAuthPassword() z vašeho modelu User
-        // a porovná hashované heslo z databáze s poskytnutým heslem.
-        if (Auth::attempt(['user_email' => $request->email, 'password' => $request->password])) { // <-- DŮLEŽITÉ: ZDE POUŽIJTE 'user_email' pro vaši tabulku
+        if (Auth::attempt(['user_email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-            // Po úspěšném přihlášení Sanctum automaticky nastaví session cookie.
+
+            // --- DIAGNOSTIKA ZAČÁTEK ---
+            Log::info('Login attempt successful. User object acquired.');
+            Log::info('User class: ' . get_class($user));
+            Log::info('User instance of Authenticatable: ' . (is_a($user, \Illuminate\Contracts\Auth\Authenticatable::class) ? 'true' : 'false'));
+            Log::info('User instance of App\Models\User: ' . (is_a($user, User::class) ? 'true' : 'false'));
+            Log::info('User has HasApiTokens trait: ' . (method_exists($user, 'createToken') ? 'true' : 'false'));
+            // --- DIAGNOSTIKA KONEC ---
+
+            // Generujeme nový API token pro uživatele.
+            $token = $user->createToken('erp-system-token')->plainTextToken;
+
             return response()->json([
                 'message' => 'Přihlášení úspěšné!',
-                'user' => $user, // Můžete vrátit data o uživateli
+                'user' => $user,
+                'token' => $token,
             ], 200);
         }
 
@@ -41,18 +51,24 @@ class AuthController extends Controller
     }
 
     /**
-     * Log the user out of the application.
+     * Odhlásí uživatele z aplikace.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout(Request $request)
     {
-        Auth::guard('web')->logout(); // Odhlásí aktuálního uživatele
+        if ($request->user()) {
+            // Zneplatní všechny tokeny aktuálního uživatele.
+            $request->user()->tokens()->delete();
+        }
 
-        // Zruší session a regeneruje CSRF token. Klíčové pro bezpečné odhlášení.
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        // Tyto řádky jsou pro session-based autentizaci.
+        // Pro čistě tokenovou autentizaci je můžete zakomentovat,
+        // aby se předešlo chybě "Session store not set on request".
+        // Auth::guard('web')->logout();
+        // $request->session()->invalidate();
+        // $request->session()->regenerateToken();
 
         return response()->json([
             'message' => 'Odhlášení úspěšné!'
@@ -60,15 +76,13 @@ class AuthController extends Controller
     }
 
     /**
-     * Get the authenticated user.
+     * Získá autentizovaného uživatele.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function user(Request $request)
     {
-        // Vrací aktuálně přihlášeného uživatele.
-        // Sanctum ověří uživatele na základě session cookie.
         return response()->json($request->user());
     }
 }

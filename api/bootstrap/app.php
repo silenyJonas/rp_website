@@ -4,8 +4,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\HandleCors;
-use Illuminate\Auth\AuthenticationException; // <-- PŘIDEJTE TENTO USE STATEMENT
-use Illuminate\Http\Request;             // <-- PŘIDEJTE TENTO USE STATEMENT
+use Illuminate\Auth\AuthenticationException; // Důležité: pro zpracování 401
+use Illuminate\Http\Request;             // Důležité: pro zpracování 401
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,18 +15,23 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->api(prepend: [
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        ]);
-
+        // Ponecháváme CORS middleware pro křížové domény
         $middleware->append(HandleCors::class);
+
+        // DŮLEŽITÉ: Zde NEJSOU žádné Sanctum middleware pro API skupinu.
+        // To znamená, že API routy NEBUDOU automaticky ověřovány pomocí Sanctum session.
+        // Autentizace se bude spoléhat na standardní Laravel session.
+        // Pokud budete chtít později přidat Sanctum, přidáte zde:
+        // $middleware->api(prepend: [
+        //     \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        // --- ZDE JE ZMĚNA ---
+        // Zajišťuje, že pro API požadavky (očekávající JSON)
+        // se při AuthenticationException vrátí 401 Unauthorized.
         $exceptions->render(function (AuthenticationException $e, Request $request) {
             if ($request->expectsJson()) {
-                return response()->json(['message' => $e->getMessage()], 401);
+                return response()->json(['message' => 'Unauthenticated.'], 401);
             }
         });
-        // --- KONEC ZMĚNY ---
     })->create();
