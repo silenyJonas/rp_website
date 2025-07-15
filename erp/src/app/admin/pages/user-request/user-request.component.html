@@ -1,15 +1,113 @@
-<!-- src/app/user-request/user-request.component.html -->
-<div class="user-request-container">
+<!-- src/app/admin/pages/user-request/user-request.component.html -->
 
-  <!-- Používáme GenericTableComponent -->
-  <app-generic-table
-    [apiEndpoint]="apiEndpoint"        
-    [tableCaption]="'Seznam požadavků na provize'" 
-    [columns]="userRequestColumns" 
-    [data]="data"                       
-    [isLoading]="isLoading"             
-    >
-  </app-generic-table>
+<div class="user-request-container container mx-auto p-4">
 
-  <!-- Zde můžete přidat další specifický obsah pro UserRequestComponent -->
+  <div *ngIf="isLoading" class="text-center text-blue-500">Načítání dat...</div>
+  <div *ngIf="errorMessage" class="text-center text-red-500">{{ errorMessage }}</div>
+
+  <div *ngIf="!isLoading && !errorMessage">
+    <!-- Nový kontejner pro rozložení filtrů a tabulky -->
+    <div class="main-content-layout">
+      <!-- Filtrovací formulář - nyní v levém sloupci -->
+      <div class="filter-form-container">
+        <h3 class="filter-form-title">Filtrovat požadavky</h3>
+        <div class="filter-grid">
+          <div>
+            <label for="filterSearch" class="filter-label">Obecné hledání</label>
+            <input type="text" id="filterSearch" [(ngModel)]="filterSearch" (keyup.enter)="applyFilters()"
+                   class="filter-input"
+                   placeholder="Hledat téma, popis, e-mail, telefon">
+          </div>
+          <div>
+            <label for="filterEmail" class="filter-label">E-mail</label>
+            <input type="email" id="filterEmail" [(ngModel)]="filterEmail" (keyup.enter)="applyFilters()"
+                   class="filter-input"
+                   placeholder="Hledat podle e-mailu">
+          </div>
+          <div>
+            <label for="filterStatus" class="filter-label">Stav</label>
+            <select id="filterStatus" [(ngModel)]="filterStatus"
+                    class="filter-select">
+              <option value="">-- Vybrat stav --</option>
+              <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+            </select>
+          </div>
+          <div>
+            <label for="filterPriority" class="filter-label">Priorita</label>
+            <select id="filterPriority" [(ngModel)]="filterPriority"
+                    class="filter-select">
+              <option value="">-- Vybrat prioritu --</option>
+              <option *ngFor="let priority of priorityOptions" [value]="priority">{{ priority }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-buttons-container">
+          <button (click)="clearFilters()"
+                  class="filter-button clear">
+            Vyčistit filtry
+          </button>
+          <button (click)="applyFilters()"
+                  class="filter-button apply">
+            Použít filtry
+          </button>
+        </div>
+      </div>
+
+      <!-- Kontejner pro tabulku a paginaci - nyní v pravém sloupci -->
+      <div class="table-and-pagination-container">
+        <!-- Používáme GenericTableComponent -->
+        <app-generic-table
+          [data]="data"
+          [columns]="userRequestColumns"
+          [tableCaption]="'Seznam požadavků na provize'"
+          [isLoading]="isLoading"
+          [uploadsBaseUrl]="'https://your-upload-domain.com/uploads/'"
+          >
+        </app-generic-table>
+
+        <!-- Paginace ovládací prvky -->
+        <div class="pagination-controls-wrapper">
+          <div class="text-sm text-gray-700">
+            Zobrazuji {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ (currentPage - 1) * itemsPerPage + data.length }} z celkem {{ totalItems }} záznamů.
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <label for="itemsPerPage" class="text-sm text-gray-700">Položek na stránku:</label>
+            <select id="itemsPerPage" (change)="onItemsPerPageChange($event)"
+                    class="items-per-page-select">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15" [selected]="itemsPerPage === 15">15</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+
+          <nav class="pagination-nav" aria-label="Pagination">
+            <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1"
+                    class="pagination-button first-page-btn">
+              <span class="sr-only">Předchozí</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <ng-container *ngFor="let page of pagesArray">
+              <button (click)="goToPage(page)"
+                      [ngClass]="{ 'active-page': page === currentPage }"
+                      class="pagination-button">
+                {{ page }}
+              </button>
+            </ng-container>
+            <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages"
+                    class="pagination-button last-page-btn">
+              <span class="sr-only">Další</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

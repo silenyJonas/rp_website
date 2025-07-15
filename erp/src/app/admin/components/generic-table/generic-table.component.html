@@ -5,7 +5,7 @@
         <div class="caption-text">
           {{ tableCaption }}
         </div>
-        </div>
+      </div>
     </caption>
     <thead>
       <tr>
@@ -13,10 +13,10 @@
           <ng-container>
             <span class="header-content">
               {{ col.header }}
-              </span>
+            </span>
           </ng-container>
         </th>
-        </tr>
+      </tr>
     </thead>
     <tbody>
       <ng-container *ngIf="data && data.length > 0; else noDataContent">
@@ -37,7 +37,7 @@
               </ng-container>
             </td>
           </ng-container>
-          </tr>
+        </tr>
       </ng-container>
       <ng-template #noDataContent>
         <tr>

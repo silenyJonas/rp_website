@@ -9,8 +9,8 @@ import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column
 // Předpoklad: BaseDataComponent je ve stejné složce 'src/app/components'
 import { BaseDataComponent } from '../base-data/base-data.component';
 // Předpoklad: DataHandler je v 'src/app/core/services'
-
 import { DataHandler } from '../../../core/services/data-handler.service';
+
 @Component({
   selector: 'app-generic-table',
   standalone: true,
