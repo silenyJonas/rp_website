@@ -11,19 +11,13 @@ import { tap, catchError } from 'rxjs/operators';
 export class AuthService {
   private baseUrl = '/api';
 
-  // Ukládáme přístupový token v paměti, protože má krátkou životnost
-  private accessToken: string | null = null;
-
-  // Sledujeme stav přihlášení na základě existence přístupového tokenu
+  // Sledujeme stav přihlášení na základě existence přístupového tokenu v Local Storage
   private _isLoggedIn = new BehaviorSubject<boolean>(this.hasAccessToken());
   isLoggedIn$ = this._isLoggedIn.asObservable();
 
   constructor(private http: HttpClient) {
-    // Při inicializaci služby zkusíme získat přístupový token, pokud je uložen
-    // (např. pokud se stránka obnoví a token je v paměti z předchozího stavu)
-    // Nicméně, pro refresh token strategii, bude accessToken obvykle null po refresh
-    // a bude se spoléhat na refreshAccessToken() při checkAuth().
-    // Pro jednoduchost ho zde explicitně nenastavujeme z localStorage, protože je krátkodobý.
+    // Při inicializaci služby zkusíme získat přístupový token z Local Storage
+    this.checkAuth().subscribe(); // Spustíme kontrolu autentizace hned při startu služby
   }
 
   // Metoda pro přihlášení uživatele
@@ -32,13 +26,14 @@ export class AuthService {
       tap({
         next: (response: any) => {
           console.log('Přihlášení úspěšné:', response);
-          this.accessToken = response.token; // Uložíme přístupový token do paměti
-          localStorage.setItem('userEmail', response.user.user_email); // E-mail stále v localStorage
+          localStorage.setItem('accessToken', response.token); // Uložíme přístupový token
+          localStorage.setItem('refreshToken', response.refreshToken); // Uložíme obnovovací token
+          localStorage.setItem('userEmail', response.user.user_email);
           this._isLoggedIn.next(true);
         },
         error: (error: HttpErrorResponse) => {
           console.error('Chyba přihlášení:', error);
-          this.clearAuthData(); // Vyčistíme data při chybě
+          this.clearAuthData();
         }
       }),
       catchError((error: HttpErrorResponse) => {
@@ -55,7 +50,11 @@ export class AuthService {
 
   // Metoda pro odhlášení uživatele
   logout(): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/logout`, {}, { withCredentials: true }).pipe(
+    // Odešleme refresh token pro zneplatnění na serveru
+    const refreshToken = this.getRefreshToken();
+    const body = refreshToken ? { refreshToken: refreshToken } : {};
+
+    return this.http.post<any>(`${this.baseUrl}/logout`, body).pipe(
       tap({
         next: () => {
           console.log('Odhlášení úspěšné.');
@@ -63,7 +62,7 @@ export class AuthService {
         },
         error: (err) => {
           console.error('Chyba při odhlášení:', err);
-          this.clearAuthData();
+          this.clearAuthData(); // Vyčistíme data i při chybě odhlášení
         }
       }),
       catchError(() => {
@@ -72,13 +71,22 @@ export class AuthService {
     );
   }
 
-  // Nová metoda pro obnovení přístupového tokenu
+  // Metoda pro obnovení přístupového tokenu
   refreshAccessToken(): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/refresh`, {}, { withCredentials: true }).pipe(
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      console.warn('Refresh token není v Local Storage, nelze obnovit.');
+      this.clearAuthData();
+      return throwError(() => new Error('Refresh token chybí.'));
+    }
+
+    // Odešleme refresh token v těle požadavku
+    return this.http.post<any>(`${this.baseUrl}/refresh`, { refreshToken: refreshToken }).pipe(
       tap({
         next: (response: any) => {
           console.log('Přístupový token obnoven:', response);
-          this.accessToken = response.token; // Uložíme nový přístupový token
+          localStorage.setItem('accessToken', response.token); // Uložíme nový přístupový token
+          localStorage.setItem('refreshToken', response.refreshToken); // Uložíme nový obnovovací token
           this._isLoggedIn.next(true);
         },
         error: (error: HttpErrorResponse) => {
@@ -98,35 +106,42 @@ export class AuthService {
 
   // Pomocná metoda pro vyčištění autentizačních dat
   private clearAuthData(): void {
-    this.accessToken = null;
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('userEmail');
     this._isLoggedIn.next(false);
   }
 
   // Získání aktuálního přístupového tokenu
-  public getAccessToken(): string | null { // Zajištěno, že je public
-    return this.accessToken;
+  public getAccessToken(): string | null {
+    return localStorage.getItem('accessToken');
+  }
+
+  // Získání obnovovacího tokenu
+  public getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
   }
 
   // Získání e-mailu uživatele z localStorage
-  public getUserEmail(): string | null { // Zajištěno, že je public
+  public getUserEmail(): string | null {
     return localStorage.getItem('userEmail');
   }
 
-  // Kontrola, zda existuje přístupový token (v paměti)
+  // Kontrola, zda existuje přístupový token v Local Storage
   private hasAccessToken(): boolean {
-    return !!this.accessToken;
+    return !!localStorage.getItem('accessToken');
   }
 
   // Metoda pro kontrolu autentizace (při načtení aplikace nebo refresh stránky)
   checkAuth(): Observable<boolean> {
     if (this.hasAccessToken()) {
-      return of(true);
+      return of(true); // Pokud je token v Local Storage, jsme přihlášeni
     }
 
+    // Pokud token není v Local Storage, zkusíme ho obnovit pomocí refresh tokenu
     return this.refreshAccessToken().pipe(
       catchError(() => {
-        return of(false);
+        return of(false); // Pokud se nepodaří obnovit, uživatel není přihlášen
       })
     );
   }
