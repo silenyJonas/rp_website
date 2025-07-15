@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-// use Illuminate\Database\Eloquent\SoftDeletes; // Pokud používáte SoftDeletes
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
- * 
  *
  * @property int $id
  * @property string $thema
@@ -16,10 +16,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $order_description
  * @property string $status
  * @property string $priority
- * @property \Illuminate\Support\Carbon $created_at
- * @property string $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property bool $is_deleted
+ * @property Carbon $created_at
+ * @property Carbon $updated_at // Nyní odkazuje na 'updated_at' v DB
+ * @property Carbon|null $deleted_at
  * @method static \Database\Factories\RawRequestCommissionFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission newQuery()
@@ -29,21 +28,25 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereIsDeleted($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereOrderDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission wherePriority($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereThema($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission withoutTrashed()
  * @mixin \Eloquent
  */
 class RawRequestCommission extends Model
 {
-    use HasFactory;
-    // use SoftDeletes; // Pokud používáte SoftDeletes
+    use HasFactory, SoftDeletes;
 
-    // Definujte název sloupce pro "updated at"
-    const UPDATED_AT = 'last_changed_at'; // <-- PŘIDAT TENTO ŘÁDEK
+    // ODSTRANĚNO: const UPDATED_AT = 'last_changed_at';
+    // Laravel nyní bude automaticky používat sloupec 'updated_at' v DB.
+
+    // Ponecháno na true (nebo odstraněno, true je výchozí)
+    public $timestamps = true;
 
     /**
      * The attributes that are mass assignable.
@@ -57,6 +60,7 @@ class RawRequestCommission extends Model
         'order_description',
         'status',
         'priority',
+        // Sloupce timestamps a softDeletes jsou spravovány automaticky
     ];
 
     /**
@@ -65,9 +69,8 @@ class RawRequestCommission extends Model
      * @var array
      */
     protected $casts = [
-        'is_deleted' => 'boolean',
         'created_at' => 'datetime',
-        'last_changed_at' => 'datetime', // Doporučeno ponechat i když je to UPDATED_AT
+        'updated_at' => 'datetime', // Změněno z last_changed_at
         'deleted_at' => 'datetime',
     ];
 

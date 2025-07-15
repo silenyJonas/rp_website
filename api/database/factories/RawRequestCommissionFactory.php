@@ -26,11 +26,14 @@ class RawRequestCommissionFactory extends Factory
     {
         return [
             'thema' => $this->faker->sentence(rand(2, 4)),
-            'contact_email' => $this->faker->unique()->safeEmail(), // Použij unique() zde
+            'contact_email' => $this->faker->unique()->safeEmail(),
             'contact_phone' => $this->faker->optional()->phoneNumber(),
             'order_description' => $this->faker->paragraphs(rand(2, 4), true),
             'status' => $this->faker->randomElement(['Nově zadané', 'Zpracovává se', 'Dokončeno', 'Zrušeno']),
             'priority' => $this->faker->randomElement(['Nízká', 'Neutrální', 'Vysoká']),
+            // created_at, updated_at a deleted_at jsou automaticky spravovány Laravelem
+            // díky timestamps() a softDeletes() v migraci a výchozímu chování modelu.
+            // Není potřeba je zde definovat.
         ];
     }
 }

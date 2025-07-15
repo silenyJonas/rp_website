@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators'; // switchMap již není nutný, protože nevoláme csrf-cookie před loginem
+import { tap, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -11,29 +11,34 @@ import { tap, catchError } from 'rxjs/operators'; // switchMap již není nutný
 export class AuthService {
   private baseUrl = '/api';
 
-  // Sledujeme stav přihlášení na základě existence tokenu v localStorage
-  private _isLoggedIn = new BehaviorSubject<boolean>(this.hasAuthToken());
+  // Ukládáme přístupový token v paměti, protože má krátkou životnost
+  private accessToken: string | null = null;
+
+  // Sledujeme stav přihlášení na základě existence přístupového tokenu
+  private _isLoggedIn = new BehaviorSubject<boolean>(this.hasAccessToken());
   isLoggedIn$ = this._isLoggedIn.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    // Při inicializaci služby zkusíme získat přístupový token, pokud je uložen
+    // (např. pokud se stránka obnoví a token je v paměti z předchozího stavu)
+    // Nicméně, pro refresh token strategii, bude accessToken obvykle null po refresh
+    // a bude se spoléhat na refreshAccessToken() při checkAuth().
+    // Pro jednoduchost ho zde explicitně nenastavujeme z localStorage, protože je krátkodobý.
+  }
 
   // Metoda pro přihlášení uživatele
   login(credentials: { email: string; password: string }): Observable<any> {
-    // Pro token-based autentizaci již nepotřebujeme volat /sanctum/csrf-cookie
-    // Požadavek na login endpoint
     return this.http.post<any>(`${this.baseUrl}/login`, credentials).pipe(
       tap({
         next: (response: any) => {
           console.log('Přihlášení úspěšné:', response);
-          // Uložení získaného tokenu a uživatelského e-mailu do localStorage
-          // Předpokládáme, že API vrátí objekt s klíčem 'token' a objektem 'user' s 'user_email'
-          localStorage.setItem('authToken', response.token);
-          localStorage.setItem('userEmail', response.user.user_email);
-          this._isLoggedIn.next(true); // Aktualizace stavu přihlášení
+          this.accessToken = response.token; // Uložíme přístupový token do paměti
+          localStorage.setItem('userEmail', response.user.user_email); // E-mail stále v localStorage
+          this._isLoggedIn.next(true);
         },
         error: (error: HttpErrorResponse) => {
           console.error('Chyba přihlášení:', error);
-          this._isLoggedIn.next(false); // Při chybě se uživatel nepovažuje za přihlášeného
+          this.clearAuthData(); // Vyčistíme data při chybě
         }
       }),
       catchError((error: HttpErrorResponse) => {
@@ -43,71 +48,85 @@ export class AuthService {
         } else if (error.status !== 401) {
           errorMessage = 'Vyskytla se chyba při komunikaci se serverem.';
         }
-        return throwError(() => new Error(errorMessage)); // Předání chyby dál
+        return throwError(() => new Error(errorMessage));
       })
     );
   }
 
   // Metoda pro odhlášení uživatele
   logout(): Observable<any> {
-    // Odeslání požadavku na logout endpoint na serveru.
-    // Na serveru by tento endpoint měl token zneplatnit (např. smazat z databáze).
-    return this.http.post<any>(`${this.baseUrl}/logout`, {}).pipe(
+    return this.http.post<any>(`${this.baseUrl}/logout`, {}, { withCredentials: true }).pipe(
       tap({
         next: () => {
           console.log('Odhlášení úspěšné.');
-          this.clearAuthData(); // Vyčistíme data po úspěšném odhlášení
+          this.clearAuthData();
         },
         error: (err) => {
           console.error('Chyba při odhlášení:', err);
-          this.clearAuthData(); // Vyčistíme data i při chybě na serveru, aby se frontend odhlásil
+          this.clearAuthData();
         }
       }),
       catchError(() => {
-        return throwError(() => new Error('Chyba při odhlášení.')); // Předání chyby dál
+        return throwError(() => new Error('Chyba při odhlášení.'));
       })
     );
   }
 
-  // Pomocná metoda pro vyčištění autentizačních dat z localStorage
+  // Nová metoda pro obnovení přístupového tokenu
+  refreshAccessToken(): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/refresh`, {}, { withCredentials: true }).pipe(
+      tap({
+        next: (response: any) => {
+          console.log('Přístupový token obnoven:', response);
+          this.accessToken = response.token; // Uložíme nový přístupový token
+          this._isLoggedIn.next(true);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Chyba při obnovování tokenu:', error);
+          this.clearAuthData();
+        }
+      }),
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'Nepodařilo se obnovit token.';
+        if (error.status === 401 && error.error && error.error.message) {
+          errorMessage = error.error.message;
+        }
+        return throwError(() => new Error(errorMessage));
+      })
+    );
+  }
+
+  // Pomocná metoda pro vyčištění autentizačních dat
   private clearAuthData(): void {
-    localStorage.removeItem('authToken'); // Odstranění tokenu
-    localStorage.removeItem('userEmail'); // Odstranění e-mailu
-    this._isLoggedIn.next(false); // Aktualizace stavu přihlášení
+    this.accessToken = null;
+    localStorage.removeItem('userEmail');
+    this._isLoggedIn.next(false);
+  }
+
+  // Získání aktuálního přístupového tokenu
+  public getAccessToken(): string | null { // Zajištěno, že je public
+    return this.accessToken;
   }
 
   // Získání e-mailu uživatele z localStorage
-  getUserEmail(): string | null {
+  public getUserEmail(): string | null { // Zajištěno, že je public
     return localStorage.getItem('userEmail');
   }
 
-  // Kontrola, zda existuje autentizační token v localStorage
-  private hasAuthToken(): boolean {
-    return !!localStorage.getItem('authToken');
+  // Kontrola, zda existuje přístupový token (v paměti)
+  private hasAccessToken(): boolean {
+    return !!this.accessToken;
   }
 
-  // Metoda pro kontrolu autentizace (např. při načtení aplikace nebo refresh stránky)
+  // Metoda pro kontrolu autentizace (při načtení aplikace nebo refresh stránky)
   checkAuth(): Observable<boolean> {
-    if (!this.hasAuthToken()) {
-      return of(false); // Pokud není token, uživatel není přihlášen
+    if (this.hasAccessToken()) {
+      return of(true);
     }
 
-    // Volání /api/user endpointu pro ověření platnosti tokenu na serveru
-    // AuthTokenInterceptor automaticky přidá hlavičku Authorization
-    return this.http.get<any>(`${this.baseUrl}/user`).pipe(
-      tap({
-        next: (response: any) => {
-          // Volitelně aktualizujte userEmail, pokud se vrací v /user response
-          localStorage.setItem('userEmail', response.user_email);
-          this._isLoggedIn.next(true); // Token je platný, uživatel je přihlášen
-        },
-        error: (error: HttpErrorResponse) => {
-          console.warn('Uživatel není ověřen API (token vypršel nebo je neplatný).', error);
-          this.clearAuthData(); // Vyčistíme data, pokud token není platný
-        }
-      }),
+    return this.refreshAccessToken().pipe(
       catchError(() => {
-        return of(false); // Při chybě ověření tokenu se uživatel nepovažuje za přihlášeného
+        return of(false);
       })
     );
   }

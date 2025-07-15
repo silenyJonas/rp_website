@@ -7,11 +7,12 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Spustí migrace.
      */
     public function up(): void
     {
-        Schema::create('raw_request_commission', function (Blueprint $table) {
+        // ZMĚNA ZDE: Název tabulky je nyní 'raw_request_commissions' (plurál)
+        Schema::create('raw_request_commissions', function (Blueprint $table) {
             $table->id(); // ID (Primary Key, Auto-increment)
 
             $table->string('thema'); // Téma požadavku
@@ -31,10 +32,11 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Vrátí migrace zpět.
      */
     public function down(): void
     {
+        // ZMĚNA ZDE: Název tabulky je nyní 'raw_request_commissions' (plurál)
         Schema::dropIfExists('raw_request_commissions');
     }
 };

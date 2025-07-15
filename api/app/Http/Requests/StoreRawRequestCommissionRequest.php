@@ -18,11 +18,8 @@ class StoreRawRequestCommissionRequest extends FormRequest
             'contact_email' => ['required', 'email', 'max:255'],
             'contact_phone' => ['nullable', 'string', 'max:255'],
             'order_description' => ['required', 'string', 'max:255'],
-            // Přidáme 'sometimes' pravidlo pro volitelná pole,
-            // která mají další validační pravidla.
-            // Zajišťuje, že pravidlo 'in' se aplikuje jen, když je pole přítomno.
-            'status' => ['sometimes', 'nullable', 'string', 'in:Nově zadané,Zpracovává se,Dokončeno,Zrušeno'],
-            'priority' => ['sometimes', 'nullable', 'string', 'in:Nízká,Neutrální,Vysoká'],
+            'status' => ['sometimes', 'string', 'in:Nově zadané,Zpracovává se,Dokončeno,Zrušeno'],
+            'priority' => ['sometimes', 'string', 'in:Nízká,Neutrální,Vysoká'],
         ];
     }
 

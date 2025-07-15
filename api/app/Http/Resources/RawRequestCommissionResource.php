@@ -23,9 +23,9 @@ class RawRequestCommissionResource extends JsonResource
             'status' => $this->status,
             'priority' => $this->priority,
             'created_at' => $this->created_at,
-            'last_changed_at' => $this->last_changed_at,
+            'updated_at' => $this->updated_at, // Změněno z 'last_changed_at'
             'deleted_at' => $this->deleted_at,
-            'is_deleted' => (bool) $this->is_deleted,
+            // 'is_deleted' odstraněno
         ];
     }
 }

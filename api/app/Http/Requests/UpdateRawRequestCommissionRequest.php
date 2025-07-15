@@ -28,8 +28,7 @@ class UpdateRawRequestCommissionRequest extends FormRequest
             'order_description' => ['sometimes', 'string', 'max:255'],
             'status' => ['sometimes', 'string', 'in:Nově zadané,Zpracovává se,Dokončeno,Zrušeno'],
             'priority' => ['sometimes', 'string', 'in:Nízká,Neutrální,Vysoká'],
-            'is_deleted' => ['sometimes', 'boolean'], // Pokud se mění ručně
-            'deleted_at' => ['nullable', 'date'],     // Pokud používáš ruční nastavení
+            // 'is_deleted' a 'deleted_at' pravidla odstraněna, spravuje SoftDeletes
         ];
     }
 }

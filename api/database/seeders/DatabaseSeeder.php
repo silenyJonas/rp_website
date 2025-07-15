@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            UserLoginSeeder::class,
+            // UserLoginSeeder::class,
             RawRequestCommissionSeeder::class, // <-- Volání správné třídy seederu
         ]);
     }

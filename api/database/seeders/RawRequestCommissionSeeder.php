@@ -13,8 +13,8 @@ class RawRequestCommissionSeeder extends Seeder // <<<<<<<<<< DŮLEŽITÉ: Náze
     public function run(): void
     {
         // Použij Factory k vytvoření 10 falešných záznamů pro RawRequestCommission
-        RawRequestCommission::factory()->count(10)->create();
+        RawRequestCommission::factory()->count(50)->create();
 
-        $this->command->info('Vytvořeno 10 falešných záznamů v tabulce raw_request_commission.');
+        $this->command->info('Vytvořeno 50 falešných záznamů v tabulce raw_request_commission.');
     }
 }
