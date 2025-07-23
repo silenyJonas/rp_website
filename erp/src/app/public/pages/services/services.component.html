@@ -58,7 +58,7 @@
            [style.animation-delay]="i * 0.1 + 's'"> <div class="faq-question" (click)="toggleFaq(item)">
           <h3>{{ item.question }}</h3>
           <div class="faq-indicator">
-            <span class="faq-arrow" [ngClass]="{'rotated': item.isActive}">&gt;</span>
+            <span class="faq-arrow" [ngClass]="{'rotated': item.isActive}">></span>
           </div>
         </div>
         <div class="faq-answer" (click)="toggleFaq(item)">
@@ -294,7 +294,7 @@
 
 <section class="references-section">
   <div class="references-content">
-    <p class="ref-text">Nahlédněte do 271 053 dokončených projektů.</p>
+    <p class="ref-text">Nahlédněte do desítek dokončených projektů.</p>
     <a routerLink="/references" class="ref-button">Realizované projekty</a>
 
   </div>

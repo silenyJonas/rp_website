@@ -10,9 +10,11 @@
     </ul>
   </nav>
 </header>
-<div class="logo-wrp">
+
+<a routerLink="/home" class="logo-wrp">
   <img [src]="logo" alt="">
-</div>
+</a>
+
 <div class="lang-wrp">
     <a routerLink="/references" class="nav-link">
       Projekty
@@ -34,7 +36,7 @@
               </div>
       </form>
       
-  </div>
+</div>
   <div class="contact-wrp">
     <div class="contact-link">
 
@@ -58,3 +60,64 @@
 
     </div>
   </div>
+
+<div class="mobile-header">
+  <div class="m-logo">
+    <img [src]="logo" alt="">
+  </div>
+  <div class="hamburger" (click)="toggleMenu()">
+    <div class="hamburger-line" [class.open]="isMenuOpen"></div>
+    <div class="hamburger-line" [class.open]="isMenuOpen"></div>
+    <div class="hamburger-line" [class.open]="isMenuOpen"></div>
+  </div>
+</div>
+
+<!-- <div class="mobile-menu-wrapper" [class.open]="isMenuOpen">
+    <nav class="mobile-nav">
+        <ul>
+            <li><a routerLink="/home" (click)="closeMenu()">Domů</a></li>
+            <li><a routerLink="/services" (click)="closeMenu()">Služby</a></li>
+            <li><a routerLink="/shop" (click)="closeMenu()">Obchod</a></li>
+            <li><a routerLink="/academy" (click)="closeMenu()">Akademie</a></li>
+            <li><a routerLink="/references" (click)="closeMenu()">Projekty</a></li>
+            <li><a routerLink="/faq" (click)="closeMenu()">FAQ</a></li>
+        </ul>
+    </nav>
+</div> -->
+
+<div class="mobile-menu-wrapper" [class.open]="isMenuOpen">
+    <nav class="mobile-nav">
+        <div class="main-links">
+            <a routerLink="/home" (click)="closeMenu()">Domů</a>
+            <hr>
+            <a routerLink="/services" (click)="closeMenu()">Služby</a>
+            <hr>
+
+            <a routerLink="/shop" (click)="closeMenu()">Obchod</a>
+            <hr>
+
+            <a routerLink="/academy" (click)="closeMenu()">Akademie</a>
+            <hr>
+            <a routerLink="/references" (click)="closeMenu()">Projekty</a>
+            <hr>
+            <a routerLink="/faq" (click)="closeMenu()">FAQ</a>
+        </div>
+        <div class="mobile-menu-bottom">
+            <div class="mobile-lang-wrp">
+                <span class="mobile-lang-label" (click)="selectLanguage('cz')" [ngClass]="{'active': currentLanguage === 'cz'}">CZ</span>
+                <span class="mobile-lang-label" (click)="selectLanguage('sk')" [ngClass]="{'active': currentLanguage === 'sk'}">SK</span>
+                <span class="mobile-lang-label" (click)="selectLanguage('en')" [ngClass]="{'active': currentLanguage === 'en'}">EN</span>
+            </div>
+            <div class="mobile-contact-wrp">
+                <a href="tel:733188328" class="mobile-contact-link">
+                    <img [src]="tel_icon" alt="Telefon">
+                    <span>733 188 328</span>
+                </a>
+                <a href="mailto:info@rpsw.cz" class="mobile-contact-link">
+                    <img [src]="mail_icon" alt="Email">
+                    <span>info&#64;rpsw.cz</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</div>

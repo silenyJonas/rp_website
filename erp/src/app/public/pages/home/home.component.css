@@ -4,6 +4,9 @@ body {
     color: #e0e0e0;
 }
 
+.m-t--75{
+    margin-top: -75px;
+}
 /* UVODNI HEADER */
 
 .header-0{
@@ -319,6 +322,7 @@ justify-content: center;
     animation: fadeInSvg 1.5s ease-out 1s forwards;
     z-index: 1100;
     margin-left: 570px;
+    margin-top: -75px;
 }
 .header-1 {
     font-family: "Source Sans Pro", sans-serif;

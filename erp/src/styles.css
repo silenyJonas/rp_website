@@ -25,6 +25,9 @@ html {
         display: none;
     }
 }
+html.no-scroll {
+    overflow: hidden !important;
+}
 /* Styly pro Firefox na úrovni HTML */
 /* html {
     scrollbar-width: thin;

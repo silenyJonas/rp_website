@@ -62,7 +62,7 @@ header.scrolled {
 nav { 
   display: flex; 
   justify-content: center; 
-  align-items: center; 
+  align-items: self-start; 
   max-width: 100%; 
   height: 100%; 
   padding: 0; 
@@ -346,36 +346,276 @@ header.scrolled .active-indicator {
   height: 80%;
 }
 
-/* Responzivní úpravy pro .lang-wrp */
-@media (max-width: 768px) {
-    .lang-wrp {
-        flex-direction: column; /* Změní na sloupec na mobilu */
-        right: 15px;
-        top: 15px;
-        align-items: flex-end; /* Zarovná položky vpravo v režimu sloupce */
-        gap: 10px; /* Menší mezera na mobilu */
+/* PŮVODNÍ STYLY PRO MOBILE HEADER ZŮSTANOU ZDE */
+
+.mobile-header {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: none;
+}
+
+.m-logo {
+  height: 60px;
+  width: 60px;
+  border-bottom-right-radius: 15px;
+  z-index: 99999;
+  background-color: rgba(26, 26, 26, 0.5);
+  outline: 3px solid #2f2f2f;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.m-logo img {
+  width: 80%;
+  height: 80%;
+}
+
+.hamburger {
+  height: 60px;
+  width: 60px;
+  background-color: rgba(26, 26, 26, 0.5);
+  z-index: 99999;
+  border-bottom-left-radius: 15px;
+  outline: 3px solid #2f2f2f;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  gap: 6px;
+  transition: all 0.3s ease;
+}
+
+/* Styly pro čáry v hamburgeru */
+.hamburger-line {
+  width: 25px;
+  height: 3px;
+  background-color: #c1c1c1;
+  transition: all 0.3s ease;
+}
+
+/* Stav otevřeného hamburgeru - animace */
+.hamburger-line:nth-child(1).open {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger-line:nth-child(2).open {
+  opacity: 0;
+}
+
+.hamburger-line:nth-child(3).open {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+/* Styl pro mobilní menu */
+.mobile-menu-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  display: flex;
+  align-items: center; /* Vycentrování menu vertikálně */
+}
+
+/* Otevřený stav menu */
+.mobile-menu-wrapper.open {
+  transform: translateX(0);
+}
+
+.mobile-nav {
+  width: 100%;
+}
+
+.mobile-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-nav li {
+  margin-bottom: 20px;
+}
+
+.mobile-nav a {
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: block;
+  padding: 10px;
+  transition: color 0.3s ease;
+  text-align: center; /* Centrování textu odkazu */
+  color: #a0a0a0;
+font-family: "Inter", sans-serif;
+}
+
+.mobile-nav a:hover {
+  color: #9b59b6;
+}
+html.no-scroll {
+    overflow: hidden !important;
+}
+/* NOVÉ STYLY PRO DOLNÍ SEKCI MENU */
+.mobile-menu-bottom {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mobile-lang-wrp {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.mobile-lang-label {
+    color: #c1c1c1;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 5px 10px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+}
+
+.mobile-lang-label.active {
+    color: #fff;
+    border-color: #9b59b6;
+}
+
+.mobile-contact-wrp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.mobile-contact-link {
+    color: #c1c1c1;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.3s ease;
+}
+
+.mobile-contact-link img {
+    height: 18px;
+    width: 18px;
+    filter: invert(70%);
+}
+
+
+
+.main-links{
+  padding-top: 75px;
+
+}
+/* ----------MEDIA QUERIES PRO UPRAVU VZHLEDU MENU ---------- */
+
+/* Na tabletech a menších obrazovkách (do 768px) */
+@media (max-width: 1375px) {
+  .lang-wrp{
+    flex-direction: column;
+    align-items: end;
+  }
+  .contact-wrp{
+    left: 10px;
+    top: 93px;
+    right: 0;
+    justify-content: start;
+  }
+  .mail-icon, .tel-icon{
+    display: none;
+  }
+
+  .contact-link{
+    display: block;
+    height: auto;
+  }
+  .lang-form{
+    transform: rotate(90deg);
+    right: -55px;
+    top: 51px;
+  }
+  .lang-label{
+    transform: rotate(270deg);
+  }
+}
+@media (max-width: 905px) {
+    .desktop-header {
+      display: none !important;
+    }
+    .mobile-header {
+      display: flex !important;
+    }
+    header, .logo-wrp, .lang-wrp, .contact-wrp {
+        display: none;
+    }
+    
+    .mobile-nav ul.main-links {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+    
+    .mobile-nav li {
+        margin-bottom: 0;
     }
 
-    .lang-wrp .nav-link {
-        font-size: 0.95em;
-        padding: 6px 12px;
+    .mobile-contact-wrp {
+        flex-direction: row;
+        justify-content: center;
+        gap: 25px;
     }
 }
 
+/* Na mobilních telefonech (do 480px) */
 @media (max-width: 480px) {
-    .lang-wrp {
-        right: 10px;
-        top: 10px;
+    .mobile-nav ul.main-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
     }
-    .lang-wrp .nav-link {
-        font-size: 0.9em;
-        padding: 5px 10px;
+    
+    .mobile-nav li {
+        margin-bottom: 5px;
     }
-    .lang-form {
-        width: 120px;
-        height: 35px;
-    }
-    .lang-label img {
-        --flag-size: 24px;
+
+    .mobile-contact-wrp {
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
     }
 }

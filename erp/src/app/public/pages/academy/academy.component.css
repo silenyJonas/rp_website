@@ -446,18 +446,30 @@
     text-align: center;
 }
 .diff-arrow {
-    font-size: 1.2em;
-    color: #FFF;
     height: 40px;
     width: 40px;
-    background-color:#a67dff;
+    background-color: #a67dff;
     border-radius: 9999px;
-    line-height: 40px;
     transition: transform 0.3s ease;
-    display: block;
     flex-shrink: 0;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.arrow-txt {
+    font-size: 1.6em;
+    font-weight: bold;
+    color: white;
+    transition: transform 0.3s ease-out;
+    transform: rotate(90deg) translateX(1px) translateY(-3px); /* jemný posun doleva */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
 
 .diff-arrow.rotated {
     transform: rotate(90deg); /* Otočí šipku doprava */
