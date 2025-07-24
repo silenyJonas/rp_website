@@ -1,3 +1,4 @@
+
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -104,7 +105,7 @@ justify-content: center;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 95%;
     z-index: 1000; 
     /* NOVÉ: Počáteční stav pro animaci */
     opacity: 0;
@@ -317,8 +318,9 @@ width: 45%;
     /* margin-left: 570px; */
     /* margin-top: -183px; */
     /* margin-bottom: 102px; */
-    margin-left: 29%;
+    margin-left: 560px;
     /* margin-bottom: 4vw; */
+    margin-top: -205px;
 }
 .header-1 {
     font-family: "Source Sans Pro", sans-serif;
@@ -696,7 +698,7 @@ width: 45%;
 /* Styly pro samotné SVG plátno */
 .dynamic-cables-from-image-wrp {
     position: absolute; /* Absolutní pozice uvnitř .hero-section */
-    top: 865px;
+    top: 700px;
     left: 0; /* Klíčové: Zarovnáme k levému okraji rodiče */
     width: 1920px; /* Klíčové: Pevná šířka pro wrapper */
     height: 1440px; /* Klíčové: Pevná výška pro wrapper (poměr 4:3 k šířce) */
@@ -738,8 +740,8 @@ width: 45%;
     display: flex;
 }
 .stats {
-       margin-top: -125px;
-    margin-bottom: 125px;
+       margin-top: -30px;
+    margin-bottom: 70px;
     display: flex
 ;
     justify-content: center;
@@ -752,7 +754,7 @@ width: 45%;
     padding: 15px;
     gap: 15px;
     /* margin-right: 150px; */
-    margin-left: 58%;
+    margin-left: 1100px;
     height: 230px;
     position: relative;
     z-index: 9900;
@@ -1192,6 +1194,154 @@ button[type="submit"]:active {
 /* --- RESPONSIVE ADJUSTMENTS --- */
 
 /* Breakpoint: 1375px - 1919px (Menší desktopy) */
+@media (max-width: 1830px) {
+    .server-img-wrp{
+           margin-left: 80px;
+    }
+    .main-text{
+        font-size: 5.2rem;
+    }
+    .learn-more-text{
+        font-size: 3.2rem;
+    }
+
+}
+.mobile-hero{
+    display: none;
+    width: 100%;
+    height: 800px;
+    position: relative;
+    z-index: 100;
+}
+.links-wrp-m{
+     width: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    padding-bottom: 150px;
+}
+.link-w-c-m{
+    gap: 15px;
+    display: flex;
+    flex-direction: column;
+    padding-left: 80px;
+}
+.server-img-wrp-m{
+    width: 550px;
+    height: auto;
+    position: relative;
+    top: 331px;
+    left: 467px;
+    z-index: 1000;
+    margin-bottom: -500px;
+}
+.l-1-2{
+    text-decoration: none;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 700;
+    color: #9c9c9d;
+    background-color: #1a1a2e;
+    border: 3px solid #302d2e;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 65px;
+    font-size: 1.25em;
+    white-space: nowrap;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 4px 15px rgba(107, 46, 145, 0.4);
+    transform: skewX(-15deg);
+    transition: box-shadow 0.4s ease-out;
+    width: 270px;
+}
+@media (max-width: 1777px) {
+    .learn-more-text{
+        right: 100px;
+    }
+    .cables-and-bubbles, .server-img-wrp{
+        display: none;
+    }
+    .stats{
+        height: 170px;
+    }
+    .stats-wrp{
+        margin-top: 60px;
+    }
+    .stat-1, .stat-2, .stat-3{
+        width: 130px;
+        height: 135px;
+        border-radius: 27px;
+    }
+    .s-1-h, .s-2-h, .s-3-h{
+        font-size: 4rem;
+    }
+      .mobile-hero{
+        display: block;
+    }
+
+}
+@media (max-width: 1650px){
+    .learn-more-text{
+        right: 50px;
+    }
+    .main-text{
+        width: 300px;
+    }
+
+}
+@media (max-width: 1560px) {
+    .stats{
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        margin-top: -330px;
+    }
+    .text-wrapper{
+        left: calc(100% - 630px - 15px);
+    }
+
+}
+@media (max-width: 1400px) {
+  .main-text{
+    width: auto;
+  }  
+}
+@media (max-width: 1300px) {
+    .main-text{
+        font-size: 4.2rem;
+    }
+    .bullet-item{
+        font-size: 0.9rem;
+    }
+    .text-wrapper{
+        left: calc(100% - 430px - 15px);
+    }
+    .learn-more-text{
+        right: 50px;
+        font-size: 2.5rem;
+    }
+}
+@media (max-width: 1288px) {
+    .stats{
+        margin-left: calc(100vw - 180px);
+    }
+}
+@media (max-width: 1240px){
+    .learn-more-text{
+        display: none;
+    }
+}
+
+@media (max-width: 1130px) {
+    .hero-section, .header-container, .stats-wrp, .contact-section, .dynamic-cables-from-image-wrp, .mobile-hero{
+        display: none;
+    }
+  
+}
+
 
 @media (max-width: 1919px) and (min-width: 1376px) {
   /* .server-img-wrp{
@@ -1200,4 +1350,63 @@ button[type="submit"]:active {
 }
 @media (max-width: 1375px) and (min-width: 906px) {
   
+}
+
+
+@media (min-width: 1921px) {
+    
+    .server-img-wrp{
+        display: block;
+            width: 750px;
+    /* padding-left: 161px; */
+    margin-top: 210px;
+    z-index: 1000;
+    position: relative;
+    left: 680px;
+    left: 6px;
+    }
+    .hero-section{
+        width: 1920px;
+    }
+    .cables-and-bubbles{
+        left: 950px;
+    }
+    .server-img-wrp{
+        
+    }
+    .hero-section .cables-and-bubbles {
+        /* Nastavíme pevnou šířku a výšku, aby se SVG dále nezvětšovalo */
+        width: 1920px; /* Nebo jiná hodnota, která vypadá dobře na velkých obrazovkách */
+        height: 1080px; /* Upravte podle poměru stran a vizuálu, např. 95% z 1920px */
+        /* Centrování SVG, pokud je jeho rodič širší než 1920px */
+        left: 50%;
+        transform: translateX(-50%);
+        /* Odstraníme animace, pokud nechcete, aby se opakovaně spouštěly při změně velikosti okna */
+        /* animation: none; */
+        /* opacity: 1; */ /* Zajištění viditelnosti */
+    }
+
+    .server-img-wrp {
+        /* Centrujeme wrapper SVG, aby SVG uvnitř bylo uprostřed */
+        width: 100%; /* Plná šířka, ale obsah uvnitř bude mít max-width */
+        max-width: 1920px; /* Omezíme maximální šířku wrapperu, pokud chcete, aby celá sekce byla omezena */
+        margin-left: auto; /* Centrování wrapperu */
+        margin-right: auto; /* Centrování wrapperu */
+    }
+
+    .server-img-wrp svg {
+        /* Nastavíme pevnou šířku pro SVG, aby se nezvětšovalo nad určitou velikost */
+        width: 800px; /* Příklad: Pevná šířka, která vypadá dobře na velkých monitorech (původní 45% na 1920px by bylo cca 864px) */
+        /* Upravte padding a margin pro centrování, pokud je šířka pevná */
+        padding-left: 0; /* Zrušíme původní pevný padding-left */
+        margin-left: 0; /* Zrušíme původní pevný margin-left */
+        margin-right: auto; /* Centrování */
+        margin-left: auto; /* Centrování */
+        display: block; /* Ujistí se, že margin auto funguje pro centrování */
+        margin-top: 210px; /* Ponecháme původní margin-top */
+    }
+    .header-0{
+        justify-content: inherit;
+        margin-left: 600px;
+    }
 }

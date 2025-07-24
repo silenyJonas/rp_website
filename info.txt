@@ -4,3 +4,7 @@
 
 vyresit aby se mail obrazek serveru zuvetsoval pres media treba co 100 px pak aby cary dolu se taky vzdy byly tak aby se napojovali a tak aby zustalo schovane za serverem a zajistit aby linky byly vzdy napojene az do 1375px pod to se udela jiny vzhled
 a zajistit aby nase slozby taky byly fixne v leva aby stats bylo fixne z leva a zmensovalo se podle potreby 
+
+pak dodelat odemykani a zamykani a nastaveni formularu z admin prostredu zobrazovani dynamicky digi produkty a potvrzeni odeslani formulare
+
+a nejak vyreste texty a preklady
