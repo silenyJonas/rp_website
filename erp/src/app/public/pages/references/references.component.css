@@ -316,10 +316,13 @@
     transform: translateY(-3px) scale(1.02);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(166, 125, 255, 0.8);
 }
+
+
 /* BUTTON ZJISTIT VICE KONEC */
 /* --- RESPONSIVE ADJUSTMENTS --- */
 
 /* Breakpoint 1375px: Jemné úpravy pro menší desktop */
+
 @media (max-width: 1375px) {
     .projects-section {
         max-width: 1100px;
@@ -348,6 +351,9 @@
 
 /* Breakpoint 905px: Tabletový a menší desktopový layout */
 @media (max-width: 905px) {
+        .project-overview:hover{
+        background-color: transparent;
+    }
     .header-1 {
         font-size: 3rem;
         padding-top: 80px;
@@ -381,6 +387,7 @@
     
     .arrow {
         font-size: 1.3em;
+        transform: rotate(180deg);
     }
     
     .button {
@@ -397,6 +404,9 @@
 }
 /* BREAKPOINT 480px */
 @media (max-width: 480px) {
+    .project-description p{
+        margin-bottom: 0px;
+    }
     .project-overview:hover {
         background-color: transparent;
     }
@@ -492,12 +502,15 @@
         padding: 0; /* Zrušíme původní padding */
         font-size: 0.85em;
     }
-    
+    .project-overview{
+        
+    }
     .project-item.active .project-description {
         max-height: 500px; /* Zvětšená výška pro delší popisy */
         padding-top: 15px; /* Nové odsazení po rozbalení */
         padding-bottom: 15px;
         border-top: 1px solid rgba(166, 125, 255, 0.2);
+        margin-top: 15px;
     }
     
     /* Tlačítko */

@@ -486,7 +486,7 @@
 }
 
 .diff-answer.active-answer {
-    max-height: 500px; /* Dostatečně velká hodnota pro zobrazení veškerého obsahu */
+    max-height: 1000px; /* Dostatečně velká hodnota pro zobrazení veškerého obsahu */
     padding-left: 75px;
     padding-right: 25px;
     padding-top: 15px;
@@ -504,47 +504,6 @@
 
 
 
-/* Responzivní úpravy */
-@media (max-width: 768px) {
-    .timeline-header {
-        font-size: 2.5rem;
-    }
-    .diff-wrp {
-        padding-left: 15px; /* Menší odsazení pro mobil */
-    }
-    /* Upravit pozice pseudo-elementů pro mobil */
-    .diff-ins::before {
-        left: 39px;
-    }
-    .diff-ins::after {
-        left: 39px;
-    }
-    .ball {
-        width: 40px;
-        height: 40px;
-        font-size: 1em;
-    }
-    .diff-line {
-        height: 40px;
-        gap: 10px;
-    }
-    .diff-header {
-        width: calc(100% - 40px - 10px);
-        padding-right: 10px;
-    }
-    .diff-c-header h3 {
-        font-size: 1em;
-    }
-    .diff-arrow {
-        font-size: 1em;
-    }
-    .diff-answer {
-        padding: 0 15px;
-    }
-    .diff-answer.active-answer {
-        padding: 10px 15px 15px;
-    }
-}
 
 /* Keyframe animace (již definované v předchozích CSS, ale pro úplnost) */
 @keyframes fadeInSlideDown {
@@ -908,4 +867,332 @@ button[type="submit"]:active {
     opacity: 0;
     transform: translateY(-20px);
     animation: fadeInSlideDown 0.8s ease-out 0.4s forwards; /* První, zpoždění 0.2s */
+}
+/* --------- MEDIA ------------ */
+@media (max-width: 1375px) {
+    .diff-header{
+        padding-right: 0px;
+    }
+    .i-header-1{
+        text-align: start;
+    }
+    .line {
+        /* justify-content: center; */
+    }
+    .courses-wrp-1 {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+    }
+    .web-course-wrp,
+    .desktop-course-wrp {
+        width: 88%;
+    }
+    .main-content {
+        padding-bottom: 50px;
+    }
+    .header-1 {
+        font-size: 3.5rem;
+    }
+    .info-wrp {
+        flex-direction: row; /* Tři vedle sebe */
+        flex-wrap: wrap;
+        justify-content: center;
+        min-height: auto;
+        gap: 15px; /* Menší mezery */
+        margin-bottom: 30px;
+    }
+    .i-when,
+    .i-what,
+    .i-where {
+        width: 30%; /* Tři vedle sebe */
+        height: auto;
+    }
+    .sep::before,
+    .sep::after {
+        display: none;
+    }
+    .prices-wrp-1 {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+    .price-card {
+        width: 45%;
+    }
+    .form {
+        width: 90%;
+    }
+    .diff-line {
+        flex-direction: row;
+        align-items: center;
+        height: auto;
+    }
+    .diff-c-header h3 {
+        font-size: 1.1em;
+    }
+    .diff-arrow {
+        font-size: 1.2em;
+    }
+    .ball {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1em;
+    }
+    .diff-ins::after {
+        left: 22px;
+    }
+    .diff-ins::before {
+        left: 22px;
+    }
+}
+
+@media (max-width: 905px) {
+    .i-header-1 {
+        text-align: start; /* Zarovnání nadpisů vlevo */
+    }
+    .diff-ins::after {
+        left: 20px;
+    }
+    .diff-ins::before {
+        left: 20px;
+    }
+    .header-1 {
+        font-size: 3rem;
+        padding-top: 80px;
+    }
+    .courses-wrp-1 {
+        width: 95%;
+    }
+    .web-course-wrp,
+    .desktop-course-wrp {
+        width: 100%;
+    }
+    .header-course {
+        font-size: 1.2em;
+    }
+    .text-1 {
+        font-size: 0.95em;
+    }
+    .info-wrp {
+        flex-direction: row; /* Dva vedle sebe, jeden pod nimi */
+        flex-wrap: wrap;
+        justify-content: flex-start; /* Zarovnání prvků na začátek (vlevo) */
+        gap: 10px; /* Menší mezery */
+        margin-bottom: 20px;
+        padding-left: 5%; /* Přidáno pro zarovnání s ostatním obsahem */
+        box-sizing: border-box; /* Zajištění, že padding nezvětší celkovou šířku */
+    }
+    .i-when,
+    .i-what,
+    .i-where {
+        width: 47%; /* Dva vedle sebe, lehce menší šířka pro menší gap */
+        height: auto;
+        text-align: start; /* Zarovnání obsahu vlevo */
+        padding-left: initial; /* Zruší předchozí padding-left */
+    }
+    /* Zarovnání třetího prvku vlevo, pokud jsou jen dva na řádku */
+    .info-wrp > *:nth-child(3):last-child:nth-child(odd) {
+        width: 90%; /* Jeden prvek na celou šířku */
+        margin-right: auto; /* Posune prvek doleva */
+        margin-left: 0; /* Zruší předchozí centrování */
+        /* padding-left: initial; Zruší předchozí padding-left */
+    }
+    .i-header-1 {
+        font-size: 1.1rem;
+    }
+    .line {
+        font-size: 0.9em;
+    }
+    .i-i-img {
+        height: 20px;
+        width: 20px;
+    }
+    .timeline-header {
+        font-size: 3rem;
+    }
+    .timeline-intro {
+        font-size: 1.1em;
+    }
+    .prices-wrp-1 {
+        flex-direction: column;
+        align-items: center;
+    }
+    .price-card {
+        width: 90%;
+    }
+    .header-2,
+    .header-3 {
+        font-size: 2.5rem;
+    }
+    .price-amount {
+        font-size: 2.5rem;
+    }
+    .price-note {
+        font-size: 0.95em;
+    }
+    .form {
+        padding: 20px;
+        width: 95%;
+    }
+    .contact-form h2 {
+        font-size: 1.8rem;
+    }
+    .contact-form h4 {
+        font-size: 1rem;
+    }
+    .diff-c-header h3 {
+        font-size: 1em;
+    }
+    .diff-arrow {
+        font-size: 1.1em;
+    }
+    .ball {
+        width: 40px;
+        height: 40px;
+        font-size: 1em;
+    }
+    .diff-answer {
+        padding-top: 10px;
+    }
+    .content-1-wrp {
+        font-size: 0.9em;
+    }
+    .diff-c-header-1 {
+        font-size: 1em;
+    }
+    .diff-c-list {
+        font-size: 0.9em;
+    }
+    .diff-c-icon {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .diff-con-icon img {
+        width: 30px;
+        height: 30px;
+    }
+    .diff-con-text {
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .s-1 {
+        width: 100%;
+    }
+    .diff-c-icon-wrp {
+        margin-top: 7px;
+    }
+    .des-wrp {
+        gap: 20px;
+        display: block;
+    }
+    .diff-ins::after {
+        left: 22px;
+    }
+    .diff-ins::before {
+        left: 22px;
+    }
+    .header-1 {
+        font-size: 2.2rem;
+        padding-top: 60px;
+    }
+    .p-wrp {
+        padding: 10px;
+    }
+    .header-course {
+        font-size: 1.4em;
+    }
+    .text-1 {
+        font-size: 0.85em;
+    }
+    .info-wrp {
+        flex-direction: column; /* Tři pod sebou */
+        align-items: flex-start; /* Zarovnání prvků na začátek (vlevo) */
+        gap: 8px; /* Ještě menší mezery mezi prvky */
+        margin-bottom: 15px; /* Snížená mezera pod celým kontejnerem */
+        padding-top: 5px; /* Ponecháno z předchozí verze, pokud je potřeba */
+        padding-left: 5%; /* Přidáno pro zarovnání s ostatním obsahem */
+        box-sizing: border-box; /* Zajištění, že padding nezvětší celkovou šířku */
+    }
+    .i-when,
+    .i-what,
+    .i-where {
+        width: 90%; /* Lehce menší šířka pro lepší okraje, ale ne úplně 100% */
+        padding: 3px; /* Snížen padding uvnitř pro kompaktnější vzhled */
+        box-sizing: border-box; /* Zajištění, že padding nezvětší celkovou šířku */
+        margin: 0; /* Zruší veškeré marginy, které by mohly ovlivnit zarovnání */
+        text-align: start; /* Zajistí zarovnání textu vlevo uvnitř bloků */
+    }
+    .i-header-1 {
+        font-size: 0.9rem;
+    }
+    .line {
+        font-size: 0.8em;
+    }
+    .i-i-img {
+        height: 16px;
+        width: 16px;
+    }
+    .timeline-header {
+        font-size: 2rem;
+    }
+    .timeline-intro {
+        font-size: 0.9em;
+        margin-bottom: 30px;
+    }
+    .diff-line {
+        gap: 10px;
+        height: auto;
+        padding: 5px;
+    }
+    .ball {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9em;
+    }
+    .diff-c-header h3 {
+        font-size: 0.8em;
+    }
+    .prices-wrp {
+        width: 95%;
+    }
+    .price-card {
+        width: 100%;
+    }
+    .price-header-strip {
+        font-size: 0.9em;
+    }
+    .price-amount {
+        font-size: 3rem;
+    }
+    .currency {
+        font-size: 0.8em;
+    }
+    .price-note {
+        font-size: 0.8em;
+    }
+    .header-2,
+    .header-3 {
+        font-size: 1.8rem;
+    }
+    .form {
+        padding: 15px;
+    }
+    .contact-form h2 {
+        font-size: 1.5rem;
+    }
+    .contact-form h4 {
+        font-size: 0.9rem;
+    }
+    .diff-c-icon-wrp {
+        /* flex-direction: column; */
+        gap: 10px;
+    }
+    .diff-c-icon {
+        flex-direction: row;
+        gap: 5px;
+    }
 }

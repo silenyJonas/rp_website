@@ -43,7 +43,7 @@ export class AcademyComponent implements OnInit {
       themes: [
         'Úvod do internetu',
         'Co to je HTML & CSS',
-        'Základní HTML tagy (h1-5, img, iframe, span, div, ..)',
+        'Základní HTML tagy',
         'Základy CSS',
         'Header a Footer',
         'Miniprojekty: Galerie, Semafor'

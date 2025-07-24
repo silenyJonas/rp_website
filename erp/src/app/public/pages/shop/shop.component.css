@@ -386,3 +386,237 @@ html, body {
         transform: translateY(0); /* Končí v původní pozici */
     }
 }
+/* ---------MEDIA -------------- */
+/* --- RESPONSIVE ADJUSTMENTS --- */
+
+/* Breakpoint 1375px: Jemné úpravy pro menší desktop */
+@media (max-width: 1375px) {
+    .content-wrp {
+        width: 100%;
+        max-width: 1200px; /* Mírné zmenšení max-šířky kontejneru */
+        padding: 0 20px;
+        box-sizing: border-box;
+        /* Zajišťujeme, že flexbox funguje správně na menší šířce */
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 20px; /* Přidáme mezeru mezi filtry a produkty */
+    }
+    .money-form-wrp{
+        justify-content: start;
+    }
+    .header-1 {
+        font-size: 3.5rem;
+    }
+
+    .filter-wrp {
+        min-width: 200px; /* Mírné zmenšení minimální šířky filtru */
+        /* Odstraněny zbytečné marginy, které mohou způsobovat problémy */
+        margin: 0;
+        position: sticky;
+        top: 150px; /* Upravená pozice sticky, aby lépe seděla */
+    }
+    .header-1{
+        padding-bottom: 15px;
+    }
+    .search-input{
+        width: 1px;
+    }
+    .prod-wrp {
+        width: 100%;
+        max-width: 900px; /* Omezení maximální šířky pro hlavní obsah */
+        margin-top: 0;
+        margin-left: 0;
+    }
+
+    .filter select {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+
+    .filter .filter-button {
+        padding: 10px 15px;
+        font-size: 1em;
+    }
+}
+
+
+/* Breakpoint 905px: Tabletový layout */
+@media (max-width: 905px) {
+    .content-wrp{
+        margin-bottom: 25px;
+    }
+    .header-1 {
+        font-size: 3rem;
+        padding-top: 80px;
+        padding-bottom: 40px;
+    }
+
+    .content-wrp {
+        flex-direction: column; /* Klíčová změna: filtry a produkty pod sebou */
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .filter-wrp {
+        width: 100%; /* Filtr zabere celou šířku */
+        max-width: 600px; /* Omezení, aby nebyl příliš široký na velkých tabletech */
+        position: static; /* Zrušíme sticky pozici */
+        top: auto;
+        margin: 0; /* Zrušíme původní margin */
+    }
+    
+    .finder {
+        margin-bottom: 15px;
+        padding-left: 12px;
+        height: 45px;
+    }
+
+    .finder .search-input {
+        font-size: 0.9em;
+    }
+    
+    .finder .search-button {
+        height: 45px;
+        width: 45px;
+    }
+    
+    .filter {
+        padding: 20px;
+        gap: 15px;
+    }
+    
+    .filter .filter-group {
+        flex-direction: row; /* Popisek a select box vedle sebe */
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .filter .filter-group label {
+        white-space: nowrap; /* Zabrání zalomení textu */
+        font-size: 0.9em;
+    }
+    
+    .filter select {
+        flex-grow: 1; /* Select box se roztáhne */
+        max-width: 200px; /* Omezení šířky select boxu */
+        font-size: 0.85em;
+    }
+    
+    .filter .filter-button {
+        font-size: 1em;
+        padding: 10px 15px;
+        width: 100%; /* Tlačítko zabere celou šířku */
+    }
+    
+    .prod-wrp {
+        width: 100%;
+        max-width: 90%;
+        margin: 0;
+        min-height: 500px; /* Zajištění minimální výšky */
+    }
+    
+    .money-form-wrp {
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+    }
+}
+
+
+/* Breakpoint 480px: Mobilní zobrazení */
+@media (max-width: 480px) {
+    .header-1 {
+        font-size: 2.2rem;
+        padding-top: 60px;
+        padding-bottom: 25px;
+    }
+    
+    .content-wrp {
+        padding: 0 10px;
+        gap: 15px;
+    }
+    
+    .filter-wrp {
+        width: 100%;
+        max-width: none;
+    }
+    
+    .finder {
+        height: 40px;
+        padding-left: 10px;
+    }
+    
+    .finder .search-input {
+        font-size: 0.8em;
+    }
+    
+    .finder .search-button {
+        height: 40px;
+        width: 40px;
+    }
+    
+    .filter {
+        padding: 15px;
+        gap: 10px;
+    }
+    
+    .filter .filter-group {
+        flex-direction: column; /* Popisek a select box pod sebou */
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .filter .filter-group label {
+        font-size: 0.85em;
+    }
+    
+    .filter select {
+        font-size: 0.8em;
+    }
+    
+    .filter .filter-button {
+        font-size: 0.9em;
+    }
+    
+    .prod-wrp {
+        min-height: 400px;
+    }
+    
+    .msg-text {
+        font-size: 1.2rem;
+    }
+    
+    .pages-wrp {
+        margin-top: 5px;
+    }
+    
+    .left-arrow, .right-arrow {
+        width: 25px;
+        height: 25px;
+        font-size: 2rem;
+    }
+    
+    .page-1 {
+        width: 25px;
+        height: 25px;
+        font-size: 0.9rem;
+    }
+    
+    .money-form-wrp {
+        margin-top: 15px;
+    }
+    
+    .money-form {
+        height: 40px;
+    }
+
+    .currency-slider {
+        height: 25px;
+        width: 65px;
+    }
+    
+    .currency-label {
+        font-size: 0.9em;
+    }
+}

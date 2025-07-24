@@ -144,7 +144,7 @@ html, body {
     display: flex;
     width: 100%; /* Take full width of content-item */
     gap: 30px;
-    align-items: flex-start;
+    /* align-items: flex-start; */
     justify-content: center;
     flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
@@ -631,7 +631,8 @@ html, body {
     background-position: center center;
     background-repeat: no-repeat;
     z-index: 0; /* Z-index pro samotný kontejner */
-        height: 1000px;
+        height: 850px;
+        padding-top: 150px;
             opacity: 0;
     transform: translateY(30px);
     animation: fadeInSlideUp 0.8s ease-out 0.6s forwards;
@@ -917,5 +918,305 @@ button[type="submit"]:active {
     to {
         opacity: 1;
         transform: translateY(0); /* Končí v původní pozici */
+    }
+}
+
+/* -------MEDIA ------------ */
+/* --- RESPONSIVE ADJUSTMENTS --- */
+/* Breakpoint 1375px: Jemné úpravy pro menší desktop */
+@media (max-width: 1375px) {
+    .header-1 {
+        font-size: 3.5rem;
+    }
+    .main-content-inner {
+        max-width: 1200px;
+        padding: 0 20px;
+    }
+    .tech-buttons {
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+    .tech-button {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+    .content-display {
+        width: 100%;
+        padding: 25px;
+    }
+    .content-top-section {
+        flex-direction: column;
+        gap: 0px;
+    }
+    .services-info-text,
+    .services-icons-sidebar {
+        min-width: unset;
+        flex-basis: auto;
+    }
+    .services-info-text {
+        padding: 0;
+    }
+    .services-icons-sidebar {
+        padding: 0;
+        
+    }
+    .tech-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    .services-header-2 {
+        margin-bottom: 35px;
+    }
+    .get-h-wrp {
+        margin-top: -30px;
+    }
+    .faq-container {
+        padding: 0;
+    }
+    .header-2 {
+        font-size: 3.5rem;
+        padding-top: 50px;
+        padding-bottom: 20px;
+    }
+    .cop-wrp {
+        padding-top: 30px;
+    }
+    .cop {
+        max-width: 100%;
+        padding: 0 20px;
+    }
+    .svg-arrow-container {
+        width: 80px;
+    }
+    .workflow-step h3 {
+        font-size: 1.3em;
+    }
+    .workflow-step p {
+        font-size: 0.9em;
+    }
+    .icon-circle {
+        width: 140px;
+        height: 50px;
+    }
+}
+
+/* Breakpoint 905px: Tabletový layout */
+@media (max-width: 905px) {
+
+    .workflow-step{
+        margin-bottom: 25px;
+    }
+    .header-1 {
+        font-size: 3rem;
+        padding-top: 80px;
+    }
+    .icon-circle{
+        padding-bottom: 50px;
+    }
+    .main-content-inner {
+        max-width: 95%;
+    }
+    .tech-buttons {
+        gap: 10px;
+        margin-bottom: 25px;
+    }
+    .tech-button {
+        font-size: 0.9em;
+    }
+    .content-display {
+        padding: 20px;
+        min-height: auto;
+    }
+    .services-info-text {
+        font-size: 1em;
+        padding: 10px;
+    }
+    .services-info-text p {
+        font-size: 1em;
+    }
+    .ser-h {
+        font-size: 1.8rem;
+    }
+    .services-icons-sidebar {
+        padding: 0px;
+    }
+    .services-icons-sidebar .services-header {
+        font-size: 1.1em;
+    }
+    .services-icons-sidebar .services-header-2 {
+        font-size: 0.9em;
+    }
+    .tech-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+    .tech-item img {
+        width: 60px;
+        height: 60px;
+    }
+    .get-h-wrp {
+        margin-top: -20px;
+    }
+    .get-h {
+        font-size: 1.1em;
+        padding-left: 0;
+        text-align: center;
+    }
+    .faq-container {
+        gap: 8px;
+    }
+    .faq-question h3 {
+        font-size: 1.1em;
+        padding-left: 5px;
+    }
+    .header-2 {
+        font-size: 2.5rem;
+        padding-top: 40px;
+    }
+    .cop {
+        padding: 0 10px;
+    }
+    .workflow-diagram {
+        flex-direction: column;
+        gap: 30px;
+        padding: 20px 0;
+    }
+    .workflow-step {
+        width: 100%;
+        max-width: 300px;
+        min-width: unset;
+        text-align: center;
+    }
+    .svg-arrow-container {
+        display: none;
+    }
+    .icon-circle {
+        width: 120px;
+        height: 40px;
+    }
+    .references-content {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 20px;
+    }
+    .ref-text {
+        white-space: normal;
+        font-size: 1.1em;
+    }
+    .ref-button {
+        width: 100%;
+        max-width: 300px;
+    }
+    .form {
+        max-width: 90%;
+    }
+    .contact-form h2 {
+        font-size: 1.8rem;
+    }
+    .contact-form h4 {
+        font-size: 1.1rem;
+    }
+      .faq-question:hover {
+        background-color: transparent;
+    }
+}
+
+/* Breakpoint 480px: Mobilní zobrazení */
+@media (max-width: 480px) {
+
+  
+    .header-1 {
+        font-size: 2.2rem;
+        padding-top: 60px;
+    }
+    .ser-h{
+        text-align: center;
+    }
+    .tech-buttons {
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    .tech-button {
+        padding: 8px 15px;
+        font-size: 0.8em;
+    }
+    .content-display {
+        padding: 15px;
+    }
+    .ser-h {
+        font-size: 1.5rem;
+    }
+    .services-info-text p {
+        font-size: 0.9em;
+        margin-bottom: 15px;
+    }
+    .services-icons-sidebar .services-header,
+    .services-icons-sidebar {
+        font-size: 1em;
+        margin-bottom: 10px;
+    }
+    .services-header-2 {
+        margin-bottom: 35px;
+    }
+
+    .tech-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+    .tech-item img {
+        width: 50px;
+        height: 50px;
+    }
+    .tech-item span {
+        font-size: 0.8em;
+    }
+    .get-h {
+        font-size: 1em;
+    }
+    .faq-question h3 {
+        font-size: 1em;
+    }
+    .faq-indicator {
+        width: 30px;
+        height: 30px;
+    }
+    .faq-arrow {
+        font-size: 1.4em;
+    }
+    .faq-answer {
+        font-size: 0.9em;
+    }
+    .header-2 {
+        font-size: 2rem;
+        padding-top: 30px;
+    }
+    .workflow-step {
+        padding: 10px 5px;
+    }
+    .workflow-step h3 {
+        font-size: 1.2em;
+    }
+    .workflow-step p {
+        font-size: 0.85em;
+    }
+    .references-content {
+        gap: 15px;
+    }
+    .ref-text {
+        font-size: 1em;
+    }
+    .ref-button {
+        font-size: 1em;
+        padding: 12px 25px;
+    }
+    .form {
+        padding: 20px;
+    }
+    .contact-form h2 {
+        font-size: 1.5rem;
+    }
+    .contact-form h4 {
+        font-size: 1rem;
     }
 }

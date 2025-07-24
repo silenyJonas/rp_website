@@ -61,7 +61,7 @@ justify-content: center;
 .hero-section {
     position: relative; 
     width: 100%;
-    height: 100vh; 
+    height: 1080px; 
     overflow: hidden; 
     background:
         /* 1. Vrstva: Radiální gradient pro centrální záři (jemnější a širší) */
@@ -101,7 +101,7 @@ justify-content: center;
 }
 .hero-section .cables-and-bubbles {
     position: absolute; 
-    top: 50;
+    top: 0;
     left: 0;
     width: 100%;
     height: 100%;
@@ -211,9 +211,9 @@ justify-content: center;
     align-items: center;
 }
 .server-img-wrp svg{
-    width: 40%;
-    padding-left: 125px;
-    margin-top: 240px;
+width: 45%;
+    padding-left: 161px;
+    margin-top: 210px;
     z-index: 1000;
 }
 /* --------------------HERO SEKCE KONEC---------------------- */
@@ -276,15 +276,7 @@ justify-content: center;
     display: none;
 }
 /* NAŠE SLUŽBY HEADER */
-.dynamic-cables-from-image {
-    display: block;
-    /* width a height SVG plátna zůstávají 100% kontejneru,
-       skutečné "zmenšení" se děje změnou viewBoxu nebo úpravou souřadnic v HTML */
-    width: 100%;
-    height: 100%;
-    visibility: visible;
-    opacity: 1;
-}
+
 .cable {
     fill: none;
     stroke-width: 3.5px; /* Zmenšená tloušťka kabelu pro dojem menšího vzhledu */
@@ -314,15 +306,19 @@ justify-content: center;
     100% { opacity: 1; }
 }
 .header-container {
-    position: relative;
-    display: flex;
-    align-items: center; /* Zarovná text a SVG ikonku vertikálně na střed */
-    justify-content: flex-start; /* Zarovná obsah doleva */
-    opacity: 0; /* Začíná neviditelné */
+       position: relative;
+    display: flex
+;
+    align-items: center;
+    /* justify-content: flex-start; */
+    opacity: 0;
     animation: fadeInSvg 1.5s ease-out 1s forwards;
     z-index: 1100;
-    margin-left: 570px;
-    margin-top: -75px;
+    /* margin-left: 570px; */
+    /* margin-top: -183px; */
+    /* margin-bottom: 102px; */
+    margin-left: 29%;
+    /* margin-bottom: 4vw; */
 }
 .header-1 {
     font-family: "Source Sans Pro", sans-serif;
@@ -693,22 +689,35 @@ justify-content: center;
     top: 0;
     left: 0;
     width: 100vw;   /* Šířka 100% viewportu */
-    height: 100vh;  /* Výška 100% viewportu - pro plnou výšku */
+    height: 1080px;  /* Výška 100% viewportu - pro plnou výšku */
     pointer-events: none; /* Umožní interakci s obsahem pod SVG, pokud by tam nějaký byl */
     z-index: 0; /* Pokud by byl nějaký další obsah, SVG je pod ním */
 }
 /* Styly pro samotné SVG plátno */
-.dynamic-cables-from-image {
-    margin-top: -260px;
-    display: block; /* Zajišťuje, že se chová jako blokový element */
-    width: 100%; /* SVG element vyplní celý .svg-container */
-    height: 100%; /* SVG element vyplní celý .svg-container */
-    visibility: visible;
-    opacity: 0;
-    position: relative;
+.dynamic-cables-from-image-wrp {
+    position: absolute; /* Absolutní pozice uvnitř .hero-section */
+    top: 865px;
+    left: 0; /* Klíčové: Zarovnáme k levému okraji rodiče */
+    width: 1920px; /* Klíčové: Pevná šířka pro wrapper */
+    height: 1440px; /* Klíčové: Pevná výška pro wrapper (poměr 4:3 k šířce) */
+    /* Zde můžete experimentovat s "left", např. left: -200px; pokud chcete, aby kus přesahoval doleva */
+    overflow: hidden; /* Skryje jakýkoli přesah SVG, pokud by bylo uvnitř wrapperu větší */
     z-index: 999;
-     animation: fadeInSvg 3.5s ease-out 1s forwards; 
+    opacity: 0; 
+    animation: fadeInSvg 3.5s ease-out 1s forwards; 
 }
+
+.dynamic-cables-from-image {
+    display: block;
+    width: 100%; /* SVG se roztáhne na 100% šířky svého wrapperu (která je nyní pevná) */
+    height: 100%; /* SVG se roztáhne na 100% výšky svého wrapperu (která je nyní pevná) */
+    /* object-fit a object-position již nejsou nutné, protože se wrapper neškáluje
+       a SVG ho jen vyplňuje */
+    visibility: visible;
+    opacity: 1; 
+    position: relative; /* Pozice relativní k wrapperu */
+}
+
 .cable {
     fill: none;
     stroke-width: 2.5px; /* Tloušťka 4px */
@@ -727,29 +736,29 @@ justify-content: center;
 /* ---------------- stats ------------------ */
 .stats-wrp {
     display: flex;
-    justify-content: end;
 }
 .stats {
-    display: flex;
+       margin-top: -125px;
+    margin-bottom: 125px;
+    display: flex
+;
     justify-content: center;
     align-items: center;
     font-family: "Source Sans Pro", sans-serif;
     color: #9c9c9d;
-    margin-top: -300px;
     background-color: #1a1a2e;
     border: 3px solid #302d2e;
     border-radius: 35px;
     padding: 15px;
     gap: 15px;
-    margin-right: 150px;
+    /* margin-right: 150px; */
+    margin-left: 58%;
     height: 230px;
     position: relative;
     z-index: 9900;
     opacity: 0;
     animation: fadeInSvg 1.5s ease-out 1s forwards;
-
-    /* Přidaný fialový shadow */
-        box-shadow: 0 4px 15px rgba(107, 46, 145, 0.4);
+    box-shadow: 0 4px 15px rgba(107, 46, 145, 0.4);
 }
 .s-1-h, .s-2-h, .s-3-h {
     font-size: 8rem;
@@ -1179,9 +1188,16 @@ button[type="submit"]:active {
     width: 60%;
 }
 
-/* ZACATEKO KONTAKT */
+/* ----------MEDIA ------------  */
+/* --- RESPONSIVE ADJUSTMENTS --- */
 
-/* KONEC KONTAKT */
-/* svg zazre a bubliny */
+/* Breakpoint: 1375px - 1919px (Menší desktopy) */
 
-/* svg zazre a bublinykonec */
+@media (max-width: 1919px) and (min-width: 1376px) {
+  /* .server-img-wrp{
+    height: 883px;
+  } */
+}
+@media (max-width: 1375px) and (min-width: 906px) {
+  
+}
