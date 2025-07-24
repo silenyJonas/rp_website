@@ -249,106 +249,6 @@
     border-top: 1px solid rgba(166, 125, 255, 0.2); /* Jemná dělící čára se objeví */
 }
 
-/* --- Responsive adjustments --- */
-@media (max-width: 992px) {
-    .projects-header,
-    .project-overview {
-        grid-template-columns: 2fr 1fr 1.5fr 40px;
-        padding: 12px 20px;
-    }
-    .projects-header div,
-    .project-overview div {
-        font-size: 1em;
-    }
-    .project-toggle-icon {
-        width: 35px;
-        height: 35px;
-    }
-    .arrow {
-        font-size: 1.3em;
-    }
-    .project-description {
-        padding-left: 20px;
-        padding-right: 20px;
-        font-size: 0.9em;
-    }
-    .project-item.active .project-description {
-        padding-bottom: 15px;
-    }
-}
-
-@media (max-width: 768px) {
-    .header-1 {
-        font-size: 3rem;
-        padding-top: 80px;
-        padding-bottom: 30px;
-    }
-    .projects-section {
-        padding: 0 15px;
-    }
-    /* Změna layoutu pro menší obrazovky - stacking */
-    .projects-header,
-    .project-overview {
-        grid-template-columns: 1fr;
-        padding: 10px 15px;
-        text-align: left;
-    }
-
-    .project-overview {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        align-items: center;
-        position: relative;
-    }
-
-    .projects-header div,
-    .project-overview div {
-        width: 100%;
-        padding-right: 0;
-        margin-bottom: 5px;
-        font-size: 0.95em;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: clip;
-    }
-    .project-title,
-    .project-duration,
-    .project-client {
-        flex: 1 1 100%;
-        text-align: left;
-    }
-    .project-toggle-icon {
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: auto;
-        height: auto;
-    }
-    .arrow {
-        font-size: 1.2em;
-    }
-    .project-description {
-        padding-left: 15px;
-        padding-right: 15px;
-        font-size: 0.85em;
-    }
-}
-
-@media (max-width: 480px) {
-    .header-1 {
-        font-size: 2.2em;
-        padding-top: 60px;
-    }
-    .projects-header div,
-    .project-overview div {
-        font-size: 0.9em;
-    }
-    .project-description {
-        font-size: 0.8em;
-    }
-}
 
 /* BUTTON ZJISTIT VICE  */
 .button-wrp{
@@ -417,3 +317,203 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(166, 125, 255, 0.8);
 }
 /* BUTTON ZJISTIT VICE KONEC */
+/* --- RESPONSIVE ADJUSTMENTS --- */
+
+/* Breakpoint 1375px: Jemné úpravy pro menší desktop */
+@media (max-width: 1375px) {
+    .projects-section {
+        max-width: 1100px;
+    }
+
+    .projects-header,
+    .project-overview {
+        grid-template-columns: 2fr 1fr 1.5fr 40px; /* Ponecháme stejné rozložení, ale zmenšíme mezery */
+        padding: 15px 20px;
+        font-size: 0.95em;
+    }
+    
+    .project-overview div {
+        font-size: 1em;
+    }
+
+    .project-description {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    .header-1 {
+        font-size: 3.5rem;
+    }
+}
+
+/* Breakpoint 905px: Tabletový a menší desktopový layout */
+@media (max-width: 905px) {
+    .header-1 {
+        font-size: 3rem;
+        padding-top: 80px;
+        padding-bottom: 40px;
+    }
+
+    .projects-section {
+        padding: 0 15px;
+    }
+    
+    .projects-header,
+    .project-overview {
+        grid-template-columns: 1.5fr 1fr 1fr 40px; /* Změna rozložení pro lepší využití místa */
+        padding: 12px 18px;
+    }
+    
+    .project-overview div {
+        font-size: 0.9em;
+    }
+
+    .project-description {
+        padding-left: 18px;
+        padding-right: 18px;
+        font-size: 0.85em;
+    }
+    
+    .project-toggle-icon {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .arrow {
+        font-size: 1.3em;
+    }
+    
+    .button {
+        width: 100%;
+        max-width: 350px;
+    }
+    .ref-text {
+        font-size: 1em;
+    }
+    .ref-button {
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+}
+/* BREAKPOINT 480px */
+@media (max-width: 480px) {
+    .project-overview:hover {
+        background-color: transparent;
+    }
+    /* Hlavní kontejner a hlavička */
+    .header-1 {
+        font-size: 2.2rem;
+        padding-top: 60px;
+        padding-bottom: 20px;
+    }
+    
+    .projects-section {
+        padding: 0 10px;
+    }
+
+    /* Hlavička tabulky se na mobilu skryje */
+    .projects-header {
+        display: none;
+    }
+
+    .projects-container {
+        gap: 10px; /* Zvětšíme mezeru mezi jednotlivými projekty */
+    }
+
+    /* Změna rozložení pro jednotlivé řádky projektů */
+    .project-item {
+        border-radius: 8px;
+        padding: 15px; /* Přidáme vnitřní odsazení celého bloku */
+    }
+
+    .project-overview {
+        display: grid;
+        grid-template-columns: 1fr 40px; /* Název projektu zabírá většinu a šipka je vedle */
+        grid-template-areas:
+            "title toggle"
+            "duration duration"
+            "client client";
+        gap: 5px; /* Mezera mezi grid prvky */
+        padding: 0; /* Zrušíme původní padding */
+    }
+    
+    /* Vylepšení pro jednotlivé prvky uvnitř řádku */
+    .project-title {
+        grid-area: title;
+        font-size: 1.1em;
+        font-weight: 700;
+        margin-bottom: 5px; /* Mezera pod názvem */
+    }
+
+    .project-duration {
+        grid-area: duration;
+        font-size: 0.9em;
+        color: #b0b0b0;
+        text-align: left; /* Zarovnání doleva */
+        margin-bottom: 3px;
+    }
+    
+    /* Přidání popisky k době plnění */
+    .project-duration::before {
+        content: "Doba plnění: ";
+        font-weight: 600;
+        color: #e0e0e0;
+    }
+    
+    .project-client {
+        grid-area: client;
+        font-size: 0.9em;
+        color: #b0b0b0;
+        text-align: left; /* Zarovnání doleva */
+    }
+    
+    /* Přidání popisky k zadavateli */
+    .project-client::before {
+        content: "Zadavatel: ";
+        font-weight: 600;
+        color: #e0e0e0;
+    }
+    
+    /* Umístění šipky */
+    .project-toggle-icon {
+        grid-area: toggle;
+        justify-self: end; /* Zarovnáme na pravou stranu v gridu */
+        align-self: center; /* Vycentrujeme s názvem projektu */
+        width: 30px;
+        height: 30px;
+    }
+    
+    .arrow {
+        font-size: 1.1em;
+    }
+    
+    /* Rozbalovací popis */
+    .project-description {
+        padding: 0; /* Zrušíme původní padding */
+        font-size: 0.85em;
+    }
+    
+    .project-item.active .project-description {
+        max-height: 500px; /* Zvětšená výška pro delší popisy */
+        padding-top: 15px; /* Nové odsazení po rozbalení */
+        padding-bottom: 15px;
+        border-top: 1px solid rgba(166, 125, 255, 0.2);
+    }
+    
+    /* Tlačítko */
+    .button-wrp {
+        margin-top: 40px;
+    }
+    .button {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        max-width: 300px;
+    }
+    .ref-text {
+        font-size: 1em;
+    }
+    .ref-button {
+        width: 100%;
+    }
+}

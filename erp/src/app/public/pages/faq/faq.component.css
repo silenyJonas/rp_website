@@ -290,3 +290,161 @@
         transform: translateY(0);
     }
 }
+/* ---------MEDIA -------------- */
+/* --- RESPONSIVE ADJUSTMENTS --- */
+
+/* Breakpoint 1375px: Jemné úpravy pro menší desktop */
+@media (max-width: 1375px) {
+    .faq-section {
+        max-width: 800px; /* Mírně zmenšíme maximální šířku FAQ kontejneru */
+    }
+
+    .header-1 {
+        font-size: 3.5rem;
+    }
+    
+    .faq-question h3 {
+        font-size: 1.3em; /* Mírně zmenšíme velikost písma otázky */
+    }
+
+    .faq-answer {
+        font-size: 1em; /* Mírně zmenšíme velikost písma odpovědi */
+    }
+    
+    .write-us-wrp {
+        max-width: 650px;
+    }
+}
+
+
+/* Breakpoint 905px: Tabletový layout */
+@media (max-width: 905px) {
+    .header-1 {
+        font-size: 3rem;
+        padding-top: 80px;
+        padding-bottom: 40px;
+    }
+
+    .faq-section {
+        padding: 0 15px; /* Menší vodorovné odsazení */
+    }
+    
+    .faq-item {
+        border-radius: 10px; /* Jemnější zaoblení */
+    }
+
+    .faq-question {
+        padding: 15px 20px;
+    }
+    
+    .faq-question h3 {
+        font-size: 1.2em;
+    }
+
+    .faq-indicator {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .faq-arrow {
+        font-size: 1.4em;
+    }
+    
+    .faq-answer {
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 0.9em;
+    }
+
+    .write-us-wrp {
+        flex-direction: column; /* Položíme text a ikony pod sebe */
+        gap: 15px; /* Menší mezera */
+        margin-top: 40px;
+        padding: 20px;
+        max-width: 500px;
+    }
+
+    .write-us-text {
+        font-size: 1.1em;
+        white-space: normal; /* Povolíme zalomení textu */
+    }
+
+    .write-us-icons img {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+/* Breakpoint 480px: Mobilní zobrazení */
+@media (max-width: 480px) {
+    .header-1 {
+        font-size: 2.2rem;
+        padding-top: 60px;
+        padding-bottom: 25px;
+    }
+
+    .faq-section {
+        padding: 0 10px;
+    }
+    
+    .faq-container {
+        gap: 10px; /* Zmenšíme mezeru mezi FAQ položkami */
+    }
+
+    .faq-item {
+        border-radius: 8px; /* Ještě jemnější zaoblení */
+    }
+    
+    .faq-question {
+        padding: 12px 15px; /* Menší vnitřní odsazení */
+    }
+
+    .faq-question h3 {
+        font-size: 1em; /* Klíčová změna: menší font pro dobrou čitelnost na mobilu */
+        padding-right: 15px;
+    }
+
+    .faq-indicator {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .faq-arrow {
+        font-size: 1.2em; /* Menší šipka */
+    }
+
+    .faq-answer {
+        padding-left: 15px;
+        padding-right: 15px;
+        font-size: 0.85em; /* Menší font odpovědi */
+    }
+    
+    .faq-answer p {
+        margin-bottom: 15px; /* Menší mezera pod textem */
+    }
+    
+    .write-us-wrp {
+        flex-direction: column; /* Text a ikony pod sebou */
+        gap: 10px;
+        margin-top: 30px;
+        padding: 15px;
+    }
+
+    .write-us-text {
+        font-size: 0.95em;
+        white-space: normal;
+    }
+    
+    .write-us-icons {
+        gap: 15px;
+    }
+
+    .write-us-icons img {
+        width: 30px;
+        height: 30px;
+    }
+    .main-content{
+        height: auto;
+    }
+    
+}
