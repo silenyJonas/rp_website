@@ -547,6 +547,7 @@
     transform: translateY(-20px); /* Start slightly above */
     animation: fadeInSlideDown 0.8s ease-out 0.2s forwards; /* Example animation for header */
 }
+
 .prices-wrp {
     font-family: "Source Sans Pro", sans-serif;
     width: 100%;

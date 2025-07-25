@@ -1335,14 +1335,168 @@ button[type="submit"]:active {
     }
 }
 
+@media (min-width: 1131px){
+    .mobile-content{
+        display: none;
+    }
+}
+
 @media (max-width: 1130px) {
+    .icon-wrp{
+        display: none;
+    }
+    .form{
+        padding: 25px;
+    }
     .hero-section, .header-container, .stats-wrp, .contact-section, .dynamic-cables-from-image-wrp, .mobile-hero{
         display: none;
     }
+    .h-wrp{
+        margin-bottom: 0px;
+        margin-top: 100px;
+    }
+
+    .header-0-1{
+        font-size: 3rem;
+        position: relative;
+    }
+    .header-0, .header-0-2-t, .hero-i-wrp-m{
+        position: relative;
+        z-index: 1;
+    }
+    .stats-m{
+    display: flex
+;
+    justify-content: center;
+    align-items: center;
+    font-family: "Source Sans Pro", sans-serif;
+    color: #9c9c9d;
+    background-color: #1a1a2e;
+    border: 3px solid #302d2e;
+    border-radius: 35px;
+    padding: 15px;
+    gap: 15px;
+    /* margin-right: 150px; */
+    position: relative;
+    z-index: 900;
+    opacity: 0;
+    animation: fadeInSvg 1.5s ease-out 1s forwards;
+    box-shadow: 0 4px 15px rgba(107, 46, 145, 0.4);
+    width: 460px;
+    }
+    .stats-wrp-m{
+        display: flex;
+        justify-content: center;
+    }
+    .header-0-2-t{
+        text-align: center;
+        padding: 20px;
+            font-family: "Source Sans Pro", sans-serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #9e9e9e;
+    text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+    }
   
+}
+.button-wrp{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+    /* Animation properties added below */
+}
+.button{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 400px;
+        margin-top: 15px;
+}
+.ref-button {
+    font-family: "Source Sans Pro", sans-serif;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #6b2e91;
+    border: 2px solid #a67dff;
+    color: #e0e0e0;
+    padding: 15px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    white-space: nowrap;
+    position: relative;
+    z-index: 50;
+}
+/* Základní styly pro nejmenší obrazovky (2 a 2 rozložení) */
+.curses-img-wrp-m {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Zajišťuje centrování položek na řádku */
+    align-items: flex-start;
+    gap: 10px; /* Zmenšená mezera mezi ikonkami z 20px na 10px */
+    padding: 10px;
+    box-sizing: border-box;
+    height: auto;
+    /* Nové: Omezíme maximální šířku kontejneru pro 2x2 rozložení,
+       aby se nezdálo, že se roztahuje moc do stran, a zůstal více "uprostřed". */
+    max-width: 320px; /* Příklad: Omezí celkovou šířku na 400px, což je cca 2*60px ikony + 2*10px padding + 10px gap */
+    margin-left: auto; /* Centrování kontejneru */
+    margin-right: auto; /* Centrování kontejneru */
+}
+
+.column-c-m {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    /* Flex-basis a max-width se musí přepočítat, pokud se změnila mezera (gap) */
+    flex: 0 0 calc(50% - 5px); /* 50% - (gap / 2) */
+    max-width: calc(50% - 5px); /* 50% - (gap / 2) */
+    padding: 10px 5px;
+}
+
+.column-c-m img {
+    max-width: 60px;
+    height: auto;
+    margin-bottom: 5px;
+}
+
+.c-text-m {
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 0.8em;
+    color: #b0b0b0;
+    white-space: nowrap;
 }
 
 
+/* Media Query pro rozložení "všechny vedle sebe" */
+@media (min-width: 600px) {
+    .curses-img-wrp-m {
+        flex-wrap: nowrap;
+        /* Změna justify-content, aby byly více u sebe a přitom vycentrované */
+        justify-content: center; /* Centruje všechny 4 položky dohromady */
+        gap: 15px; /* Můžete zmenšit nebo zvětšit mezeru pro 4 položky */
+        height: 75px;
+        /* Nové: Omezíme maximální šířku kontejneru i pro 4 položky,
+           aby se celá skupina držela více u středu. */
+        max-width: 600px; /* Příklad: 4*60px ikony + 3*15px gap + padding = cca 240 + 45 + 20 = 305. Volím větší pro případné další paddingy atd. */
+        margin-left: auto; /* Centrování kontejneru */
+        margin-right: auto; /* Centrování kontejneru */
+        margin-bottom: 50px;
+    }
+
+    .column-c-m {
+        flex: 0 0 auto; /* Nebudou se roztahovat, jen se přizpůsobí obsahu */
+        max-width: 100px; /* Můžete zde nastavit max-width pro jednotlivé sloupce, pokud je potřeba */
+    }
+}
 @media (max-width: 1919px) and (min-width: 1376px) {
   /* .server-img-wrp{
     height: 883px;
@@ -1410,3 +1564,241 @@ button[type="submit"]:active {
         margin-left: 600px;
     }
 }
+@media (max-width: 905px) {
+    .h-wrp{
+        margin-bottom: 0px;
+        margin-top: 30px;
+    }
+    .header-0-1{
+        font-size: 3rem;
+    }
+    .header-0-2{
+        font-size: 1.2rem;
+    }
+}
+/* Vaše stávající media query pro max-width: 480px */
+@media (max-width: 480px){
+    .header-0-1{
+        font-size: 2.2rem;
+    }
+
+    /* Změny pro .stats-m a jeho děti pro rozložení 2 a pak 1 */
+    .stats-m{
+        background-color: transparent;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    /* Styly pro jednotlivé stat boxy - ZDE JSOU HLAVNÍ ZMĚNY PRO ČTVERCOVÝ TVAR A CENTROVÁNÍ */
+    .stat-1,
+    .stat-2,
+    .stat-3 {
+        flex: 1 1 calc(50% - 10px);
+        max-width: calc(50% - 10px);
+        box-sizing: border-box;
+
+        /* ---------- Změny pro čtvercový tvar a centrování obsahu ---------- */
+        aspect-ratio: 1 / 1; /* Klíčové pro čtvercový tvar! Šířka bude rovna výšce */
+        display: flex; /* Udělá z boxu flex kontejner */
+        flex-direction: column; /* Uspořádá obsah vertikálně */
+        justify-content: center; /* Vycentruje obsah vertikálně */
+        align-items: center; /* Vycentruje obsah horizontálně */
+        padding: 15px; /* Ponecháno pro vnitřní odsazení, upravte dle potřeby */
+        /* background-color, border, border-radius, box-shadow můžete přidat, pokud byly odstraněny průhlednými styly na .stats-m */
+        background-color: #1a1a2e; /* Příklad: Pokud chcete pozadí i přes průhlednost na .stats-m */
+        border: 3px solid #302d2e; /* Příklad: Pokud chcete okraj */
+        border-radius: 27px; /* Příklad: Zaoblené rohy */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Příklad: Stín */
+    }
+
+    /* Specificky pro stat-3, aby byl uprostřed na dalším řádku */
+    .stat-3 {
+        flex: 1 1 100%;
+        max-width: calc(50% - 10px);
+    }
+
+    /* Styly pro text uvnitř stat boxů - ZMĚNY PRO VĚTŠÍ TEXT */
+    .s-1-h, .s-2-h, .s-3-h {
+        font-size: 3.5rem; /* Zvětšeno pro nadpisy */
+        line-height: 1; /* Zajistí, že text nebude příliš vysoký */
+        margin-bottom: 5px; /* Mezera pod nadpisem */
+        color: #e0e0e0; /* Barva nadpisu */
+        text-align: center; /* Vycentrování textu uvnitř */
+    }
+
+    .s-1-t, .s-2-t, .s-3-t {
+        font-size: 1.1rem; /* Zvětšeno pro text */
+        color: #b0b0b0; /* Barva textu */
+        text-align: center; /* Vycentrování textu uvnitř */
+    }
+}
+.d-none{
+    display: none;
+}
+/* ------------MOBILE CONTENT-------------- */
+.mobile-content{
+        position: relative;
+    width: 100%;
+    background: radial-gradient(ellipse at center, rgba(128, 0, 128, 0.05) 15%, rgba(128, 0, 128, 0.02) 30%, rgba(17, 17, 31, 0) 50%), repeating-linear-gradient(to bottom, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px), repeating-linear-gradient(to right, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+.mobile-content::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(17, 17, 31, 0.98) 80%);
+    z-index: 1;
+}
+
+.header-0-1{
+    color: #9e9e9e;
+}
+.header-0-2{
+    color: #9e9e9e;
+}
+.hero-i-wrp-m{
+    width: 100%;
+    height: 360px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: -40px;
+}
+.hero-i-wrp-m svg{
+    height: 100%;
+    width: auto;
+}
+
+
+
+/* Kontejnerové styly */
+.mobile-hero-m{
+    width: 100%;
+    position: relative;
+    z-index: 100;
+    /* Přidáme padding, aby se obsah nepřilepil k okrajům viewportu */
+    padding: 15px;
+    box-sizing: border-box; /* Zajištění, že padding nezvětší šířku */
+}
+
+.links-wrp-m-m{
+    width: 100%; /* Bude flexibilní */
+    display: flex;
+    flex-direction: column; /* Umožní centrovat .link-w-c-m-m */
+    justify-content: center;
+    align-items: center; /* Centruje .link-w-c-m-m horizontálně */
+}
+
+.link-w-c-m-m{
+    gap: 15px; /* Mezery mezi položkami */
+    display: flex;
+    flex-wrap: wrap; /* Klíčové pro zalomení na nový řádek */
+    justify-content: center; /* Centruje odkazy na řádku */
+    /* Zde nebudeme nastavovat width: 100% nebo flex-basis na .l-1-2,
+       protože má pevnou šířku. Místo toho budeme řídit max-width tohoto kontejneru. */
+    max-width: 100%; /* Výchozí */
+}
+
+/* -------------------- Media Queries pro různé rozložení -------------------- */
+
+/* Základní rozložení (výchozí pro nejmenší obrazovky): 1 1 1 1 */
+/* .l-1-2 má width: 270px, takže se zalomí, pokud je viewport menší než 270px + padding */
+/* Pro tento stav nic neměníme, protože flex-wrap a justify-content: center
+   zajistí, že se každý odkaz zobrazí na vlastním řádku, pokud se nevejde. */
+
+
+/* Rozložení: 2 a 2 */
+/* Když se vejdou 2 odkazy s mezerou (2 * 270px + 15px gap = 555px) */
+@media (min-width: 580px) { /* Mírně více než 555px, kvůli paddingu mobile-hero-m */
+    .link-w-c-m-m {
+        /* Omezíme max-width kontejneru, aby se vešly právě dva prvky */
+        max-width: calc(270px * 2 + 15px); /* Šířka pro 2 prvky + 1 mezeru */
+        /* justify-content: center zůstává */
+    }
+}
+
+/* Rozložení: 3 a 1 */
+/* Když se vejdou 3 odkazy s mezerami (3 * 270px + 2 * 15px gap = 810px + 30px = 840px) */
+@media (min-width: 870px) { /* Mírně více než 840px */
+    .link-w-c-m-m {
+        max-width: calc(270px * 3 + 2 * 15px); /* Šířka pro 3 prvky + 2 mezery */
+        /* justify-content: center zůstává */
+    }
+}
+
+/* Rozložení: 4 vedle sebe */
+/* Když se vejdou 4 odkazy s mezerami (4 * 270px + 3 * 15px gap = 1080px + 45px = 1125px) */
+@media (min-width: 1150px) { /* Mírně více než 1125px */
+    .link-w-c-m-m {
+        max-width: calc(270px * 4 + 3 * 15px); /* Šířka pro 4 prvky + 3 mezery */
+        /* justify-content: center zůstává */
+    }
+}
+
+/* Další breakpointy pro skrytí mobilního menu, pokud máte */
+@media (min-width: 1131px) { /* Příklad, pokud desktopová verze začíná od této šířky */
+    .mobile-hero-m {
+        display: none;
+    }
+}
+
+.header-0-2-t{
+    text-align: center;
+    padding: 20px 15px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #9e9e9e;
+    text-shadow: 0 0 10px rgba(158, 158, 158, 0.3);
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+/* Button Wrapper a Button Styles */
+.button-wrp{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px; /* Mezera pod tlačítkem */
+}
+.button{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 80%; /* Dělá tlačítko širší na mobilu, ale stále s okraji */
+    max-width: 400px; /* Omezí maximální šířku tlačítka */
+    margin-top: 15px;
+}
+.ref-button {
+    font-family: "Source Sans Pro", sans-serif;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #6b2e91;
+    border: 2px solid #a67dff;
+    color: #e0e0e0;
+    padding: 12px 25px; /* Mírně zmenšený padding */
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 1.0em; /* Mírně zmenšený font-size */
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    white-space: nowrap;
+    position: relative;
+    z-index: 50;
+    width: 100%; /* Vyplní dostupnou šířku */
+    box-sizing: border-box;
+}
+/* -------------TESTING ------------- */

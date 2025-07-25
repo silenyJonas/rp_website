@@ -216,7 +216,130 @@ html, body {
     padding-left: 25px;
     padding-right: 25px;
 }
+/* ----ceny ---- */
+.prices-wrp {
+    font-family: "Source Sans Pro", sans-serif;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 15px 20px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+}
 
+.prices-wrp-1 {
+    /* Ubral jsem pevnou šířku, aby se flexbox mohl lépe roztahovat */
+    width: 100%; /* Bude vyplňovat dostupný prostor s paddingem z prices-wrp */
+    max-width: 1400px; /* Aby se na extra velkých monitorech neroztahovalo nekonečně */
+    display: flex;
+    justify-content: center; /* Centruje karty, když je méně než maximální počet na řádku */
+    gap: 25px; /* Mírně menší mezera mezi kartami pro lepší zalamování */
+    flex-wrap: wrap; /* Klíčové pro zalamování na nový řádek */
+}
+
+/* Individual Price Card */
+.price-card {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    /* --- Klíčové změny pro rozložení bez media queries --- */
+    /* flex-basis říká, jakou preferovanou šířku má mít prvek.
+       flex-grow dovoluje prvku roztáhnout se, flex-shrink smrštit.
+       Zde chceme, aby se karty roztahovaly, ale ne méně než min-width. */
+    flex: 1 1 calc(33.333% - 17px); /* Pro 3 karty na řádek s 25px mezerou (25*2/3 = 16.666) */
+    /* flex: 1 1 calc(33.333% - (2 * 25px / 3)); */
+
+    min-width: 280px; /* Minimální šířka karty, než se zalomí */
+    max-width: 400px; /* Maximální šířka karty */
+
+    /* --- Původní animace --- */
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlideUp 0.6s ease-out forwards;
+}
+
+/* Delay for each card to create a staggered effect */
+/* Pokud máte 6 karet, přizpůsobte zpoždění */
+.prices-wrp-1 .price-card:nth-child(1) { animation-delay: 0.1s; }
+.prices-wrp-1 .price-card:nth-child(2) { animation-delay: 0.2s; }
+.prices-wrp-1 .price-card:nth-child(3) { animation-delay: 0.3s; }
+.prices-wrp-1 .price-card:nth-child(4) { animation-delay: 0.4s; }
+.prices-wrp-1 .price-card:nth-child(5) { animation-delay: 0.5s; }
+.prices-wrp-1 .price-card:nth-child(6) { animation-delay: 0.6s; }
+
+
+/* Price Header Strip */
+.price-header-strip {
+    background-color: #a67dff;
+    color: #fff;
+    font-size: 1.3em;
+    font-weight: bold;
+    padding: 20px 15px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+/* Price Content Area */
+.price-content {
+    padding: 30px 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: rgba(026, 026, 046, 0.5);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    border-right: 3px solid #2f2f2f;
+    border-bottom: 3px solid #2f2f2f;
+    border-left: 3px solid #2f2f2f;
+}
+
+/* Price Amount (e.g., 1899) */
+.price-amount {
+    font-size: 3.5em;
+    font-weight: 800;
+    color: #a67dff;
+    margin-bottom: 10px;
+    line-height: 1;
+}
+
+.price-amount .currency {
+    font-size: 0.4em;
+    font-weight: normal;
+    vertical-align: super;
+}
+
+/* Price Note (e.g., * Platíte každý měsíc) */
+.price-note {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 15px;
+}
+
+/* Animace (pokud již není definována jinde) */
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ----ceny konec---- */
 .faq-item {
     background-color: rgba(26, 26, 46, 0.2); /* Průhledné pozadí */
     border: 2px solid #2f2f2f;
@@ -436,7 +559,7 @@ html, body {
     color: #979797;
     font-size: 4rem;
     font-weight: 700;
-    padding-top: 60px;
+    padding-bottom: 60px;
         opacity: 0;
     transform: translateY(30px);
     animation: fadeInSlideUp 0.8s ease-out 0.6s forwards;

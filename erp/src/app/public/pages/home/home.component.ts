@@ -29,6 +29,11 @@ export class HomeComponent {
   mail_icon: string = 'assets/images/icons/mail.png';
   send_icon: string = 'assets/images/icons/send.png';
 
+  py:string = 'assets/images/icons/curses/py.png'
+  scratch:string = 'assets/images/icons/curses/scratch.png'
+  csharp:string = 'assets/images/icons/curses/csharp.png'
+  js:string = 'assets/images/icons/curses/js.png'
+
   hoverState: { [key: string]: boolean } = {
     webapp: false,
     website: false,
