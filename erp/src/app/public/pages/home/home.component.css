@@ -1801,4 +1801,122 @@ button[type="submit"]:active {
     width: 100%; /* Vyplní dostupnou šířku */
     box-sizing: border-box;
 }
-/* -------------TESTING ------------- */
+/* -------------3 ukazkove produkty------------- */
+/* Styling pro celou sekci produktových karet */
+
+.product-cards-section {
+    font-family: "Source Sans Pro", sans-serif;
+    display: flex;
+    flex-wrap: wrap; /* Umožní kartám zalamovat se na nový řádek */
+    justify-content: center; /* Centruje karty horizontálně */
+    gap: 30px; /* Mezera mezi kartami */
+    padding: 40px 20px; /* Vnitřní odsazení sekce */
+}
+
+/* Styling pro jednotlivou produktovou kartu */
+.product-card {
+    overflow: hidden; /* Důležité pro zaoblení obrázku */
+    display: flex;
+    flex-direction: column; /* Obsah karty pod sebou */
+    text-align: center; /* Centrování textu uvnitř karty */
+
+    /* Responzivní šířka bez media queries */
+    flex: 1 1 calc(33.333% - 20px); /* Tři karty na řádek s mezerami */
+    min-width: 280px; /* Minimální šířka karty před zalomením */
+    max-width: 380px; /* Maximální šířka karty */
+}
+
+/* Placeholder pro obrázek produktu */
+.product-image-placeholder {
+    border-radius: 15px; /* Zaoblené rohy karty */
+    background-color: #005792;
+    width: 100%;
+    height: 200px;
+    /* background-color: #007bff; */
+    border: 3px solid rgba(116, 068, 128);
+    display: flex
+;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: bold;
+    position: relative;
+    z-index: 2;
+}
+
+/* Informační část produktu (pod obrázkem) */
+.product-info {
+   flex-grow: 1;
+    display: flex
+;
+    flex-direction: column;
+    justify-content: space-between;
+    /* border: 3px solid black; */
+    border: 3px solid rgba(116, 068, 128, 0.4);
+    /* border-radius: 15px; */
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    margin-top: -20px;
+}
+
+/* Nadpis produktu */
+.product-title {
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #9e9e9e;
+    text-shadow: 0 0 10px rgba(158, 158, 158, 0.3);
+    padding-top: 35px;
+    padding-bottom: 5px;
+}
+
+/* Cena produktu */
+.product-price {
+    font-size: 1.4em;
+    color: #a67dff; /* Fialová barva pro cenu */
+    font-weight: 700;
+    padding-bottom: 5px;
+}
+
+/* Popis produktu */
+.product-description {
+    font-size: 0.95em;
+    color: #b0b0b0; /* Světle šedá pro popis */
+    line-height: 1.5;
+    flex-grow: 1; /* Popis se může roztáhnout a posunout tlačítko dolů */
+}
+
+/* Tlačítko "Přidat do košíku" */
+.add-to-cart-button {
+    background: linear-gradient(45deg, #a67dff, #6f42c1); /* Fialový gradient */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 100%; /* Plná šířka tlačítka v kartě */
+    max-width: 250px; /* Omezení šířky tlačítka, pokud je karta příliš široká */
+    margin: 0 auto; /* Centrování tlačítka */
+}
+
+.add-to-cart-button:hover {
+    background: linear-gradient(45deg, #c3a1ff, #8a5acd); /* Mírně světlejší při najetí */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+.add-to-cart-button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+/* -------------3 ukazkove produkty konec------------- */
+
+
