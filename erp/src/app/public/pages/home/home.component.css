@@ -1829,7 +1829,6 @@ button[type="submit"]:active {
 /* Placeholder pro obrázek produktu */
 .product-image-placeholder {
     border-radius: 15px; /* Zaoblené rohy karty */
-    background-color: #005792;
     width: 100%;
     height: 200px;
     /* background-color: #007bff; */
@@ -1843,8 +1842,13 @@ button[type="submit"]:active {
     font-weight: bold;
     position: relative;
     z-index: 2;
+        overflow: hidden;
 }
-
+.product-image-placeholder img {
+    width: 100%; /* Make the image take up the full width of its parent */
+    height: 100%; /* Make the image take up the full height of its parent */
+    object-fit: cover; /* This is key: it crops the image to fill the container while maintaining aspect ratio */
+}
 /* Informační část produktu (pod obrázkem) */
 .product-info {
    flex-grow: 1;
@@ -1920,3 +1924,21 @@ button[type="submit"]:active {
 /* -------------3 ukazkove produkty konec------------- */
 
 
+/* -------cena lekce ------ */
+/* Nový styl pro text s cenou lekce */
+.lesson-price-note {
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 1.2em;
+    color: #b0b0b0; /* Mírně světlejší šedá, jako pro popisky */
+    text-align: center;
+    margin-bottom: 40px; /* Větší mezera mezi cenou a obrázky jazyků */
+    line-height: 1.5;
+}
+
+/* Zvýraznění samotné ceny */
+.lesson-price-note .price-highlight {
+    color: #a67dff; /* Fialová barva, jako pro ceny v produktových kartách */
+    font-weight: 700;
+    font-size: 1.1em; /* Mírně větší než okolní text */
+}
+/* -------cena lekce konec ------ */

@@ -545,41 +545,47 @@
 
 <!-- ZACATEK KONKTAKT -->
 <div class="header-0-2-t">
-            Učíme děti programovat
-        </div>
+    Učíme děti programovat
+</div>
 
-        <div class="curses-img-wrp-m">
-            <div class="column-c-m">
-                <img [src]="scratch">
-                <div class="c-text-m">
-                    Scratch
-                </div>
-            </div>
-            <div class="column-c-m">
-                <img [src]="py">
-                <div class="c-text-m">
-                    Python
-                </div>
-            </div>
-            <div class="column-c-m">
-                <img [src]="csharp">
-                <div class="c-text-m">
-                    C#
-                </div>
-            </div>
-            <div class="column-c-m">
-                <img [src]="js">
-                <div class="c-text-m">
-                    JavaScript
-                </div>
-            </div>
-        </div>
 
-        <div class="button-wrp">
-        <div class="button">
-          <a routerLink="/academy" class="ref-button">Navštivte akademii zde</a>
+
+<div class="curses-img-wrp-m">
+    <div class="column-c-m">
+        <img [src]="scratch">
+        <div class="c-text-m">
+            Scratch
         </div>
-      </div>
+    </div>
+    <div class="column-c-m">
+        <img [src]="py">
+        <div class="c-text-m">
+            Python
+        </div>
+    </div>
+    <div class="column-c-m">
+        <img [src]="csharp">
+        <div class="c-text-m">
+            C#
+        </div>
+    </div>
+    <div class="column-c-m">
+        <img [src]="js">
+        <div class="c-text-m">
+            JavaScript
+        </div>
+    </div>
+</div>
+<div class="lesson-price-note">
+    Cena od <span class="price-highlight">350 Kč</span>/lekce
+</div>
+<div class="button-wrp">
+    <div class="button">
+        <a routerLink="/academy" class="ref-button">Navštivte akademii zde</a>
+    </div>
+</div>
+
+
 
       <div class="header-0-2-t">
             Máme i vlastní obchod s digitáními produkty
@@ -588,6 +594,7 @@
         <div class="product-cards-section">
     <div class="product-card">
         <div class="product-image-placeholder">
+            <img [src]="eshop_default">
             </div>
         <div class="product-info">
             <div class="product-title">Předpřipravený E-Shop</div>
@@ -598,6 +605,7 @@
 
     <div class="product-card">
         <div class="product-image-placeholder">
+              <img [src]="survey_engine">
             </div>
         <div class="product-info">
             <div class="product-title">Dotazníkový software</div>
@@ -607,11 +615,12 @@
     </div>
     <div class="product-card">
         <div class="product-image-placeholder">
+            <img [src]="survey_solver">
             </div>
         <div class="product-info">
             <div class="product-title">Dotazníkový analyzátor</div>
             <div class="product-price">1 499 Kč</div>
-            <div class="product-description">Vložení dat v různém formátu a výstup je čistá přehledná analýza se statistikama.</div>
+            <div class="product-description">Rychlá analýza a prezentace dat.</div>
         </div>
     </div>
 
