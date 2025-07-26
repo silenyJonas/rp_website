@@ -9,6 +9,7 @@ html, body {
     color: #e0e0e0;
 }
 .main-content {
+    padding-bottom: 60px;
     position: relative;
     width: 100%;
     display: flex;
@@ -317,6 +318,14 @@ html, body {
     font-size: 0.4em;
     font-weight: normal;
     vertical-align: super;
+}
+.var-pr{
+    font-size: 2.5rem;
+}
+.prefix{
+     font-size: 0.4em;
+    font-weight: normal;
+    padding-right: 10px;
 }
 
 /* Price Note (e.g., * Platíte každý měsíc) */
@@ -680,6 +689,7 @@ html, body {
         opacity: 0;
     transform: translateY(30px);
     animation: fadeInSlideUp 0.8s ease-out 0.6s forwards;
+        padding-bottom: 50px;
 }
 .ref-text {
     margin: 0;
@@ -755,7 +765,6 @@ html, body {
     background-repeat: no-repeat;
     z-index: 0; /* Z-index pro samotný kontejner */
         height: 850px;
-        padding-top: 150px;
             opacity: 0;
     transform: translateY(30px);
     animation: fadeInSlideUp 0.8s ease-out 0.6s forwards;
@@ -1126,7 +1135,9 @@ button[type="submit"]:active {
 
 /* Breakpoint 905px: Tabletový layout */
 @media (max-width: 905px) {
-
+    .references-section{
+        padding-bottom: 55px;
+    }
     .workflow-step{
         margin-bottom: 25px;
     }

@@ -832,6 +832,7 @@ width: 45%;
 
 /* Kontejner formuláře s mřížkovým pozadím */
 .form-wrp {
+        margin-top: -50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1762,7 +1763,6 @@ button[type="submit"]:active {
     font-weight: 700;
     color: #9e9e9e;
     text-shadow: 0 0 10px rgba(158, 158, 158, 0.3);
-    margin-top: 30px;
     margin-bottom: 15px;
 }
 /* Button Wrapper a Button Styles */
@@ -1890,6 +1890,7 @@ button[type="submit"]:active {
     color: #b0b0b0; /* Světle šedá pro popis */
     line-height: 1.5;
     flex-grow: 1; /* Popis se může roztáhnout a posunout tlačítko dolů */
+        padding-bottom: 15px;
 }
 
 /* Tlačítko "Přidat do košíku" */
@@ -1942,3 +1943,25 @@ button[type="submit"]:active {
     font-size: 1.1em; /* Mírně větší než okolní text */
 }
 /* -------cena lekce konec ------ */
+.gradient-seep-wrp{
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+.gradient-line-separator {
+    width: 80%;
+    height: 2px; /* Výška čáry */
+    background: linear-gradient(to right,
+        rgba(107, 46, 145, 0) 0%,      /* Úplně průhledná na začátku */
+        rgba(107, 46, 145, 0.25) 20%,  /* Mírně průhlednější */
+        rgba(107, 46, 145, 0.7) 50%,   /* Stále výrazná uprostřed, ale tmavší (méně bílé) */
+        rgba(107, 46, 145, 0.25) 80%,  /* Mírně průhlednější */
+        rgba(107, 46, 145, 0) 100%     /* Úplně průhledná na konci */
+    );
+    margin: 40px 0; /* Mezera nad a pod čárou */
+    box-sizing: border-box;
+    /* Centrování čáry, protože má width: 80% */
+    margin-left: auto;
+    margin-right: auto;
+}
