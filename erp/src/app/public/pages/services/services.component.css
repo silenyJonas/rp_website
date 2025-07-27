@@ -838,7 +838,7 @@ html, body {
 }
 .form {
     display: flex;
-    margin-top: -150px;
+    margin-top: -80px;
     /* KLÍČOVÁ ZMĚNA: Výška je nyní automatická s minimální výškou */
     height: auto; /* Necháme výšku přizpůsobit obsahu */
     min-height: 500px; /* Minimální výška, aby se zachoval vzhled */
@@ -1243,7 +1243,7 @@ button[type="submit"]:active {
         max-width: 300px;
     }
     .form {
-        max-width: 90%;
+        /* max-width: 90%; */
     }
     .contact-form h2 {
         font-size: 1.8rem;

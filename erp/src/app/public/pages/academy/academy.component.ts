@@ -1,8 +1,16 @@
+// src/app/academy/academy.component.ts
 
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'; // Potřebné pro *ngFor, *ngIf
+import { PublicDataService } from '../../services/public-data.service';
+import { HttpErrorResponse } from '@angular/common/http'; // Pro zpracování chyb
 
-// Rozhraní pro položku timeline
+// Import GenericFormComponent a rozhraní pro konfiguraci polí
+import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
+import { FormFieldConfig } from '../../../shared/interfaces/form-field-config';
+import { FormsModule } from '@angular/forms'; // FormsModule je potřeba pro komponentu, která GenericForm používá
+
+// Rozhraní pro položku timeline (zůstává stejné)
 interface TimelineItem {
   id: number;
   title: string;
@@ -15,13 +23,26 @@ interface TimelineItem {
 @Component({
   selector: 'app-academy',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    GenericFormComponent, // Důležité: Přidejte GenericFormComponent do imports
+    FormsModule // Důležité: FormsModule je potřeba pro GenericFormComponent
+  ],
   templateUrl: './academy.component.html',
   styleUrls: ['./academy.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AcademyComponent implements OnInit {
 
+  form_header : string = 'Zanechte kontakt pro konzultaci';
+  form_description: string = 'Odezva do 24h'; 
+  form_button: string = 'Rezervovat konzultaci';
+
+
+  // Konfigurace formuláře pro GenericFormComponent
+  contactFormConfig: FormFieldConfig[] = [];
+
+  // Ostatní vlastnosti pro ikony a data timeline (zůstávají stejné)
   time: string = 'assets/images/icons/curses/time.png';
   calendar: string = 'assets/images/icons/curses/calendar.png';
   online: string = 'assets/images/icons/curses/online.png';
@@ -107,7 +128,7 @@ export class AcademyComponent implements OnInit {
         'Miniprojekty: Jednoduchá kalkulačka, Generátor náhodných čísel'
       ],
       newThings: [
-        ['Scratch', 'assets/images/icons/curses/scratch.png'], 
+        ['Scratch', 'assets/images/icons/curses/scratch.png'],
         ['Python', 'assets/images/icons/curses/py.png']
       ],
     },
@@ -148,11 +169,76 @@ export class AcademyComponent implements OnInit {
     },
   ];
 
+  constructor(private publicDataService: PublicDataService, private cdr: ChangeDetectorRef) { } // Přidán PublicDataService
 
-  constructor(private cdr: ChangeDetectorRef) { }
-
+  // OPRAVENO: Změněno z OnInit() na ngOnInit()
   ngOnInit(): void {
-    // Inicializační logika, pokud je potřeba
+    // Definujeme konfiguraci polí pro kontaktní formulář v AcademyComponent
+    this.contactFormConfig = [
+      {
+        label: 'Okruh:',
+        name: 'theme', // Odpovídá name="theme" v původním HTML
+        type: 'select',
+        required: true,
+        value: 'desktop-development', // Výchozí hodnota z původního HTML
+        options: [
+          { value: 'desktop-development', label: 'Desktopový vývoj' },
+          { value: 'web-development', label: 'Webový vývoj' }
+        ]
+      },
+      {
+        label: 'Obtížnost:',
+        name: 'diff', // Odpovídá name="diff" v původním HTML
+        type: 'select',
+        required: true,
+        value: 'begginer', // Výchozí hodnota z původního HTML
+        options: [
+          { value: 'begginer', label: 'Začátečník (11-17 let)' },
+          { value: 'advanced', label: 'Pokročilý (13-17 let)' },
+          { value: 'expert', label: 'Expert (14-17 let)' }
+        ]
+      },
+      {
+        label: 'E-mail:',
+        name: 'email', // Odpovídá name="email" v původním HTML
+        type: 'email',
+        required: true,
+        placeholder: 'vas.email@priklad.cz',
+        pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'
+      },
+      {
+        label: 'Telefon (nepovinné):',
+        name: 'phone', // Odpovídá name="phone" v původním HTML
+        type: 'tel',
+        required: false,
+        placeholder: 'např. +420 123 456 789',
+        pattern: '^[0-9\\s\\-+\\(\\)]+$'
+      }
+    ];
+  }
+
+  // Metoda pro odeslání dat formuláře přes PublicDataService
+  handleFormSubmission(formData: any): void {
+    console.log('Data přijata z generického formuláře k odeslání do PublicDataService:', formData);
+
+    // Zde voláme vaši PublicDataService pro odeslání dat na backend
+    // Předpokládáme, že endpoint pro Academy formulář je stejný nebo podobný
+    // a backend ho očekává bez autentizace.
+    this.publicDataService.submitContactForm(formData).subscribe({
+      next: (response) => {
+        console.log('Formulář odeslán úspěšně přes PublicDataService!', response);
+        // GenericFormComponent už si sám zobrazí zprávu o úspěchu.
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Chyba při odesílání formuláře přes PublicDataService:', error);
+        // GenericFormComponent už si sám zobrazí chybovou zprávu.
+      }
+    });
+  }
+
+  // Metoda pro resetování formuláře
+  handleFormReset(): void {
+    console.log('Generický formulář byl resetován.');
   }
 
   // Metoda pro přepínání stavu rozbalení/sbalení pro webové kroužky

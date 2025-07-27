@@ -541,7 +541,6 @@
     font-size: 3rem;
     font-weight: 700;
     text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
-    padding-bottom: 30px;
     /* Animation for the header itself */
     opacity: 0; /* Start hidden for animation */
     transform: translateY(-20px); /* Start slightly above */
@@ -1107,7 +1106,7 @@ button[type="submit"]:active {
         font-size: 1.4em;
     }
     .text-1 {
-        font-size: 0.85em;
+        font-size: 0.9em;
     }
     .info-wrp {
         flex-direction: column; /* Tři pod sebou */
@@ -1131,7 +1130,7 @@ button[type="submit"]:active {
         font-size: 0.9rem;
     }
     .line {
-        font-size: 0.8em;
+        font-size: 0.9em;
     }
     .i-i-img {
         height: 16px;
@@ -1155,7 +1154,7 @@ button[type="submit"]:active {
         font-size: 0.9em;
     }
     .diff-c-header h3 {
-        font-size: 0.8em;
+        font-size: 0.95em;
     }
     .prices-wrp {
         width: 95%;
@@ -1164,10 +1163,10 @@ button[type="submit"]:active {
         width: 100%;
     }
     .price-header-strip {
-        font-size: 0.9em;
+        font-size: 1.3em;
     }
     .price-amount {
-        font-size: 3rem;
+        font-size: 3.5rem;
     }
     .currency {
         font-size: 0.8em;
@@ -1177,7 +1176,8 @@ button[type="submit"]:active {
     }
     .header-2,
     .header-3 {
-        font-size: 1.8rem;
+        /* font-size: 1.8rem; */
+        font-size: 40px;
     }
     .form {
         padding: 15px;

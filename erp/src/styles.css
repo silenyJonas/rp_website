@@ -28,6 +28,13 @@ html {
 html.no-scroll {
     overflow: hidden !important;
 }
+/* Váš globální styles.css */
+body.no-scroll {
+    overflow: hidden !important; /* Přidejte !important pro testování */
+}
+html, body {
+    overflow: auto !important; /* !important by přebilo vše */
+}
 /* Styly pro Firefox na úrovni HTML */
 /* html {
     scrollbar-width: thin;

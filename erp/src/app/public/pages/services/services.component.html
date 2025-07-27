@@ -492,37 +492,15 @@
 
 <div class="form-wrp">
            <div class="form">
-                           <form class="contact-form">
-            <h2>Máte nápad ? My máme řešení</h2>
-            <h4>Navázání spolupráce do 24h</h4>
-            <div class="form-group">
-                <label for="theme">Téma:</label>
-                <select id="theme" name="theme" required>
-                    <option selected value="web-development">Webový vývoj</option>
-                    <option value="desktop-development">Desktopový vývoj</option>
-                    <option value="mobile-development">Mobilní vývoj</option>
-                    <option value="ai-development">AI vývoj</option>
-                    <option value="other">Jiné</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="email">E-mail:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="phone">Telefon (nepovinné):</label>
-                <input type="tel" id="phone" name="phone">
-            </div>
-            
-            <div class="form-group">
-                <label for="message">Stručný popis zadání:</label>
-                <textarea id="message" name="message" rows="5" required></textarea>
-            </div>
-            
-            <button type="submit">Rezervovat konzultaci</button>
-        </form>
+                             <app-generic-form
+                        [formConfig]="contactFormConfig"
+                        [form_header]="form_header"
+                        [form_description]="form_description"
+                        [form_button]="form_button"
+                        (formSubmitted)="handleFormSubmission($event)"
+                        (formReset)="handleFormReset()"
+
+                    ></app-generic-form>
              
            </div>
 </div>

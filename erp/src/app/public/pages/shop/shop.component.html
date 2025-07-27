@@ -1,71 +1,69 @@
-    <div class="header-1">Naše digitální produkty</div>
+<div class="header-1">Naše digitální produkty</div>
+<div class="header-0-2-t">Spuštění do 24 hodin</div>
 
 <div class="main-content">
-
     <div class="content-wrp">
         <div class="filter-wrp">
-    <form class="finder" (submit)="onSearch($event)">
-        <input type="text" placeholder="Název" class="search-input" name="searchInput">
-        <button type="submit" class="search-button" aria-label="Najít">
-            <img [src]="search_icon" alt="">
-        </button>
-    </form>
+            <form class="finder" (submit)="onSearch($event)">
+                <input type="text" placeholder="Název" class="search-input" name="searchInput" [(ngModel)]="searchQuery">
+                <button type="submit" class="search-button" aria-label="Najít">
+                    <img [src]="search_icon" alt="Search Icon">
+                </button>
+            </form>
 
-    <form class="filter" (submit)="onFilter($event)">
-        
+            <form class="filter" (submit)="onFilter($event)">
+                <div class="filter-group">
+                    <label for="sort-order">Seřadit dle:</label>
+                    <select name="sortOrder" id="sort-order" [(ngModel)]="selectedSortOrder">
+                        <option value="">-- Výchozí --</option>
+                        <option value="az">A-Z</option>
+                        <option value="za">Z-A</option>
+                        <option value="price-desc">Od nejdražšího</option>
+                        <option value="price-asc">Od nejlevnějšího</option>
+                    </select>
+                </div>
+                
+                <div class="result">
+                    Počet výsledků: {{ filteredProducts.length }} produktů
+                </div>
+                <div class="btn-wrp-form-s">
+                    <button type="submit" class="filter-button">Filtrovat</button>
+                    <button type="button" class="reset-button" (click)="onReset()">Resetovat</button>
+                </div>
+            </form>
 
-        <div class="filter-group">
-            <label for="sort-order">Seřadit dle:</label>
-            <select name="sortOrder" id="sort-order" [(ngModel)]="selectedSortOrder">
-                <option value="">-- Výchozí --</option>
-                <option value="az">A-Z</option>
-                <option value="za">Z-A</option>
-                <option value="price-desc">Od nejdražšího</option>
-                <option value="price-asc">Od nejlevnějšího</option>
-            </select>
+            <div class="money-form-wrp">
+                <form class="money-form">
+                    <div class="currency-slider-track" #currencySliderTrack>
+                        <span
+                            class="currency-label"
+                            data-currency="czk"
+                            (click)="selectCurrency('czk')"
+                            [ngClass]="{'active': currentCurrency === 'czk'}"
+                        >CZK</span>
+                        <span
+                            class="currency-label"
+                            data-currency="eur"
+                            (click)="selectCurrency('eur')"
+                            [ngClass]="{'active': currentCurrency === 'eur'}"
+                        >EUR</span>
+                        <div class="currency-slider" #currencySlider></div>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <div class="filter-group">
-            <label for="category-filter">Kategorie:</label>
-            <select name="categoryFilter" id="category-filter" [(ngModel)]="selectedCategory">
-                <option value="">-- Všechny kategorie --</option>
-                <option value="cat1">Kategorie 1</option>
-                <option value="cat2">Kategorie 2</option>
-                <option value="cat3">Kategorie 3</option>
-                <option value="cat4">Kategorie 4</option>
-            </select>
-        </div>
-        <div class="result">
-            Počet výsledků: 0 produktů
-        </div>
-        <button type="submit" class="filter-button">Filtrovat</button>
-    </form>
-<div class="money-form-wrp">
-    <form class="money-form" action="">
-        <div class="currency-slider-track" #currencySliderTrack>
-            <span
-                class="currency-label"
-                data-currency="czk"
-                (click)="selectCurrency('czk')"
-                [ngClass]="{'active': currentCurrency === 'czk'}"
-            >CZK</span>
-            <span
-                class="currency-label"
-                data-currency="eur"
-                (click)="selectCurrency('eur')"
-                [ngClass]="{'active': currentCurrency === 'eur'}"
-            >EUR</span>
-            <div class="currency-slider" #currencySlider></div>
-        </div>
-    </form>
-</div>
-
-</div>
-        <div class="prod-wrp ">
+        <div class="prod-wrp">
+            
+            <div class="prods-content"> <div *ngIf="filteredProducts.length === 0" class="result no-products-message">
+                    Žádné produkty k zobrazení
+                </div>
+                <app-product-card-list [products]="filteredProducts"></app-product-card-list>
+            </div>
             <div class="pages-wrp">
                 <div class="pages">
                     <div class="left-arrow">
-                        <
+                        < 
                     </div>
                     <div class="pages-count">
                         <div class="page-1">
@@ -73,16 +71,9 @@
                         </div>
                     </div>
                     <div class="right-arrow">
-                        <
+                        >
                     </div>
                 </div>
-            </div>
-            <div class="prods">
-                <div class="result" style="width: 100%; text-align: center; font-family: 'Source Sans Pro', sans-serif;">
-                Žádné produkty k zobrazení
-
-                </div>
-               
             </div>
         </div>
     </div>

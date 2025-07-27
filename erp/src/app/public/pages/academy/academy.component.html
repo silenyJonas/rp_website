@@ -444,38 +444,15 @@
 </div>
 <div class="form-wrp">
            <div class="form">
-                           <form class="contact-form">
-            <h2>Zanechte kontakt pro konzultaci</h2>
-            <h4>Odezva do 24 hodin</h4>
-            <div class="form-group">
-                <label for="theme">Okruh:</label>
-                <select id="theme" name="theme" required>
-                    <option selected value="desktop-development">Desktopový vývoj</option>
-                    <option value="web-development">Webový vývoj</option>
-                </select>
-            </div>
+                           <app-generic-form
+                        [formConfig]="contactFormConfig"
+                        [form_header]="form_header"
+                        [form_description]="form_description"
+                        [form_button]="form_button"
+                        (formSubmitted)="handleFormSubmission($event)"
+                        (formReset)="handleFormReset()"
 
-            <div class="form-group">
-                <label for="diff">Obtížnost:</label>
-                <select id="diff" name="diff" required>
-                    <option selected value="begginer">Začátečník (11-17 let)</option>
-                    <option value="advanced">Pokročilý (13-17 let)</option>
-                    <option value="expert">Expert (14-17 let)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="email">E-mail:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="phone">Telefon (nepovinné):</label>
-                <input type="tel" id="phone" name="phone">
-            </div>
-            
-            <button type="submit">Rezervovat konzultaci</button>
-        </form>
+                    ></app-generic-form>
              
            </div>
 </div>

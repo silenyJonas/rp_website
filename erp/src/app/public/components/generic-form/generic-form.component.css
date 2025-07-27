@@ -1,0 +1,321 @@
+
+/* Kontejner formuláře s mřížkovým pozadím */
+.generic-form-container {
+    /* Přenesené styly z původního .contact-form */
+    height: auto;
+    min-height: 500px; /* Nastaveno na min-height, aby se přizpůsobila obsahu, ale měla minimální velikost */
+    width: 500px;
+    padding: 25px; /* Mírně zmenšený padding */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(026, 026, 046, 0.5);
+    backdrop-filter: blur(2px);
+    border: 3px solid rgba(116, 068, 128, 0.4);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    animation: scaleIn 0.8s ease-out forwards; /* Animace při zobrazení */
+    font-family: "Source Sans Pro", sans-serif; /* Zajištění fontu */
+    color: #e0e0e0; /* Výchozí barva textu */
+
+    /* Centrování formuláře v rodiči, pokud rodič je flex/grid kontejner */
+    max-width: 750px; /* ZMĚNA ZDE: Zvětšena maximální šířka */
+    margin: 50px auto; /* Centrování a mezera odshora/zdola */
+}
+
+/* Animace pro zobrazení formuláře */
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Hlavička formuláře (obsahuje h2 a h4) */
+.form-header {
+    text-align: center;
+    margin-bottom: 30px; /* Mezera pod hlavičkou */
+}
+
+.form-header h2 {
+    /* Styly z .contact-form h2 */
+    text-align: center;
+    color: #e0e0e0;
+    margin-bottom: 5px;
+    font-size: 2.2em;
+    font-weight: 600;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.form-header h4 {
+    /* Styly z .contact-form h4 */
+    text-align: center;
+    color: #b39ddb;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+/* Styly pro skupiny formulářových prvků */
+.form-group {
+    margin-bottom: 15px; /* Mírně zmenšené mezery */
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    color: #e0e0e0;
+    font-weight: 500;
+    font-size: 0.95em;
+    transition: color 0.3s ease;
+}
+
+/* Povinná hvězdička */
+.required-asterisk {
+    color: #ff4d4d; /* Červená barva */
+    margin-left: 5px;
+}
+
+/* Styly pro inputy, select a textarea */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="password"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid rgba(116, 068, 128, 0.4);
+    border-radius: 8px;
+    background-color: #131325;
+    color: #9a9a9b;
+    font-size: 0.95em;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="tel"]:focus,
+.form-group input[type="password"]:focus,
+.form-group input[type="number"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    color: #9a9a9b;
+    outline: none;
+    border-color: #a67dff;
+    box-shadow: 0 0 0 3px rgba(134, 94, 220, 0.3);
+}
+
+/* Styly pro placeholder text */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #b39ddb;
+    opacity: 0.7;
+}
+
+/* Styly pro select box */
+.form-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23e0e0e0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
+}
+
+/* Styly pro možnosti v selectu */
+.form-group select option {
+    background-color: #2a2a4a; /* Tmavší pozadí pro možnosti */
+    color: #e0e0e0; /* Světlá barva textu */
+}
+
+
+/* Styly pro textarea */
+.form-group textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+/* Styly pro radio group */
+.radio-group, .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.radio-option, .checkbox-group label {
+    display: flex;
+    align-items: center;
+    color: #d0d0d0;
+}
+
+.radio-option input[type="radio"],
+.checkbox-group input[type="checkbox"] {
+    margin-right: 10px;
+    /* Můžete stylizovat vlastní radio/checkbox, pokud chcete */
+}
+
+/* Styly pro chybové zprávy validace pod inputy */
+.validation-error {
+    color: #ff4d4d; /* Červená barva pro chybu validace */
+    font-size: 0.85em;
+    margin-top: 5px;
+    text-align: left;
+}
+
+/* Obecná chybová zpráva (např. z API) */
+.error-message {
+    color: #ff4d4d;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+    text-align: center;
+    background-color: rgba(255, 0, 0, 0.1);
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Styly pro zprávu o úspěšném odeslání uvnitř formuláře */
+.success-message-in-form {
+    background-color: rgba(026, 046, 026, 0.7);
+    backdrop-filter: blur(5px);
+    padding: 40px;
+    border-radius: 15px; /* Stejné zaoblení jako kontejner formuláře */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Mírně odlišný stín od hlavního formuláře, pokud chcete */
+    text-align: center;
+    color: #e0e0e0;
+    border: 2px solid rgba(116, 255, 128, 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px; /* Aby se natáhlo do podobné výšky jako formulář */
+}
+
+.success-message-title {
+    font-size: 2.5em;
+    color: #7dff8e;
+    margin-bottom: 15px;
+    text-shadow: 0 0 20px rgba(125, 255, 142, 0.5);
+}
+
+.success-message-text {
+    font-size: 1.2em;
+    color: #c0c0c0;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* Styly pro tlačítka formuláře (Odeslat a Reset) */
+.form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Mezera mezi tlačítky */
+    margin-top: 30px;
+}
+
+.form-buttons button {
+    padding: 14px 20px; /* Mírně zmenšený padding */
+    border: none;
+    border-radius: 8px;
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    color: #fff; /* Barva textu pro obě tlačítka */
+}
+
+/* Tlačítko Odeslat */
+.form-buttons button[type="submit"] {
+    background: linear-gradient(45deg, #a67dff, #6f42c1); /* Fialový gradient */
+}
+
+.form-buttons button[type="submit"]:hover:not(:disabled) {
+    background: linear-gradient(45deg, #c3a1ff, #8a5acd);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+.form-buttons button[type="submit"]:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.form-buttons button[type="submit"]:disabled {
+    background: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: none;
+}
+
+/* Tlačítko Reset */
+.form-buttons button[type="button"] {
+    background-color: #3a3a5a; /* Tmavší šedá */
+    border: 1px solid #5a5a7a;
+}
+
+.form-buttons button[type="button"]:hover:not(:disabled) {
+    background-color: #4a4a6a;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    transform: translateY(-2px);
+}
+
+.form-buttons button[type="button"]:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Tlačítko pro návrat z úspěšné zprávy */
+.back-to-form-button {
+    background: linear-gradient(45deg, #6f42c1, #a67dff);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+}
+
+.back-to-form-button:hover {
+    background: linear-gradient(45deg, #8a5acd, #c3a1ff);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+.back-to-form-button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+/* src/app/generic-form/generic-form.component.css */
+@media (max-width: 560px){
+    .generic-form-container{
+        width: calc(100vw - 40px);
+    }
+}
+@media (max-width: 480px){
+    .form-header h2{
+        font-size: 1.8em;
+    }
+}

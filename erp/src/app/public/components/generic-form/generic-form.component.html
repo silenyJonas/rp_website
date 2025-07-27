@@ -1,0 +1,117 @@
+<form class="generic-form-container" (ngSubmit)="onSubmit()" #dynamicForm="ngForm">
+  <div class="form-header">
+    <h2>{{form_header}}</h2>
+    <h4>{{form_description}}</h4>
+  </div>
+
+  <div *ngIf="successMessage" class="success-message-in-form">
+    <h2 class="success-message-title">Děkujeme!</h2>
+    <p class="success-message-text">{{ successMessage }}</p>
+    <button class="back-to-form-button" (click)="onReset()">Vyplnit znovu</button>
+  </div>
+
+  <div *ngIf="!successMessage">
+    <div *ngFor="let field of formConfig" class="form-group">
+      <label [for]="field.name">
+        {{ field.label }}
+        <span *ngIf="field.required" class="required-asterisk">*</span>
+      </label>
+
+      <ng-container *ngIf="['text', 'email', 'tel', 'password', 'number'].includes(field.type)">
+        <input
+          [type]="field.type"
+          [id]="field.name"
+          [name]="field.name"
+          [(ngModel)]="formData[field.name]"
+          [required]="field.required ?? false"
+          [pattern]="field.pattern ?? ''"
+          [placeholder]="field.placeholder ?? ''"
+          [minlength]="field.minLength ?? null"
+          [maxlength]="field.maxLength ?? null"
+          [min]="field.min ?? null"
+          [max]="field.max ?? null"
+          [disabled]="(field.disabled ?? false) || isLoading"
+          [attr.aria-describedby]="field.name + '-error'" >
+      </ng-container>
+
+      <ng-container *ngIf="field.type === 'textarea'">
+        <textarea
+          [id]="field.name"
+          [name]="field.name"
+          [(ngModel)]="formData[field.name]"
+          [required]="field.required ?? false"
+          [placeholder]="field.placeholder ?? ''"
+          [rows]="field.rows || 5"
+          [minlength]="field.minLength ?? null"
+          [maxlength]="field.maxLength ?? null"
+          [disabled]="(field.disabled ?? false) || isLoading"
+          [attr.aria-describedby]="field.name + '-error'" ></textarea>
+      </ng-container>
+
+      <ng-container *ngIf="field.type === 'select'">
+        <select
+          [id]="field.name"
+          [name]="field.name"
+          [(ngModel)]="formData[field.name]"
+          [required]="field.required ?? false"
+          [disabled]="(field.disabled ?? false) || isLoading"
+          [attr.aria-describedby]="field.name + '-error'" >
+          <option *ngIf="!field.required" [value]="null">Vyberte...</option>
+          <option *ngFor="let option of field.options" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </ng-container>
+
+      <ng-container *ngIf="field.type === 'radio'">
+        <div class="radio-group">
+          <div *ngFor="let option of field.options" class="radio-option">
+            <input
+              type="radio"
+              [id]="field.name + '_' + option.value"
+              [name]="field.name"
+              [value]="option.value"
+              [(ngModel)]="formData[field.name]"
+              [required]="field.required ?? false"
+              [disabled]="(field.disabled ?? false) || isLoading"
+              [attr.aria-describedby]="field.name + '-error'" >
+            <label [for]="field.name + '_' + option.value">{{ option.label }}</label>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="field.type === 'checkbox'">
+        <div class="checkbox-group">
+          <input
+            type="checkbox"
+            [id]="field.name"
+            [name]="field.name"
+            [(ngModel)]="formData[field.name]"
+            [required]="field.required ?? false"
+            [disabled]="(field.disabled ?? false) || isLoading"
+            [attr.aria-describedby]="field.name + '-error'" >
+          <label [for]="field.name">{{ field.placeholder || field.label }}</label>
+        </div>
+      </ng-container>
+
+      <div
+        *ngIf="dynamicForm.controls[field.name]?.invalid && (dynamicForm.controls[field.name]?.dirty || dynamicForm.controls[field.name]?.touched)"
+        class="validation-error"
+        [id]="field.name + '-error'"
+      >
+        {{ getValidationErrors(field.name) }}
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div class="form-buttons">
+      <button type="submit" [disabled]="!dynamicForm.form.valid || isLoading">
+        <span *ngIf="!isLoading">{{form_button}}</span>
+        <span *ngIf="isLoading">Odesílám...</span>
+      </button>
+    </div>
+  </div>
+</form>

@@ -17,5 +17,5 @@ export class PublicDataService {
   submitContactForm(formData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/raw_request_commissions`, formData);
   }
-
+  
 }

@@ -1,0 +1,316 @@
+/* src/app/components/product-card-list/product-card-list.component.css */
+
+/* Styly pro kontejner seznamu karet produktů */
+.product-card-list-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responzivní mřížka */
+  gap: 30px; /* Mezera mezi kartami */
+  padding: 30px 30px 0; /* 30px nahoře, 30px vlevo/vpravo, 0px dole */
+  font-family: 'Source Sans Pro', sans-serif;
+  width: 100%; /* Zajistí, že komponenta vyplní dostupnou šířku */
+  box-sizing: border-box; /* Důležité pro správné počítání šířky */
+}
+
+/* Styly pro jednotlivé karty produktů */
+.product-card {
+  background-color: rgba(26, 26, 46, 0.7); /* Mírně průhledné tmavé pozadí */
+  border: 1px solid rgba(116, 68, 128, 0.4); /* Jemný fialový okraj */
+  border-radius: 15px;
+  overflow: hidden; /* Pro zaoblené rohy */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Jemný stín */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  color: #e0e0e0; /* Světlý text */
+  min-height: 150px; /* ZMĚNA: Snížena minimální výška karty pro menší vzhled bez obrázku */
+  justify-content: space-between; /* Rozprostře obsah vertikálně */
+}
+
+.product-card:hover {
+  transform: translateY(-5px); /* Mírné posunutí nahoru při najetí */
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(166, 125, 255, 0.3); /* Výraznější stín a záře */
+}
+
+/* ODSTRANĚNO: Styly pro .product-image-wrapper a .product-preview-image */
+/* Tyto sekce byly odstraněny, protože jste požadoval zobrazení bez obrázků. */
+
+.product-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Zajistí, že info sekce vyplní zbývající prostor */
+}
+
+.product-name {
+  font-size: 1.6em; /* Ponecháno, ale můžete upravit, pokud chcete menší text */
+  color: #a67dff; /* Fialový nadpis */
+  margin-top: 0;
+  margin-bottom: 10px;
+  text-shadow: 0 0 8px rgba(166, 125, 255, 0.2);
+}
+
+.product-short-description {
+  font-size: 0.95em;
+  color: #b0b0b0;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  flex-grow: 1; /* Popis se roztáhne */
+}
+
+.product-price {
+  font-size: 1.4em;
+  font-weight: 700;
+  color: #7dff8e; /* Zelená barva pro cenu */
+  margin-bottom: 15px;
+  text-align: right;
+}
+
+.product-details-button {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  background: linear-gradient(45deg, #6f42c1, #a67dff);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.product-details-button:hover {
+  background: linear-gradient(45deg, #8a5acd, #c3a1ff);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Styly pro Popup */
+.product-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Pokryje celou šířku viewportu */
+  height: 100vh; /* Pokryje celou výšku viewportu */
+  background-color: rgba(0, 0, 0, 0.8); /* Tmavé průhledné pozadí */
+  display: flex;
+  justify-content: center;
+  z-index: 1000; /* Vysoký z-index, aby byl nad vším */
+  backdrop-filter: blur(5px); /* Jemné rozmazání pozadí */
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.product-popup-content {
+  margin-bottom: 50px;
+  margin-top: 130px;
+  font-family: 'Source Sans Pro', sans-serif;
+  background-color: #1a1a2e; /* Tmavé pozadí popupu */
+  border: 2px solid rgba(116, 68, 128, 0.6); /* Fialový okraj */
+  border-radius: 20px;
+  padding: 30px;
+  width: 70vw; /* Šířka 95% viewportu */
+  height: auto; /* Výška 95% viewportu */
+  max-width: 1600px; /* ZMĚNA: Zvýšená maximální šířka pro větší obrazovky */
+  overflow-y: auto; /* Scroll, pokud je obsah větší */
+  position: relative;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7); /* Výraznější stín */
+  color: #e0e0e0;
+  animation: slideIn 0.4s ease-out forwards;
+  display: flex;
+  flex-direction: column; /* Zajišťuje, že obsah popupu je uspořádán vertikálně */
+  
+
+  /* Responzivní úpravy pro obsah popupu */
+  @media (max-width: 768px) {
+    padding: 20px; /* Menší padding na menších obrazovkách */
+    width: 93vw; /* Větší šířka na menších obrazovkách */
+    
+  }
+
+  @media (max-width: 480px) {
+    padding: 15px; /* Ještě menší padding na mobilních zařízeních */
+    border-radius: 10px; /* Menší zaoblení rohů na mobilních zařízeních */
+  }
+}
+@media (max-width: 768px) {
+   .product-card-list-container{
+      padding: 0;
+    }
+  }
+
+/* Animace pro popup */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Třída pro body, když je popup otevřen */
+body.no-scroll {
+  overflow: hidden;
+}
+
+.popup-close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #a67dff; /* Fialová barva pro ikonu zavření */
+  font-size: 1.8em;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+  padding: 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-close-button:hover {
+  transform: rotate(90deg);
+  color: #c3a1ff;
+  background-color: rgba(166, 125, 255, 0.1);
+}
+
+.popup-header {
+  text-align: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(116, 68, 128, 0.3);
+}
+
+.popup-product-name {
+  font-size: 2.5em;
+  color: #a67dff;
+  margin-bottom: 5px;
+  text-shadow: 0 0 10px rgba(166, 125, 255, 0.4);
+}
+
+.popup-product-price {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #7dff8e;
+}
+
+.popup-details-section {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(116, 68, 128, 0.2);
+  flex-grow: 1; /* ZMĚNA: Zajistí, že sekce s detaily vyplní dostupný prostor */
+}
+
+.popup-details-section:last-of-type {
+  border-bottom: none; /* Poslední sekce bez spodního okraje */
+}
+
+.popup-details-section h3 {
+  font-size: 1.8em;
+  color: #e0e0e0;
+  margin-bottom: 15px;
+}
+
+.popup-details-section p {
+  font-size: 1.05em;
+  line-height: 1.6;
+  color: #b0b0b0;
+  margin-bottom: 10px;
+}
+
+.popup-details-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.popup-details-section li {
+  font-size: 1em;
+  color: #c0c0c0;
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.popup-details-section li::before {
+  content: '•'; /* Malá tečka jako odrážka */
+  color: #7dff8e; /* Zelená odrážka */
+  position: absolute;
+  left: 0;
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.popup-detail-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin: 20px 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.review-item {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 1px solid rgba(116, 68, 128, 0.2);
+}
+
+.review-item strong {
+  color: #a67dff;
+}
+
+.review-item p {
+  margin-top: 5px;
+  font-size: 0.95em;
+  color: #c0c0c0;
+}
+
+.popup-footer {
+  margin-top: 30px;
+  text-align: center;
+  flex-shrink: 0; /* ZMĚNA: Zabrání zmenšení patičky při nedostatku místa */
+}
+
+.popup-action-button {
+  padding: 12px 25px;
+  background: linear-gradient(45deg, #a67dff, #6f42c1);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.popup-action-button:hover {
+  background: linear-gradient(45deg, #c3a1ff, #8a5acd);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 905px){
+  .product-popup-content{
+    margin-top: 80px;
+    width: 80vw;
+  }
+  .popup-product-name{
+    margin-top: 20px;
+  }
+}
+body.no-scroll {
+    overflow: hidden;
+    /* Volitelné: Zabrání posunu stránky, pokud má scrollbar šířku */
+    padding-right: var(--scrollbar-width, 0px); /* Bude to dynamičtější */
+}

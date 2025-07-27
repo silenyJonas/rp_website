@@ -6,7 +6,6 @@
     border-top: 3px solid rgba(116, 068, 128, 0.4); /* Jemný oddělovač nahoře */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     position: relative;
-    z-index: 100; /* Ujistěte se, že je footer nad ostatním obsahem */
     box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5); /* Jemný stín nahoru */
 }
 a{

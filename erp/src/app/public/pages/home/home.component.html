@@ -550,6 +550,59 @@
   </div>
 
 </div>
+
+      <div class="header-0-2-t">
+            Máme vlastní obchod s digitáními produkty
+        </div>
+
+        <div class="product-cards-section">
+    <div class="product-card">
+        <div class="product-image-placeholder">
+            <img [src]="eshop_default">
+            </div>
+        <div class="product-info">
+            <div class="product-title">Předpřipravený E-Shop</div>
+            <div class="product-price">8 099 Kč</div>
+            <div class="product-description">Předpřipravený E-Shop s možností spustit do 24h.</div>
+        </div>
+    </div>
+
+    <div class="product-card">
+        <div class="product-image-placeholder">
+              <img [src]="survey_engine">
+            </div>
+        <div class="product-info">
+            <div class="product-title">Dotazníkový software</div>
+            <div class="product-price">7 999 Kč</div>
+            <div class="product-description">Profesionální dotazníkový software na vlastní doméně.</div>
+        </div>
+    </div>
+    <div class="product-card">
+        <div class="product-image-placeholder">
+            <img [src]="survey_solver">
+            </div>
+        <div class="product-info">
+            <div class="product-title">Dotazníkový analyzátor</div>
+            <div class="product-price">1 499 Kč</div>
+            <div class="product-description">Rychlá analýza a prezentace dat.</div>
+        </div>
+    </div>
+
+</div>
+
+        <div class="button-wrp">
+        <div class="button">
+          <a routerLink="/shop" class="ref-button">Navštivte obchod zde</a>
+        </div>
+      </div>
+<div class="gradient-seep-wrp">
+  <div class="gradient-line-separator">
+
+  </div>
+
+</div>
+
+
 <div class="header-0-2-t">
     Učíme děti programovat
 </div>
@@ -590,58 +643,7 @@
         <a routerLink="/academy" class="ref-button">Navštivte akademii zde</a>
     </div>
 </div>
-<div class="gradient-seep-wrp">
-  <div class="gradient-line-separator">
 
-  </div>
-
-</div>
-
-
-      <div class="header-0-2-t">
-            Máme i vlastní obchod s digitáními produkty
-        </div>
-
-        <div class="product-cards-section">
-    <div class="product-card">
-        <div class="product-image-placeholder">
-            <img [src]="eshop_default">
-            </div>
-        <div class="product-info">
-            <div class="product-title">Předpřipravený E-Shop</div>
-            <div class="product-price">8099 Kč</div>
-            <div class="product-description">Předpřipravený E-Shop s možností spustit do 24h.</div>
-        </div>
-    </div>
-
-    <div class="product-card">
-        <div class="product-image-placeholder">
-              <img [src]="survey_engine">
-            </div>
-        <div class="product-info">
-            <div class="product-title">Dotazníkový software</div>
-            <div class="product-price">7999 Kč</div>
-            <div class="product-description">Profesionální dotazníkový software na vlastní doméně.</div>
-        </div>
-    </div>
-    <div class="product-card">
-        <div class="product-image-placeholder">
-            <img [src]="survey_solver">
-            </div>
-        <div class="product-info">
-            <div class="product-title">Dotazníkový analyzátor</div>
-            <div class="product-price">1 499 Kč</div>
-            <div class="product-description">Rychlá analýza a prezentace dat.</div>
-        </div>
-    </div>
-
-</div>
-
-        <div class="button-wrp">
-        <div class="button">
-          <a routerLink="/shop" class="ref-button">Navštivte obchod zde</a>
-        </div>
-      </div>
       <div class="gradient-seep-wrp">
   <div class="gradient-line-separator">
 
@@ -650,38 +652,15 @@
 </div>
 <div class="form-wrp">
            <div class="form">
-                <form class="contact-form" (ngSubmit)="onSubmit()" #contactForm="ngForm">
-                    <h2>Máte nápad? My máme řešení</h2>
-                    <h4>Navázání spolupráce do 24h</h4>
+                  <app-generic-form
+                        [formConfig]="contactFormConfig"
+                        [form_header]="form_header"
+                        [form_description]="form_description"
+                        [form_button]="form_button"
+                        (formSubmitted)="handleFormSubmission($event)"
+                        (formReset)="handleFormReset()"
 
-                    <div class="form-group">
-                        <label for="thema">Téma:</label>
-                        <select id="thema" name="thema" [(ngModel)]="formData.thema" required>
-                            <option value="web-development">Webový vývoj</option>
-                            <option value="desktop-development">Desktopový vývoj</option>
-                            <option value="mobile-development">Mobilní vývoj</option>
-                            <option value="ai-development">AI vývoj</option>
-                            <option value="other">Jiné</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="contact_email">E-mail:</label>
-                        <input type="email" id="contact_email" name="contact_email" [(ngModel)]="formData.contact_email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="contact_phone">Telefon (nepovinné):</label>
-                        <input type="tel" id="contact_phone" name="contact_phone" [(ngModel)]="formData.contact_phone">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="order_description">Stručný popis zadání:</label>
-                        <textarea id="order_description" name="order_description" [(ngModel)]="formData.order_description" rows="5" required></textarea>
-                    </div>
-
-                    <button type="submit" [disabled]="!contactForm.form.valid">Rezervovat konzultaci</button>
-                </form>
+                    ></app-generic-form>
                 <div class="icon-wrp">
                     <div class="c-img-wrp">
                         <div class="c-img-wrp-i">
