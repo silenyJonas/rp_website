@@ -1,0 +1,34 @@
+{
+  "faq": {
+    "question_1": "What can you develop?",
+    "answer_1": "We specialize in a wide range of development, including **web applications**, responsive websites, e-shops, mobile applications (iOS/Android), and custom software solutions. Whatever you need, we will find an effective solution.",
+    "question_2": "How long does website development take?",
+    "answer_2": "The development time depends on the project's complexity. A simple presentation website can be ready in **2-4 weeks**, while a more extensive e-shop or web application may take **2-4 months** or longer. We will always provide you with a realistic estimate after the initial consultation.",
+    "question_3": "Do you offer maintenance and post-launch support?",
+    "answer_3": "Yes, absolutely! We provide **comprehensive after-sales support and maintenance**, which includes regular updates, security patches, performance monitoring, and technical support. We want your project to run smoothly in the long term.",
+    "question_4": "What is the collaboration process like?",
+    "answer_4": "Our collaboration begins with an **initial consultation** where we discuss your needs and vision. This is followed by the planning and design phase, then the development itself, testing, and finally launch. Throughout the process, we will keep you actively informed and involve you in decision-making.",
+    "question_5": "What technologies do you use?",
+    "answer_5": "We use modern and proven technologies. For the frontend, these include **Angular, React, Vue.js**, for the backend **Node.js, Python (Django/Flask)**, databases such as **PostgreSQL, MongoDB**, and cloud platforms. We always choose the most suitable tools for your specific project.",
+    "question_6": "Can you help me with SEO optimization?",
+    "answer_6": "Yes, SEO optimization is an integral part of our services. During development, we focus on technical SEO (loading speed, mobile responsiveness, code structure), and after launch, we can also offer **content optimization and link-building strategy** to help you achieve better search engine rankings."
+  },
+  "common": {
+    "button_text_details": "Show details",
+    "button_close": "Close",
+    "language_cz": "Czech",
+    "language_sk": "Slovak",
+    "language_en": "English",
+    "language_cz_short": "CZ",
+    "language_sk_short": "SK",
+    "language_en_short": "EN"
+  },
+  "navigation": {
+    "home": "Home",
+    "services": "Services",
+    "shop": "Shop",
+    "academy": "Academy",
+    "references": "Projects",
+    "faq": "FAQ"
+  }
+}

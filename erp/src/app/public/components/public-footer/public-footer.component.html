@@ -1,52 +1,49 @@
 <footer class="public-footer">
   <div class="footer-content">
     <div class="footer-section company-info">
-      <h3>RegioPartner, s.r.o</h3>
-      <p><strong>Adresa:</strong> Kytlická 862/6, 190 00 Praha</p>
-      <p><strong>IČO:</strong> 12345678</p>
-      <p><strong>DIČ:</strong> CZ12345678</p>
+      <h3>{{ company_name_text }}</h3>
+      <p><strong>{{ address_label_text }}:</strong> {{ address_value_text }}</p>
+      <p><strong>{{ ico_label_text }}:</strong> {{ ico_value_text }}</p>
+      <p><strong>{{ dic_label_text }}:</strong> {{ dic_value_text }}</p>
       <div class="social-links">
         <a href="">
-          <img [src]="ig_link" alt="">
+          <img [src]="ig_link" alt="Instagram">
         </a>
-         <a href="">
-          <img [src]="fb_link" alt="">
+        <a href="">
+          <img [src]="fb_link" alt="Facebook">
         </a>
-         <a href="">
-          <img [src]="in_link" alt="">
+        <a href="">
+          <img [src]="in_link" alt="LinkedIn">
         </a>
       </div>
     </div>
 
     <div class="footer-section quick-links">
-      <h3>Rychlé odkazy</h3>
+      <h3>{{ quick_links_header_text }}</h3>
       <ul>
-        <li><a routerLink="/home">Domů</a></li>
-        <li><a routerLink="/services">Služby</a></li>
-        <li><a routerLink="/shop">Obchod</a></li>
-        <li><a routerLink="/academy">Akademie</a></li>
-        <li><a routerLink="/references">Realizované projekty</a></li>
-        <li><a routerLink="/faq">Často kladené otázky</a></li>
+        <li *ngFor="let link of footerNavLinks">
+          <a [routerLink]="link.route">{{ link.text }}</a>
+        </li>
       </ul>
     </div>
 
     <div class="footer-section contact-info">
-      <h3>Kontakt</h3>
-      <p><strong>Email: </strong><a href="mailto:info@vasitfirma.cz">info&#64;rpsw.cz</a></p>
-      <p><strong>Telefon:</strong> +420 733 188 328 </p>
-      
+      <h3>{{ contact_header_text }}</h3>
+      <p><strong>{{ email_label_text }}: </strong><a href="mailto:info@vasitfirma.cz">{{ email_value_text }}</a></p>
+      <p><strong>{{ phone_label_text }}:</strong> {{ phone_value_text }} </p>
     </div>
 
     <div class="footer-section legal-info">
-      <h3>Právní informace</h3>
+      <h3>{{ legal_info_header_text }}</h3>
       <ul>
-        <li><a routerLink="/privacy-policy">Zásady ochrany osobních údajů</a></li>
-        <li><a routerLink="/tos">Obchodní podmínky</a></li>
+        <li *ngFor="let link of footerLegalLinks">
+          <a [routerLink]="link.route">{{ link.text }}</a>
+        </li>
       </ul>
     </div>
   </div>
   
   <div class="footer-bottom">
-    <p>&copy; {{ currentYear }} RegioPartner, s.r.o., Všechna práva vyhrazena.</p>
+    <p>{{ copyright_text }}</p>
   </div>
 </footer>

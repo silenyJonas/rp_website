@@ -1,6 +1,9 @@
+// src/app/components/product-card-list/product-card-list.component.ts
+
 import { Component, Input, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../../shared/interfaces/product';
+
 @Component({
   selector: 'app-product-card-list',
   standalone: true,
@@ -24,17 +27,17 @@ export class ProductCardListComponent implements OnInit {
   openPopup(product: Product): void {
     this.selectedProduct = product;
     this.isPopupOpen = true;
-    // TOTO JE JIŽ SPRÁVNĚ
+    // TOTO JE JIŽ SPRÁVNĚ - PŘIDÁVÁ TŘÍDU
     document.body.classList.add('no-scroll');
-    this.cdr.detectChanges();
+    this.cdr.detectChanges(); // Vynutí detekci změn, aby se popup zobrazil okamžitě
   }
 
   closePopup(): void {
     this.isPopupOpen = false;
     this.selectedProduct = null;
-    // TOTO JE JIŽ SPRÁVNĚ
+    // TOTO JE JIŽ SPRÁVNĚ - ODEBÍRÁ TŘÍDU
     document.body.classList.remove('no-scroll');
-    this.cdr.detectChanges();
+    this.cdr.detectChanges(); // Vynutí detekci změn, aby se popup skryl okamžitě
   }
 
   onOverlayClick(event: MouseEvent): void {

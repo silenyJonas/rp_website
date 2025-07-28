@@ -1,9 +1,6 @@
-<!-- src/app/components/product-card-list/product-card-list.component.html -->
-
 <div class="product-card-list-container">
-  <!-- Iterace přes seznam produktů a vykreslení každé karty -->
   <div *ngFor="let product of products" class="product-card" (click)="openPopup(product)">
-    
+
     <div class="product-info">
       <h3 class="product-name">{{ product.name }}</h3>
       <p class="product-short-description">{{ product.shortDescription }}</p>
@@ -13,92 +10,79 @@
   </div>
 </div>
 
-<!-- Popup pro zobrazení detailů produktu -->
 <div *ngIf="isPopupOpen" class="product-popup-overlay" (click)="onOverlayClick($event)">
   <div class="product-popup-content">
-    <button class="popup-close-button" (click)="closePopup()">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
-        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-        <path d="M0 0h24v24H0z" fill="none"/>
-      </svg>
-    </button>
 
-    <!-- Hlavička popupu - obecné informace o produktu -->
-    <div class="popup-header">
-      <div class="popup-product-name">{{ selectedProduct?.name }}</div>
-      <p class="popup-product-price">{{ selectedProduct?.price }}</p>
-    </div>
+    <div class="popup-fixed-header">
+      <button class="popup-close-button" (click)="closePopup()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          <path d="M0 0h24v24H0z" fill="none"/>
+        </svg>
+      </button>
 
-    <!-- Dynamický obsah popupu na základě popupType -->
-    <!-- Zde můžete mít libovolný počet divů s různými typy popupů.
-         Každý div bude mít *ngIf, který kontroluje selectedProduct?.popupType.
-         Název popupType by měl odpovídat klíči, který definujete ve vašich datech produktu.
-         Příklad: 'eshop-app', 'task-manager', 'space-game', 'ai-assistant', 'custom-product-X'
-    -->
-
-    <!-- Popup pro "eshop-app" -->
-    <div *ngIf="selectedProduct?.popupType === 'eshop-app'" class="popup-details-section popup-type-eshop">
-      <h3>Podrobnosti o E-shop aplikaci</h3>
-      <p>{{ selectedProduct?.details?.longDescription }}</p>
-      <h4>Klíčové vlastnosti:</h4>
-      <ul>
-        <li *ngFor="let feature of selectedProduct?.details?.features">{{ feature }}</li>
-      </ul>
-      <p>Technologie: <strong>{{ selectedProduct?.details?.technologyStack }}</strong></p>
-      <img [src]="selectedProduct?.details?.screenshotUrl" alt="Screenshot E-shopu" class="popup-detail-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/333333/FFFFFF?text=Obrázek+není+dostupný';" />
-      <p>Podpora: {{ selectedProduct?.details?.supportInfo }}</p>
-    </div>
-
-    <!-- Popup pro "task-manager" -->
-    <div *ngIf="selectedProduct?.popupType === 'task-manager'" class="popup-details-section popup-type-task-manager">
-      <h3>Specifikace Správce úkolů</h3>
-      <p>Kategorie: <strong>{{ selectedProduct?.details?.category }}</strong></p>
-      <p>Aktuální verze: <strong>{{ selectedProduct?.details?.version }}</strong></p>
-      <p>Platformy: <strong>{{ selectedProduct?.details?.platforms }}</strong></p>
-      <p>{{ selectedProduct?.details?.notes }}</p>
-      <h4>Funkce:</h4>
-      <ul>
-        <li *ngFor="let func of selectedProduct?.details?.functions">{{ func }}</li>
-      </ul>
-    </div>
-
-    <!-- Popup pro "space-game" -->
-    <div *ngIf="selectedProduct?.popupType === 'space-game'" class="popup-details-section popup-type-space-game">
-      <h3>O hře Space Invaders</h3>
-      <p>{{ selectedProduct?.details?.gameStory }}</p>
-      <p>Žánr: <strong>{{ selectedProduct?.details?.genre }}</strong></p>
-      <p>Dostupné na: <strong>{{ selectedProduct?.details?.availableOn }}</strong></p>
-      <h4>Recenze:</h4>
-      <div *ngFor="let review of selectedProduct?.details?.reviews" class="review-item">
-        <strong>{{ review.author }}</strong> (Hodnocení: {{ review.rating }}/5)
-        <p>{{ review.comment }}</p>
+      <div class="popup-header">
+        <div class="popup-product-name">{{ selectedProduct?.name }}</div>
+        <div class="popup-product-price">{{ selectedProduct?.price }}</div>
       </div>
-      <p>Průměrné hodnocení: {{ selectedProduct?.details?.averageRating }}</p>
     </div>
+    <div class="popup-scrollable-body">
+      <div *ngIf="selectedProduct?.popupType === 'eshop-app'" class="popup-details-section popup-type-eshop">
+        <h3>Podrobnosti o E-shop aplikaci</h3>
+        <p>{{ selectedProduct?.details?.longDescription }}</p>
+        <h4>Klíčové vlastnosti:</h4>
+        <ul>
+          <li *ngFor="let feature of selectedProduct?.details?.features">{{ feature }}</li>
+        </ul>
+        <p>Technologie: <strong>{{ selectedProduct?.details?.technologyStack }}</strong></p>
+        <img [src]="selectedProduct?.details?.screenshotUrl" alt="Screenshot E-shopu" class="popup-detail-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/333333/FFFFFF?text=Obrázek+není+dostupný';" />
+        <p>Podpora: {{ selectedProduct?.details?.supportInfo }}</p>
+      </div>
 
-    <!-- Popup pro "ai-assistant" -->
-    <div *ngIf="selectedProduct?.popupType === 'ai-assistant'" class="popup-details-section popup-type-ai-assistant">
-      <h3>Podrobnosti o AI asistentovi</h3>
-      <p>{{ selectedProduct?.details?.aiCapabilities }}</p>
-      <h4>Využití:</h4>
-      <ul>
-        <li *ngFor="let useCase of selectedProduct?.details?.useCases">{{ useCase }}</li>
-      </ul>
-      <p>Přizpůsobení: <strong>{{ selectedProduct?.details?.customization }}</strong></p>
+      <div *ngIf="selectedProduct?.popupType === 'task-manager'" class="popup-details-section popup-type-task-manager">
+        <h3>Specifikace Správce úkolů</h3>
+        <p>Kategorie: <strong>{{ selectedProduct?.details?.category }}</strong></p>
+        <p>Aktuální verze: <strong>{{ selectedProduct?.details?.version }}</strong></p>
+        <p>Platformy: <strong>{{ selectedProduct?.details?.platforms }}</strong></p>
+        <p>{{ selectedProduct?.details?.notes }}</p>
+        <h4>Funkce:</h4>
+        <ul>
+          <li *ngFor="let func of selectedProduct?.details?.functions">{{ func }}</li>
+        </ul>
+      </div>
+
+      <div *ngIf="selectedProduct?.popupType === 'space-game'" class="popup-details-section popup-type-space-game">
+        <h3>O hře Space Invaders</h3>
+        <p>{{ selectedProduct?.details?.gameStory }}</p>
+        <p>Žánr: <strong>{{ selectedProduct?.details?.genre }}</strong></p>
+        <p>Dostupné na: <strong>{{ selectedProduct?.details?.availableOn }}</strong></p>
+        <h4>Recenze:</h4>
+        <div *ngFor="let review of selectedProduct?.details?.reviews" class="review-item">
+          <strong>{{ review.author }}</strong> (Hodnocení: {{ review.rating }}/5)
+          <p>{{ review.comment }}</p>
+        </div>
+        <p>Průměrné hodnocení: {{ selectedProduct?.details?.averageRating }}</p>
+      </div>
+
+      <div *ngIf="selectedProduct?.popupType === 'ai-assistant'" class="popup-details-section popup-type-ai-assistant">
+        <h3>Podrobnosti o AI asistentovi</h3>
+        <p>{{ selectedProduct?.details?.aiCapabilities }}</p>
+        <h4>Využití:</h4>
+        <ul>
+          <li *ngFor="let useCase of selectedProduct?.details?.useCases">{{ useCase }}</li>
+        </ul>
+        <p>Přizpůsobení: <strong>{{ selectedProduct?.details?.customization }}</strong></p>
+      </div>
+
+      <div *ngIf="!selectedProduct?.popupType || (selectedProduct?.popupType !== 'eshop-app' && selectedProduct?.popupType !== 'task-manager' && selectedProduct?.popupType !== 'space-game' && selectedProduct?.popupType !== 'ai-assistant')" class="popup-details-section popup-type-default">
+        <h3>Obecné detaily</h3>
+        <p>{{ selectedProduct?.details?.defaultLongDescription || selectedProduct?.shortDescription }}</p>
+        <p>Pro více informací o tomto produktu nás prosím kontaktujte přímo.</p>
+      </div>
+
+      <div class="popup-footer">
+        <button class="popup-action-button" (click)="closePopup()">Zavřít</button>
+        </div>
     </div>
-
-    <!-- Výchozí popup, pokud není definován specifický typ nebo pokud popupType chybí -->
-    <div *ngIf="!selectedProduct?.popupType || (selectedProduct?.popupType !== 'eshop-app' && selectedProduct?.popupType !== 'task-manager' && selectedProduct?.popupType !== 'space-game' && selectedProduct?.popupType !== 'ai-assistant')" class="popup-details-section popup-type-default">
-      <h3>Obecné detaily</h3>
-      <p>{{ selectedProduct?.details?.defaultLongDescription || selectedProduct?.shortDescription }}</p>
-      <p>Pro více informací o tomto produktu nás prosím kontaktujte přímo.</p>
     </div>
-
-
-    <!-- Společná patička popupu -->
-    <div class="popup-footer">
-      <button class="popup-action-button" (click)="closePopup()">Zavřít</button>
-      <!-- Můžete přidat další tlačítka, např. "Koupit", "Kontaktovat" -->
-    </div>
-  </div>
 </div>

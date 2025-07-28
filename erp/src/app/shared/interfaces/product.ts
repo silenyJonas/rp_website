@@ -1,10 +1,13 @@
+// src/shared/interfaces/product.ts
 
 export interface Product {
   id: string;
   name: string;
   shortDescription: string;
-  price: string; // Může být i number, ale pro formátování je string flexibilnější
+  priceCZK: number;
+  priceEUR: number;
+  price?: string; // Změna: Otazník (?) dělá vlastnost volitelnou
   imageUrl: string;
-  popupType: string; // Změněno na obecný string pro dynamické typy popupů
-  details: any; // Objekt pro detailní data specifická pro daný typ popupu
+  popupType: string;
+  details: any;
 }

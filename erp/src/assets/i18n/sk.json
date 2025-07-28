@@ -1,0 +1,34 @@
+{
+  "faq": {
+    "question_1": "Čo všetko viete vyvinúť?",
+    "answer_1": "Špecializujeme sa na širokú škálu vývoja, vrátane **webových aplikácií**, responzívnych webových stránok, e-shopov, mobilných aplikácií (iOS/Android) a custom softvérových riešení na mieru. Nech už potrebujete čokoľvek, nájdeme efektívne riešenie.",
+    "question_2": "Ako dlho trvá vývoj webovej stránky?",
+    "answer_2": "Dĺžka vývoja závisí od komplexnosti projektu. Jednoduchá prezentačná webová stránka môže byť hotová za **2-4 týždne**, zatiaľ čo rozsiahlejší e-shop alebo webová aplikácia môže trvať **2-4 mesiace** aj dlhšie. Vždy vám poskytneme realistický odhad po úvodnej konzultácii.",
+    "question_3": "Ponúkate aj údržbu a podporu po spustení?",
+    "answer_3": "Áno, samozrejme! Poskytujeme **komplexnú popredajnú podporu a údržbu**, ktorá zahŕňa pravidelné aktualizácie, bezpečnostné záplaty, monitorovanie výkonu a technickú podporu. Chceme, aby váš projekt dlhodobo fungoval bez problémov.",
+    "question_4": "Ako prebieha proces spolupráce?",
+    "answer_4": "Naša spolupráca začína **úvodnou konzultáciou**, kde preberieme vaše potreby a víziu. Nasleduje fáza plánovania a návrhu, potom samotný vývoj, testovanie a nakoniec spustenie. Po celú dobu vás budeme aktívne informovať o priebehu a zapájať do rozhodovania.",
+    "question_5": "Aké technológie používate?",
+    "answer_5": "Používame moderné a overené technológie. Pre frontend to sú napríklad **Angular, React, Vue.js**, pre backend **Node.js, Python (Django/Flask)**, databázy ako **PostgreSQL, MongoDB** a cloudové platformy. Vždy vyberáme tie najvhodnejšie nástroje pre váš konkrétny projekt.",
+    "question_6": "Môžete mi pomôcť s SEO optimalizáciou?",
+    "answer_6": "Áno, SEO optimalizácia je neoddeliteľnou súčasťou našich služieb. Už počas vývoja dbáme na technické SEO (rýchlosť načítania, mobilná responzivita, štruktúra kódu) a po spustení vám môžeme ponúknuť aj **obsahovú optimalizáciu a stratégiu budovania odkazov**, aby ste dosiahli lepšie pozície vo vyhľadávačoch."
+  },
+  "common": {
+    "button_text_details": "Zobraziť detaily",
+    "button_close": "Zavrieť",
+    "language_cz": "Česky",
+    "language_sk": "Slovensky",
+    "language_en": "Anglicky",
+    "language_cz_short": "CZ",
+    "language_sk_short": "SK",
+    "language_en_short": "EN"
+  },
+  "navigation": {
+    "home": "Domov",
+    "services": "Služby",
+    "shop": "Obchod",
+    "academy": "Akadémia",
+    "references": "Projekty",
+    "faq": "FAQ"
+  }
+}

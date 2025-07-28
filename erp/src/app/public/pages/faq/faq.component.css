@@ -130,10 +130,6 @@
     z-index: 2;
 }
 
-.faq-question:hover {
-    background-color: rgba(107, 46, 145, 0.2); /* Mírný hover efekt, konzistentní s projekty */
-    border-color: rgba(166, 125, 255, 0.6); /* Jemně fialový okraj */
-}
 
 .faq-question h3 {
     margin: 0;
@@ -232,7 +228,7 @@
     transition: all 0.3s ease-out;
     opacity: 0;
     transform: translateY(-20px);
-    animation: _ngcontent-ng-c2306478343_fadeInSlideDownItem 0.6s ease-out 0.8s forwards;
+    animation: fadeInSlideDownItem 0.6s ease-out 0.8s forwards;
 }
 
 
@@ -262,11 +258,7 @@
     transition: filter 0.3s ease, transform 0.2s ease; /* Plynulá animace záře a mírného posunu */
 }
 
-.icon-wrp:hover img {
-    /* Zvýraznění při najetí: zesvětlení a fialová záře */
-    filter: brightness(1.2) drop-shadow(0 0 12px rgba(166, 125, 255, 0.8)); /* Zesvětlení a výraznější fialová záře */
-    transform: translateY(-3px); /* Mírný posun nahoru pro interaktivitu */
-}
+
 
 
 /* WRITE US KONEC-------------- */
@@ -458,4 +450,15 @@
         width: 30px;
         height: 30px;
     }
+}
+@media(min-width: 906px){
+.faq-question:hover {
+    background-color: rgba(107, 46, 145, 0.2); /* Mírný hover efekt, konzistentní s projekty */
+    border-color: rgba(166, 125, 255, 0.6); /* Jemně fialový okraj */
+}
+.icon-wrp:hover img {
+    /* Zvýraznění při najetí: zesvětlení a fialová záře */
+    filter: brightness(1.2) drop-shadow(0 0 12px rgba(166, 125, 255, 0.8)); /* Zesvětlení a výraznější fialová záře */
+    transform: translateY(-3px); /* Mírný posun nahoru pro interaktivitu */
+}
 }

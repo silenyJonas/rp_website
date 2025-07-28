@@ -2,315 +2,408 @@
 
 /* Styly pro kontejner seznamu karet produktů */
 .product-card-list-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responzivní mřížka */
-  gap: 30px; /* Mezera mezi kartami */
-  padding: 30px 30px 0; /* 30px nahoře, 30px vlevo/vpravo, 0px dole */
-  font-family: 'Source Sans Pro', sans-serif;
-  width: 100%; /* Zajistí, že komponenta vyplní dostupnou šířku */
-  box-sizing: border-box; /* Důležité pro správné počítání šířky */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responzivní mřížka */
+    gap: 30px; /* Mezera mezi kartami */
+    padding: 30px 30px 0; /* 30px nahoře, 30px vlevo/vpravo, 0px dole */
+    font-family: 'Source Sans Pro', sans-serif;
+    width: 100%; /* Zajistí, že komponenta vyplní dostupnou šířku */
+    box-sizing: border-box; /* Důležité pro správné počítání šířky */
 }
 
 /* Styly pro jednotlivé karty produktů */
 .product-card {
-  background-color: rgba(26, 26, 46, 0.7); /* Mírně průhledné tmavé pozadí */
-  border: 1px solid rgba(116, 68, 128, 0.4); /* Jemný fialový okraj */
-  border-radius: 15px;
-  overflow: hidden; /* Pro zaoblené rohy */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Jemný stín */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  color: #e0e0e0; /* Světlý text */
-  min-height: 150px; /* ZMĚNA: Snížena minimální výška karty pro menší vzhled bez obrázku */
-  justify-content: space-between; /* Rozprostře obsah vertikálně */
+    background-color: rgba(26, 26, 46, 0.7); /* Mírně průhledné tmavé pozadí */
+    border: 1px solid rgba(116, 68, 128, 0.4); /* Jemný fialový okraj */
+    border-radius: 15px;
+    overflow: hidden; /* Pro zaoblené rohy */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Jemný stín */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    color: #e0e0e0; /* Světlý text */
+    min-height: 150px; /* Snížená minimální výška karty pro menší vzhled bez obrázku */
+    justify-content: space-between; /* Rozprostře obsah vertikálně */
 }
-
-.product-card:hover {
-  transform: translateY(-5px); /* Mírné posunutí nahoru při najetí */
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(166, 125, 255, 0.3); /* Výraznější stín a záře */
-}
-
-/* ODSTRANĚNO: Styly pro .product-image-wrapper a .product-preview-image */
-/* Tyto sekce byly odstraněny, protože jste požadoval zobrazení bez obrázků. */
 
 .product-info {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1; /* Zajistí, že info sekce vyplní zbývající prostor */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Zajistí, že info sekce vyplní zbývající prostor */
 }
 
 .product-name {
-  font-size: 1.6em; /* Ponecháno, ale můžete upravit, pokud chcete menší text */
-  color: #a67dff; /* Fialový nadpis */
-  margin-top: 0;
-  margin-bottom: 10px;
-  text-shadow: 0 0 8px rgba(166, 125, 255, 0.2);
+    font-size: 1.6em;
+    color: #a67dff; /* Fialový nadpis */
+    margin-top: 0;
+    margin-bottom: 10px;
+    text-shadow: 0 0 8px rgba(166, 125, 255, 0.2);
 }
 
 .product-short-description {
-  font-size: 0.95em;
-  color: #b0b0b0;
-  line-height: 1.5;
-  margin-bottom: 15px;
-  flex-grow: 1; /* Popis se roztáhne */
+    font-size: 0.95em;
+    color: #b0b0b0;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    flex-grow: 1; /* Popis se roztáhne */
 }
 
 .product-price {
-  font-size: 1.4em;
-  font-weight: 700;
-  color: #7dff8e; /* Zelená barva pro cenu */
-  margin-bottom: 15px;
-  text-align: right;
+    font-size: 1.4em;
+    font-weight: 700;
+    color: #7dff8e; /* Zelená barva pro cenu */
+    margin-bottom: 15px;
+    text-align: right;
 }
 
 .product-details-button {
-  display: block;
-  width: 100%;
-  padding: 10px 15px;
-  background: linear-gradient(45deg, #6f42c1, #a67dff);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 1em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-}
-
-.product-details-button:hover {
-  background: linear-gradient(45deg, #8a5acd, #c3a1ff);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-  transform: translateY(-1px);
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    background: linear-gradient(45deg, #6f42c1, #a67dff);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Styly pro Popup */
 .product-popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw; /* Pokryje celou šířku viewportu */
-  height: 100vh; /* Pokryje celou výšku viewportu */
-  background-color: rgba(0, 0, 0, 0.8); /* Tmavé průhledné pozadí */
-  display: flex;
-  justify-content: center;
-  z-index: 1000; /* Vysoký z-index, aby byl nad vším */
-  backdrop-filter: blur(5px); /* Jemné rozmazání pozadí */
-  animation: fadeIn 0.3s ease-out forwards;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw; /* Pokryje celou šířku viewportu */
+    height: 100vh; /* Pokryje celou výšku viewportu */
+    background-color: rgba(0, 0, 0, 0.8); /* Tmavé průhledné pozadí */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Zajišťuje vycentrování popup-content ve středu obrazovky */
+    z-index: 1000; /* Vysoký z-index, aby byl nad vším */
+    backdrop-filter: blur(5px); /* Jemné rozmazání pozadí */
+    animation: fadeIn 0.3s ease-out forwards; /* Vracíme animaci fadeIn */
 }
 
 .product-popup-content {
-  margin-bottom: 50px;
-  margin-top: 130px;
-  font-family: 'Source Sans Pro', sans-serif;
-  background-color: #1a1a2e; /* Tmavé pozadí popupu */
-  border: 2px solid rgba(116, 68, 128, 0.6); /* Fialový okraj */
-  border-radius: 20px;
-  padding: 30px;
-  width: 70vw; /* Šířka 95% viewportu */
-  height: auto; /* Výška 95% viewportu */
-  max-width: 1600px; /* ZMĚNA: Zvýšená maximální šířka pro větší obrazovky */
-  overflow-y: auto; /* Scroll, pokud je obsah větší */
-  position: relative;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7); /* Výraznější stín */
-  color: #e0e0e0;
-  animation: slideIn 0.4s ease-out forwards;
-  display: flex;
-  flex-direction: column; /* Zajišťuje, že obsah popupu je uspořádán vertikálně */
-  
-
-  /* Responzivní úpravy pro obsah popupu */
-  @media (max-width: 768px) {
-    padding: 20px; /* Menší padding na menších obrazovkách */
-    width: 93vw; /* Větší šířka na menších obrazovkách */
-    
-  }
-
-  @media (max-width: 480px) {
-    padding: 15px; /* Ještě menší padding na mobilních zařízeních */
-    border-radius: 10px; /* Menší zaoblení rohů na mobilních zařízeních */
-  }
+    margin-bottom: 50px;
+    margin-top: 120px;
+    font-family: "Source Sans Pro", sans-serif;
+    background-color: #1a1a2e;
+    border: 2px solid rgba(116, 68, 128, 0.6);
+    border-radius: 20px;
+    width: 70vw;
+    max-width: 1600px;
+    position: relative;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+    color: #e0e0e0;
+    animation: _ngcontent-ng-c1069243116_slideIn 0.4s ease-out forwards;
+    display: flex
+;
+    flex-direction: column;
+    max-height: 85vh;
 }
-@media (max-width: 768px) {
-   .product-card-list-container{
-      padding: 0;
+
+/* Styly pro fixní hlavičku */
+.popup-fixed-header {
+    padding: 20px 30px 15px; /* Upravený padding, méně nahoře/dole */
+    background-color: #1a1a2e; /* Stejné pozadí jako popup */
+    border-bottom: 1px solid rgba(116, 68, 128, 0.3); /* Oddělovací linka */
+    position: sticky; /* Důležité: Udrží hlavičku nahoře */
+    top: 0; /* Přilepí k horní části rodiče */
+    z-index: 10; /* Zajistí, že bude nad scrollovatelným obsahem */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Jemný stín pro oddělení */
+    border-top-left-radius: 20px; /* Zaoblení rohů, pokud popup-content má radius */
+    border-top-right-radius: 20px;
+
+    display: flex; /* Důležité: Použijeme Flexbox */
+    align-items: center; /* Vycentruje prvky vertikálně */
+    justify-content: space-between; /* Rozprostře prvky (název+cena nalevo, křížek napravo) */
+    position: relative; /* Křížek se bude pozicovat vzhledem k tomuto */
+}
+
+/* Styly pro scrollovatelné tělo */
+.popup-scrollable-body {
+    flex-grow: 1; /* Zajistí, že vyplní zbývající prostor */
+    overflow-y: auto; /* Důležité: Zde se bude scrollovat obsah */
+    padding: 15px 30px 30px; /* Horní padding menší, boční a spodní původní */
+
+    /* ----- STYLOVÁNÍ SCROLLBARU START ----- */
+
+    /* Pro prohlížeče založené na WebKitu (Chrome, Safari, Edge) */
+    &::-webkit-scrollbar {
+        width: 10px; /* Šířka vertikálního scrollbaru */
     }
-  }
+
+    &::-webkit-scrollbar-track {
+        background: #2a2a40; /* Barva pozadí stopy scrollbaru */
+        border-radius: 5px; /* Zaoblené rohy stopy */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #a67dff; /* Barva posuvníku (palce) */
+        border-radius: 5px; /* Zaoblené rohy posuvníku */
+        border: 2px solid #2a2a40; /* Rámeček kolem posuvníku, aby se oddělil od stopy */
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: #c3a1ff; /* Barva posuvníku při najetí myší */
+    }
+
+    /* Pro Firefox */
+    scrollbar-width: thin; /* 'auto' | 'thin' | 'none' */
+    scrollbar-color: #a67dff #2a2a40; /* Barva posuvníku a barva stopy */
+
+    /* ----- STYLOVÁNÍ SCROLLBARU END ----- */
+}
 
 /* Animace pro popup */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes slideIn {
-  from { transform: translateY(-50px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-/* Třída pro body, když je popup otevřen */
-body.no-scroll {
-  overflow: hidden;
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 .popup-close-button {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: none;
-  border: none;
-  color: #a67dff; /* Fialová barva pro ikonu zavření */
-  font-size: 1.8em;
-  cursor: pointer;
-  transition: transform 0.2s ease, color 0.2s ease;
-  padding: 5px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.popup-close-button:hover {
-  transform: rotate(90deg);
-  color: #c3a1ff;
-  background-color: rgba(166, 125, 255, 0.1);
+    position: absolute; /* Důležité: Fixuje křížek vzhledem k popup-fixed-header */
+    top: 50%; /* Posune tlačítko do středu vertikálně */
+    right: 15px; /* Vzdálenost od pravého okraje popupu */
+    transform: translateY(-50%); /* Dorovná přesně do středu */
+    z-index: 1050; /* Zajišťuje, že křížek bude vždy nahoře nad ostatním obsahem popupu */
+    background: none;
+    border: none;
+    color: #a67dff; /* Fialová barva pro ikonu zavření */
+    font-size: 1.8em;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+    padding: 5px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Styly pro "rámeček" kolem křížku */
+    background-color: rgba(26, 26, 46, 0.7); /* Tmavé průhledné pozadí */
+    border: 1px solid rgba(116, 68, 128, 0.4); /* Jemný okraj */
+    width: 40px; /* Pevná šířka pro rámeček */
+    height: 40px; /* Pevná výška pro rámeček */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Jemný stín */
 }
 
 .popup-header {
-  text-align: center;
-  margin-bottom: 25px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(116, 68, 128, 0.3);
+    /* Uvnitř .popup-fixed-header už není potřeba display:flex ani text-align:center */
+    text-align: left; /* Zarovná text nalevo, protože je teď vedle křížku */
+    margin-bottom: 0; /* Odstraníme margin-bottom, aby byla kompaktnější */
+    padding-bottom: 0;
+    border-bottom: none;
+    flex-grow: 1; /* Zajistí, že tato sekce vyplní dostupný prostor */
 }
 
 .popup-product-name {
-  font-size: 2.5em;
-  color: #a67dff;
-  margin-bottom: 5px;
-  text-shadow: 0 0 10px rgba(166, 125, 255, 0.4);
+    font-size: 2.2em; /* Mírně menší, aby se vešlo vedle */
+    color: #a67dff;
+    margin-bottom: 2px; /* Menší mezera pod názvem */
+    text-shadow: 0 0 10px rgba(166, 125, 255, 0.4);
 }
 
 .popup-product-price {
-  font-size: 1.8em;
-  font-weight: 700;
-  color: #7dff8e;
+    font-size: 1.6em; /* Mírně menší */
+    font-weight: 700;
+    color: #7dff8e;
 }
 
 .popup-details-section {
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(116, 68, 128, 0.2);
-  flex-grow: 1; /* ZMĚNA: Zajistí, že sekce s detaily vyplní dostupný prostor */
+    border-bottom: 1px solid rgba(116, 68, 128, 0.2);
 }
 
 .popup-details-section:last-of-type {
-  border-bottom: none; /* Poslední sekce bez spodního okraje */
+    border-bottom: none; /* Poslední sekce bez spodního okraje */
 }
 
 .popup-details-section h3 {
-  font-size: 1.8em;
-  color: #e0e0e0;
-  margin-bottom: 15px;
+    font-size: 1.8em;
+    color: #e0e0e0;
+    margin-bottom: 15px;
+    margin-top: 10px;
 }
 
 .popup-details-section p {
-  font-size: 1.05em;
-  line-height: 1.6;
-  color: #b0b0b0;
-  margin-bottom: 10px;
+    font-size: 1.05em;
+    line-height: 1.6;
+    color: #b0b0b0;
+    margin-bottom: 10px;
 }
 
 .popup-details-section ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .popup-details-section li {
-  font-size: 1em;
-  color: #c0c0c0;
-  margin-bottom: 8px;
-  padding-left: 20px;
-  position: relative;
+    font-size: 1em;
+    color: #c0c0c0;
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
 }
 
 .popup-details-section li::before {
-  content: '•'; /* Malá tečka jako odrážka */
-  color: #7dff8e; /* Zelená odrážka */
-  position: absolute;
-  left: 0;
-  font-size: 1.2em;
-  line-height: 1;
+    content: '•'; /* Malá tečka jako odrážka */
+    color: #7dff8e; /* Zelená odrážka */
+    position: absolute;
+    left: 0;
+    font-size: 1.2em;
+    line-height: 1;
 }
 
 .popup-detail-image {
-  max-width: 100%;
-  height: auto;
-  border-radius: 10px;
-  margin: 20px 0;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .review-item {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 15px;
-  border: 1px solid rgba(116, 68, 128, 0.2);
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(116, 68, 128, 0.2);
 }
 
 .review-item strong {
-  color: #a67dff;
+    color: #a67dff;
 }
 
 .review-item p {
-  margin-top: 5px;
-  font-size: 0.95em;
-  color: #c0c0c0;
+    margin-top: 5px;
+    font-size: 0.95em;
+    color: #c0c0c0;
 }
 
 .popup-footer {
-  margin-top: 30px;
-  text-align: center;
-  flex-shrink: 0; /* ZMĚNA: Zabrání zmenšení patičky při nedostatku místa */
+    margin-top: 30px;
+    text-align: center;
+    flex-shrink: 0; /* Zabrání zmenšení patičky při nedostatku místa */
 }
 
 .popup-action-button {
-  padding: 12px 25px;
-  background: linear-gradient(45deg, #a67dff, #6f42c1);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    padding: 12px 25px;
+    background: linear-gradient(45deg, #a67dff, #6f42c1);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.popup-action-button:hover {
-  background: linear-gradient(45deg, #c3a1ff, #8a5acd);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6);
-  transform: translateY(-1px);
-}
+/* RESPONSIVNÍ MEDIA QUERIES */
 
 @media (max-width: 905px){
-  .product-popup-content{
-    margin-top: 80px;
-    width: 80vw;
-  }
-  .popup-product-name{
-    margin-top: 20px;
-  }
+    .product-popup-content{
+        margin-top: 80px;
+        width: 80vw;
+    }
+    /* .popup-product-name{ margin-top: 20px; } - Toto už není potřeba kvůli flexboxu */
+    .popup-fixed-header {
+        flex-direction: column; /* Na menších obrazovkách zpět pod sebe */
+        align-items: flex-start; /* Zarovnání doleva */
+        padding: 20px 20px 10px;
+    }
+    .popup-header {
+        text-align: center; /* Zpět na střed pro název/cenu */
+        width: 100%; /* Zajistí plnou šířku pro text */
+        margin-bottom: 15px; /* Mezera pod hlavičkou */
+    }
+    .popup-product-name, .popup-product-price {
+        font-size: 2em; /* Větší text na mobilu */
+    }
+    .popup-product-name{
+        margin-top: 22px;
+    }
+    .popup-product-price {
+        font-size: 1.5em;
+    }
+    .popup-close-button {
+        position: absolute; /* Znovu absolutní pozicování vůči fixed-header */
+        top: 10px;
+        right: 10px;
+        transform: translateY(0); /* Odstraníme transform */
+    }
 }
-body.no-scroll {
-    overflow: hidden;
-    /* Volitelné: Zabrání posunu stránky, pokud má scrollbar šířku */
-    padding-right: var(--scrollbar-width, 0px); /* Bude to dynamičtější */
+
+/* Responsivní úpravy pro tlačítko zavření */
+@media (max-width: 768px) {
+    .popup-close-button {
+        width: 35px;
+        height: 35px;
+        font-size: 1.5em;
+    }
+    .popup-fixed-header, .popup-scrollable-body, .popup-footer {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+@media (max-width: 620px) {
+    .product-name{
+        font-size: 1.3em;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-card-list-container{
+        padding: 10px 10px 0;
+    }
+    .popup-close-button {
+        width: 30px;
+        height: 30px;
+        font-size: 1.3em;
+    }
+    .popup-fixed-header, .popup-scrollable-body, .popup-footer {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .popup-fixed-header {
+        padding: 15px 15px 10px; /* Ještě menší padding na nejmenších obrazovkách */
+    }
+}
+
+/* HOVER EFEKTY (aplikované pouze pro šířky nad 906px) */
+@media (min-width: 906px){
+    .product-card:hover {
+        transform: translateY(-5px); /* Mírné posunutí nahoru při najetí */
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(166, 125, 255, 0.3); /* Výraznější stín a záře */
+    }
+    .product-details-button:hover {
+        background: linear-gradient(45deg, #8a5acd, #c3a1ff);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        transform: translateY(-1px);
+    }
+    .popup-close-button:hover {
+        transform: translateY(-50%) rotate(90deg); /* Kombinuje transform */
+        color: #c3a1ff;
+        background-color: rgba(166, 125, 255, 0.1);
+    }
+    .popup-action-button:hover {
+        background: linear-gradient(45deg, #c3a1ff, #8a5acd);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6);
+        transform: translateY(-1px);
+    }
 }

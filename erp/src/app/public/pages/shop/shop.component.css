@@ -71,7 +71,6 @@ html, body {
     z-index: 0; /* Ujistěte se, že je nad ostatním obsahem */
     /* --- Animace pro filter-wrp --- */
     opacity: 0; /* Začíná neviditelně */
-    transform: translateY(30px); /* Začíná mírně pod pozicí */
     animation: fadeInSlideUp 0.8s ease-out 0.4s forwards; /* Spustí se s mírným zpožděním */
 }
 /* money form  */
@@ -180,10 +179,7 @@ html, body {
     cursor: pointer;
 }
 
-.finder .search-button:hover {
-    background-color: #3b3b5c;
-    box-shadow: 0 0 20px rgba(166, 125, 255, 0.4);
-}
+
 .search-button img{
     height: 70%;
 }
@@ -234,11 +230,6 @@ html, body {
     outline: none;
 }
 
-.filter select:hover,
-.filter select:focus {
-    border-color: #a67dff;
-    box-shadow: 0 0 5px rgba(166, 125, 255, 0.4);
-}
 
 .filter select option {
     background-color: #1a1a2e;
@@ -313,19 +304,12 @@ html, body {
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
 }
 
-.left-arrow:hover,
-.right-arrow:hover {
-    background-color: #3b3b5c;
-    border-color: #a67dff;
-    box-shadow: 0 0 15px rgba(166, 125, 255, 0.6);
-    color: #a67dff;
-}
 
 
-.pages-count{
+/* .pages-count{
     padding-left: 5px;
     padding-right: 5px;
-}
+} */
 .page-1{
     display: flex;
     justify-content: center;
@@ -471,13 +455,11 @@ html, body {
 
 /* Breakpoint 905px: Tabletový layout */
 @media (max-width: 905px) {
-    .content-wrp{
-        margin-bottom: 25px;
-    }
+    
     .header-1 {
         font-size: 3rem;
-        padding-top: 80px;
-        padding-bottom: 40px;
+        padding-top: 40px;
+        padding-bottom: 10px;
     }
 
     .content-wrp {
@@ -550,7 +532,16 @@ html, body {
 
 /* Breakpoint 480px: Mobilní zobrazení */
 @media (max-width: 480px) {
-
+    .filter select{
+        max-width: none;
+    }
+    .filter-wrp{
+        margin-bottom: 0;
+    }
+    .header-0-2-t{
+        font-size: 1.2rem;
+        margin-bottom: 0px;
+    }
     .header-1 {
         font-size: 2.2rem;
         padding-top: 60px;
@@ -614,11 +605,11 @@ html, body {
         margin-top: 5px;
     }
     
-    .left-arrow, .right-arrow {
+    /* .left-arrow, .right-arrow {
         width: 25px;
         height: 25px;
         font-size: 2rem;
-    }
+    } */
     
     .page-1 {
         width: 25px;
@@ -645,8 +636,17 @@ html, body {
     }
 }
 
+@media (max-width: 768px){
+        .header-0-2-t{
+        margin-bottom: 0;
+    }
+    .content-wrp{
+        margin-bottom: 25px;
+    }
+}
 /* Důležité: Ujistěte se, že následující media queries jsou na konci vašeho shop.component.css */
 @media (min-width: 768px) {
+
     .content-wrp {
         flex-direction: row; /* Na větších obrazovkách filtry vlevo, produkty vpravo */
         align-items: flex-start; /* Zarovnání obsahu nahoru */
@@ -690,25 +690,21 @@ app-product-card-list {
 
     padding: 12px 20px;
     border-radius: 8px;
-    font-size: 1.1em;
+    /* font-size: 1.1em; */
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     width: 48%;
 }
 
-.reset-button:hover {
-    background-color: #7c689e; /* Trochu světlejší odstín fialové při najetí myši */
-    box-shadow: 0 0 15px rgba(124, 104, 158, 0.6); /* Stín ladící s barvou */
-    border-color: #a67dff; /* Mírně výraznější ohraničení při hoveru */
-}
+
 .filter .filter-button {
     background-color: #a67dff;
     color: #1a1a2e;
     border: none;
     padding: 12px 20px;
     border-radius: 8px;
-    font-size: 1.1em;
+    /* font-size: 1.1em; */
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -716,10 +712,7 @@ app-product-card-list {
 
 }
 
-.filter .filter-button:hover {
-    background-color: #c5aaff;
-    box-shadow: 0 0 15px rgba(166, 125, 255, 0.6);
-}
+
 .btn-wrp-form-s{
     display: flex;
     justify-content: space-between;
@@ -731,4 +724,115 @@ app-product-card-list {
     .reset-button {
         font-size: 0.9rem;
     }
+}
+
+.pages-wrp{
+    margin-top: 50px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+.pages{
+    display: flex;
+    gap: 5px; /* Mezera mezi čísly stránek a šipkami */
+}
+
+
+
+
+/* Styl pro disabled šipky */
+.left-arrow.disabled,
+.right-arrow.disabled {
+    background-color: #2f2f2f; /* Tmavší pozadí */
+    color: #555555; /* Tmavší text */
+    border-color: #444444; /* Tmavší ohraničení */
+    cursor: not-allowed; /* Změna kurzoru */
+    box-shadow: none; /* Bez stínu */
+}
+
+
+
+.pages-count{
+    display: flex;
+    gap: 5px; /* Mezera mezi čísly stránek */
+}
+.page-1{ /* Změníme na obecnější .page-number nebo .page-item */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    height: 30px;
+    width: 30px;
+    border-radius: 9999px;
+    border: 3px solid #2f2f2f;
+    background-color: #1a1a2e; /* Mírně odlišné od šipek */
+    color: #9a9a9b;
+    font-family: "Source Sans Pro", sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    user-select: none;
+}
+
+.page-1:hover {
+    background-color: #3b3b5c;
+    border-color: #a67dff;
+    box-shadow: 0 0 10px rgba(166, 125, 255, 0.4);
+    color: #a67dff;
+}
+.left-arrow.disabled:hover,
+.right-arrow.disabled:hover {
+    background-color: #2f2f2f; /* Zůstane stejné i při hoveru */
+    border-color: #444444;
+    color: #555555;
+    box-shadow: none;
+}
+.left-arrow:hover,
+.right-arrow:hover {
+    background-color: #3b3b5c;
+    border-color: #a67dff;
+    box-shadow: 0 0 15px rgba(166, 125, 255, 0.6);
+    color: #a67dff;
+}
+.page-1.active { /* Styl pro aktivní stránku */
+    background-color: #a67dff;
+    border-color: #a67dff;
+    color: #1a1a2e; /* Tmavý text na světlém pozadí */
+    box-shadow: 0 0 15px rgba(166, 125, 255, 0.6);
+    cursor: default; /* Změna kurzoru */
+}
+
+
+
+@media (min-width: 906px){
+.page-1.active:hover { /* Zabrání změně při hoveru na aktivní stránce */
+    background-color: #a67dff;
+    border-color: #a67dff;
+    color: #1a1a2e;
+    box-shadow: 0 0 15px rgba(166, 125, 255, 0.6);
+}
+.filter .filter-button:hover {
+    background-color: #c5aaff;
+    box-shadow: 0 0 15px rgba(166, 125, 255, 0.6);
+}
+.reset-button:hover {
+    background-color: #7c689e; /* Trochu světlejší odstín fialové při najetí myši */
+    box-shadow: 0 0 15px rgba(124, 104, 158, 0.6); /* Stín ladící s barvou */
+    border-color: #a67dff; /* Mírně výraznější ohraničení při hoveru */
+}
+.left-arrow:hover,
+.right-arrow:hover {
+    background-color: #3b3b5c;
+    border-color: #a67dff;
+    box-shadow: 0 0 15px rgba(166, 125, 255, 0.6);
+    color: #a67dff;
+}
+.filter select:hover,
+.filter select:focus {
+    border-color: #a67dff;
+    box-shadow: 0 0 5px rgba(166, 125, 255, 0.4);
+}
+.finder .search-button:hover {
+    background-color: #3b3b5c;
+    box-shadow: 0 0 20px rgba(166, 125, 255, 0.4);
+}
 }

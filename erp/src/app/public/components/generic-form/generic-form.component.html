@@ -5,13 +5,13 @@
   </div>
 
   <div *ngIf="successMessage" class="success-message-in-form">
-    <h2 class="success-message-title">Děkujeme!</h2>
+    <h2 class="success-message-title">{{ internal_success_title }}</h2>
     <p class="success-message-text">{{ successMessage }}</p>
-    <button class="back-to-form-button" (click)="onReset()">Vyplnit znovu</button>
+    <button class="back-to-form-button" (click)="onReset()">{{ internal_reset_button_text }}</button>
   </div>
 
   <div *ngIf="!successMessage">
-    <div *ngFor="let field of formConfig" class="form-group">
+    <div *ngFor="let field of translatedFormConfig" class="form-group">
       <label [for]="field.name">
         {{ field.label }}
         <span *ngIf="field.required" class="required-asterisk">*</span>
@@ -56,7 +56,7 @@
           [required]="field.required ?? false"
           [disabled]="(field.disabled ?? false) || isLoading"
           [attr.aria-describedby]="field.name + '-error'" >
-          <option *ngIf="!field.required" [value]="null">Vyberte...</option>
+          <option *ngIf="!field.required" [value]="null">{{ internal_select_default_option }}</option>
           <option *ngFor="let option of field.options" [value]="option.value">
             {{ option.label }}
           </option>
@@ -110,7 +110,7 @@
     <div class="form-buttons">
       <button type="submit" [disabled]="!dynamicForm.form.valid || isLoading">
         <span *ngIf="!isLoading">{{form_button}}</span>
-        <span *ngIf="isLoading">Odesílám...</span>
+        <span *ngIf="isLoading">{{ internal_sending_text }}</span>
       </button>
     </div>
   </div>

@@ -1,19 +1,20 @@
 <div class="main-content">
   <div class="faq-section">
-    <div class="header-1">Často kladené otázky</div>
+    <div class="header-1">{{ header_1_text }}</div>
 
     <div class="faq-container">
       <div *ngFor="let item of faqItems; let i = index"
            class="faq-item animated-faq-item"
            [ngClass]="{'active': item.isActive}"
-           [style.animation-delay]="i * 0.1 + 's'"> <div class="faq-question" (click)="toggleFaq(item)">
+           [style.animation-delay]="i * 0.1 + 's'">
+        <div class="faq-question" (click)="toggleFaq(item)">
           <h3>{{ item.question }}</h3>
           <div class="faq-indicator">
             <span class="faq-arrow" [ngClass]="{'rotated': item.isActive}">&gt;</span>
           </div>
         </div>
         <div class="faq-answer" (click)="toggleFaq(item)">
-          <p>{{ item.answer }}</p>
+          <p [innerHTML]="item.answer"></p>
         </div>
       </div>
     </div>
@@ -21,16 +22,15 @@
 
   <div class="write-us-wrp">
     <div class="write-us-text">
-      Nezodpověděli jsme vše ? Napiště nám
+      {{ write_us_prompt_text }}
     </div>
     <div class="write-us-icons">
       <a href="www.instagram.com" class="icon-wrp">
-        <img [src]="ig_icon" alt="">
+        <img [src]="ig_icon" alt="Instagram">
       </a>
       <a href="www.facebook.com" class="icon-wrp">
-        <img [src]="fb_icon" alt="">
+        <img [src]="in_icon" alt="Facebook">
       </a>
     </div>
   </div>
-  
 </div>

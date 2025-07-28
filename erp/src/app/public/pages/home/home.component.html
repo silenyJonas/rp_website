@@ -18,23 +18,23 @@
         </div>
 
         <div class="mobile-hero-m">
-            <div class="links-wrp-m-m">
-                <div class="link-w-c-m-m">
-                    <a routerLink="/services" class="l-1-2">
-                        Webový vývoj
-                    </a>
-                    <a routerLink="/services" class="l-1-2">
-                        Desktopový vývoj
-                    </a>
-                    <a routerLink="/services" class="l-1-2">
-                       Mobilní vývoj
-                    </a>
-                    <a routerLink="/services" class="l-1-2">
-                        AI vývoj
-                    </a>
-                </div>
-            </div>
+    <div class="links-wrp-m-m">
+        <div class="link-w-c-m-m">
+            <a routerLink="/services" [queryParams]="{ tech: 'web-dev' }" class="l-1-2">
+                Webový vývoj
+            </a>
+            <a routerLink="/services" [queryParams]="{ tech: 'desktop-dev' }" class="l-1-2">
+                Desktopový vývoj
+            </a>
+            <a routerLink="/services" [queryParams]="{ tech: 'mobile-dev' }" class="l-1-2">
+                Mobilní vývoj
+            </a>
+            <a routerLink="/services" [queryParams]="{ tech: 'ai-dev' }" class="l-1-2">
+                AI vývoj
+            </a>
         </div>
+    </div>
+</div>
 
         <div class="header-0-2-t">
             Přinášíme moderní řešení v mnoha oblastech IT
@@ -263,7 +263,7 @@
                 keySplines="0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1"
             />
         </path>
-        <a routerLink="/services">
+        <a routerLink="/services" [queryParams]="{ tech: 'mobile-dev' }" >
             <g class="bubble-group bubble-target bubble-4" transform="translate(850, 430)">
                 <polygon points="0,0 160,0 180,40 20,40" 
                                 fill="#1a1a2e" stroke="#2f2f2f" stroke-width="2" class="parallelogram-shape"/>
@@ -285,16 +285,16 @@
         <div class="mobile-hero ">
             <div class="links-wrp-m">
                 <div class="link-w-c-m">
-                    <a routerLink="/services" class="l-1-2">
+                    <a routerLink="/services" [queryParams]="{ tech: 'web-dev' }" class="l-1-2">
                         Webový vývoj
                     </a>
-                    <a routerLink="/services" class="l-1-2">
+                    <a routerLink="/services" [queryParams]="{ tech: 'desktop-dev' }" class="l-1-2">
                         Desktopový vývoj
                     </a>
-                    <a routerLink="/services" class="l-1-2">
+                    <a routerLink="/services" [queryParams]="{ tech: 'mobile-dev' }" class="l-1-2">
                        Mobilní vývoj
                     </a>
-                    <a routerLink="/services" class="l-1-2">
+                    <a routerLink="/services" [queryParams]="{ tech: 'ai-dev' }" class="l-1-2">
                         AI vývoj
                     </a>
                 </div>
@@ -390,7 +390,7 @@
                 </div>
             </div>
 
-            <div class="i-1">
+            <a routerLink="/services" class="i-1" [queryParams]="{ tech: 'web-dev' }">
                 <div class="i-1-background" [style.backgroundImage]="getServiceBackground('webapp')"></div>
                 <div class="i-11">
                     <div class="icon-border-overlay"></div>
@@ -413,7 +413,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </a>
     <a href="#" class="links-wrapper">
@@ -430,7 +430,7 @@
                 </div>
             </div>
 
-            <div class="i-1">
+            <a routerLink="/services" class="i-1" [queryParams]="{ tech: 'desktop-dev' }">
                 <div class="i-1-background" [style.backgroundImage]="getServiceBackground('desktopapp')"></div>
                 <div class="i-11">
                     <div class="icon-border-overlay"></div>
@@ -453,7 +453,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </a>
     <a href="#" class="links-wrapper">
@@ -470,7 +470,7 @@
                 </div>
             </div>
 
-            <div class="i-1">
+            <a routerLink="/services" class="i-1" [queryParams]="{ tech: 'mobile-dev' }">
                 <div class="i-1-background" [style.backgroundImage]="getServiceBackground('mobileapp')"></div>
                 <div class="i-11">
                     <div class="icon-border-overlay"></div>
@@ -493,7 +493,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </a>
     <a href="#" class="links-wrapper">
@@ -510,7 +510,7 @@
                 </div>
             </div>
 
-            <div class="i-1">
+            <a routerLink="/services" class="i-1" [queryParams]="{ tech: 'ai-dev' }" >
                 <div class="i-1-background" [style.backgroundImage]="getServiceBackground('aiapp')"></div>
                 <div class="i-11">
                     <div class="icon-border-overlay"></div>
@@ -534,7 +534,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </a>
     </div>
@@ -556,7 +556,7 @@
         </div>
 
         <div class="product-cards-section">
-    <div class="product-card">
+    <a routerLink="/shop" class="product-card">
         <div class="product-image-placeholder">
             <img [src]="eshop_default">
             </div>
@@ -565,9 +565,9 @@
             <div class="product-price">8 099 Kč</div>
             <div class="product-description">Předpřipravený E-Shop s možností spustit do 24h.</div>
         </div>
-    </div>
+    </a>
 
-    <div class="product-card">
+    <a routerLink="/shop" class="product-card">
         <div class="product-image-placeholder">
               <img [src]="survey_engine">
             </div>
@@ -576,8 +576,8 @@
             <div class="product-price">7 999 Kč</div>
             <div class="product-description">Profesionální dotazníkový software na vlastní doméně.</div>
         </div>
-    </div>
-    <div class="product-card">
+    </a>
+    <a routerLink="/services" class="product-card">
         <div class="product-image-placeholder">
             <img [src]="survey_solver">
             </div>
@@ -586,7 +586,7 @@
             <div class="product-price">1 499 Kč</div>
             <div class="product-description">Rychlá analýza a prezentace dat.</div>
         </div>
-    </div>
+    </a>
 
 </div>
 

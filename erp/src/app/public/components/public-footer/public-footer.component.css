@@ -63,10 +63,7 @@ a{
     text-shadow: none; /* Zruší případný text-shadow */
 }
 
-.footer-section ul li a:hover {
-    color: #a67dff; /* Změna barvy na světlejší fialovou při najetí */
-    transform: translateX(5px); /* Jemný posun doprava */
-}
+
 
 /* --- Styly pro OBRÁZKOVÉ sociální ikony --- */
 .social-links {
@@ -88,10 +85,6 @@ a{
     /* FILTRY ÚPLNĚ ODSTRANĚNY - ikony budou mít původní barvu */
 }
 
-.social-links a:hover img {
-    /* Zvýraznění při najetí: jen zesvětlení a fialová záře */
-    filter: brightness(1.2) drop-shadow(0 0 10px rgba(166, 125, 255, 0.8)); /* Zesvětlení a výraznější fialová záře */
-}
 
 
 /* Spodní část footeru s copyrightem */
@@ -145,4 +138,16 @@ a{
         width: 28px; /* Mírně menší ikony na mobilu */
         height: 28px;
     }
+}
+
+@media (min-width: 906px){
+    .footer-section ul li a:hover {
+    color: #a67dff; /* Změna barvy na světlejší fialovou při najetí */
+    transform: translateX(5px); /* Jemný posun doprava */
+}
+.social-links a:hover img {
+    /* Zvýraznění při najetí: jen zesvětlení a fialová záře */
+    filter: brightness(1.2) drop-shadow(0 0 10px rgba(166, 125, 255, 0.8)); /* Zesvětlení a výraznější fialová záře */
+}
+
 }

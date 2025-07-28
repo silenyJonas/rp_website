@@ -1,18 +1,22 @@
 <div class="main-content">
   <div class="projects-section">
-    <div class="header-1">Top 10 dokončených projektů</div>
+    <!-- ZMĚNA ZDE: Použijeme proměnnou z TS -->
+    <div class="header-1">{{ header_1_text }}</div>
 
     <div class="projects-container">
+      <!-- ZMĚNA ZDE: Použijeme proměnné z TS pro hlavičky tabulky -->
       <div class="projects-header animated-project-item" [style.animation-delay]="'0s'">
-        <div class="project-title-header">Název projektu</div>
-        <div class="project-duration-header">Doba plnění</div>
-        <div class="project-client-header">Zadavatel</div>
+        <div class="project-title-header">{{ table_header_title_text }}</div>
+        <div class="project-duration-header">{{ table_header_duration_text }}</div>
+        <div class="project-client-header">{{ table_header_client_text }}</div>
       </div>
 
       <div *ngFor="let project of projects; let i = index"
            class="project-item animated-project-item"
            [ngClass]="{'active': project.isActive}"
-           [style.animation-delay]="(i + 1) * 0.1 + 's'"> <div class="project-overview" (click)="toggleProject(project)">
+           [style.animation-delay]="(i + 1) * 0.1 + 's'">
+        <div class="project-overview" (click)="toggleProject(project)">
+          <!-- project.name, .duration, .client jsou již přeložené -->
           <div class="project-title">{{ project.name }}</div>
           <div class="project-duration">{{ project.duration }}</div>
           <div class="project-client">{{ project.client }}</div>
@@ -22,17 +26,18 @@
         </div>
 
         <div class="project-description" (click)="toggleProject(project)">
-          <p>{{ project.description }}</p>
+          <!-- project.description je již přeložený, použijeme innerHTML pro formátování -->
+          <p [innerHTML]="project.description"></p>
         </div>
       </div>
     </div>
-      <div class="button-wrp">
-        <div class="button">
-          <p class="ref-text">Chcete vidět více?</p>
-          <a href="https://www.regiopartner.cz/archiv-ukoncenych-projektu-1404041473.html" class="ref-button" target="_blank">Celý seznam zde</a>
-        </div>
+    
+    <div class="button-wrp">
+      <div class="button">
+        <!-- ZMĚNA ZDE: Použijeme proměnné z TS pro texty tlačítek -->
+        <p class="ref-text">{{ more_button_prompt_text }}</p>
+        <a href="https://www.regiopartner.cz/archiv-ukoncenych-projektu-1404041473.html" class="ref-button" target="_blank">{{ more_button_link_text }}</a>
       </div>
-
-
+    </div>
   </div>
 </div>

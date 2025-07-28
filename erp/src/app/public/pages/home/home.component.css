@@ -704,7 +704,7 @@ width: 45%;
     height: 1440px; /* Klíčové: Pevná výška pro wrapper (poměr 4:3 k šířce) */
     /* Zde můžete experimentovat s "left", např. left: -200px; pokud chcete, aby kus přesahoval doleva */
     overflow: hidden; /* Skryje jakýkoli přesah SVG, pokud by bylo uvnitř wrapperu větší */
-    z-index: 999;
+    z-index: 1;
     opacity: 0; 
     animation: fadeInSvg 3.5s ease-out 1s forwards; 
 }
@@ -1088,11 +1088,7 @@ button[type="submit"] {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-button[type="submit"]:hover {
-    background: linear-gradient(45deg, #c3a1ff, #8a5acd); /* Mírně světlejší při najetí */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6); /* Výraznější stín a záře */
-    transform: translateY(-2px); /* Mírné posunutí nahoru */
-}
+
 
 button[type="submit"]:active {
     transform: translateY(0);
@@ -1226,6 +1222,7 @@ button[type="submit"]:active {
     display: flex;
     flex-direction: column;
     padding-left: 80px;
+    
 }
 .server-img-wrp-m{
     width: 550px;
@@ -1256,6 +1253,10 @@ button[type="submit"]:active {
     transform: skewX(-15deg);
     transition: box-shadow 0.4s ease-out;
     width: 270px;
+     transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), /* Pro pohyb */
+                box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), /* Pro stín/záři */
+                color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Přidal jsem i pro barvu, pokud ji na hoveru měníte */
+
 }
 @media (max-width: 1777px) {
     .learn-more-text{
@@ -1340,8 +1341,40 @@ button[type="submit"]:active {
         display: none;
     }
 }
+@media(min-width: 1131px){
+      .l-1-2:hover {
+    /* Mírné odsunutí do prava. Protože už máme skewX, přidáme translate X */
+    /* Důležité: translační transformace se provádí až po zkosení,
+       takže translate X bude fungovat "relativně" k zkosenému boxu. */
+    transform: skewX(-15deg) translateX(15px); /* Posun o 5px doprava */
+    
+    /* Mírná záře - zesílení stávajícího box-shadow */
+    /* Barvy jsou upraveny pro výraznější záři */
+    box-shadow: 0 4px 20px rgba(107, 46, 145, 0.6), /* silnější stín */
+                0 0 25px rgba(166, 125, 255, 0.8); /* výraznější záře */
+    
+    /* Můžete zvážit změnu barvy textu nebo pozadí pro další efekt */
+    /* color: #a67dff; */
+    /* background-color: #2a2a4e; */
+}
+}
 
 @media (max-width: 1130px) {
+     .l-1-2:hover {
+    /* Mírné odsunutí do prava. Protože už máme skewX, přidáme translate X */
+    /* Důležité: translační transformace se provádí až po zkosení,
+       takže translate X bude fungovat "relativně" k zkosenému boxu. */
+    transform: skewX(-15deg) translateX(0px); /* Posun o 5px doprava */
+    
+    /* Mírná záře - zesílení stávajícího box-shadow */
+    /* Barvy jsou upraveny pro výraznější záři */
+    box-shadow: 0 4px 20px rgba(107, 46, 145, 0.6), /* silnější stín */
+                0 0 25px rgba(166, 125, 255, 0.8); /* výraznější záře */
+    
+    /* Můžete zvážit změnu barvy textu nebo pozadí pro další efekt */
+    /* color: #a67dff; */
+    /* background-color: #2a2a4e; */
+}
     .icon-wrp{
         display: none;
     }
@@ -1565,6 +1598,12 @@ button[type="submit"]:active {
     }
 }
 @media (max-width: 905px) {
+    .l-1-2:hover{
+        box-shadow: 0 4px 15px rgba(107, 46, 145, 0.4);
+    }
+    .product-card:hover{
+        transform: none;
+    }
     .h-wrp{
         margin-bottom: 0px;
         margin-top: 30px;
@@ -1578,10 +1617,13 @@ button[type="submit"]:active {
 }
 /* Vaše stávající media query pro max-width: 480px */
 @media (max-width: 480px){
+
     .header-0-1{
         font-size: 2.2rem;
     }
-
+    .header-0-2-t{
+        margin-bottom: 0px;
+    }
     /* Změny pro .stats-m a jeho děti pro rozložení 2 a pak 1 */
     .stats-m{
         background-color: transparent;
@@ -1747,12 +1789,15 @@ button[type="submit"]:active {
     }
 }
 
+
 /* Další breakpointy pro skrytí mobilního menu, pokud máte */
 @media (min-width: 1131px) { /* Příklad, pokud desktopová verze začíná od této šířky */
     .mobile-hero-m {
         display: none;
     }
 }
+
+
 
 .header-0-2-t{
     text-align: center;
@@ -1814,6 +1859,12 @@ button[type="submit"]:active {
 
 /* Styling pro jednotlivou produktovou kartu */
 .product-card {
+    text-decoration: none;
+    
+     transition: transform 0.3s ease-out, box-shadow 0.3s ease-out; /* Add this line */
+
+    border-radius: 15px;
+
     overflow: hidden; /* Důležité pro zaoblení obrázku */
     display: flex;
     flex-direction: column; /* Obsah karty pod sebou */
@@ -2033,4 +2084,20 @@ button[type="submit"]:active {
 .back-to-form-button:active {
     transform: translateY(0);
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 906px){
+    .product-card:hover{
+        transform: translateY(-5px) ;
+        /* box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(166, 125, 255, 0.8); */
+        
+    }
+    .ref-button:hover {
+        background-color: #7d35ae;
+        border-color: #c09fff;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(166, 125, 255, 0.8);
+    }
+  
+
 }

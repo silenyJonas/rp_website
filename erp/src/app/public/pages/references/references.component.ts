@@ -1,116 +1,106 @@
-// projects.component.ts
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Důležité pro *ngFor a [ngClass]
+// src/app/public/pages/references/references.component.ts
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { LocalizationService } from '../../services/localization.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-// Rozhraní pro definici struktury jednoho projektu
+// Rozhraní pro definici struktury jednoho projektu (s klíči pro lokalizaci)
+interface ProjectItemConfig {
+  id: number;
+  nameKey: string;
+  durationKey: string;
+  clientKey: string;
+  descriptionKey: string;
+}
+
+// Rozhraní pro projektovou položku s přeloženými texty
 interface ProjectItem {
   id: number;
   name: string;
   duration: string;
   client: string;
   description: string;
-  isActive: boolean; // Vlastnost pro sledování stavu rozbalení
+  isActive: boolean;
 }
 
 @Component({
-  selector: 'app-projects',
+  selector: 'app-references', // Selektor komponenty
   standalone: true,
   imports: [CommonModule],
   templateUrl: './references.component.html',
   styleUrl: './references.component.css'
 })
-export class ReferencesComponent implements OnInit {
+export class ReferencesComponent implements OnInit, OnDestroy {
 
-  // Pole projektů
-  projects: ProjectItem[] = [
-    {
-      id: 1,
-      name: 'E-shop s elektronikou',
-      duration: '4 měsíce',
-      client: 'ABC Tech s.r.o.',
-      description: 'Kompletní vývoj moderního e-shopu na míru s pokročilými funkcemi, jako je správa objednávek, platební brána, sledování zásob a responzivní design pro mobilní zařízení.',
-      isActive: false
-    },
-    {
-      id: 2,
-      name: 'Mobilní aplikace pro fitness',
-      duration: '6 měsíců',
-      client: 'FitLife Studios',
-      description: 'Vývoj nativní mobilní aplikace pro iOS a Android, která uživatelům umožňuje sledovat tréninky, plánovat cvičení, monitorovat pokrok a interagovat s trenéry. Obsahuje i integraci s nositelnou elektronikou.',
-      isActive: false
-    },
-    {
-      id: 3,
-      name: 'Informační systém pro logistiku',
-      duration: '8 měsíců',
-      client: 'Global Logistics a.s.',
-      description: 'Zakázkový webový informační systém pro optimalizaci logistických procesů, včetně sledování zásilek, správy vozového parku, plánování tras a reportingu. Zlepšuje efektivitu a snižuje náklady.',
-      isActive: false
-    },
-    {
-      id: 4,
-      name: 'Prezentační web pro architektonické studio',
-      duration: '2 měsíce',
-      client: 'ArchiDesign s.r.o.',
-      description: 'Vytvoření elegantní a vizuálně poutavé webové stránky, která prezentuje portfolio architektonických projektů, s interaktivními galeriemi a kontaktními formuláři.',
-      isActive: false
-    },
-    {
-      id: 5,
-      name: 'Rezervační systém pro ordinaci',
-      duration: '3 měsíce',
-      client: 'MUDr. Nováková',
-      description: 'Jednoduchý a intuitivní online rezervační systém pro lékařskou ordinaci, umožňující pacientům rezervovat termíny, dostávat připomenutí a spravovat své schůzky.',
-      isActive: false
-    },
-    {
-      id: 6,
-      name: 'Redesign korporátního webu',
-      duration: '3.5 měsíce',
-      client: 'Enterprise Solutions Inc.',
-      description: 'Kompletní redesign stávajícího korporátního webu s důrazem na moderní UI/UX, optimalizaci pro mobilní zařízení a zlepšení SEO. Cílem bylo zvýšit konverze a posílit brand.',
-      isActive: false
-    },
-    {
-      id: 7,
-      name: 'Platforma pro online kurzy',
-      duration: '7 měsíců',
-      client: 'EduTech Academy',
-      description: 'Vývoj komplexní vzdělávací platformy s video kurzy, interaktivními cvičeními, správou uživatelů a pokročilým systémem pro hodnocení a certifikaci.',
-      isActive: false
-    },
-    {
-      id: 8,
-      name: 'CRM systém na míru',
-      duration: '10 měsíců',
-      client: 'ClientCare Ltd.',
-      description: 'Vývoj CRM (Customer Relationship Management) systému šitého na míru pro specifické potřeby klienta, zahrnující správu zákazníků, prodejních cyklů, komunikace a analytiku.',
-      isActive: false
-    },
-    {
-      id: 9,
-      name: 'Automatizace reportingu',
-      duration: '5 měsíců',
-      client: 'Data Insights Corp.',
-      description: 'Software pro automatizaci sběru dat z různých zdrojů a generování dynamických reportů a dashboardů. Zkracuje čas potřebný pro analýzu dat a zlepšuje rozhodování.',
-      isActive: false
-    },
-    {
-      id: 10,
-      name: 'Webová aplikace pro správu akcí',
-      duration: '4 měsíce',
-      client: 'Eventify Solutions',
-      description: 'Interaktivní webová aplikace pro organizátory akcí, umožňující správu registrací, prodej vstupenek, komunikaci s účastníky a plánování logistiky událostí.',
-      isActive: false
-    }
+  // Proměnné pro statické texty v HTML
+  header_1_text: string = '';
+  table_header_title_text: string = '';
+  table_header_duration_text: string = '';
+  table_header_client_text: string = '';
+  more_button_prompt_text: string = '';
+  more_button_link_text: string = '';
+
+  // Konfigurace projektů s klíči pro lokalizaci
+  projectsConfig: ProjectItemConfig[] = [
+    { id: 1, nameKey: 'projects.project_1.name', durationKey: 'projects.project_1.duration', clientKey: 'projects.project_1.client', descriptionKey: 'projects.project_1.description' },
+    { id: 2, nameKey: 'projects.project_2.name', durationKey: 'projects.project_2.duration', clientKey: 'projects.project_2.client', descriptionKey: 'projects.project_2.description' },
+    { id: 3, nameKey: 'projects.project_3.name', durationKey: 'projects.project_3.duration', clientKey: 'projects.project_3.client', descriptionKey: 'projects.project_3.description' },
+    { id: 4, nameKey: 'projects.project_4.name', durationKey: 'projects.project_4.duration', clientKey: 'projects.project_4.client', descriptionKey: 'projects.project_4.description' },
+    { id: 5, nameKey: 'projects.project_5.name', durationKey: 'projects.project_5.duration', clientKey: 'projects.project_5.client', descriptionKey: 'projects.project_5.description' },
+    { id: 6, nameKey: 'projects.project_6.name', durationKey: 'projects.project_6.duration', clientKey: 'projects.project_6.client', descriptionKey: 'projects.project_6.description' },
+    { id: 7, nameKey: 'projects.project_7.name', durationKey: 'projects.project_7.duration', clientKey: 'projects.project_7.client', descriptionKey: 'projects.project_7.description' },
+    { id: 8, nameKey: 'projects.project_8.name', durationKey: 'projects.project_8.duration', clientKey: 'projects.project_8.client', descriptionKey: 'projects.project_8.description' },
+    { id: 9, nameKey: 'projects.project_9.name', durationKey: 'projects.project_9.duration', clientKey: 'projects.project_9.client', descriptionKey: 'projects.project_9.description' },
+    { id: 10, nameKey: 'projects.project_10.name', durationKey: 'projects.project_10.duration', clientKey: 'projects.project_10.client', descriptionKey: 'projects.project_10.description' }
   ];
 
-  constructor() { }
+  // Pole projektů s přeloženými texty, které se zobrazí v HTML
+  projects: ProjectItem[] = [];
 
-  ngOnInit(): void { }
+  private destroy$ = new Subject<void>(); // Pro správné odhlášení z odběrů
+
+  constructor(private localizationService: LocalizationService) { }
+
+  ngOnInit(): void {
+    // Přihlásíme se k odběru změn překladů
+    this.localizationService.currentTranslations$
+      .pipe(takeUntil(this.destroy$)) // Automatické odhlášení při zničení komponenty
+      .subscribe(translations => {
+        if (translations) {
+          // Naplnění proměnných s přeloženými texty
+          this.header_1_text = this.localizationService.getText('projects.header_1');
+          this.table_header_title_text = this.localizationService.getText('projects.table_header_title');
+          this.table_header_duration_text = this.localizationService.getText('projects.table_header_duration');
+          this.table_header_client_text = this.localizationService.getText('projects.table_header_client');
+          this.more_button_prompt_text = this.localizationService.getText('projects.more_button_prompt');
+          this.more_button_link_text = this.localizationService.getText('projects.more_button_link_text');
+
+          // Načtení a naplnění pole projektů s přeloženými texty
+          this.loadProjects();
+        }
+      });
+  }
+
+  // Metoda pro načtení a aktualizaci pole projektů
+  private loadProjects(): void {
+    this.projects = this.projectsConfig.map(config => ({
+      id: config.id,
+      name: this.localizationService.getText(config.nameKey),
+      duration: this.localizationService.getText(config.durationKey),
+      client: this.localizationService.getText(config.clientKey),
+      description: this.localizationService.getText(config.descriptionKey),
+      isActive: false // Výchozí stav
+    }));
+  }
 
   // Metoda pro přepínání stavu projektu (umožňuje více otevřených najednou)
   toggleProject(clickedProject: ProjectItem): void {
     clickedProject.isActive = !clickedProject.isActive;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

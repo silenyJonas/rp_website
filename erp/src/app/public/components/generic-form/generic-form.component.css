@@ -21,7 +21,6 @@
 
     /* Centrování formuláře v rodiči, pokud rodič je flex/grid kontejner */
     max-width: 750px; /* ZMĚNA ZDE: Zvětšena maximální šířka */
-    margin: 50px auto; /* Centrování a mezera odshora/zdola */
 }
 
 /* Animace pro zobrazení formuláře */
@@ -246,11 +245,7 @@
     background: linear-gradient(45deg, #a67dff, #6f42c1); /* Fialový gradient */
 }
 
-.form-buttons button[type="submit"]:hover:not(:disabled) {
-    background: linear-gradient(45deg, #c3a1ff, #8a5acd);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6);
-    transform: translateY(-2px);
-}
+
 
 .form-buttons button[type="submit"]:active:not(:disabled) {
     transform: translateY(0);
@@ -298,11 +293,6 @@
     margin-top: 20px;
 }
 
-.back-to-form-button:hover {
-    background: linear-gradient(45deg, #8a5acd, #c3a1ff);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6);
-    transform: translateY(-2px);
-}
 
 .back-to-form-button:active {
     transform: translateY(0);
@@ -318,4 +308,18 @@
     .form-header h2{
         font-size: 1.8em;
     }
+}
+
+@media (min-width: 906px){
+    .form-buttons button[type="submit"]:hover:not(:disabled) {
+    background: linear-gradient(45deg, #c3a1ff, #8a5acd);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6);
+    transform: translateY(-2px);
+}
+.back-to-form-button:hover {
+    background: linear-gradient(45deg, #8a5acd, #c3a1ff);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6);
+    transform: translateY(-2px);
+}
+
 }

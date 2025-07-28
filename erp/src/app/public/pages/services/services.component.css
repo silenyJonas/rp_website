@@ -69,11 +69,7 @@ html, body {
     transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
-.tech-button:hover {
-    background-color: rgba(70, 70, 90, 0.9);
-    border-color: #a67dff;
-    transform: translateY(-3px);
-}
+
 .tech-button.active {
     background-color: #6b2e91;
     border-color: #a67dff;
@@ -402,10 +398,6 @@ html, body {
     z-index: 2;
 }
 
-.faq-question:hover {
-    background-color: rgba(107, 46, 145, 0.2); /* Mírný hover efekt, konzistentní s projekty */
-    border-color: rgba(166, 125, 255, 0.6); /* Jemně fialový okraj */
-}
 
 .faq-question h3 {
     margin: 0;
@@ -551,10 +543,6 @@ html, body {
     transition: transform 0.2s ease, filter 0.3s ease;
 }
 
-.tech-item img:hover {
-    transform: scale(1.15);
-    filter: drop-shadow(0 0 12px rgba(166, 125, 255, 0.9));
-}
 
 
 /* SLUZBY WEB */
@@ -718,12 +706,7 @@ html, body {
     position: relative;
     z-index: 50;
 }
-.ref-button:hover {
-    background-color: #7d35ae;
-    border-color: #c09fff;
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(166, 125, 255, 0.8);
-}
+
 .gradient-seep-wrp{
     display: flex;
     justify-content: center;
@@ -961,11 +944,7 @@ button[type="submit"] {
     text-transform: uppercase;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
-button[type="submit"]:hover {
-    background: linear-gradient(45deg, #c3a1ff, #8a5acd); /* Mírně světlejší při najetí */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6); /* Výraznější stín a záře */
-    transform: translateY(-2px); /* Mírné posunutí nahoru */
-}
+
 button[type="submit"]:active {
     transform: translateY(0);
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
@@ -983,9 +962,7 @@ button[type="submit"]:active {
 .c-img-wrp-i {
     transition: transform 0.3s ease;
 }
-.c-img-wrp-i:hover {
-    transform: scale(1.05); /* Jemná animace při najetí */
-}
+
 .submit{
     display: flex;
     justify-content: center;
@@ -1251,9 +1228,7 @@ button[type="submit"]:active {
     .contact-form h4 {
         font-size: 1.1rem;
     }
-      .faq-question:hover {
-        background-color: transparent;
-    }
+
 }
 
 /* Breakpoint 480px: Mobilní zobrazení */
@@ -1262,7 +1237,7 @@ button[type="submit"]:active {
   
     .header-1 {
         font-size: 2.2rem;
-        padding-top: 60px;
+        padding-top: 35px;
     }
     .ser-h{
         text-align: center;
@@ -1293,7 +1268,9 @@ button[type="submit"]:active {
     .services-header-2 {
         margin-bottom: 35px;
     }
-
+    .main-content{
+        padding-bottom: 20px;
+    }
     .tech-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 15px;
@@ -1309,7 +1286,7 @@ button[type="submit"]:active {
         font-size: 1em;
     }
     .faq-question h3 {
-        font-size: 1em;
+        font-size: 0.9em;
     }
     .faq-indicator {
         width: 30px;
@@ -1323,7 +1300,7 @@ button[type="submit"]:active {
     }
     .header-2 {
         font-size: 2rem;
-        padding-top: 30px;
+        padding-top: 0;
     }
     .workflow-step {
         padding: 10px 5px;
@@ -1353,4 +1330,37 @@ button[type="submit"]:active {
     .contact-form h4 {
         font-size: 1rem;
     }
+}
+
+@media(min-width: 906px){
+      .faq-question:hover {
+        background-color: transparent;
+    }
+    .c-img-wrp-i:hover {
+    transform: scale(1.05); /* Jemná animace při najetí */
+}
+button[type="submit"]:hover {
+    background: linear-gradient(45deg, #c3a1ff, #8a5acd); /* Mírně světlejší při najetí */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6); /* Výraznější stín a záře */
+    transform: translateY(-2px); /* Mírné posunutí nahoru */
+}
+.ref-button:hover {
+    background-color: #7d35ae;
+    border-color: #c09fff;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(166, 125, 255, 0.8);
+}
+.tech-item img:hover {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 12px rgba(166, 125, 255, 0.9));
+}
+.faq-question:hover {
+    background-color: rgba(107, 46, 145, 0.2); /* Mírný hover efekt, konzistentní s projekty */
+    border-color: rgba(166, 125, 255, 0.6); /* Jemně fialový okraj */
+}
+.tech-button:hover {
+    background-color: rgba(70, 70, 90, 0.9);
+    border-color: #a67dff;
+    transform: translateY(-3px);
+}
 }

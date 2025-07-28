@@ -2,10 +2,6 @@
 905
 480
 
-import { ProductCardListComponent } from '../../components/product-card-list/product-card-list.component';
-import { Product } from '../../../shared/interfaces/product';
-
-
 
 
 
@@ -14,9 +10,10 @@ Dodělat funkci odemykání a zamykání treba prijimani zaku a neprijimani
 
 Dodělat nastavení formuláře z admin prostředí
 
-Zajistit dynamické zobrazování digitálních produktů
+upravit texty + preklady
 
-Vyřešit texty a přidat překlady
+z /home odklazy na /services hodit na spravnou sekci 
+
 
 4
 3

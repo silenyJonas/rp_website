@@ -156,10 +156,6 @@
 }
 
 /* Vylepšený hover efekt pro řádky projektů, konzistentní s FAQ */
-.project-overview:hover {
-    background-color: rgba(107, 46, 145, 0.2); /* Trochu tmavší fialové pozadí při hoveru */
-    border-color: rgba(166, 125, 255, 0.6); /* Jemně fialový okraj */
-}
 
 .project-overview div {
     font-family: "Source Sans Pro", sans-serif;
@@ -310,12 +306,7 @@
     position: relative;
     z-index: 50;
 }
-.ref-button:hover {
-    background-color: #7d35ae;
-    border-color: #c09fff;
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(166, 125, 255, 0.8);
-}
+
 
 
 /* BUTTON ZJISTIT VICE KONEC */
@@ -528,5 +519,18 @@
     }
     .ref-button {
         width: 100%;
+    }
+}
+
+@media (min-width: 906px){
+    .project-overview:hover {
+        background-color: rgba(107, 46, 145, 0.2); /* Trochu tmavší fialové pozadí při hoveru */
+        border-color: rgba(166, 125, 255, 0.6); /* Jemně fialový okraj */
+    }
+    .ref-button:hover {
+        background-color: #7d35ae;
+        border-color: #c09fff;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(166, 125, 255, 0.8);
     }
 }

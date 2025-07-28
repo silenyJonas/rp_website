@@ -1,68 +1,36 @@
-html {
-    box-sizing: border-box; 
-    overflow-x: hidden; 
-    /* Stylování scrollbaru pro Webkit prohlížeče na úrovni HTML */
-    &::-webkit-scrollbar {
-        width: 4px; /* ZÚŽENO NA 4PX pro menší tloušťku */
-        height: 4px; /* ZÚŽENO NA 4PX */
-    }
-
-    &::-webkit-scrollbar-track {
-        background: rgba(17, 17, 31, 0.2); /* Pozadí tracku je JEŠTĚ PRŮHLEDNĚJŠÍ */
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, rgba(138, 43, 226, 0.4), rgba(0, 191, 255, 0.4)); /* Barvy s VÝRAZNĚ MENŠÍ PRŮHLEDNOSTÍ */
-        border-radius: 10px; 
-        border: 1px solid rgba(17, 17, 31, 0.2); /* Tenčí a PRŮHLEDNĚJŠÍ okraj */
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, rgba(153, 50, 204, 0.6), rgba(30, 144, 255, 0.6)); /* Mírně výraznější při najetí, ale stále decentní */
-    }
-
-    &::-webkit-scrollbar-button {
-        display: none;
-    }
-}
-html.no-scroll {
-    overflow: hidden !important;
-}
-/* Váš globální styles.css */
-body.no-scroll {
-    overflow: hidden !important; /* Přidejte !important pro testování */
-}
-html, body {
-    overflow: auto !important; /* !important by přebilo vše */
-}
-/* Styly pro Firefox na úrovni HTML */
-/* html {
-    scrollbar-width: thin;
-    scrollbar-color: linear-gradient(135deg, rgba(138, 43, 226, 0.4), rgba(0, 191, 255, 0.4)) rgba(17, 17, 31, 0.2);
-} */
-
-
+/* Globální nastavení box-sizing */
 *, *::before, *::after {
     box-sizing: inherit;
 }
+html {
+    box-sizing: border-box; 
+    /* overflow-x: hidden; - Nepotřebné zde, bude na body */
 
-.blue{
-    background-color: blue;
-}
-.green{
-    background-color: green;
-}
-.black{
-    background-color: black;
-}
-.yellow{
-    background-color: yellow;
-}
-.white{
-    background-color: white;
-}
-.red{
-    background-color: red;
+    /* Stylování scrollbaru pro Webkit prohlížeče na úrovni HTML - Ponechat pokud chcete mít scrollbar na html elementu,
+       ale obvykle je lepší ho mít na body, pokud není jiný důvod */
+    &::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+    &::-webkit-scrollbar-track {
+        background: rgba(17, 17, 31, 0.2);
+    }
+    &::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, rgba(138, 43, 226, 0.4), rgba(0, 191, 255, 0.4));
+        border-radius: 10px; 
+        border: 1px solid rgba(17, 17, 31, 0.2); 
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, rgba(153, 50, 204, 0.6), rgba(30, 144, 255, 0.6));
+    }
+    &::-webkit-scrollbar-button {
+        display: none;
+    }
+
+    /* Zde již není potřeba html.no-scroll, pokud cílíme na body */
+    /* html.no-scroll {
+        overflow: hidden !important;
+    } */
 }
 
 body {
@@ -70,63 +38,59 @@ body {
     margin: 0;
     padding: 0;
     width: 100vw;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Jen pro horizontální scroll */
+    /* overflow-y: auto; - Nechte toto na výchozí hodnotě, nebo ji nastavte na auto, ale ne !important,
+                          aby ji body.no-scroll mohl přepsat */
     background-color: #11111f;
-    /* Změna kurzoru na křížek pro celé tělo */
     cursor: crosshair;
 
-    /* Stylování scrollbaru pro Webkit prohlížeče na úrovni BODY - pro konzistenci */
+    /* Stylování scrollbaru pro Webkit prohlížeče na úrovni BODY */
+    /* Zvažte, zda chcete mít scrollbar na html NEBO na body, ne na obou, 
+       protože se mohou lišit. Pokud chcete, aby se scrollbar pohyboval s celou stránkou, nechte to na html.
+       Pokud ho chcete mít vždy viditelný a jen obsah body skrolovat, nechte to zde.
+       Nechávám to zde, jak jste to měl, ale je to redundantní s html scrollem.
+       Pro jednoduchost bych stylizoval jen html scrollbar a na body nechal výchozí (nebo auto)
+       pokud nebudete mít specifické use-cases.
+       Pokud ale chcete stylovat jen body scrollbar, pak pravidla z html výše odstraňte.*/
     &::-webkit-scrollbar {
         width: 4px;
         height: 4px;
     }
-
     &::-webkit-scrollbar-track {
         background: rgba(17, 17, 31, 0.2);
     }
-
     &::-webkit-scrollbar-thumb {
         background: linear-gradient(135deg, rgba(138, 43, 226, 0.4), rgba(0, 191, 255, 0.4));
         border-radius: 10px;
         border: 1px solid rgba(17, 17, 31, 0.2);
     }
-
     &::-webkit-scrollbar-thumb:hover {
         background: linear-gradient(135deg, rgba(153, 50, 204, 0.6), rgba(30, 144, 255, 0.6));
     }
-
     &::-webkit-scrollbar-button {
         display: none;
     }
 }
 
-/* --- */
-
-/* Pro všechny odkazy */
-a {
-    cursor: pointer;
+/* --- NOVÉ/UPRAVENÉ PRAVIDLO PRO ZAKÁZÁNÍ SCROLLOVÁNÍ --- */
+/* Ponechejte POUZE tuto definici body.no-scroll */
+body.no-scroll {
+    overflow: hidden; /* Stačí bez !important, pokud není jiná !important kolize */
+    padding-right: var(--scrollbar-width, 0px); 
 }
 
-/* Pro všechna tlačítka */
-button {
-    cursor: pointer;
-}
+/* ODSTRAŇTE TOTO PRAVIDLO, PŘEBÍJÍ VŠE! */
+/* html, body {
+    overflow: auto !important; 
+} */
 
-/* Pro vstupy formulářů a textové oblasti */
-input, textarea {
-    cursor: text;
-}
+/* Ostatní pravidla pro Firefox scrollbar, kurzory, fonty, atd. zůstávají */
+/* Styly pro Firefox na úrovni HTML */
+/* html {
+    scrollbar-width: thin;
+    scrollbar-color: linear-gradient(135deg, rgba(138, 43, 226, 0.4), rgba(0, 191, 255, 0.4)) rgba(17, 17, 31, 0.2);
+} */
 
-/* Pro prvky s možností tažení (draggable) */
-[draggable="true"] {
-    cursor: grab;
-}
-
-/* Obecně pro všechny prvky, které mají být klikatelné, ale nejsou to a nebo button */
-/* Pokud máte vlastní klikatelné divy, p nebo jiné prvky, přidejte je sem */
-.clickable-div { /* Příklad třídy pro klikatelný div */
-    cursor: pointer;
-}
 /* Styly pro Firefox na úrovni BODY */
 /* body {
     scrollbar-width: thin;
@@ -169,3 +133,18 @@ button, .nav-link {
     font-weight: normal;
     font-style: normal;
 }
+
+/* Standardní třídy pro kurzory - v pořádku */
+a { cursor: pointer; }
+button { cursor: pointer; }
+input, textarea { cursor: text; }
+[draggable="true"] { cursor: grab; }
+.clickable-div { cursor: pointer; }
+
+/* Barevné třídy - v pořádku */
+.blue { background-color: blue; }
+.green { background-color: green; }
+.black { background-color: black; }
+.yellow { background-color: yellow; }
+.white { background-color: white; }
+.red { background-color: red; }

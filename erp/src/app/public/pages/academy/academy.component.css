@@ -336,8 +336,6 @@
 
 }
 
-.diff-line:hover {
-}
 
 /* Kulička s číslem */
 .ball {
@@ -378,11 +376,6 @@
     border-radius: 9999px;
 
     
-}
-.diff-header:hover {
-    background-color: rgba(107, 46, 145, 0.2); /* Mírný hover efekt, konzistentní s projekty */
-    border-color: rgba(166, 125, 255, 0.6);
-    transition: background-color 0.5s ease, border-color 0.5s ease; /* Zpomalené rozsvícení */
 }
 
 .diff-c-header h3 {
@@ -524,7 +517,7 @@
     font-family: "Source Sans Pro", sans-serif;
     color: #979797;
     padding-top: 40px; /* Consolidated from two padding-top properties */
-    font-size: 3rem;
+    font-size: 4rem;
     font-weight: 700;
     text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
     /* Animation for the header itself */
@@ -538,7 +531,7 @@
     text-align: center;
     font-family: "Source Sans Pro", sans-serif;
     color: #979797;
-    font-size: 3rem;
+    font-size: 4rem;
     font-weight: 700;
     text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
     /* Animation for the header itself */
@@ -569,6 +562,7 @@
 
 /* Individual Price Card */
 .price-card {
+    backdrop-filter: blur(8px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Soft shadow for depth */
     overflow: hidden; /* Ensures header strip's border-radius is respected */
     flex: 1; /* Allows cards to grow and shrink */
@@ -824,11 +818,7 @@ button[type="submit"] {
     text-transform: uppercase;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
-button[type="submit"]:hover {
-    background: linear-gradient(45deg, #c3a1ff, #8a5acd); /* Mírně světlejší při najetí */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6); /* Výraznější stín a záře */
-    transform: translateY(-2px); /* Mírné posunutí nahoru */
-}
+
 button[type="submit"]:active {
     transform: translateY(0);
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
@@ -846,9 +836,7 @@ button[type="submit"]:active {
 .c-img-wrp-i {
     transition: transform 0.3s ease;
 }
-.c-img-wrp-i:hover {
-    transform: scale(1.05); /* Jemná animace při najetí */
-}
+
 .submit{
     display: flex;
     justify-content: center;
@@ -922,6 +910,7 @@ button[type="submit"]:active {
     }
     .form {
         width: 90%;
+        justify-content: center;
     }
     .diff-line {
         flex-direction: row;
@@ -1079,6 +1068,9 @@ button[type="submit"]:active {
 }
 
 @media (max-width: 480px) {
+    .header-3{
+        padding-bottom: 40px;
+    }
     .s-1 {
         width: 100%;
     }
@@ -1196,4 +1188,23 @@ button[type="submit"]:active {
         flex-direction: row;
         gap: 5px;
     }
+}
+
+@media(min-width: 906px){
+    .header-3{
+        margin-bottom: 40px;
+    }
+.diff-header:hover {
+    background-color: rgba(107, 46, 145, 0.2); /* Mírný hover efekt, konzistentní s projekty */
+    border-color: rgba(166, 125, 255, 0.6);
+    transition: background-color 0.5s ease, border-color 0.5s ease; /* Zpomalené rozsvícení */
+}
+button[type="submit"]:hover {
+    background: linear-gradient(45deg, #c3a1ff, #8a5acd); /* Mírně světlejší při najetí */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.6); /* Výraznější stín a záře */
+    transform: translateY(-2px); /* Mírné posunutí nahoru */
+}
+.c-img-wrp-i:hover {
+    transform: scale(1.05); /* Jemná animace při najetí */
+}
 }

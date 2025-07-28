@@ -1,0 +1,149 @@
+{
+  "faq": {
+    "question_1": "Co všechno umíte vyvinout?",
+    "answer_1": "Specializujeme se na širokou škálu vývoje, včetně **webových aplikací**, responzivních webových stránek, e-shopů, mobilních aplikací (iOS/Android) a custom softwarových řešení na míru. Ať už potřebujete cokoliv, najdeme efektivní řešení.",
+    "question_2": "Jak dlouho trvá vývoj webové stránky?",
+    "answer_2": "Délka vývoje závisí na komplexnosti projektu. Jednoduchá prezentační webová stránka může být hotová za **2-4 týdny**, zatímco rozsáhlejší e-shop nebo webová aplikace může trvat **2-4 měsíce** i déle. Vždy vám poskytneme realistický odhad po úvodní konzultaci.",
+    "question_3": "Nabízíte i údržbu a podporu po spuštění?",
+    "answer_3": "Ano, samozřejmě! Poskytujeme **komplexní poprodejní podporu a údržbu**, která zahrnuje pravidelné aktualizace, bezpečnostní záplaty, monitorování výkonu a technickou podporu. Chceme, aby váš projekt dlouhodobě fungoval bez problémů.",
+    "question_4": "Jak probíhá proces spolupráce?",
+    "answer_4": "Naše spolupráce začíná **úvodní konzultací**, kde probereme vaše potřeby a vizi. Následuje fáze plánování a návrhu, poté samotný vývoj, testování a nakonec spuštění. Po celou dobu vás budeme aktivně informovat o průběhu a zapojovat do rozhodování.",
+    "question_5": "Jaké technologie používáte?",
+    "answer_5": "Používáme moderní a ověřené technologie. Pro frontend to jsou například **Angular, React, Vue.js**, pro backend **Node.js, Python (Django/Flask)**, databáze jako **PostgreSQL, MongoDB** a cloudové platformy. Vždy vybíráme ty nejvhodnější nástroje pro váš konkrétní projekt.",
+    "question_6": "Můžete mi pomoci s SEO optimalizací?",
+    "answer_6": "Ano, SEO optimalizace je nedílnou součástí našich služeb. Už během vývoje dbáme na technické SEO (rychlost načítání, mobilní responzivita, struktura kódu) a po spuštění vám můžeme nabídnout i **obsahovou optimalizaci a strategii budování odkazů**, abyste dosáhli lepších pozic ve vyhledávačích.",
+    "header_1": "Často kladené otázky",
+    "write_us_prompt": "Nezodpověděli jsme vše? Napište nám"
+  },
+  "common": {
+    "button_text_details": "Zobrazit detaily",
+    "button_close": "Zavřít",
+    "language_cz": "Česky",
+    "language_sk": "Slovensky",
+    "language_en": "English",
+    "language_cz_short": "CZ",
+    "language_sk_short": "SK",
+    "language_en_short": "EN"
+  },
+  "navigation": {
+    "home": "Domů",
+    "services": "Služby",
+    "shop": "Obchod",
+    "academy": "Akademie",
+    "references": "Projekty",
+    "references_full": "Realizované projekty",
+    "faq": "FAQ",
+    "faq_full": "Často kladené otázky"
+  },
+  "projects": {
+    "header_1": "Top 10 dokončených projektů",
+    "table_header_title": "Název projektu",
+    "table_header_duration": "Doba plnění",
+    "table_header_client": "Zadavatel",
+    "more_button_prompt": "Chcete vidět více?",
+    "more_button_link_text": "Celý seznam zde",
+    "project_1": {
+      "name": "E-shop s elektronikou",
+      "duration": "4 měsíce",
+      "client": "ABC Tech s.r.o.",
+      "description": "Kompletní vývoj moderního e-shopu na míru s pokročilými funkcemi, jako je správa objednávek, platební brána, sledování zásob a responzivní design pro mobilní zařízení."
+    },
+    "project_2": {
+      "name": "Mobilní aplikace pro fitness",
+      "duration": "6 měsíců",
+      "client": "FitLife Studios",
+      "description": "Vývoj nativní mobilní aplikace pro iOS a Android, která uživatelům umožňuje sledovat tréninky, plánovat cvičení, monitorovat pokrok a interagovat s trenéry. Obsahuje i integraci s nositelnou elektronikou."
+    },
+    "project_3": {
+      "name": "Informační systém pro logistiku",
+      "duration": "8 měsíců",
+      "client": "Global Logistics a.s.",
+      "description": "Zakázkový webový informační systém pro optimalizaci logistických procesů, včetně sledování zásilek, správy vozového parku, plánování tras a reportingu. Zlepšuje efektivitu a snižuje náklady."
+    },
+    "project_4": {
+      "name": "Prezentační web pro architektonické studio",
+      "duration": "2 měsíce",
+      "client": "ArchiDesign s.r.o.",
+      "description": "Vytvoření elegantní a vizuálně poutavé webové stránky, která prezentuje portfolio architektonických projektů, s interaktivními galeriemi a kontaktními formuláři."
+    },
+    "project_5": {
+      "name": "Rezervační systém pro ordinaci",
+      "duration": "3 měsíce",
+      "client": "MUDr. Nováková",
+      "description": "Jednoduchý a intuitivní online rezervační systém pro lékařskou ordinaci, umožňující pacientům rezervovat termíny, dostávat připomenutí a spravovat své schůzky."
+    },
+    "project_6": {
+      "name": "Redesign korporátního webu",
+      "duration": "3.5 měsíce",
+      "client": "Enterprise Solutions Inc.",
+      "description": "Kompletní redesign stávajícího korporátního webu s důrazem na moderní UI/UX, optimalizaci pro mobilní zařízení a zlepšení SEO. Cílem bylo zvýšit konverze a posílit brand."
+    },
+    "project_7": {
+      "name": "Platforma pro online kurzy",
+      "duration": "7 měsíců",
+      "client": "EduTech Academy",
+      "description": "Vývoj komplexní vzdělávací platformy s video kurzy, interaktivními cvičeními, správou uživatelů a pokročilým systémem pro hodnocení a certifikaci."
+    },
+    "project_8": {
+      "name": "CRM systém na míru",
+      "duration": "10 měsíců",
+      "client": "ClientCare Ltd.",
+      "description": "Vývoj CRM (Customer Relationship Management) systému šitého na míru pro specifické potřeby klienta, zahrnující správu zákazníků, prodejních cyklů, komunikace a analytiku."
+    },
+    "project_9": {
+      "name": "Automatizace reportingu",
+      "duration": "5 měsíců",
+      "client": "Data Insights Corp.",
+      "description": "Software pro automatizaci sběru dat z různých zdrojů a generování dynamických reportů a dashboardů. Zkracuje čas potřebný pro analýzu dat a zlepšuje rozhodování."
+    },
+    "project_10": {
+      "name": "Webová aplikace pro správu akcí",
+      "duration": "4 měsíce",
+      "client": "Eventify Solutions",
+      "description": "Interaktivní webová aplikace pro organizátory akcí, umožňující správu registrací, prodej vstupenek, komunikaci s účastníky a plánování logistiky událostí."
+    }
+  },
+  "footer": {
+    "company_name": "RegioPartner, s.r.o.",
+    "address_label": "Adresa",
+    "address_value": "Kytlická 862/6, 190 00 Praha",
+    "ico_label": "IČO",
+    "ico_value": "12345678",
+    "dic_label": "DIČ",
+    "dic_value": "CZ12345678",
+    "quick_links_header": "Rychlé odkazy",
+    "contact_header": "Kontakt",
+    "email_label": "Email",
+    "email_value": "info@rpsw.cz",
+    "phone_label": "Telefon",
+    "phone_value": "+420 733 188 328",
+    "legal_info_header": "Právní informace",
+    "copyright_text": "&copy; {year} RegioPartner, s.r.o., Všechna práva vyhrazena."
+  },
+  "legal": {
+    "privacy_policy": "Zásady ochrany osobních údajů",
+    "terms_of_service": "Obchodní podmínky"
+  },
+  "form": {
+    "success_title": "Děkujeme!",
+    "success_message": "Formulář byl úspěšně odeslán! Brzy se vám ozveme.",
+    "reset_button_text": "Vyplnit znovu",
+    "sending_text": "Odesílám...",
+    "error_submit_generic": "Při odesílání formuláře nastala chyba. Zkuste to prosím znovu.",
+    "error_validation_generic": "Prosím vyplňte všechna povinná pole a opravte chyby.",
+    "select_default_option": "Vyberte...",
+
+    "validation_required": "Toto pole je povinné.",
+    "validation_email": "Zadejte platnou e-mailovou adresu.",
+    "validation_pattern": "Neplatný formát.",
+    "validation_minlength_prefix": "Minimální délka je",
+    "validation_minlength_suffix": "znaků.",
+    "validation_maxlength_prefix": "Maximální délka je",
+    "validation_maxlength_suffix": "znaků.",
+    "validation_min_prefix": "Minimální hodnota je",
+    "validation_min_suffix": ".",
+    "validation_max_prefix": "Maximální hodnota je",
+    "validation_max_suffix": ".",
+    "validation_invalid_value": "Neplatná hodnota."
+  }
+}
