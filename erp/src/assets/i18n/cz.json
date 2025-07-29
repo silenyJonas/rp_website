@@ -132,7 +132,6 @@
     "error_submit_generic": "Při odesílání formuláře nastala chyba. Zkuste to prosím znovu.",
     "error_validation_generic": "Prosím vyplňte všechna povinná pole a opravte chyby.",
     "select_default_option": "Vyberte...",
-
     "validation_required": "Toto pole je povinné.",
     "validation_email": "Zadejte platnou e-mailovou adresu.",
     "validation_pattern": "Neplatný formát.",
@@ -145,5 +144,262 @@
     "validation_max_prefix": "Maximální hodnota je",
     "validation_max_suffix": ".",
     "validation_invalid_value": "Neplatná hodnota."
-  }
+  },
+  "academy": {
+    "header": "Naše Akademie",
+    "intro_text": "Objevte naše kurzy programování a posuňte své dovednosti na novou úroveň.",
+    "common": {
+      "duration_header": "Doba trvání",
+      "themes_header": "Hlavní témata",
+      "new_things_header": "Co se naučíte",
+      "time_duration": "4 měsíce / úroveň (48 hodin)",
+      "tuesday_time": "Úterý: 16:00 - 17:30 (Časové pásmo Praha)",
+      "thursday_time": "Čtvrtek: 16:00 - 17:30 (Časové pásmo Praha)",
+      "tuesday_time_desktop": "Úterý: 18:00 - 19:30 (Časové pásmo Praha)",
+      "thursday_time_desktop": "Čtvrtek: 18:00 - 19:30 (Časové pásmo Praha)",
+      "course_duration": "1,5 hodiny / lekce",
+      "internet_basics": "Základy internetu",
+      "website_creation": "Tvorba webových stránek",
+      "web_app_creation": "Tvorba webových aplikací",
+      "database_basics": "Základy práce s databázemi",
+      "computer_principles": "Principy fungování počítače",
+      "cmd_applications": "Aplikace pro příkazový řádek",
+      "gui_applications": "Aplikace s grafickým rozhraním"
+    },
+    "consultation_form": {
+      "header": "Zanechte kontakt pro konzultaci",
+      "description": "Odezva do 24h",
+      "button": "Rezervovat konzultaci",
+      "fields": {
+        "theme_label": "Okruh:",
+        "theme_option_desktop": "Desktopový vývoj",
+        "theme_option_web": "Webový vývoj",
+        "diff_label": "Obtížnost:",
+        "diff_option_begginer": "Začátečník {age_range}",
+        "diff_option_advanced": "Pokročilý {age_range}",
+        "diff_option_expert": "Expert {age_range}",
+        "age_range_begginer": "(9-17 let)",
+        "age_range_advanced": "(11-17 let)",
+        "age_range_expert": "(12-17 let)",
+        "email_label": "E-mail:",
+        "email_placeholder": "vas.email@priklad.cz",
+        "phone_label": "Telefon (nepovinné):",
+        "phone_placeholder": "např. +420 123 456 789"
+      }
+    },
+    "web_development": {
+      "title": "Web Development - Vytvářejte interaktivní weby",
+      "description": "Ponořte se do světa webových technologií a naučte se tvořit moderní a responzivní webové stránky a aplikace.",
+      "timeline": {
+        "1": {
+          "title": "Začátečník (9-17 let)",
+          "content": "Tento kurz je určen pro děti, které nemají žádné předchozí zkušenosti s programováním. Naučíme se základní koncepty logiky, algoritmů a řešení problémů pomocí vizuálního programování (např. Scratch) a jednoduchých textových příkazů. Děti si vytvoří své první interaktivní příběhy a hry.",
+          "theme": {
+            "1": "Úvod do internetu",
+            "2": "Co to je HTML & CSS",
+            "3": "Základní HTML tagy",
+            "4": "Základy CSS",
+            "5": "Header a Footer",
+            "6": "Miniprojekty: Galerie, Semafor"
+          },
+          "new_thing": {
+            "1": "HTML",
+            "2": "CSS"
+          }
+        },
+        "2": {
+          "title": "Pokročilý (11-17 let)",
+          "content": "Navazuje na základy a prohlubuje znalosti v konkrétním programovacím jazyce (např. úvod do Pythonu nebo JavaScriptu). Zaměříme se na složitější datové struktury, funkce a tvorbu komplexnějších projektů, jako jsou jednoduché aplikace nebo pokročilejší hry. Děti se naučí efektivněji psát kód a řešit složitější problémy.",
+          "theme": {
+            "1": "Pokročilé HTML tagy a atributy",
+            "2": "Styly a layout v CSS (flexbox, grid)",
+            "3": "Úvod do JavaScriptu",
+            "4": "Moderní TypeScript frameworky (Angular)",
+            "5": "Základy dynamického obsahu (DOM)",
+            "6": "Interaktivní prvky (formuláře, tlačítka)",
+            "7": "Projekty: Interaktivní formulář, Jednoduchá hra, Animation ball"
+          },
+          "new_thing": {
+            "1": "JavaScript",
+            "2": "TypeScript"
+          }
+        },
+        "3": {
+          "title": "Expert (12-17 let)",
+          "content": "Pro ty, kteří již mají solidní základy a chtějí se stát skutečnými experty. Budeme pracovat na individuálních projektech, řešit reálné programovací výzvy a učit se pokročilé techniky. Děti si zdokonalí své dovednosti v debugování, optimalizaci, práci s API a týmové spolupráci. Budou připraveny tvořit vlastní inovativní řešení.",
+          "theme": {
+            "1": "Moderní TypeScript frameworky (Angular)",
+            "2": "Základy backendového vývoje (PHP)",
+            "3": "Práce s databázemi (MySQL, PostgreSQL)",
+            "4": "Vytváření full-stack aplikací",
+            "5": "Verzování kódu (Git)",
+            "6": "Projekty: Chat aplikace, E-commerce web"
+          },
+          "new_thing": {
+            "1": "PHP",
+            "2": "MySQL"
+          }
+        }
+      }
+    },
+    "desktop_development": {
+      "title": "Desktop Development - Tvořte aplikace pro stolní počítače",
+      "description": "Získejte dovednosti v programování desktopových aplikací s grafickým rozhraním pro různé operační systémy.",
+      "timeline": {
+        "1": {
+          "title": "Začátečník (11-17 let)",
+          "content": "Tento kurz je určen pro děti, které nemají žádné předchozí zkušenosti s programováním. Naučíme se základní koncepty logiky, algoritmů a řešení problémů pomocí vizuálního programování (např. Scratch) a jednoduchých textových příkazů. Děti si vytvoří své první interaktivní příběhy a hry.",
+          "theme": {
+            "1": "Úvod do programování (základy logiky, algoritmy)",
+            "2": "Vizuální programování (např. Scratch)",
+            "3": "Základy datových typů a proměnných",
+            "4": "Podmíněné příkazy a smyčky",
+            "5": "Miniprojekty: Jednoduchá kalkulačka, Generátor náhodných čísel"
+          },
+          "new_thing": {
+            "1": "Scratch",
+            "2": "Python"
+          }
+        },
+        "2": {
+          "title": "Pokročilý (13-17 let)",
+          "content": "Navazuje na základy a prohlubuje znalosti v konkrétním programovacím jazyce (např. úvod do Pythonu s tkinter nebo C# s WinForms). Zaměříme se na tvorbu grafických uživatelských rozhraní (GUI), práci s událostmi, ukládání dat do souborů a objektově orientované programování.",
+          "theme": {
+            "1": "Základy GUI programování (např. Tkinter/WinForms)",
+            "2": "Práce s událostmi (kliknutí, stisky kláves)",
+            "3": "Ukládání a načítání dat ze souborů",
+            "4": "Základy objektově orientovaného programování (OOP)",
+            "5": "Miniprojekty: Jednoduchý textový editor, Malovací program"
+          },
+          "new_thing": {
+            "1": "C#",
+            "2": "MSSQL"
+          }
+        },
+        "3": {
+          "title": "Expert (14-17 let)",
+          "content": "Pro ty, kteří již mají solidní základy a chtějí se stát skutečnými experty. Budeme pracovat na komplexních desktopových aplikacích, řešit optimalizaci výkonu, práci s externími knihovnami a týmovou spolupráci na větších projektech. Cílem je vytvořit robustní a uživatelsky přívětivé aplikace.",
+          "theme": {
+            "1": "Pokročilé GUI frameworky (např. PyQt, WPF)",
+            "2": "Databáze v desktopových aplikacích (SQLite)",
+            "3": "Multithreading a asynchronní programování",
+            "4": "Deployování aplikací",
+            "5": "Pokročilé datové struktury a algoritmy",
+            "6": "Projekty: Správce úkolů s databází, Jednoduchá 2D hra"
+          },
+          "new_thing": {
+            "1": "C++",
+            "2": "SQLite"
+          }
+        }
+      }
+    },
+    "icons": {
+      "time": "Čas",
+      "online": "Online kurzy",
+      "what": "Co se naučíte",
+      "discord": "Discord komunita"
+    },
+    "prices": {
+      "header": "Ceny kurzů",
+      "monthly": {
+        "header": "Měsíční platba",
+        "amount": "1 500 Kč",
+        "note": "Při platbě měsíčně"
+      },
+      "quarterly": {
+        "header": "Čtvrtletní platba",
+        "amount": "4 200 Kč",
+        "note": "Ušetříte 300 Kč (100 Kč/měsíc)"
+      },
+      "yearly": {
+        "header": "Roční platba",
+        "amount": "15 000 Kč",
+        "note": "Ušetříte 3 000 Kč (250 Kč/měsíc)"
+      }
+    }
+  },
+  "shop": {
+    "header1": "Naše předpřipravené produkty",
+    "header02T": "Spuštění na vaší doméně do 24 hodin",
+    "searchPlaceholder": "Název",
+    "sortByLabel": "Seřadit dle:",
+    "sortByDefaultOption": "-- Výchozí --",
+    "sortByAz": "A-Z",
+    "sortByZa": "Z-A",
+    "sortByPriceDesc": "Od nejdražšího",
+    "sortByPriceAsc": "Od nejlevnějšího",
+    "resultsCountText": "Počet výsledků:",
+    "productsSuffix": "produktů",
+    "filterButtonText": "Filtrovat",
+    "resetButtonText": "Resetovat",
+    "noProductsMessage": "Žádné produkty neodpovídají vašemu výběru.",
+    "products_data": [
+      {
+        "id": "prod-001",
+        "name": "Předpřipravený E-Shop",
+        "shortDescription": "Spuštění do 24 hodin na vlastní doméně.",
+        "priceCZK": 8099,
+        "priceEUR": 329.99,
+        "imageUrl": "assets/images/product_images/eshop_default.png",
+        "popupType": "eshop-app",
+        "details": {
+          "longDescription": "Naše e-shop řešení \"Obchodník\" je navrženo pro maximální flexibilitu a snadné použití. Zahrnuje správu produktů, objednávek, uživatelů, platebních bran a robustní analytiku. Plně responzivní design zajišťuje perfektní zobrazení na všech zařízeních.",
+          "features": [
+            "Intuitivní správa produktů",
+            "Bezpečné platební brány (Stripe, PayPal, GoPay)",
+            "Automatizovaná správa objednávek",
+            "Uživatelské účty a historie nákupů",
+            "SEO optimalizace pro lepší viditelnost",
+            "Integrace s dopravními službami"
+          ],
+          "technologyStack": "Angular, Laravel, PostgreSQL",
+          "screenshotUrl": "https://placehold.co/600x400/8a5acd/FFFFFF?text=E-shop+Detail",
+          "supportInfo": "24/7 technická podpora a pravidelné aktualizace."
+        }
+      },
+      {
+        "id": "prod-002",
+        "name": "Dotazníkový software",
+        "shortDescription": "Profesionální software pro tvorbu vlastních dotazníků.",
+        "priceCZK": 7999,
+        "priceEUR": 325.99,
+        "imageUrl": "assets/images/product_images/survey_engine.png",
+        "popupType": "task-manager",
+        "details": {
+          "category": "Produktivita a řízení",
+          "version": "2.1.0",
+          "platforms": "Windows, macOS, Linux",
+          "notes": "Offline funkcionalita s možností synchronizace po připojení k internetu. Podporuje týmovou spolupráci.",
+          "functions": [
+            "Vytváření a přiřazování úkolů",
+            "Sledování pokroku projektu",
+            "Ganttovy diagramy a kalendář",
+            "Připojování souborů k úkolům",
+            "Generování reportů",
+            "Notifikace a připomenutí"
+          ]
+        }
+      },
+      {
+        "id": "prod-003",
+        "name": "Dotazníkový analyzátor",
+        "shortDescription": "Rychlá analýza a prezentace vložených dat.",
+        "priceCZK": 1499,
+        "priceEUR": 61.99,
+        "imageUrl": "assets/images/product_images/survey_solver.png",
+        "popupType": "ai-assistant",
+        "details": {
+          "aiCapabilities": "Využívá pokročilé NLP pro porozumění dotazům a generování relevantních odpovědí. Schopnost učení z interakcí a integrace s vašimi databázemi.",
+          "useCases": [
+            "Automatická odpověď na FAQ",
+            "Přesměrování dotazů na správné oddělení",
+            "Sběr informací od klientů před spojením s operátorem",
+            "Personalizované doporučení produktů/služeb"
+          ],
+          "customization": "Plně přizpůsobitelný pro vaši značku a tone-of-voice. Možnost integrace do webových stránek, mobilních aplikací a sociálních sítích."
+        }
+      }
+    ]
+  } 
 }

@@ -1,6 +1,5 @@
-
 <div class="header-1">
-    Naše výukové kroužky
+    {{ academyHeader }}
 </div>
 <div class="main-content">
     <div class="courses-wrp">
@@ -9,108 +8,107 @@
             <div class="web-course-wrp">
                 <div class="p-wrp">
                     <div class="header-course">
-                        Webový vývoj
+                        {{ webDevSectionTitle }}
                     </div>
                     <div class="text-1">
-                        Nauč se tvořit vlastní webové stránky i aplikace – od základních HTML a CSS prvků až po interaktivní JavaScriptové projekty. V kroužku projdeme klíčové technologie moderního webu s důrazem na kreativitu, logické myšlení a praktické projekty.
+                        {{ webDevSectionDescription }}
                     </div>
                     <div class="text-1">
-                        Kurz je určen pro děti a teenagery, kteří chtějí pochopit, jak funguje internet, jak se tvoří weby a co se děje „za oponou“. Začneme od úplných základů a postupně se propracujeme k tvorbě vlastních miniaplikací i webových stránek.
+                        {{ introText }}
                     </div>
                     <div class="info-wrp">
                         <div class="i-when">
                             <div class="i-header-1">
-                                Kdy?
+                                {{ timeHeader }}
                             </div>
                             <div class="i-inside">
                                 <div class="line">
                                     <div class="i-i-img">
-                                        <img [src]="time" alt="">
+                                        <img [src]="timeIcon" alt="">
                                     </div>
                                     <div class="i-i-text">
-                                        1x týdně, 90 minut
+                                        {{ localizationService.getText('academy.common.time_duration') }}
                                     </div>
                                 </div>
 
                                 <div class="line">
                                     <div class="i-i-img ">
-                                        <img [src]="calendar" alt="">
+                                        <img [src]="calendarIcon" alt="">
                                     </div>
                                     <div class="i-i-text">
-                                        Úterý 16:30
+                                        {{ localizationService.getText('academy.common.tuesday_time') }}
                                     </div>
                                 </div>
 
-
                                 <div class="line">
                                     <div class="i-i-img ">
-                                        <img [src]="calendar" alt="">
+                                        <img [src]="calendarIcon" alt="">
                                     </div>
                                     <div class="i-i-text">
-                                        Čtvrtek 16:30
+                                        {{ localizationService.getText('academy.common.thursday_time') }}
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="i-what sep">
                             <div class="i-header-1">
-                                Kde?
+                                {{ onlineHeader }}
                             </div>
                             <div class="i-inside">
                                 <div class="line">
                                     <div class="i-i-img ">
-                                        <img [src]="online" alt="">
+                                        <img [src]="onlineIcon" alt="">
                                     </div>
                                     <div class="i-i-text">
-                                        Online
+                                        {{ localizationService.getText('academy.icons.online') }}
                                     </div>
                                 </div>
                                 <div class="line">
                                     <div class="i-i-img ">
-                                        <img [src]="discord" alt="">
+                                        <img [src]="discordIcon" alt="">
                                     </div>
                                     <div class="i-i-text">
-                                        Discord
+                                        {{ localizationService.getText('academy.icons.discord') }}
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="i-where">
                             <div class="i-header-1">
-                                Co?
+                                {{ whatHeader }}
                             </div>
                             <div class="i-inside">
                                 <div class="line">
                                     <div class="i-i-img ">
-                                        <img [src]="client" alt="">
+                                        <img [src]="clientIcon" alt="">
                                     </div>
                                     <div class="i-i-text">
-                                        Základy internetových sítí
+                                        {{ localizationService.getText('academy.common.internet_basics') }}
                                     </div>
                                 </div>
 
                                 <div class="line">
                                     <div class="i-i-img ">
-                                        <img [src]="www" alt="">
+                                        <img [src]="wwwIcon" alt="">
                                     </div>
                                     <div class="i-i-text">
-                                        Tvorba webových stránek
+                                        {{ localizationService.getText('academy.common.website_creation') }}
                                     </div>
                                 </div>
                                 <div class="line">
                                     <div class="i-i-img ">
-                                        <img [src]="www" alt="">
+                                        <img [src]="wwwIcon" alt="">
                                     </div>
                                     <div class="i-i-text">
-                                        Tvorba webových aplikací
+                                        {{ localizationService.getText('academy.common.web_app_creation') }}
                                     </div>
                                 </div>
                                 <div class="line">
                                     <div class="i-i-img ">
-                                        <img [src]="database" alt="">
+                                        <img [src]="databaseIcon" alt="">
                                     </div>
                                     <div class="i-i-text">
-                                        Základy databází
+                                        {{ localizationService.getText('academy.common.database_basics') }}
                                     </div>
                                 </div>
                             </div>
@@ -147,16 +145,16 @@
                                     </div>
                                     <div class="duration-wrp">
                                         <div class="diff-c-header-2">
-                                            Trvání:
+                                            {{ commonDurationHeader }}
                                         </div>
                                         <div class="duration-text">
-                                            1 školní rok, 36 lekcí
+                                            {{ localizationService.getText('academy.common.course_duration') }}
                                         </div>
                                     </div>
                                     <div class="des-wrp">
                                         <div class="s-1">
                                             <div class="diff-c-header-1">
-                                                Obsah kroužku:
+                                                {{ commonThemesHeader }}
                                             </div>
                                             <ul class="diff-c-list">
                                                 <li *ngFor="let theme of item.themes">
@@ -166,7 +164,7 @@
                                         </div>
                                         <div class="s-1">
                                             <div class="diff-c-header-1">
-                                                S čím novým budeme pracovat:
+                                                {{ commonNewThingsHeader }}
                                             </div>
                                             <div class="diff-c-icon-wrp">
                                                 <div class="diff-c-icon" *ngIf="item.newThings[0]">
@@ -196,184 +194,185 @@
             </div>
 
 
-        <div class="desktop-course-wrp">
-            <div class="p-wrp">
-                <div class="header-course">
-                    Desktopový vývoj
-                </div>
-                <div class="text-1">
-                    Zjisti, jak se tvoří opravdové počítačové programy a aplikace, které běží přímo ve Windows, macOS nebo Linuxu. V tomto kroužku se naučíš vytvářet grafická uživatelská rozhraní (GUI), pracovat s událostmi, ukládat data do souborů a tvořit funkční nástroje i jednoduché hry.
-                </div>
+            <div class="desktop-course-wrp">
+                <div class="p-wrp">
+                    <div class="header-course">
+                        {{ desktopDevSectionTitle }}
+                    </div>
+                    <div class="text-1">
+                        {{ desktopDevSectionDescription }}
+                    </div>
 
-                <div class="text-1">
-                    Kurz je vhodný pro všechny, které láká reálný vývoj aplikací mimo webové prohlížeče a chtějí si vytvořit něco „opravdového“ – kalkulačku, malovací program, launcher, správce úkolů nebo jednoduchou hru.
-                </div>
-                <div class="info-wrp">
-                    <div class="i-when">
-                        <div class="i-header-1">
-                            Kdy?
+                    <div class="text-1">
+                        {{ introText }}
+                    </div>
+                    <div class="info-wrp">
+                        <div class="i-when">
+                            <div class="i-header-1">
+                                {{ timeHeader }}
+                            </div>
+                            <div class="i-inside">
+                                <div class="line">
+                                    <div class="i-i-img">
+                                        <img [src]="timeIcon" alt="">
+                                    </div>
+                                    <div class="i-i-text">
+                                        {{ localizationService.getText('academy.common.time_duration') }}
+                                    </div>
+                                </div>
+
+                                <div class="line">
+                                    <div class="i-i-img ">
+                                        <img [src]="calendarIcon" alt="">
+                                    </div>
+                                    <div class="i-i-text">
+                                        {{ localizationService.getText('academy.common.tuesday_time_desktop') }}
+                                    </div>
+                                </div>
+
+
+                                <div class="line">
+                                    <div class="i-i-img ">
+                                        <img [src]="calendarIcon" alt="">
+                                    </div>
+                                    <div class="i-i-text">
+                                        {{ localizationService.getText('academy.common.thursday_time_desktop') }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="i-inside">
-                            <div class="line">
-                                <div class="i-i-img">
-                                    <img [src]="time" alt="">
+                        <div class="i-what sep">
+                            <div class="i-header-1">
+                                {{ onlineHeader }}
+                            </div>
+                            <div class="i-inside">
+                                <div class="line">
+                                    <div class="i-i-img ">
+                                        <img [src]="onlineIcon" alt="">
+                                    </div>
+                                    <div class="i-i-text">
+                                        {{ localizationService.getText('academy.icons.online') }}
+                                    </div>
                                 </div>
-                                <div class="i-i-text">
-                                    1x týdně, 90 minut
+                                <div class="line">
+                                    <div class="i-i-img ">
+                                        <img [src]="discordIcon" alt="">
+                                    </div>
+                                    <div class="i-i-text">
+                                        {{ localizationService.getText('academy.icons.discord') }}
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="line">
-                                <div class="i-i-img ">
-                                    <img [src]="calendar" alt="">
-                                </div>
-                                <div class="i-i-text">
-                                    Úterý 18:30
-                                </div>
+                        </div>
+                        <div class="i-where">
+                            <div class="i-header-1">
+                                {{ whatHeader }}
                             </div>
-
-
-                            <div class="line">
-                                <div class="i-i-img ">
-                                    <img [src]="calendar" alt="">
+                            <div class="i-inside">
+                                <div class="line">
+                                    <div class="i-i-img ">
+                                        <img [src]="pcIcon" alt="">
+                                    </div>
+                                    <div class="i-i-text">
+                                        {{ localizationService.getText('academy.common.computer_principles') }}
+                                    </div>
                                 </div>
-                                <div class="i-i-text">
-                                    Čtvrtek 18:30
+
+                                <div class="line">
+                                    <div class="i-i-img ">
+                                        <img [src]="cmdIcon" alt="">
+                                    </div>
+                                    <div class="i-i-text">
+                                        {{ localizationService.getText('academy.common.cmd_applications') }}
+                                    </div>
+                                </div>
+                                <div class="line">
+                                    <div class="i-i-img ">
+                                        <img [src]="guiIcon" alt="">
+                                    </div>
+                                    <div class="i-i-text">
+                                        {{ localizationService.getText('academy.common.gui_applications') }}
+                                    </div>
+                                </div>
+                                <div class="line">
+                                    <div class="i-i-img ">
+                                        <img [src]="databaseIcon" alt="">
+                                    </div>
+                                    <div class="i-i-text">
+                                        {{ localizationService.getText('academy.common.database_basics') }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="i-what sep">
-                        <div class="i-header-1">
-                            Kde?
-                        </div>
-                        <div class="i-inside">
-                            <div class="line">
-                                <div class="i-i-img ">
-                                    <img [src]="online" alt="">
-                                </div>
-                                <div class="i-i-text">
-                                    Online
-                                </div>
-                            </div>
-                            <div class="line">
-                                <div class="i-i-img ">
-                                    <img [src]="discord" alt="">
-                                </div>
-                                <div class="i-i-text">
-                                    Discord
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="i-where">
-                        <div class="i-header-1">
-                            Co?
-                        </div>
-                        <div class="i-inside">
-                            <div class="line">
-                                <div class="i-i-img ">
-                                    <img [src]="pc" alt="">
-                                </div>
-                                <div class="i-i-text">
-                                    Základy principů počítač
-                                </div>
-                            </div>
 
-                            <div class="line">
-                                <div class="i-i-img ">
-                                    <img [src]="cmd" alt="">
-                                </div>
-                                <div class="i-i-text">
-                                    Aplikace v CMD
-                                </div>
-                            </div>
-                            <div class="line">
-                                <div class="i-i-img ">
-                                    <img [src]="gui" alt="">
-                                </div>
-                                <div class="i-i-text">
-                                    Aplikace v GUI
-                                </div>
-                            </div>
-                            <div class="line">
-                                <div class="i-i-img ">
-                                    <img [src]="database" alt="">
-                                </div>
-                                <div class="i-i-text">
-                                    Základy databází
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <div class="timeline-section-container">
 
-                <div class="timeline-section-container">
+                        <div class="diff-wrp">
+                            <div *ngFor="let item of desktopTimelineItems; let i = index"
+                                class="diff-ins"
+                                [ngClass]="{'active-item': item.isActive}"
+                                [style.animation-delay]="i * 0.1 + 's'">
 
-                    <div class="diff-wrp">
-                        <div *ngFor="let item of desktopTimelineItems; let i = index"
-                            class="diff-ins"
-                            [ngClass]="{'active-item': item.isActive}"
-                            [style.animation-delay]="i * 0.1 + 's'">
-
-                            <div class="diff-line" (click)="toggleDesktopItem(item)">
-                                <div class="ball" [ngClass]="{'active-ball': item.isActive}">
-                                    {{ i + 1 }}
-                                </div>
-                                <div class="diff-header">
-                                    <div class="diff-c-header">
-                                        <h3>{{ item.title }}</h3>
+                                <div class="diff-line" (click)="toggleDesktopItem(item)">
+                                    <div class="ball" [ngClass]="{'active-ball': item.isActive}">
+                                        {{ i + 1 }}
                                     </div>
-                                    <div class="diff-arrow" [ngClass]="{'rotated': item.isActive}">
-                                        <div class="arrow-txt">
-                                        >
+                                    <div class="diff-header">
+                                        <div class="diff-c-header">
+                                            <h3>{{ item.title }}</h3>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="diff-answer" [ngClass]="{'active-answer': item.isActive}">
-                                <div class="content-1-wrp">
-                                    {{item.content}}
-                                </div>
-                                <div class="duration-wrp">
-                                    <div class="diff-c-header-2">
-                                        Trvání:
-                                    </div>
-                                    <div class="duration-text">
-                                        1 školní rok, 36 lekcí
-                                    </div>
-                                </div>
-                                <div class="des-wrp">
-                                    <div class="s-1">
-                                        <div class="diff-c-header-1">
-                                            Obsah kroužku:
-                                        </div>
-                                        <ul class="diff-c-list">
-                                            <li *ngFor="let theme of item.themes">
-                                                {{theme}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="s-1">
-                                        <div class="diff-c-header-1">
-                                            S čím novým budeme pracovat:
-                                        </div>
-                                        <div class="diff-c-icon-wrp">
-                                            <div class="diff-c-icon" *ngIf="item.newThings[0]">
-                                                <div class="diff-con-icon">
-                                                    <img [src]="item.newThings[0][1]" alt="">
-                                                </div>
-                                                <div class="diff-con-text">
-                                                    {{item.newThings[0][0]}}
-                                                </div>
+                                        <div class="diff-arrow" [ngClass]="{'rotated': item.isActive}">
+                                            <div class="arrow-txt">
+                                                >
                                             </div>
-                                            <div class="diff-c-icon" *ngIf="item.newThings[1]">
-                                                <div class="diff-con-icon">
-                                                    <img [src]="item.newThings[1][1]" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="diff-answer" [ngClass]="{'active-answer': item.isActive}">
+                                    <div class="content-1-wrp">
+                                        {{item.content}}
+                                    </div>
+                                    <div class="duration-wrp">
+                                        <div class="diff-c-header-2">
+                                            {{ commonDurationHeader }}
+                                        </div>
+                                        <div class="duration-text">
+                                            {{ localizationService.getText('academy.common.course_duration') }}
+                                        </div>
+                                    </div>
+                                    <div class="des-wrp">
+                                        <div class="s-1">
+                                            <div class="diff-c-header-1">
+                                                {{ commonThemesHeader }}
+                                            </div>
+                                            <ul class="diff-c-list">
+                                                <li *ngFor="let theme of item.themes">
+                                                    {{theme}}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="s-1">
+                                            <div class="diff-c-header-1">
+                                                {{ commonNewThingsHeader }}
+                                            </div>
+                                            <div class="diff-c-icon-wrp">
+                                                <div class="diff-c-icon" *ngIf="item.newThings[0]">
+                                                    <div class="diff-con-icon">
+                                                        <img [src]="item.newThings[0][1]" alt="">
+                                                    </div>
+                                                    <div class="diff-con-text">
+                                                        {{item.newThings[0][0]}}
+                                                    </div>
                                                 </div>
-                                                <div class="diff-con-text">
-                                                    {{item.newThings[1][0]}}
+                                                <div class="diff-c-icon" *ngIf="item.newThings[1]">
+                                                    <div class="diff-con-icon">
+                                                        <img [src]="item.newThings[1][1]" alt="">
+                                                    </div>
+                                                    <div class="diff-con-text">
+                                                        {{item.newThings[1][0]}}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -385,76 +384,73 @@
                 </div>
             </div>
         </div>
-        </div>
     </div>
 
 
     <div class="header-2">
-    Cena
-</div>
+        {{ priceHeader }}
+    </div>
 
     <div class="prices-wrp">
         <div class="prices-wrp-1">
             <div class="price-card">
-    <div class="price-header-strip">
-        MĚSÍČNÍ PLATBA
-    </div>
-    <div class="price-content">
-        <div class="price-amount">
-            1899 <span class="currency">Kč/měsíc</span>
-        </div>
-        <div class="price-note">
-            * Platíte každý měsíc
-        </div>
-    </div>
-</div>
+                <div class="price-header-strip">
+                    {{ monthlyPaymentHeader }}
+                </div>
+                <div class="price-content">
+                    <div class="price-amount">
+                        {{ monthlyPaymentAmount }}
+                    </div>
+                    <div class="price-note">
+                        {{ monthlyPaymentNote }}
+                    </div>
+                </div>
+            </div>
 
-<div class="price-card">
-    <div class="price-header-strip">
-        PLATBA ZA 3 MĚSÍCE
-    </div>
-    <div class="price-content">
-        <div class="price-amount">
-            1770 <span class="currency">Kč/měsíc</span>
-        </div>
-        <div class="price-note">
-            * Platba se provádí jednorázově – 5310 Kč
-        </div>
-    </div>
-</div>
+            <div class="price-card">
+                <div class="price-header-strip">
+                    {{ quarterlyPaymentHeader }}
+                </div>
+                <div class="price-content">
+                    <div class="price-amount">
+                        {{ quarterlyPaymentAmount }}
+                    </div>
+                    <div class="price-note">
+                        {{ quarterlyPaymentNote }}
+                    </div>
+                </div>
+            </div>
 
-<div class="price-card">
-    <div class="price-header-strip">
-        ROČNÍ PLATBA
-    </div>
-    <div class="price-content">
-        <div class="price-amount">
-            1566 <span class="currency">Kč/měsíc</span>
+            <div class="price-card">
+                <div class="price-header-strip">
+                    {{ yearlyPaymentHeader }}
+                </div>
+                <div class="price-content">
+                    <div class="price-amount">
+                        {{ yearlyPaymentAmount }}
+                    </div>
+                    <div class="price-note">
+                        {{ yearlyPaymentNote }}
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="price-note">
-            * Platba se provádí jednorázově – 14100 Kč
-        </div>
     </div>
-</div>
-        </div>
-    </div>
-    
+
     <div class="header-3" >
-    Kontakt
-</div>
-<div class="form-wrp">
-           <div class="form">
-                           <app-generic-form
-                        [formConfig]="contactFormConfig"
-                        [form_header]="form_header"
-                        [form_description]="form_description"
-                        [form_button]="form_button"
-                        (formSubmitted)="handleFormSubmission($event)"
-                        (formReset)="handleFormReset()"
-
-                    ></app-generic-form>
-             
-           </div>
-</div>
+        {{ form_header }}
+    </div>
+    <div class="form-wrp">
+        <div class="form">
+            <app-generic-form
+                [formConfig]="contactFormConfig"
+                [form_header]="form_header"
+                [form_description]="form_description"
+                [form_button]="form_button"
+                (formSubmitted)="handleFormSubmission($event)"
+                (formReset)="handleFormReset()">
+            </app-generic-form>
+        </div>
+    </div>
 
 </div>

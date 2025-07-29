@@ -543,7 +543,11 @@ html, body {
     transition: transform 0.2s ease, filter 0.3s ease;
 }
 
-
+.icon-circle > div{
+    height: 100%;
+    width: 100%;
+    padding-bottom: 130px;
+}
 
 /* SLUZBY WEB */
 

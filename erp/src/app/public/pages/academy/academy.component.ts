@@ -1,23 +1,34 @@
 // src/app/academy/academy.component.ts
 
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Potřebné pro *ngFor, *ngIf
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { PublicDataService } from '../../services/public-data.service';
-import { HttpErrorResponse } from '@angular/common/http'; // Pro zpracování chyb
+import { HttpErrorResponse } from '@angular/common/http';
+import { LocalizationService } from '../../services/localization.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-// Import GenericFormComponent a rozhraní pro konfiguraci polí
 import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
 import { FormFieldConfig } from '../../../shared/interfaces/form-field-config';
-import { FormsModule } from '@angular/forms'; // FormsModule je potřeba pro komponentu, která GenericForm používá
 
-// Rozhraní pro položku timeline (zůstává stejné)
+// Rozhraní pro položku timeline před překladem (s klíči)
+interface TimelineItemKeys {
+  id: number;
+  titleKey: string;
+  contentKey: string;
+  themesKeys: string[];
+  newThingsKeys: { textKey: string; icon: string; }[];
+  isActive: boolean;
+}
+
+// Rozhraní pro přeloženou položku timeline
 interface TimelineItem {
   id: number;
   title: string;
   content: string;
   isActive: boolean;
-  themes: string[];
-  newThings: string[][];
+  themes: string[]; // Již přeložené texty
+  newThings: string[][]; // [přeložený text, cesta k ikoně]
 }
 
 @Component({
@@ -25,229 +36,363 @@ interface TimelineItem {
   standalone: true,
   imports: [
     CommonModule,
-    GenericFormComponent, // Důležité: Přidejte GenericFormComponent do imports
-    FormsModule // Důležité: FormsModule je potřeba pro GenericFormComponent
+    GenericFormComponent,
   ],
   templateUrl: './academy.component.html',
   styleUrls: ['./academy.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AcademyComponent implements OnInit {
+export class AcademyComponent implements OnInit, OnDestroy {
 
-  form_header : string = 'Zanechte kontakt pro konzultaci';
-  form_description: string = 'Odezva do 24h'; 
-  form_button: string = 'Rezervovat konzultaci';
+  // --- Proměnné pro texty formuláře (budou naplněny z lokalizace) ---
+  form_header: string = '';
+  form_description: string = '';
+  form_button: string = '';
 
+  // --- Obecné texty pro sekci kroužků (budou naplněny z lokalizace) ---
+  academyHeader: string = '';
+  introText: string = '';
+  timeHeader: string = '';
+  onlineHeader: string = '';
+  whatHeader: string = '';
+  commonDurationHeader: string = '';
+  commonThemesHeader: string = '';
+  commonNewThingsHeader: string = '';
+  priceHeader: string = '';
+  monthlyPaymentHeader: string = '';
+  monthlyPaymentAmount: string = '';
+  monthlyPaymentNote: string = '';
+  quarterlyPaymentHeader: string = '';
+  quarterlyPaymentAmount: string = '';
+  quarterlyPaymentNote: string = '';
+  yearlyPaymentHeader: string = '';
+  yearlyPaymentAmount: string = '';
+  yearlyPaymentNote: string = '';
 
-  // Konfigurace formuláře pro GenericFormComponent
+  // Konfigurace formuláře pro GenericFormComponent s klíči pro lokalizaci
+  private initialContactFormConfig: FormFieldConfig[] = [
+    {
+      label: 'academy.consultation_form.fields.theme_label',
+      isLocalizedLabel: true,
+      name: 'theme',
+      type: 'select',
+      required: true,
+      value: 'desktop-development', // Výchozí hodnota
+      options: [
+        { value: 'desktop-development', label: 'academy.consultation_form.fields.theme_option_desktop', isLocalizedLabel: true },
+        { value: 'web-development', label: 'academy.consultation_form.fields.theme_option_web', isLocalizedLabel: true }
+      ]
+    },
+    {
+      label: 'academy.consultation_form.fields.diff_label',
+      isLocalizedLabel: true,
+      name: 'diff',
+      type: 'select',
+      required: true,
+      value: 'begginer', // Výchozí hodnota
+      options: [
+        { value: 'begginer', label: 'academy.consultation_form.fields.diff_option_begginer', isLocalizedLabel: true },
+        { value: 'advanced', label: 'academy.consultation_form.fields.diff_option_advanced', isLocalizedLabel: true },
+        { value: 'expert', label: 'academy.consultation_form.fields.diff_option_expert', isLocalizedLabel: true }
+      ]
+    },
+    {
+      label: 'academy.consultation_form.fields.email_label',
+      isLocalizedLabel: true,
+      name: 'email',
+      type: 'email',
+      required: true,
+      placeholder: 'academy.consultation_form.fields.email_placeholder',
+      isLocalizedPlaceholder: true,
+      pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'
+    },
+    {
+      label: 'academy.consultation_form.fields.phone_label',
+      isLocalizedLabel: true,
+      name: 'phone',
+      type: 'tel',
+      required: false,
+      placeholder: 'academy.consultation_form.fields.phone_placeholder',
+      isLocalizedPlaceholder: true,
+      pattern: '^[0-9\\s\\-+\\(\\)]+$'
+    }
+  ];
+
   contactFormConfig: FormFieldConfig[] = [];
 
-  // Ostatní vlastnosti pro ikony a data timeline (zůstávají stejné)
-  time: string = 'assets/images/icons/curses/time.png';
-  calendar: string = 'assets/images/icons/curses/calendar.png';
-  online: string = 'assets/images/icons/curses/online.png';
-  discord: string = 'assets/images/icons/curses/discord.png';
-  client: string = 'assets/images/icons/curses/client.png';
-  www: string = 'assets/images/icons/curses/www.png';
-  database: string = 'assets/images/icons/curses/database.png';
-  pc: string = 'assets/images/icons/curses/pc.png';
-  cmd: string = 'assets/images/icons/curses/cmd.png';
-  gui: string = 'assets/images/icons/curses/gui.png';
+  // Statické cesty k ikonám
+  timeIcon: string = 'assets/images/icons/curses/time.png';
+  calendarIcon: string = 'assets/images/icons/curses/calendar.png';
+  onlineIcon: string = 'assets/images/icons/curses/online.png';
+  discordIcon: string = 'assets/images/icons/curses/discord.png';
+  clientIcon: string = 'assets/images/icons/curses/client.png';
+  wwwIcon: string = 'assets/images/icons/curses/www.png';
+  databaseIcon: string = 'assets/images/icons/curses/database.png';
+  pcIcon: string = 'assets/images/icons/curses/pc.png';
+  cmdIcon: string = 'assets/images/icons/curses/cmd.png';
+  guiIcon: string = 'assets/images/icons/curses/gui.png';
 
-  // Separate timeline items for Web Development
-  webTimelineItems: TimelineItem[] = [
+  // --- Interní proměnné pro timeline před překladem (s klíči) ---
+  private initialWebTimelineItems: TimelineItemKeys[] = [
     {
       id: 1,
-      title: 'Začátečník (9-17 let)',
-      content: 'Tento kurz je určen pro děti, které nemají žádné předchozí zkušenosti s programováním. Naučíme se základní koncepty logiky, algoritmů a řešení problémů pomocí vizuálního programování (např. Scratch) a jednoduchých textových příkazů. Děti si vytvoří své první interaktivní příběhy a hry.',
+      titleKey: 'academy.web_development.timeline.1.title',
+      contentKey: 'academy.web_development.timeline.1.content',
+      themesKeys: [
+        'academy.web_development.timeline.1.theme.1',
+        'academy.web_development.timeline.1.theme.2',
+        'academy.web_development.timeline.1.theme.3',
+        'academy.web_development.timeline.1.theme.4',
+        'academy.web_development.timeline.1.theme.5',
+        'academy.web_development.timeline.1.theme.6'
+      ],
+      newThingsKeys: [
+        { textKey: 'academy.web_development.timeline.1.new_thing.1', icon: 'assets/images/icons/curses/html.png' },
+        { textKey: 'academy.web_development.timeline.1.new_thing.2', icon: 'assets/images/icons/curses/css.png' }
+      ],
       isActive: false,
-      themes: [
-        'Úvod do internetu',
-        'Co to je HTML & CSS',
-        'Základní HTML tagy',
-        'Základy CSS',
-        'Header a Footer',
-        'Miniprojekty: Galerie, Semafor'
-      ],
-      newThings: [
-        ['HTML', 'assets/images/icons/curses/html.png'],
-        ['CSS', 'assets/images/icons/curses/css.png']
-      ],
     },
     {
       id: 2,
-      title: 'Pokročilý (11-17 let)',
-      content: 'Navazuje na základy a prohlubuje znalosti v konkrétním programovacím jazyce (např. úvod do Pythonu nebo JavaScriptu). Zaměříme se na složitější datové struktury, funkce a tvorbu komplexnějších projektů, jako jsou jednoduché aplikace nebo pokročilejší hry. Děti se naučí efektivněji psát kód a řešit složitější problémy.',
+      titleKey: 'academy.web_development.timeline.2.title',
+      contentKey: 'academy.web_development.timeline.2.content',
+      themesKeys: [
+        'academy.web_development.timeline.2.theme.1',
+        'academy.web_development.timeline.2.theme.2',
+        'academy.web_development.timeline.2.theme.3',
+        'academy.web_development.timeline.2.theme.4',
+        'academy.web_development.timeline.2.theme.5',
+        'academy.web_development.timeline.2.theme.6',
+        'academy.web_development.timeline.2.theme.7'
+      ],
+      newThingsKeys: [
+        { textKey: 'academy.web_development.timeline.2.new_thing.1', icon: 'assets/images/icons/curses/js.png' },
+        { textKey: 'academy.web_development.timeline.2.new_thing.2', icon: 'assets/images/icons/curses/ts.png' }
+      ],
       isActive: false,
-      themes: [
-        'Pokročilé HTML tagy a atributy',
-        'Styly a layout v CSS (flexbox, grid)',
-        'Úvod do JavaScriptu',
-        'Moderní TypeScript frameworky (Angular)',
-        'Základy dynamického obsahu (DOM)',
-        'Interaktivní prvky (formuláře, tlačítka)',
-        'Projekty: Interaktivní formulář, Jednoduchá hra, Animation ball'
-      ],
-      newThings: [
-        ['JavaScript', 'assets/images/icons/curses/js.png'],
-        ['TypeScript', 'assets/images/icons/curses/ts.png']
-      ],
     },
     {
       id: 3,
-      title: 'Expert (12-17 let)',
-      content: 'Pro ty, kteří již mají solidní základy a chtějí se stát skutečnými experty. Budeme pracovat na individuálních projektech, řešit reálné programovací výzvy a učit se pokročilé techniky. Děti si zdokonalí své dovednosti v debugování, optimalizaci, práci s API a týmové spolupráci. Budou připraveny tvořit vlastní inovativní řešení.',
+      titleKey: 'academy.web_development.timeline.3.title',
+      contentKey: 'academy.web_development.timeline.3.content',
+      themesKeys: [
+        'academy.web_development.timeline.3.theme.1',
+        'academy.web_development.timeline.3.theme.2',
+        'academy.web_development.timeline.3.theme.3',
+        'academy.web_development.timeline.3.theme.4',
+        'academy.web_development.timeline.3.theme.5',
+        'academy.web_development.timeline.3.theme.6'
+      ],
+      newThingsKeys: [
+        { textKey: 'academy.web_development.timeline.3.new_thing.1', icon: 'assets/images/icons/curses/php.png' },
+        { textKey: 'academy.web_development.timeline.3.new_thing.2', icon: 'assets/images/icons/curses/mysql.png' }
+      ],
       isActive: false,
-      themes: [
-        'Moderní TypeScript frameworky (Angular)',
-        'Základy backendového vývoje (PHP)',
-        'Práce s databázemi (MySQL, PostgreSQL)',
-        'Vytváření full-stack aplikací',
-        'Verzování kódu (Git)',
-        'Projekty: Chat aplikace, E-commerce web'
-      ],
-      newThings: [
-        ['PHP', 'assets/images/icons/curses/php.png'],
-        ['MySQL', 'assets/images/icons/curses/mysql.png']
-      ],
     },
   ];
 
-  // Separate timeline items for Desktop Development
-  desktopTimelineItems: TimelineItem[] = [
+  private initialDesktopTimelineItems: TimelineItemKeys[] = [
     {
       id: 1,
-      title: 'Začátečník (11-17 let)',
-      content: 'Tento kurz je určen pro děti, které nemají žádné předchozí zkušenosti s programováním. Naučíme se základní koncepty logiky, algoritmů a řešení problémů pomocí vizuálního programování (např. Scratch) a jednoduchých textových příkazů. Děti si vytvoří své první interaktivní příběhy a hry.',
+      titleKey: 'academy.desktop_development.timeline.1.title',
+      contentKey: 'academy.desktop_development.timeline.1.content',
+      themesKeys: [
+        'academy.desktop_development.timeline.1.theme.1',
+        'academy.desktop_development.timeline.1.theme.2',
+        'academy.desktop_development.timeline.1.theme.3',
+        'academy.desktop_development.timeline.1.theme.4',
+        'academy.desktop_development.timeline.1.theme.5'
+      ],
+      newThingsKeys: [
+        { textKey: 'academy.desktop_development.timeline.1.new_thing.1', icon: 'assets/images/icons/curses/scratch.png' },
+        { textKey: 'academy.desktop_development.timeline.1.new_thing.2', icon: 'assets/images/icons/curses/py.png' }
+      ],
       isActive: false,
-      themes: [
-        'Úvod do programování (základy logiky, algoritmy)',
-        'Vizuální programování (např. Scratch)',
-        'Základy datových typů a proměnných',
-        'Podmíněné příkazy a smyčky',
-        'Miniprojekty: Jednoduchá kalkulačka, Generátor náhodných čísel'
-      ],
-      newThings: [
-        ['Scratch', 'assets/images/icons/curses/scratch.png'],
-        ['Python', 'assets/images/icons/curses/py.png']
-      ],
     },
     {
       id: 2,
-      title: 'Pokročilý (13-17 let)',
-      content: 'Navazuje na základy a prohlubuje znalosti v konkrétním programovacím jazyce (např. úvod do Pythonu s tkinter nebo C# s WinForms). Zaměříme se na tvorbu grafických uživatelských rozhraní (GUI), práci s událostmi, ukládání dat do souborů a objektově orientované programování.',
+      titleKey: 'academy.desktop_development.timeline.2.title',
+      contentKey: 'academy.desktop_development.timeline.2.content',
+      themesKeys: [
+        'academy.desktop_development.timeline.2.theme.1',
+        'academy.desktop_development.timeline.2.theme.2',
+        'academy.desktop_development.timeline.2.theme.3',
+        'academy.desktop_development.timeline.2.theme.4',
+        'academy.desktop_development.timeline.2.theme.5'
+      ],
+      newThingsKeys: [
+        { textKey: 'academy.desktop_development.timeline.2.new_thing.1', icon: 'assets/images/icons/curses/csharp.png' },
+        { textKey: 'academy.desktop_development.timeline.2.new_thing.2', icon: 'assets/images/icons/curses/mssql.png' }
+      ],
       isActive: false,
-      themes: [
-        'Základy GUI programování (např. Tkinter/WinForms)',
-        'Práce s událostmi (kliknutí, stisky kláves)',
-        'Ukládání a načítání dat ze souborů',
-        'Základy objektově orientovaného programování (OOP)',
-        'Miniprojekty: Jednoduchý textový editor, Malovací program'
-      ],
-      newThings: [
-        ['C#', 'assets/images/icons/curses/csharp.png'],
-        ['MSSQL', 'assets/images/icons/curses/mssql.png'] // Example, replace with actual icon
-      ],
     },
     {
       id: 3,
-      title: 'Expert (14-17 let)',
-      content: 'Pro ty, kteří již mají solidní základy a chtějí se stát skutečnými experty. Budeme pracovat na komplexních desktopových aplikacích, řešit optimalizaci výkonu, práci s externími knihovnami a týmovou spolupráci na větších projektech. Cílem je vytvořit robustní a uživatelsky přívětivé aplikace.',
+      titleKey: 'academy.desktop_development.timeline.3.title',
+      contentKey: 'academy.desktop_development.timeline.3.content',
+      themesKeys: [
+        'academy.desktop_development.timeline.3.theme.1',
+        'academy.desktop_development.timeline.3.theme.2',
+        'academy.desktop_development.timeline.3.theme.3',
+        'academy.desktop_development.timeline.3.theme.4',
+        'academy.desktop_development.timeline.3.theme.5',
+        'academy.desktop_development.timeline.3.theme.6'
+      ],
+      newThingsKeys: [
+        { textKey: 'academy.desktop_development.timeline.3.new_thing.1', icon: 'assets/images/icons/curses/cpp.png' },
+        { textKey: 'academy.desktop_development.timeline.3.new_thing.2', icon: 'assets/images/icons/curses/sqlite.png' }
+      ],
       isActive: false,
-      themes: [
-        'Pokročilé GUI frameworky (např. PyQt, WPF)',
-        'Databáze v desktopových aplikacích (SQLite)',
-        'Multithreading a asynchronní programování',
-        'Deployování aplikací',
-        'Pokročilé datové struktury a algoritmy',
-        'Projekty: Správce úkolů s databází, Jednoduchá 2D hra'
-      ],
-      newThings: [
-        ['C++', 'assets/images/icons/curses/cpp.png'], // Example, replace with actual icon
-        ['SQLite', 'assets/images/icons/curses/sqlite.png'] // Example, replace with actual icon
-      ],
     },
   ];
 
-  constructor(private publicDataService: PublicDataService, private cdr: ChangeDetectorRef) { } // Přidán PublicDataService
+  // --- Přeložené proměnné pro timeline (pro HTML) ---
+  webTimelineItems: TimelineItem[] = [];
+  desktopTimelineItems: TimelineItem[] = [];
 
-  // OPRAVENO: Změněno z OnInit() na ngOnInit()
+  // --- Texty hlaviček sekcí ---
+  webDevSectionTitle: string = '';
+  desktopDevSectionTitle: string = '';
+  webDevSectionDescription: string = '';
+  desktopDevSectionDescription: string = '';
+
+
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private publicDataService: PublicDataService,
+    private cdr: ChangeDetectorRef,
+    public localizationService: LocalizationService
+  ) { }
+
   ngOnInit(): void {
-    // Definujeme konfiguraci polí pro kontaktní formulář v AcademyComponent
-    this.contactFormConfig = [
-      {
-        label: 'Okruh:',
-        name: 'theme', // Odpovídá name="theme" v původním HTML
-        type: 'select',
-        required: true,
-        value: 'desktop-development', // Výchozí hodnota z původního HTML
-        options: [
-          { value: 'desktop-development', label: 'Desktopový vývoj' },
-          { value: 'web-development', label: 'Webový vývoj' }
-        ]
-      },
-      {
-        label: 'Obtížnost:',
-        name: 'diff', // Odpovídá name="diff" v původním HTML
-        type: 'select',
-        required: true,
-        value: 'begginer', // Výchozí hodnota z původního HTML
-        options: [
-          { value: 'begginer', label: 'Začátečník (11-17 let)' },
-          { value: 'advanced', label: 'Pokročilý (13-17 let)' },
-          { value: 'expert', label: 'Expert (14-17 let)' }
-        ]
-      },
-      {
-        label: 'E-mail:',
-        name: 'email', // Odpovídá name="email" v původním HTML
-        type: 'email',
-        required: true,
-        placeholder: 'vas.email@priklad.cz',
-        pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'
-      },
-      {
-        label: 'Telefon (nepovinné):',
-        name: 'phone', // Odpovídá name="phone" v původním HTML
-        type: 'tel',
-        required: false,
-        placeholder: 'např. +420 123 456 789',
-        pattern: '^[0-9\\s\\-+\\(\\)]+$'
-      }
-    ];
+    this.localizationService.currentTranslations$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.loadLocalizedContent();
+        this.cdr.detectChanges();
+      });
   }
 
-  // Metoda pro odeslání dat formuláře přes PublicDataService
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private loadLocalizedContent(): void {
+    // Načtení obecných textů
+    this.academyHeader = this.localizationService.getText('academy.header');
+    this.introText = this.localizationService.getText('academy.intro_text');
+    this.timeHeader = this.localizationService.getText('academy.icons.time');
+    this.onlineHeader = this.localizationService.getText('academy.icons.online');
+    this.whatHeader = this.localizationService.getText('academy.icons.what'); // Nový klíč
+    this.commonDurationHeader = this.localizationService.getText('academy.common.duration_header');
+    this.commonThemesHeader = this.localizationService.getText('academy.common.themes_header');
+    this.commonNewThingsHeader = this.localizationService.getText('academy.common.new_things_header');
+
+    // Načtení textů pro formulář
+    this.form_header = this.localizationService.getText('academy.consultation_form.header');
+    this.form_description = this.localizationService.getText('academy.consultation_form.description');
+    this.form_button = this.localizationService.getText('academy.consultation_form.button');
+
+    // Načtení textů pro hlavičky sekcí
+    this.webDevSectionTitle = this.localizationService.getText('academy.web_development.title');
+    this.webDevSectionDescription = this.localizationService.getText('academy.web_development.description');
+    this.desktopDevSectionTitle = this.localizationService.getText('academy.desktop_development.title');
+    this.desktopDevSectionDescription = this.localizationService.getText('academy.desktop_development.description');
+
+    // Načtení textů pro ceny
+    this.priceHeader = this.localizationService.getText('academy.prices.header');
+    this.monthlyPaymentHeader = this.localizationService.getText('academy.prices.monthly.header');
+    this.monthlyPaymentAmount = this.localizationService.getText('academy.prices.monthly.amount');
+    this.monthlyPaymentNote = this.localizationService.getText('academy.prices.monthly.note');
+    this.quarterlyPaymentHeader = this.localizationService.getText('academy.prices.quarterly.header');
+    this.quarterlyPaymentAmount = this.localizationService.getText('academy.prices.quarterly.amount');
+    this.quarterlyPaymentNote = this.localizationService.getText('academy.prices.quarterly.note');
+    this.yearlyPaymentHeader = this.localizationService.getText('academy.prices.yearly.header');
+    this.yearlyPaymentAmount = this.localizationService.getText('academy.prices.yearly.amount');
+    this.yearlyPaymentNote = this.localizationService.getText('academy.prices.yearly.note');
+
+
+    // Překlad a nastavení contactFormConfig pro GenericFormComponent
+    this.contactFormConfig = this.initialContactFormConfig.map(field => {
+      const translatedField: FormFieldConfig = { ...field };
+
+      if (field.isLocalizedLabel) {
+        translatedField.label = this.localizationService.getText(field.label);
+      }
+      if (field.isLocalizedPlaceholder && field.placeholder) {
+        translatedField.placeholder = this.localizationService.getText(field.placeholder);
+      }
+      if (field.options && field.options.length > 0) {
+        translatedField.options = field.options.map(option => {
+          const translatedOption = { ...option };
+          if (option.isLocalizedLabel) {
+            if (option.label.includes('{age_range}')) {
+              let ageRange: string = '';
+              switch (option.value) {
+                case 'begginer':
+                  ageRange = this.localizationService.getText('academy.consultation_form.fields.age_range_begginer');
+                  break;
+                case 'advanced':
+                  ageRange = this.localizationService.getText('academy.consultation_form.fields.age_range_advanced');
+                  break;
+                case 'expert':
+                  ageRange = this.localizationService.getText('academy.consultation_form.fields.age_range_expert');
+                  break;
+                default:
+                  ageRange = '';
+              }
+              translatedOption.label = this.localizationService.getText(option.label).replace('{age_range}', ageRange);
+            } else {
+              translatedOption.label = this.localizationService.getText(option.label);
+            }
+          }
+          return translatedOption;
+        });
+      }
+      return translatedField;
+    });
+
+    // Překlad a nastavení timeline items
+    this.webTimelineItems = this.initialWebTimelineItems.map(item => this.translateTimelineItem(item));
+    this.desktopTimelineItems = this.initialDesktopTimelineItems.map(item => this.translateTimelineItem(item));
+  }
+
+  private translateTimelineItem(itemKeys: TimelineItemKeys): TimelineItem {
+    const translatedItem: TimelineItem = {
+      id: itemKeys.id,
+      isActive: itemKeys.isActive,
+      title: this.localizationService.getText(itemKeys.titleKey),
+      content: this.localizationService.getText(itemKeys.contentKey),
+      themes: itemKeys.themesKeys.map(key => this.localizationService.getText(key)),
+      newThings: itemKeys.newThingsKeys.map(nt => [this.localizationService.getText(nt.textKey), nt.icon])
+    };
+    return translatedItem;
+  }
+
   handleFormSubmission(formData: any): void {
     console.log('Data přijata z generického formuláře k odeslání do PublicDataService:', formData);
 
-    // Zde voláme vaši PublicDataService pro odeslání dat na backend
-    // Předpokládáme, že endpoint pro Academy formulář je stejný nebo podobný
-    // a backend ho očekává bez autentizace.
     this.publicDataService.submitContactForm(formData).subscribe({
       next: (response) => {
         console.log('Formulář odeslán úspěšně přes PublicDataService!', response);
-        // GenericFormComponent už si sám zobrazí zprávu o úspěchu.
       },
       error: (error: HttpErrorResponse) => {
         console.error('Chyba při odesílání formuláře přes PublicDataService:', error);
-        // GenericFormComponent už si sám zobrazí chybovou zprávu.
       }
     });
   }
 
-  // Metoda pro resetování formuláře
   handleFormReset(): void {
     console.log('Generický formulář byl resetován.');
   }
 
-  // Metoda pro přepínání stavu rozbalení/sbalení pro webové kroužky
   toggleWebItem(clickedItem: TimelineItem): void {
     clickedItem.isActive = !clickedItem.isActive;
     this.cdr.detectChanges();
   }
 
-  // Metoda pro přepínání stavu rozbalení/sbalení pro desktopové kroužky
   toggleDesktopItem(clickedItem: TimelineItem): void {
     clickedItem.isActive = !clickedItem.isActive;
     this.cdr.detectChanges();
