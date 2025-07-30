@@ -23,6 +23,13 @@ html, body {
     padding-top: 20px;
     box-sizing: border-box;
 }
+.services-info-text div[innerhtml] p {
+    margin-bottom: 25px;
+    line-height: 1.7;
+    font-size: 1.2em;
+    color: #c0c0c0;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
 .main-content::before {
     content: "";
     position: absolute;
@@ -172,7 +179,7 @@ html, body {
     text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
 }
 
-.services-info-text p {
+.services-info-text-2 p {
     margin-bottom: 25px;
     line-height: 1.7;
     font-size: 1.2em;
@@ -1238,7 +1245,9 @@ button[type="submit"]:active {
 /* Breakpoint 480px: Mobilní zobrazení */
 @media (max-width: 480px) {
 
-  
+    .workflow-diagram{
+        margin-bottom: -35px;
+    }
     .header-1 {
         font-size: 2.2rem;
         padding-top: 35px;

@@ -763,7 +763,8 @@ width: 45%;
     box-shadow: 0 4px 15px rgba(107, 46, 145, 0.4);
 }
 .s-1-h, .s-2-h, .s-3-h {
-    font-size: 8rem;
+    font-size: 6rem;
+    margin-top: 20px;
 }
 .s-1-t, .s-2-t, .s-3-t {
     font-size: 1.2rem;
@@ -1222,6 +1223,9 @@ button[type="submit"]:active {
     display: flex;
     flex-direction: column;
     padding-left: 80px;
+            opacity: 0; /* Začíná neviditelně */
+    transform: translateY(-20px); /* Začíná mírně nad pozicí */
+    animation: fadeInSlideDown 0.8s ease-out 0.5s forwards;
     
 }
 .server-img-wrp-m{
@@ -1277,7 +1281,7 @@ button[type="submit"]:active {
         border-radius: 27px;
     }
     .s-1-h, .s-2-h, .s-3-h{
-        font-size: 4rem;
+        font-size: 3.5rem;
     }
       .mobile-hero{
         display: block;
@@ -1616,72 +1620,7 @@ button[type="submit"]:active {
     }
 }
 /* Vaše stávající media query pro max-width: 480px */
-@media (max-width: 480px){
 
-    .header-0-1{
-        font-size: 2.2rem;
-    }
-    .header-0-2-t{
-        margin-bottom: 0px;
-    }
-    /* Změny pro .stats-m a jeho děti pro rozložení 2 a pak 1 */
-    .stats-m{
-        background-color: transparent;
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
-
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-        padding: 10px;
-        box-sizing: border-box;
-    }
-
-    /* Styly pro jednotlivé stat boxy - ZDE JSOU HLAVNÍ ZMĚNY PRO ČTVERCOVÝ TVAR A CENTROVÁNÍ */
-    .stat-1,
-    .stat-2,
-    .stat-3 {
-        flex: 1 1 calc(50% - 10px);
-        max-width: calc(50% - 10px);
-        box-sizing: border-box;
-
-        /* ---------- Změny pro čtvercový tvar a centrování obsahu ---------- */
-        aspect-ratio: 1 / 1; /* Klíčové pro čtvercový tvar! Šířka bude rovna výšce */
-        display: flex; /* Udělá z boxu flex kontejner */
-        flex-direction: column; /* Uspořádá obsah vertikálně */
-        justify-content: center; /* Vycentruje obsah vertikálně */
-        align-items: center; /* Vycentruje obsah horizontálně */
-        padding: 15px; /* Ponecháno pro vnitřní odsazení, upravte dle potřeby */
-        /* background-color, border, border-radius, box-shadow můžete přidat, pokud byly odstraněny průhlednými styly na .stats-m */
-        background-color: #1a1a2e; /* Příklad: Pokud chcete pozadí i přes průhlednost na .stats-m */
-        border: 3px solid #302d2e; /* Příklad: Pokud chcete okraj */
-        border-radius: 27px; /* Příklad: Zaoblené rohy */
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Příklad: Stín */
-    }
-
-    /* Specificky pro stat-3, aby byl uprostřed na dalším řádku */
-    .stat-3 {
-        flex: 1 1 100%;
-        max-width: calc(50% - 10px);
-    }
-
-    /* Styly pro text uvnitř stat boxů - ZMĚNY PRO VĚTŠÍ TEXT */
-    .s-1-h, .s-2-h, .s-3-h {
-        font-size: 3.5rem; /* Zvětšeno pro nadpisy */
-        line-height: 1; /* Zajistí, že text nebude příliš vysoký */
-        margin-bottom: 5px; /* Mezera pod nadpisem */
-        color: #e0e0e0; /* Barva nadpisu */
-        text-align: center; /* Vycentrování textu uvnitř */
-    }
-
-    .s-1-t, .s-2-t, .s-3-t {
-        font-size: 1.1rem; /* Zvětšeno pro text */
-        color: #b0b0b0; /* Barva textu */
-        text-align: center; /* Vycentrování textu uvnitř */
-    }
-}
 .d-none{
     display: none;
 }
@@ -1741,6 +1680,9 @@ button[type="submit"]:active {
     flex-direction: column; /* Umožní centrovat .link-w-c-m-m */
     justify-content: center;
     align-items: center; /* Centruje .link-w-c-m-m horizontálně */
+        opacity: 0; /* Začíná neviditelně */
+    transform: translateY(-20px); /* Začíná mírně nad pozicí */
+    animation: fadeInSlideDown 0.8s ease-out 0.5s forwards;
 }
 
 .link-w-c-m-m{
@@ -1751,6 +1693,7 @@ button[type="submit"]:active {
     /* Zde nebudeme nastavovat width: 100% nebo flex-basis na .l-1-2,
        protože má pevnou šířku. Místo toho budeme řídit max-width tohoto kontejneru. */
     max-width: 100%; /* Výchozí */
+
 }
 
 /* -------------------- Media Queries pro různé rozložení -------------------- */
@@ -1807,6 +1750,9 @@ button[type="submit"]:active {
     font-weight: 700;
     color: #9e9e9e;
     text-shadow: 0 0 10px rgba(158, 158, 158, 0.3);
+            opacity: 0; /* Začíná neviditelně */
+    transform: translateY(-20px); /* Začíná mírně nad pozicí */
+    animation: fadeInSlideDown 0.8s ease-out 0.5s forwards;
     margin-bottom: 15px;
 }
 /* Button Wrapper a Button Styles */
@@ -2100,4 +2046,74 @@ button[type="submit"]:active {
     }
   
 
+}
+@media (max-width: 480px){
+    .pad-0{
+        padding: 0;
+    }
+    .header-0-1{
+        font-size: 3.5rem;
+    }
+    .header-0-2-t{
+        margin-bottom: 0px;
+    }
+    /* Změny pro .stats-m a jeho děti pro rozložení 2 a pak 1 */
+    .stats-m{
+        background-color: transparent;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    /* Styly pro jednotlivé stat boxy - ZDE JSOU HLAVNÍ ZMĚNY PRO ČTVERCOVÝ TVAR A CENTROVÁNÍ */
+    .stat-1,
+    .stat-2,
+    .stat-3 {
+        flex: 1 1 calc(50% - 10px);
+        max-width: calc(50% - 10px);
+        box-sizing: border-box;
+
+        /* ---------- Změny pro čtvercový tvar a centrování obsahu ---------- */
+        aspect-ratio: 1 / 1; /* Klíčové pro čtvercový tvar! Šířka bude rovna výšce */
+        display: flex; /* Udělá z boxu flex kontejner */
+        flex-direction: column; /* Uspořádá obsah vertikálně */
+        justify-content: center; /* Vycentruje obsah vertikálně */
+        align-items: center; /* Vycentruje obsah horizontálně */
+        padding: 15px; /* Ponecháno pro vnitřní odsazení, upravte dle potřeby */
+        /* background-color, border, border-radius, box-shadow můžete přidat, pokud byly odstraněny průhlednými styly na .stats-m */
+        background-color: #1a1a2e; /* Příklad: Pokud chcete pozadí i přes průhlednost na .stats-m */
+        border: 3px solid #302d2e; /* Příklad: Pokud chcete okraj */
+        border-radius: 27px; /* Příklad: Zaoblené rohy */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Příklad: Stín */
+    }
+
+    /* Specificky pro stat-3, aby byl uprostřed na dalším řádku */
+    .stat-3 {
+        flex: 1 1 100%;
+        max-width: calc(50% - 10px);
+    }
+
+    /* Styly pro text uvnitř stat boxů - ZMĚNY PRO VĚTŠÍ TEXT */
+    .s-1-h, .s-2-h, .s-3-h {
+        font-size: 3.5rem; /* Zvětšeno pro nadpisy */
+        line-height: 1; /* Zajistí, že text nebude příliš vysoký */
+        margin-bottom: 5px; /* Mezera pod nadpisem */
+        color: #9c9c9d;
+        text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+        text-align: center; /* Vycentrování textu uvnitř */
+        margin-top: 0px;
+    }
+
+    .s-1-t, .s-2-t, .s-3-t {
+        font-size: 1.1rem; /* Zvětšeno pro text */
+        color: #b0b0b0; /* Barva textu */
+        text-align: center; /* Vycentrování textu uvnitř */
+    }
 }

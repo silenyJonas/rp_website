@@ -1,8 +1,9 @@
-// src/app/main-content/services/services.component.ts
-
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, ActivatedRoute } from '@angular/router'; // Přidáno ActivatedRoute
+import { RouterLink, ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { LocalizationService } from '../../services/localization.service';
 
 import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
 import { FormFieldConfig } from '../../../shared/interfaces/form-field-config';
@@ -29,83 +30,341 @@ interface Item {
     styleUrls: ['./services.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ServicesComponent implements OnInit {
+export class ServicesComponent implements OnInit, OnDestroy {
 
-    form_description: string = 'Navázání spolupráce do 24h';
-    form_button: string = 'Rezervovat konzultaci';
-    form_header: string = 'Máte nápad ? My máme řešení';
+    // Localization keys for form headers and descriptions
+    form_description: string = '';
+    form_button: string = '';
+    form_header: string = '';
 
     contactFormConfig: FormFieldConfig[] = [];
+    private destroy$ = new Subject<void>();
 
-    // Přidáme ActivatedRoute do konstruktoru
+    // Localization keys for main section headers
+    header_1_text: string = '';
+    web_dev_header: string = '';
+    desktop_dev_header: string = '';
+    mobile_dev_header: string = '';
+    ai_dev_header: string = '';
+
+
+    colab_procces_header: string = '';
+    prices_header: string = '';
+    show_projects_header: string = '';
+    projects_button_text: string = '';
+
+    info_header_web: string = '';
+    info_header_desktop: string = '';
+    info_header_mobile: string = '';
+    info_header_ai: string = '';
+
+    info_header_1: string = '';
+    info_header_2: string = '';
+    info_header_3: string = '';
+
+    colab_header_1: string = '';
+    colab_text_1: string = '';
+
+    colab_header_2: string = '';
+    colab_text_2: string = '';
+
+    colab_header_3: string = '';
+    colab_text_3: string = '';
+
+    colab_header_4: string = '';
+    colab_text_4: string = '';
+
+    services_preffix: string = '';
+    services_currency: string = '';
+
+    service_header_1: string = '';
+    service_price_1: string = '';
+    service_message_1: string = '';
+
+    service_header_2: string = '';
+    service_price_2: string = '';
+    service_message_2: string = '';
+
+    service_header_3: string = '';
+    service_price_3: string = '';
+    service_message_3: string = '';
+
+    service_header_4: string = '';
+    service_price_4: string = '';
+    service_message_4: string = '';
+
+    service_header_5: string = '';
+    service_price_5: string = '';
+    service_message_5: string = '';
+
+    service_header_6: string = '';
+    service_price_6: string = '';
+
+    service_main_text_1_html: string = '';
+    service_main_text_2_html: string = '';
+    service_main_text_3_html: string = '';
+    service_main_text_4_html: string = '';
+
+    currentTech: string = 'web-dev';
+    technologies: Technology[] = []; // Initialized as empty, populated after translations load
+
+    webServices: Item[] = [];
+    desktopServices: Item[] = [];
+    mobileServices: Item[] = [];
+    aiServices: Item[] = [];
+
+    // Technology images paths - these are fixed and not localized
+    webTechImages: any[] = [
+        { name: 'C#', path: 'assets/images/services-img/csharp.png' },
+        { name: 'TypeScript', path: 'assets/images/services-img/ts.png' },
+        { name: 'Java', path: 'assets/images/services-img/java.png' },
+        { name: 'Python', path: 'assets/images/services-img/py.png' },
+        { name: 'PHP', path: 'assets/images/services-img/php.png' },
+        { name: 'PostgreSQL', path: 'assets/images/services-img/postgresql.png' },
+    ];
+    desktopTechImages: any[] = [
+        { name: 'C#', path: 'assets/images/services-img/csharp.png' },
+        { name: 'C++', path: 'assets/images/services-img/cpp.png' },
+        { name: 'Java', path: 'assets/images/services-img/java.png' },
+        { name: 'Python', path: 'assets/images/services-img/py.png' },
+        { name: 'SQLite', path: 'assets/images/services-img/sqlite.png' },
+        { name: 'PostgreSQL', path: 'assets/images/services/postgresql.png' },
+    ];
+    mobileTechImages: any[] = [
+        { name: 'C#', path: 'assets/images/services-img/csharp.png' },
+        { name: 'TypeScript', path: 'assets/images/services-img/ts.png' },
+        { name: 'Swift', path: 'assets/images/services-img/swift.png' },
+        { name: 'Kotlin', path: 'assets/images/services-img/kotlin.png' },
+        { name: 'SQLite', path: 'assets/images/services-img/sqlite.png' },
+        { name: 'PostgreSQL', path: 'assets/images/services-img/postgresql.png' },
+    ];
+    aiTechImages: any[] = [
+        { name: 'C++', path: 'assets/images/services-img/cpp.png' },
+        { name: 'Python', path: 'assets/images/services-img/py.png' },
+        { name: 'Java', path: 'assets/images/services-img/java.png' },
+        { name: 'JavaScript', path: 'assets/images/services-img/js.png' },
+        { name: 'Rust', path: 'assets/images/services-img/rust.png' },
+        { name: 'Go', path: 'assets/images/services-img/go.png' },
+    ];
+
+
     constructor(
         private publicDataService: PublicDataService,
         private cdr: ChangeDetectorRef,
-        private route: ActivatedRoute // Zde je ActivatedRoute
+        private route: ActivatedRoute,
+        private localizationService: LocalizationService
     ) { }
 
     ngOnInit(): void {
-        this.contactFormConfig = [
-            {
-                label: 'Téma',
-                name: 'thema',
-                type: 'select',
-                required: true,
-                value: 'web-development', // Výchozí hodnota
-                options: [
-                    { value: 'web-development', label: 'Webový vývoj' },
-                    { value: 'desktop-development', label: 'Desktopový vývoj' },
-                    { value: 'mobile-development', label: 'Mobilní vývoj' },
-                    { value: 'ai-development', label: 'AI vývoj' },
-                    { value: 'other', label: 'Jiné' }
-                ]
-            },
-            {
-                label: 'E-mail',
-                name: 'contact_email',
-                type: 'email',
-                required: true,
-                placeholder: 'vas.email@priklad.cz',
-                pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'
-            },
-            {
-                label: 'Telefon (nepovinné)',
-                name: 'contact_phone',
-                type: 'tel',
-                required: false,
-                placeholder: 'např. +420 123 456 789',
-                pattern: '^[0-9\\s\\-+\\(\\)]+$'
-            },
-            {
-                label: 'Stručný popis zadání',
-                name: 'order_description',
-                type: 'textarea',
-                required: true,
-                rows: 5,
-                placeholder: 'Popište prosím váš projekt nebo dotaz...'
-            }
-        ];
+        // Subscribe to translations to populate all localized texts
+        this.localizationService.currentTranslations$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(translations => {
+                if (translations) {
+                    
+                      // NEW: Populate main service texts with HTML
+                    this.service_main_text_1_html = this.localizationService.getText('services.service_main_text_1');
+                    this.service_main_text_2_html = this.localizationService.getText('services.service_main_text_2');
+                    this.service_main_text_3_html = this.localizationService.getText('services.service_main_text_3');
+                    this.service_main_text_4_html = this.localizationService.getText('services.service_main_text_4');
 
-        // *** NOVÁ LOGIKA PRO ZPRACOVÁNÍ QUERY PARAMETRŮ ***
-        this.route.queryParams.subscribe(params => {
+
+                    this.info_header_web= this.localizationService.getText('services.info_header_web');
+                    this.info_header_desktop= this.localizationService.getText('services.info_header_desktop');
+                    this.info_header_mobile= this.localizationService.getText('services.info_header_mobile');
+                    this.info_header_ai= this.localizationService.getText('services.info_header_ai');
+                    
+                    this.info_header_1 = this.localizationService.getText('services.info_header_1');
+                    this.info_header_2 = this.localizationService.getText('services.info_header_2');
+                    this.info_header_3 = this.localizationService.getText('services.info_header_3');
+                    
+                    this.services_preffix = this.localizationService.getText('services.services.text_preffix');
+                    this.services_currency = this.localizationService.getText('services.services.currency');
+                    
+                    this.service_header_1 = this.localizationService.getText('services.services.item_1.header');
+                    this.service_price_1 = this.localizationService.getText('services.services.item_1.price');
+                    this.service_message_1 = this.localizationService.getText('services.services.item_1.message');
+
+                    this.service_header_2 = this.localizationService.getText('services.services.item_2.header');
+                    this.service_price_2 = this.localizationService.getText('services.services.item_2.price');
+                    this.service_message_2 = this.localizationService.getText('services.services.item_2.message');
+
+                    this.service_header_3 = this.localizationService.getText('services.services.item_3.header');
+                    this.service_price_3 = this.localizationService.getText('services.services.item_3.price');
+                    this.service_message_3 = this.localizationService.getText('services.services.item_3.message');
+
+                    this.service_header_4 = this.localizationService.getText('services.services.item_4.header');
+                    this.service_price_4 = this.localizationService.getText('services.services.item_4.price');
+                    this.service_message_4 = this.localizationService.getText('services.services.item_4.message');
+
+                    this.service_header_5 = this.localizationService.getText('services.services.item_5.header');
+                    this.service_price_5 = this.localizationService.getText('services.services.item_5.price');
+                    this.service_message_5 = this.localizationService.getText('services.services.item_5.message');
+
+                    this.service_header_6 = this.localizationService.getText('services.services.item_6.header');
+                    this.service_price_6 = this.localizationService.getText('services.services.item_6.price');
+
+                    // Update form headers and descriptions
+                    this.form_description = this.localizationService.getText('services.form_description');
+                    this.form_button = this.localizationService.getText('services.form_button');
+                    this.form_header = this.localizationService.getText('services.form_header');
+
+                    // Update main section headers
+                    this.header_1_text = this.localizationService.getText('services.header_1_text');
+                    this.web_dev_header = this.localizationService.getText('services.web_dev_header');
+                    this.desktop_dev_header = this.localizationService.getText('services.desktop_dev_header');
+                    this.mobile_dev_header = this.localizationService.getText('services.mobile_dev_header');
+
+                    this.ai_dev_header = this.localizationService.getText('services.ai_dev_header');
+
+                    this.colab_procces_header = this.localizationService.getText('services.colab.colab_procces_header');
+                    this.prices_header = this.localizationService.getText('services.services.prices_header');
+                    this.show_projects_header = this.localizationService.getText('services.show_projects_header');
+
+                    this.projects_button_text = this.localizationService.getText('services.projects_button_text');
+
+                    this.colab_header_1 = this.localizationService.getText('services.colab.item_1.header')
+                    this.colab_text_1 = this.localizationService.getText('services.colab.item_1.text')
+                    this.colab_header_2 = this.localizationService.getText('services.colab.item_2.header')
+                    this.colab_text_2 = this.localizationService.getText('services.colab.item_2.text')
+                    this.colab_header_3 = this.localizationService.getText('services.colab.item_3.header')
+                    this.colab_text_3 = this.localizationService.getText('services.colab.item_3.text')
+                    this.colab_header_4 = this.localizationService.getText('services.colab.item_4.header')
+                    this.colab_text_4 = this.localizationService.getText('services.colab.item_4.text')
+
+                    // Populate technologies array with localized names
+                    this.technologies = [
+                        { id: 'web-dev', name: this.web_dev_header },
+                        { id: 'desktop-dev', name: this.desktop_dev_header },
+                        { id: 'mobile-dev', name: this.mobile_dev_header },
+                        { id: 'ai-dev', name: this.ai_dev_header }
+                    ];
+
+                    // Populate form configuration with localized labels and placeholders
+                    this.contactFormConfig = [
+                        {
+                            label: this.localizationService.getText('services.contact_form.thema_label'),
+                            name: 'thema',
+                            type: 'select',
+                            required: true,
+                            value: 'web-development', // Default value
+                            options: [
+                                { value: 'web-development', label: this.localizationService.getText('services.contact_form.web_development_label') },
+                                { value: 'desktop-development', label: this.localizationService.getText('services.contact_form.desktop_development_label') },
+                                { value: 'mobile-development', label: this.localizationService.getText('services.contact_form.mobile_development_label') },
+                                { value: 'ai-development', label: this.localizationService.getText('services.contact_form.ai_development_label') },
+                                { value: 'other', label: this.localizationService.getText('services.contact_form.other_label') }
+                            ]
+                        },
+                        {
+                            label: this.localizationService.getText('services.contact_form.email_label'),
+                            name: 'contact_email',
+                            type: 'email',
+                            required: true,
+                            placeholder: this.localizationService.getText('services.contact_form.email_placeholder'),
+                            pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'
+                        },
+                        {
+                            label: this.localizationService.getText('services.contact_form.phone_label'),
+                            name: 'contact_phone',
+                            type: 'tel',
+                            required: false,
+                            placeholder: this.localizationService.getText('services.contact_form.phone_placeholder'),
+                            pattern: '^[0-9\\s\\-+\\(\\)]+$'
+                        },
+                        {
+                            label: this.localizationService.getText('services.contact_form.order_description_label'),
+                            name: 'order_description',
+                            type: 'textarea',
+                            required: true,
+                            rows: 5,
+                            placeholder: this.localizationService.getText('services.contact_form.order_description_placeholder')
+                        }
+                    ];
+
+                    // Populate FAQ sections with localized questions and answers
+                    this.webServices = [
+                        { id: 1, question: this.localizationService.getText('services.webServices.item1.question'), answer: this.localizationService.getText('services.webServices.item1.answer'), isActive: false },
+                        { id: 2, question: this.localizationService.getText('services.webServices.item2.question'), answer: this.localizationService.getText('services.webServices.item2.answer'), isActive: false },
+                        { id: 3, question: this.localizationService.getText('services.webServices.item3.question'), answer: this.localizationService.getText('services.webServices.item3.answer'), isActive: false },
+                        { id: 4, question: this.localizationService.getText('services.webServices.item4.question'), answer: this.localizationService.getText('services.webServices.item4.answer'), isActive: false },
+                        { id: 5, question: this.localizationService.getText('services.webServices.item5.question'), answer: this.localizationService.getText('services.webServices.item5.answer'), isActive: false },
+                        { id: 6, question: this.localizationService.getText('services.webServices.item6.question'), answer: this.localizationService.getText('services.webServices.item6.answer'), isActive: false },
+                        { id: 7, question: this.localizationService.getText('services.webServices.item7.question'), answer: this.localizationService.getText('services.webServices.item7.answer'), isActive: false },
+                        { id: 8, question: this.localizationService.getText('services.webServices.item8.question'), answer: this.localizationService.getText('services.webServices.item8.answer'), isActive: false },
+                        { id: 9, question: this.localizationService.getText('services.webServices.item9.question'), answer: this.localizationService.getText('services.webServices.item9.answer'), isActive: false }
+                    ];
+
+                    this.desktopServices = [
+                        { id: 1, question: this.localizationService.getText('services.desktopServices.item1.question'), answer: this.localizationService.getText('services.desktopServices.item1.answer'), isActive: false },
+                        { id: 2, question: this.localizationService.getText('services.desktopServices.item2.question'), answer: this.localizationService.getText('services.desktopServices.item2.answer'), isActive: false },
+                        { id: 3, question: this.localizationService.getText('services.desktopServices.item3.question'), answer: this.localizationService.getText('services.desktopServices.item3.answer'), isActive: false },
+                        { id: 4, question: this.localizationService.getText('services.desktopServices.item4.question'), answer: this.localizationService.getText('services.desktopServices.item4.answer'), isActive: false },
+                        { id: 5, question: this.localizationService.getText('services.desktopServices.item5.question'), answer: this.localizationService.getText('services.desktopServices.item5.answer'), isActive: false },
+                        { id: 6, question: this.localizationService.getText('services.desktopServices.item6.question'), answer: this.localizationService.getText('services.desktopServices.item6.answer'), isActive: false },
+                        { id: 7, question: this.localizationService.getText('services.desktopServices.item7.question'), answer: this.localizationService.getText('services.desktopServices.item7.answer'), isActive: false },
+                        { id: 8, question: this.localizationService.getText('services.desktopServices.item8.question'), answer: this.localizationService.getText('services.desktopServices.item8.answer'), isActive: false },
+                        { id: 9, question: this.localizationService.getText('services.desktopServices.item9.question'), answer: this.localizationService.getText('services.desktopServices.item9.answer'), isActive: false }
+                    ];
+
+                    this.mobileServices = [
+                        { id: 1, question: this.localizationService.getText('services.mobileServices.item1.question'), answer: this.localizationService.getText('services.mobileServices.item1.answer'), isActive: false },
+                        { id: 2, question: this.localizationService.getText('services.mobileServices.item2.question'), answer: this.localizationService.getText('services.mobileServices.item2.answer'), isActive: false },
+                        { id: 3, question: this.localizationService.getText('services.mobileServices.item3.question'), answer: this.localizationService.getText('services.mobileServices.item3.answer'), isActive: false },
+                        { id: 4, question: this.localizationService.getText('services.mobileServices.item4.question'), answer: this.localizationService.getText('services.mobileServices.item4.answer'), isActive: false },
+                        { id: 5, question: this.localizationService.getText('services.mobileServices.item5.question'), answer: this.localizationService.getText('services.mobileServices.item5.answer'), isActive: false },
+                        { id: 6, question: this.localizationService.getText('services.mobileServices.item6.question'), answer: this.localizationService.getText('services.mobileServices.item6.answer'), isActive: false },
+                        { id: 7, question: this.localizationService.getText('services.mobileServices.item7.question'), answer: this.localizationService.getText('services.mobileServices.item7.answer'), isActive: false },
+                        { id: 8, question: this.localizationService.getText('services.mobileServices.item8.question'), answer: this.localizationService.getText('services.mobileServices.item8.answer'), isActive: false },
+                        { id: 9, question: this.localizationService.getText('services.mobileServices.item9.question'), answer: this.localizationService.getText('services.mobileServices.item9.answer'), isActive: false },
+                        { id: 10, question: this.localizationService.getText('services.mobileServices.item10.question'), answer: this.localizationService.getText('services.mobileServices.item10.answer'), isActive: false }
+                    ];
+
+                    this.aiServices = [
+                        { id: 1, question: this.localizationService.getText('services.aiServices.item1.question'), answer: this.localizationService.getText('services.aiServices.item1.answer'), isActive: false },
+                        { id: 2, question: this.localizationService.getText('services.aiServices.item2.question'), answer: this.localizationService.getText('services.aiServices.item2.answer'), isActive: false },
+                        { id: 3, question: this.localizationService.getText('services.aiServices.item3.question'), answer: this.localizationService.getText('services.aiServices.item3.answer'), isActive: false },
+                        { id: 4, question: this.localizationService.getText('services.aiServices.item4.question'), answer: this.localizationService.getText('services.aiServices.item4.answer'), isActive: false },
+                        { id: 5, question: this.localizationService.getText('services.aiServices.item5.question'), answer: this.localizationService.getText('services.aiServices.item5.answer'), isActive: false },
+                        { id: 6, question: this.localizationService.getText('services.aiServices.item6.question'), answer: this.localizationService.getText('services.aiServices.item6.answer'), isActive: false },
+                        { id: 7, question: this.localizationService.getText('services.aiServices.item7.question'), answer: this.localizationService.getText('services.aiServices.item7.answer'), isActive: false },
+                        { id: 8, question: this.localizationService.getText('services.aiServices.item8.question'), answer: this.localizationService.getText('services.aiServices.item8.answer'), isActive: false },
+                        { id: 9, question: this.localizationService.getText('services.aiServices.item9.question'), answer: this.localizationService.getText('services.aiServices.item9.answer'), isActive: false },
+                        { id: 10, question: this.localizationService.getText('services.aiServices.item10.question'), answer: this.localizationService.getText('services.aiServices.item10.answer'), isActive: false }
+                    ];
+
+                    // Trigger change detection after all localized texts are set
+                    this.cdr.detectChanges();
+                }
+            });
+
+        // Query params logic depends on `technologies` array, so it should be processed
+        // *after* the `technologies` array is populated by the localization subscription.
+        // The `queryParams` observable will still emit if URL changes later.
+        this.route.queryParams.pipe(
+            takeUntil(this.destroy$) // Ensure unsubscription
+        ).subscribe(params => {
             const techIdFromUrl = params['tech'];
-            if (techIdFromUrl && this.technologies.some(t => t.id === techIdFromUrl)) {
+            // Check if technologies array is populated before checking for existence
+            if (techIdFromUrl && this.technologies.length > 0 && this.technologies.some(t => t.id === techIdFromUrl)) {
                 this.currentTech = techIdFromUrl;
-                // Volitelně můžete aktualizovat i výchozí hodnotu formuláře
                 const themaField = this.contactFormConfig.find(field => field.name === 'thema');
                 if (themaField) {
-                    // Najdeme odpovídající value pro formulář z ID technologie
                     const formValue = this.mapTechIdToFormValue(techIdFromUrl);
                     if (formValue) {
                         themaField.value = formValue;
                     }
                 }
             } else {
-                // Pokud není platný parametr, zůstane výchozí 'web-dev'
                 this.currentTech = 'web-dev';
             }
-            this.cdr.detectChanges(); // Vynutí detekci změn po nastavení currentTech
+            this.cdr.detectChanges(); // Trigger change detection for currentTech updates
         });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     handleFormSubmission(formData: any): void {
@@ -124,15 +383,6 @@ export class ServicesComponent implements OnInit {
         console.log('Generický formulář byl resetován.');
     }
 
-    currentTech: string = 'web-dev'; // ID aktuálně vybrané technologie
-    technologies: Technology[] = [
-        { id: 'web-dev', name: 'Webový vývoj' },
-        { id: 'desktop-dev', name: 'Desktopový vývoj' },
-        { id: 'mobile-dev', name: 'Mobilní vývoj' },
-        { id: 'ai-dev', name: 'AI vývoj' }
-    ];
-
-    // Pomocná metoda pro mapování ID technologie na hodnotu pro formulář
     private mapTechIdToFormValue(techId: string): string | undefined {
         switch (techId) {
             case 'web-dev': return 'web-development';
@@ -143,88 +393,10 @@ export class ServicesComponent implements OnInit {
         }
     }
 
-    webServices: Item[] = [
-        { id: 1, question: 'Vývoj na míru', answer: 'Tvoříme jedinečná webová řešení přesně podle vašich potřeb a cílů, od začátku do konce.', isActive: false },
-        { id: 2, question: 'Responzivní design', answer: 'Zaručujeme perfektní zobrazení a funkčnost na všech zařízeních – desktop, tablet i mobil.', isActive: false },
-        { id: 3, question: 'Optimalizace pro vyhledávače (SEO)', answer: 'Implementujeme nejlepší praktiky SEO přímo do kódu pro lepší viditelnost ve vyhledávačích.', isActive: false },
-        { id: 4, question: 'Integrace API a externích služeb', answer: 'Bezproblémové propojení s platebními bránami, CRM systémy, sociálními sítěmi a dalšími nástroji.', isActive: false },
-        { id: 5, question: 'Intuitivní Redakční systémy (CMS)', answer: 'Umožníme vám snadnou správu obsahu webu bez technických znalostí.', isActive: false },
-        { id: 6, question: 'Vysoká bezpečnost', answer: 'Chráníme vaše data a uživatele pomocí moderních bezpečnostních protokolů a postupů.', isActive: false },
-        { id: 7, question: 'Škálovatelnost a výkon', answer: 'Navrhujeme systémy, které zvládnou růst vaší návštěvnosti a budoucí rozšíření funkcí.', isActive: false },
-        { id: 8, question: 'Interaktivní uživatelské rozhraní (UI/UX)', answer: 'Zaměřujeme se na plynulé a příjemné používání pro vaše klienty.', isActive: false },
-        { id: 9, question: 'Pravidelná údržba a podpora', answer: 'Zajišťujeme dlouhodobou funkčnost a aktualizaci vašeho webového řešení.', isActive: false }
-    ];
-    webTechImages: any[] = [
-        { name: 'C#', path: 'assets/images/services-img/csharp.png' },
-        { name: 'TypeScript', path: 'assets/images/services-img/ts.png' },
-        { name: 'Java', path: 'assets/images/services-img/java.png' },
-        { name: 'Python', path: 'assets/images/services-img/py.png' },
-        { name: 'PHP', path: 'assets/images/services-img/php.png' },
-        { name: 'PostgreSQL', path: 'assets/images/services-img/postgresql.png' },
-    ]
-    desktopServices: Item[] = [
-        { id: 1, question: 'Aplikace na míru', answer: 'Vyvíjíme desktopové aplikace přesně podle vašich specifických požadavků a firemních procesů.', isActive: false },
-        { id: 2, question: 'Vysoký výkon a stabilita', answer: 'Zaměřujeme se na optimalizaci a robustní architekturu pro bezproblémový chod.', isActive: false },
-        { id: 3, question: 'Intuitivní uživatelské rozhraní (UI/UX)', answer: 'Navrhujeme aplikace, které jsou snadno použitelné a maximalizují efektivitu práce.', isActive: false },
-        { id: 4, question: 'Integrace s hardwarem a systémy', answer: 'Možnost propojení s periferiemi, databázemi a jinými firemními systémy.', isActive: false },
-        { id: 5, question: 'Offline funkcionalita', answer: 'Aplikace mohou fungovat i bez stálého připojení k internetu, což zvyšuje flexibilitu.', isActive: false },
-        { id: 6, question: 'Vylepšená bezpečnost dat', answer: 'Implementujeme silné šifrování a bezpečnostní protokoly pro ochranu citlivých informací.', isActive: false },
-        { id: 7, question: 'Pravidelné aktualizace a podpora', answer: 'Zajišťujeme dlouhodobou údržbu, aktualizace a technickou podporu.', isActive: false },
-        { id: 8, question: 'Multiplatformní řešení', answer: 'Možnost vývoje pro Windows, macOS nebo Linux podle vašich potřeb.', isActive: false },
-        { id: 9, question: 'Správa licencí a distribuce', answer: 'Pomoc s nastavením distribuce a licenčního modelu pro vaši aplikaci.', isActive: false }
-    ];
-    desktopTechImages: any[] = [
-        { name: 'C#', path: 'assets/images/services-img/csharp.png' },
-        { name: 'C++', path: 'assets/images/services-img/cpp.png' },
-        { name: 'Java', path: 'assets/images/services-img/java.png' },
-        { name: 'Python', path: 'assets/images/services-img/py.png' },
-        { name: 'SQLite', path: 'assets/images/services-img/sqlite.png' },
-        { name: 'PostgreSQL', path: 'assets/images/services-img/postgresql.png' },
-    ]
-    mobileServices: Item[] = [
-        { id: 1, question: 'Aplikace pro veřejnost i interní potřeby', answer: 'Vývoj komerčních aplikací pro App Store/Google Play i specializovaných firemních řešení (např. mobilní CRM, správu procesů).', isActive: false },
-        { id: 2, question: 'Nativní vývoj', answer: 'Využíváme plný potenciál iOS a Android platforem pro maximální výkon a uživatelský zážitek.', isActive: false },
-        { id: 3, question: 'Cross-platform vývoj', answer: 'Efektivní řešení s jedním kódem pro iOS i Android, které šetří čas a náklady.', isActive: false },
-        { id: 4, question: 'Intuitivní UI/UX design', answer: 'Zaměřujeme se na jednoduché a poutavé rozhraní, které uživatelé milují.', isActive: false },
-        { id: 5, question: 'Integrace s cloudovými službami a API', answer: 'Bezproblémové propojení s externími daty, službami a backendem.', isActive: false },
-        { id: 6, question: 'Push notifikace', answer: 'Implementace pro efektivní komunikaci s uživateli a udržení jejich angažovanosti.', isActive: false },
-        { id: 7, question: 'Offline režim', answer: 'Funkčnost aplikace i bez připojení k internetu pro lepší dostupnost v terénu.', isActive: false },
-        { id: 8, question: 'Optimalizace výkonu a spotřeby baterie', answer: 'Zajišťujeme, že vaše aplikace běží hladce a šetří energii zařízení.', isActive: false },
-        { id: 9, question: 'Bezpečnost dat a uživatelů', answer: 'Prioritizujeme ochranu citlivých informací a soukromí, důležité pro veřejné i firemní aplikace.', isActive: false },
-        { id: 10, question: 'Nasazení a distribuce', answer: 'Pomoc s celým procesem od přípravy až po schválení a vydání (veřejné obchody) nebo interní distribuci v rámci firmy.', isActive: false }
-    ];
-    mobileTechImages: any[] = [
-        { name: 'C#', path: 'assets/images/services-img/csharp.png' },
-        { name: 'TypeScript', path: 'assets/images/services-img/ts.png' },
-        { name: 'Swift', path: 'assets/images/services-img/swift.png' },
-        { name: 'Kotlin', path: 'assets/images/services-img/kotlin.png' },
-        { name: 'SQLite', path: 'assets/images/services-img/sqlite.png' },
-        { name: 'PostgreSQL', path: 'assets/images/services-img/postgresql.png' },
-    ]
-    aiServices: Item[] = [
-        { id: 1, question: 'Integrace AI API', answer: 'Propojíme vaše systémy s předními AI službami (např. rozpoznávání řeči, analýza obrazu, NLP, generování textu).', isActive: false },
-        { id: 2, question: 'Inteligentní automatizace', answer: 'Zefektivnění opakujících se úkolů a rozhodovacích procesů pomocí chytrých algoritmů.', isActive: false },
-        { id: 3, question: 'Chatboti a asistenti', answer: 'Implementace inteligentních chatbotů pro vylepšení zákaznické podpory a interní komunikace.', isActive: false },
-        { id: 4, question: 'Personalizace a doporučení', answer: 'Využití AI pro dynamické přizpůsobení obsahu a služeb uživatelům, zvyšující angažovanost.', isActive: false },
-        { id: 5, question: 'Prediktivní analýza', answer: 'Přesné předpovídání budoucích trendů a chování zákazníků pro optimalizaci strategií.', isActive: false },
-        { id: 6, question: 'Zlepšení efektivity', answer: 'Identifikace úzkých hrdel a optimalizace pracovních postupů pro snížení nákladů.', isActive: false },
-        { id: 7, question: 'Optimalizace vyhledávání', answer: 'Chytré vyhledávací funkce a automatické kategorizování obsahu pro lepší dostupnost informací.', isActive: false },
-        { id: 8, question: 'Analýza dat s AI', answer: 'Transformace komplexních dat na srozumitelné vhledy pro strategické rozhodování.', isActive: false },
-        { id: 9, question: 'Bezpečnost a etika AI', answer: 'Důraz na zodpovědné a bezpečné nasazení AI řešení s ohledem na ochranu dat.', isActive: false },
-        { id: 10, question: 'Školení a podpora', answer: 'Poskytujeme školení a nepřetržitou podporu pro hladký chod AI řešení.', isActive: false }
-    ];
-    aiTechImages: any[] = [
-        { name: 'C++', path: 'assets/images/services-img/cpp.png' },
-        { name: 'Python', path: 'assets/images/services-img/py.png' },
-        { name: 'Java', path: 'assets/images/services-img/java.png' },
-        { name: 'JavaScript', path: 'assets/images/services-img/js.png' },
-        { name: 'Rust', path: 'assets/images/services-img/rust.png' },
-        { name: 'Go', path: 'assets/images/services-img/go.png' },
-    ]
-
     toggleFaq(clickedItem: Item): void {
         clickedItem.isActive = !clickedItem.isActive;
     }
+
     selectTech(techId: string): void {
         if (this.currentTech !== techId) {
             this.currentTech = techId;

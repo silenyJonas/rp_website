@@ -35,6 +35,7 @@
     "faq": "FAQ",
     "faq_full": "Často kladené otázky"
   },
+  
   "projects": {
     "header_1": "Top 10 dokončených projektů",
     "table_header_title": "Název projektu",
@@ -118,7 +119,7 @@
     "phone_label": "Telefon",
     "phone_value": "+420 733 188 328",
     "legal_info_header": "Právní informace",
-    "copyright_text": "&copy; {year} RegioPartner, s.r.o., Všechna práva vyhrazena."
+    "copyright_text": "©2025 RegioPartner, s.r.o., Všechna práva vyhrazena."
   },
   "legal": {
     "privacy_policy": "Zásady ochrany osobních údajů",
@@ -152,18 +153,18 @@
       "duration_header": "Doba trvání",
       "themes_header": "Hlavní témata",
       "new_things_header": "Co se naučíte",
-      "time_duration": "4 měsíce / úroveň (48 hodin)",
-      "tuesday_time": "Úterý: 16:00 - 17:30 (Časové pásmo Praha)",
-      "thursday_time": "Čtvrtek: 16:00 - 17:30 (Časové pásmo Praha)",
-      "tuesday_time_desktop": "Úterý: 18:00 - 19:30 (Časové pásmo Praha)",
-      "thursday_time_desktop": "Čtvrtek: 18:00 - 19:30 (Časové pásmo Praha)",
-      "course_duration": "1,5 hodiny / lekce",
-      "internet_basics": "Základy internetu",
-      "website_creation": "Tvorba webových stránek",
+      "time_duration": "8 měsíců",
+      "tuesday_time": "Úterý: 16:00 - 17:30",
+      "thursday_time": "Čtvrtek: 16:00 - 17:30",
+      "tuesday_time_desktop": "Úterý: 18:00 - 19:30",
+      "thursday_time_desktop": "Čtvrtek: 18:00 - 19:30",
+      "course_duration": "32 lekcí - 90 minut lekce",
+      "internet_basics": "Seznámení s internetem",
+      "website_creation": "Tvorba webu",
       "web_app_creation": "Tvorba webových aplikací",
-      "database_basics": "Základy práce s databázemi",
-      "computer_principles": "Principy fungování počítače",
-      "cmd_applications": "Aplikace pro příkazový řádek",
+      "database_basics": "Práce s databázi",
+      "computer_principles": "Architektura počítače",
+      "cmd_applications": "Aplikace v commandline",
       "gui_applications": "Aplikace s grafickým rozhraním"
     },
     "consultation_form": {
@@ -175,9 +176,9 @@
         "theme_option_desktop": "Desktopový vývoj",
         "theme_option_web": "Webový vývoj",
         "diff_label": "Obtížnost:",
-        "diff_option_begginer": "Začátečník {age_range}",
-        "diff_option_advanced": "Pokročilý {age_range}",
-        "diff_option_expert": "Expert {age_range}",
+        "diff_option_begginer": "Začátečník",
+        "diff_option_advanced": "Pokročilý",
+        "diff_option_expert": "Expert",
         "age_range_begginer": "(9-17 let)",
         "age_range_advanced": "(11-17 let)",
         "age_range_expert": "(12-17 let)",
@@ -401,5 +402,348 @@
         }
       }
     ]
-  } 
+  },
+   "services": {
+    "service_main_text_1": "<p>V digitálním světě je silná online prezentace klíčová. Nabízíme <strong>komplexní řešení webového vývoje</strong>, od moderních a <strong>responzivních webových stránek</strong> šitých na míru, až po složité a robustní <strong>webové aplikace</strong>. Specializujeme se na využití nejnovějších technologií, abychom zajistili <strong>optimální výkon, bezpečnost a vynikající uživatelskou zkušenost</strong> pro každého návštěvníka.</p><p>Nezáleží na tom, zda potřebujete firemní prezentaci, e-shop, portál nebo komplexní interní systém – s námi získáte <strong>digitální řešení, které roste s vaším podnikáním</strong> a efektivně oslovuje vaše cílové publikum. Klademe důraz na čistý kód, modulární architekturu a snadnou rozšiřitelnost.</p>",
+    "service_main_text_2": "<p>Přinášíme <strong>výkonné a spolehlivé desktopové aplikace</strong> navržené pro Windows, macOS nebo Linux. Ať už potřebujete nástroj pro interní procesy, specializovaný software pro vaši niku, nebo robustní analytickou aplikaci, zajistíme <strong>optimalizovaný výkon, intuitivní uživatelské rozhraní a maximální bezpečnost</strong>.</p><p>Naše řešení jsou šitá na míru specifickým potřebám vašeho podnikání, což zaručuje <strong>zvýšení produktivity, automatizaci úkolů a efektivnější správu dat</strong>. S důrazem na stabilitu a snadnou údržbu vytváříme aplikace, které jsou připraveny na výzvy dnešního digitálního světa a rostou s vašimi požadavky.</p>",
+    "service_main_text_3": "<p>Žijeme v éře mobilních zařízení, kde je přímá interakce se zákazníky i efektivní správa interních procesů klíčová. Nabízíme <strong>kompletní řešení pro mobilní aplikace</strong>, ať už potřebujete nativní aplikace pro <strong>iOS (iPhone, iPad)</strong> a <strong>Android</strong>, nebo efektivní <strong>cross-platform řešení</strong>, která osloví širší publikum s jedním kódem.</p><p>Náš záběr sahá od <strong>komerčních aplikací pro veřejné App Store a Google Play</strong> až po <strong>specializované interní systémy</strong>. Vyvíjíme mobilní CRM řešení, nástroje pro správu úkolů, terénní sběr dat, mobilní přístup k podnikovým systémům a mnoho dalšího. Zaměřujeme se na aplikace, které jsou nejen vizuálně atraktivní a snadno použitelné, ale také <strong>výkonné, bezpečné a optimalizované pro konkrétní mobilní platformy a firemní prostředí</strong>. Od prvotního návrhu UI/UX až po nasazení a publikaci (ať už v obchodech, nebo interní distribuci), jsme vaším partnerem pro digitální inovaci, která drží krok s mobilním světem.</p>",
+    "service_main_text_4": "<p>Využijte potenciál <strong>umělé inteligence</strong> pro transformaci vašeho podnikání a procesů. Specializujeme se na <strong>integraci a implementaci pokročilých AI služeb a API</strong> přímo do vašich stávajících i nových projektů. Pomůžeme vám efektivně využít to nejlepší z dostupných AI technologií pro <strong>automatizaci, zlepšení výkonnosti a získání hlubších datových vhledů</strong>, které vám dají konkurenční výhodu.</p><p>Implementujeme AI do CRM systémů, automatizujeme zákaznickou podporu pomocí chatbotů, personalizujeme obsah, provádíme prediktivní analýzu, nebo optimalizujeme interní procesy. Naše řešení AI jsou navržena tak, aby přinášela <strong>konkrétní a měřitelné výsledky</strong>, zefektivnila vaše operace a posunula vaši firmu vpřed v digitální éře. Zaměřujeme se na praktické využití AI, které vám přinese okamžitou hodnotu a podpoří váš růst.</p>",
+
+    "info_header_web": "Webový vývoj",
+    "info_header_desktop": "Desktopový vývoj",
+    "info_header_mobile": "Mobilní vývoj",
+    "info_header_ai": "Vývoj AI Řešení",
+
+    "header_1_text": "Naše specializace",
+    "web_dev_header": "Webový vývoj",
+    "desktop_dev_header": "Desktopové aplikace",
+    "mobile_dev_header": "Mobilní aplikace",
+    "ai_dev_header": "Umělá inteligence",
+
+    "info_header_1": "S čím rádi pracujeme:",
+    "info_header_2": "Ale umíme mnohem víc",
+    "info_header_3": "Co s námi získáte a MNOHEM VÍC:",
+
+    "form_description": "Navázání spolupráce do 24h",
+    "form_button": "Rezervovat konzultaci",
+    "form_header": "Máte nápad? My máme řešení",
+
+    "show_projects_header": "Nahlédněte do desítek dokončených projektů.",
+    "projects_button_text": "Realizované projekty",
+
+    "colab": {
+      "colab_procces_header": "Průběh spolupráce",
+      "item_1": {
+        "header": "1. Kontakt",
+        "text": "Nezávazné spojení – zjištění vašich potřeb a cílů."
+      },
+      "item_2": {
+        "header": "2. Návrh",
+        "text": "Připravíme návrh postupu, technologie, časový rámec i cenu."
+      },
+      "item_3": {
+        "header": "3. Vývoj",
+        "text": "Projekt realizujeme krok po kroku. O průběhu vás pravidelně informujeme."
+      },
+      "item_4": {
+        "header": "4. Nasazení",
+        "text": "Spuštění řešení a předání veškerých podkladů a volitelné údržby."
+      }
+      
+    },
+    "services": {
+      "prices_header": "Ceny vybraných služeb",
+      "text_preffix": "Od",
+      "currency": "Kč",
+      "item_1":{
+        "header": "MALÝ WEB/E-SHOP NA MÍRU",
+        "price": "8099",
+        "message": "* Cena je uvedena bez DPH"
+      },
+      "item_2":{
+        "header": "STŘEDNÍ WEB/E-SHOP NA MÍRU",
+        "price": "14 099",
+        "message": "* Cena je uvedena bez DPH"
+      },
+      "item_3":{
+        "header": "VELKÝ WEB/E-SHOP NA MÍRU",
+        "price": "29 990",
+        "message": "* Cena je uvedena bez DPH"
+      }
+      ,"item_4":{
+        "header": "CRM SYSTÉM NA MÍRU",
+        "price": "29 990",
+        "message": "* Cena je uvedena bez DPH"
+      }
+      ,"item_5":{
+        "header": "ERP SYSTÉM NA MÍRU",
+        "price": "39 990",
+        "message": "* Cena je uvedena bez DPH"
+      }
+      ,"item_6":{
+        "header": "ÚPRAVA STÁVAJÍCÍHO SYSTÉMU",
+        "price": "Variabilní cena",
+        "message": ""
+      }
+    },
+
+    "contact_form": {
+      "thema_label": "Téma",
+      "web_development_label": "Webový vývoj",
+      "desktop_development_label": "Desktopový vývoj",
+      "mobile_development_label": "Mobilní vývoj",
+      "ai_development_label": "AI vývoj",
+      "other_label": "Jiné",
+      "email_label": "E-mail",
+      "email_placeholder": "vas.email@priklad.cz",
+      "phone_label": "Telefon (nepovinné)",
+      "phone_placeholder": "např. +420 123 456 789",
+      "order_description_label": "Stručný popis zadání",
+      "order_description_placeholder": "Popište prosím váš projekt nebo dotaz..."
+    },
+
+    "webServices": {
+      "item1": {
+        "question": "Vývoj na míru",
+        "answer": "Tvoříme jedinečná webová řešení přesně podle vašich potřeb a cílů, od začátku do konce."
+      },
+      "item2": {
+        "question": "Responzivní design",
+        "answer": "Zaručujeme perfektní zobrazení a funkčnost na všech zařízeních – desktop, tablet i mobil."
+      },
+      "item3": {
+        "question": "Optimalizace pro vyhledávače (SEO)",
+        "answer": "Implementujeme nejlepší praktiky SEO přímo do kódu pro lepší viditelnost ve vyhledávačích."
+      },
+      "item4": {
+        "question": "Integrace API a externích služeb",
+        "answer": "Bezproblémové propojení s platebními bránami, CRM systémy, sociálními sítěmi a dalšími nástroji."
+      },
+      "item5": {
+        "question": "Intuitivní Redakční systémy (CMS)",
+        "answer": "Umožníme vám snadnou správu obsahu webu bez technických znalostí."
+      },
+      "item6": {
+        "question": "Vysoká bezpečnost",
+        "answer": "Chráníme vaše data a uživatele pomocí moderních bezpečnostních protokolů a postupů."
+      },
+      "item7": {
+        "question": "Škálovatelnost a výkon",
+        "answer": "Navrhujeme systémy, které zvládnou růst vaší návštěvnosti a budoucí rozšíření funkcí."
+      },
+      "item8": {
+        "question": "Interaktivní uživatelské rozhraní (UI/UX)",
+        "answer": "Zaměřujeme se na plynulé a příjemné používání pro vaše klienty."
+      },
+      "item9": {
+        "question": "Pravidelná údržba a podpora",
+        "answer": "Zajišťujeme dlouhodobou funkčnost a aktualizaci vašeho webového řešení."
+      }
+    },
+    "desktopServices": {
+      "item1": {
+        "question": "Aplikace na míru",
+        "answer": "Vyvíjíme desktopové aplikace přesně podle vašich specifických požadavků a firemních procesů."
+      },
+      "item2": {
+        "question": "Vysoký výkon a stabilita",
+        "answer": "Zaměřujeme se na optimalizaci a robustní architekturu pro bezproblémový chod."
+      },
+      "item3": {
+        "question": "Intuitivní uživatelské rozhraní (UI/UX)",
+        "answer": "Navrhujeme aplikace, které jsou snadno použitelné a maximalizují efektivitu práce."
+      },
+      "item4": {
+        "question": "Integrace s hardwarem a systémy",
+        "answer": "Možnost propojení s periferiemi, databázemi a jinými firemními systémy."
+      },
+      "item5": {
+        "question": "Offline funkcionalita",
+        "answer": "Aplikace mohou fungovat i bez stálého připojení k internetu, což zvyšuje flexibilitu."
+      },
+      "item6": {
+        "question": "Vylepšená bezpečnost dat",
+        "answer": "Implementujeme silné šifrování a bezpečnostní protokoly pro ochranu citlivých informací."
+      },
+      "item7": {
+        "question": "Pravidelné aktualizace a podpora",
+        "answer": "Zajišťujeme dlouhodobou údržbu, aktualizace a technickou podporu."
+      },
+      "item8": {
+        "question": "Multiplatformní řešení",
+        "answer": "Možnost vývoje pro Windows, macOS nebo Linux podle vašich potřeb."
+      },
+      "item9": {
+        "question": "Správa licencí a distribuce",
+        "answer": "Pomoc s nastavením distribuce a licenčního modelu pro vaši aplikaci."
+      }
+    },
+    "mobileServices": {
+      "item1": {
+        "question": "Aplikace pro veřejnost i interní potřeby",
+        "answer": "Vývoj komerčních aplikací pro App Store/Google Play i specializovaných firemních řešení (např. mobilní CRM, správu procesů)."
+      },
+      "item2": {
+        "question": "Nativní vývoj",
+        "answer": "Využíváme plný potenciál iOS a Android platforem pro maximální výkon a uživatelský zážitek."
+      },
+      "item3": {
+        "question": "Cross-platform vývoj",
+        "answer": "Efektivní řešení s jedním kódem pro iOS i Android, které šetří čas a náklady."
+      },
+      "item4": {
+        "question": "Intuitivní UI/UX design",
+        "answer": "Zaměřujeme se na jednoduché a poutavé rozhraní, které uživatelé milují."
+      },
+      "item5": {
+        "question": "Integrace s cloudovými službami a API",
+        "answer": "Bezproblémové propojení s externími daty, službami a backendem."
+      },
+      "item6": {
+        "question": "Push notifikace",
+        "answer": "Implementace pro efektivní komunikaci s uživateli a udržení jejich angažovanosti."
+      },
+      "item7": {
+        "question": "Offline režim",
+        "answer": "Funkčnost aplikace i bez připojení k internetu pro lepší dostupnost v terénu."
+      },
+      "item8": {
+        "question": "Optimalizace výkonu a spotřeby baterie",
+        "answer": "Zajišťujeme, že vaše aplikace běží hladce a šetří energii zařízení."
+      },
+      "item9": {
+        "question": "Bezpečnost dat a uživatelů",
+        "answer": "Prioritizujeme ochranu citlivých informací a soukromí, důležité pro veřejné i firemní aplikace."
+      },
+      "item10": {
+        "question": "Nasazení a distribuce",
+        "answer": "Pomoc s celým procesem od přípravy až po schválení a vydání (veřejné obchody) nebo interní distribuci v rámci firmy."
+      }
+    },
+    "aiServices": {
+      "item1": {
+        "question": "Integrace AI API",
+        "answer": "Propojíme vaše systémy s předními AI službami (např. rozpoznávání řeči, analýza obrazu, NLP, generování textu)."
+      },
+      "item2": {
+        "question": "Inteligentní automatizace",
+        "answer": "Zefektivnění opakujících se úkolů a rozhodovacích procesů pomocí chytrých algoritmů."
+      },
+      "item3": {
+        "question": "Chatboti a asistenti",
+        "answer": "Implementace inteligentních chatbotů pro vylepšení zákaznické podpory a interní komunikace."
+      },
+      "item4": {
+        "question": "Personalizace a doporučení",
+        "answer": "Využití AI pro dynamické přizpůsobení obsahu a služeb uživatelům, zvyšující angažovanost."
+      },
+      "item5": {
+        "question": "Prediktivní analýza",
+        "answer": "Přesné předpovídání budoucích trendů a chování zákazníků pro optimalizaci strategií."
+      },
+      "item6": {
+        "question": "Zlepšení efektivity",
+        "answer": "Identifikace úzkých hrdel a optimalizace pracovních postupů pro snížení nákladů."
+      },
+      "item7": {
+        "question": "Optimalizace vyhledávání",
+        "answer": "Chytré vyhledávací funkce a automatické kategorizování obsahu pro lepší dostupnost informací."
+      },
+      "item8": {
+        "question": "Analýza dat s AI",
+        "answer": "Transformace komplexních dat na srozumitelné vhledy pro strategické rozhodování."
+      },
+      "item9": {
+        "question": "Bezpečnost a etika AI",
+        "answer": "Důraz na zodpovědné a bezpečné nasazení AI řešení s ohledem na ochranu dat."
+      },
+      "item10": {
+        "question": "Školení a podpora",
+        "answer": "Poskytujeme školení a nepřetržitou podporu pro hladký chod AI řešení."
+      }
+    }
+  },
+  "home": {
+    "header_1": "RegioPartner",
+    "header_2": "víc než IT, stavíme digitální budoucnost",
+    "web_header": "Webový Vývoj",
+    "desktop_header": "Desktopový Vývoj",
+    "mobile_header": "Mobilní Vývoj",
+    "ai_header": "AI Vývoj",
+    "our_services": "Naše služby",
+    "our_services_m": "RegioPartner v číslech",
+    "stats_projects_text": "Projektů",
+    "stats_projects_count": "110+",
+    "stats_years_text": "Let na trhu",
+    "stats_years_count": "28",
+    "stats_solutions_text": "Řešení",
+    "stats_solutions_count": "∞",
+    "links": {
+      "link_1":{
+        "header" : "Webový vývoj",
+        "bullet_1" : "Moderní technologie",
+        "bullet_2" : "Moderní desing",
+        "bullet_3" : "Bezpečnost dat"
+      },
+      "link_2":{
+        "header" : "Desktopový vývoj",
+        "bullet_1" : "Výkon a stabilita",
+        "bullet_2" : "Pokročilá architektura",
+        "bullet_3" : "Špičkové zabezpečení"
+      },
+      "link_3":{
+        "header" : "Mobilní vývoj",
+        "bullet_1" : "Multiplatformní řešení",
+        "bullet_2" : "Rychlá optimalizace",
+        "bullet_3" : "Vysoká bezpečnost"
+      },
+      "link_4":{
+        "header" : "AI vývoj",
+        "bullet_1" : "AI-poháněná řešení",
+        "bullet_2" : "Chytrá automatizace",
+        "bullet_3" : "Prediktivní analýza"
+      },
+      "learn_more": "Zjistit více"
+    },
+    "products_header": "Naše předpřipravené produkty",
+    "products": {
+      "prod_1" : {
+        "header": "Předpřipravený E-Shop",
+        "price": "8 099 Kč",
+        "description": "Předpřipravený E-Shop s možností spustit do 24h."
+      },
+        "prod_2" : {
+        "header": "Dotazníkový software",
+        "price": "7 999 Kč",
+        "description": "Profesionální dotazníkový software na vlastní doméně."
+      },
+        "prod_3" : {
+        "header": "Dotazníkový analyzátor",
+        "price": "1 499 Kč",
+        "description": "Rychlá analýza a prezentace dat."
+      },
+      "button_shop_text" : "Navštivte obchod zde"
+    },
+    "academy_header": "Učíme děti programovat",
+    "price_start": "Cena od",
+    "price_number": "350 Kč",
+    "price_end": "/lekce",
+    "button_academy_text": "Navštivte akademii zde",
+    "form_topic_label": "Téma",
+    "form_topic_option_web": "Webový vývoj",
+    "form_topic_option_desktop": "Desktopový vývoj",
+    "form_topic_option_mobile": "Mobilní vývoj",
+    "form_topic_option_ai": "AI vývoj",
+    "form_topic_option_other": "Jiné",
+
+    "form_email_label": "E-mail",
+    "form_email_placeholder": "vas.email@priklad.cz",
+
+    "form_phone_label": "Telefon (nepovinné)",
+    "form_phone_placeholder": "např. +420 123 456 789",
+
+    "form_description_label": "Stručný popis zadání",
+    "form_description_placeholder": "Popište prosím váš projekt nebo dotaz..."
+
+  }
 }

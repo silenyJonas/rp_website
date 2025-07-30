@@ -6,10 +6,11 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PublicDataService } from '../../services/public-data.service';
 import { HttpErrorResponse } from '@angular/common/http';
-
+import { Subject } from 'rxjs';
 import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
 import { FormFieldConfig } from '../../../shared/interfaces/form-field-config';
-
+import { takeUntil } from 'rxjs/operators';
+import { LocalizationService } from '../../services/localization.service';
 
 @Component({
   selector: 'app-home',
@@ -55,57 +56,189 @@ export class HomeComponent implements OnInit {
   form_button: string = 'Rezervovat konzultaci';
   form_header : string = 'Máte nápad ? My máme řešení';
 
+  headerMain: string = '';
+  headerSubtitle: string = '';
+
+  webDevelopmentHeader: string = '';
+  desktopDevelopmentHeader: string = '';
+  mobileDevelopmentHeader: string = '';
+  aiDevelopmentHeader: string = '';
+
+  ourServicesTitle: string = '';
+
+  learnMore: string = '';
+
+  statsProjectsLabel: string = '';
+  statsProjectsCount: string = '';
+  statsYearsLabel: string = '';
+  statsYearsCount: string = '';
+  statsSolutionsLabel: string = '';
+  statsSolutionsCount: string = '';
+
+  webDevTitle: string = '';
+  webDevBullet1: string = '';
+  webDevBullet2: string = '';
+  webDevBullet3: string = '';
+
+  desktopDevTitle: string = '';
+  desktopDevBullet1: string = '';
+  desktopDevBullet2: string = '';
+  desktopDevBullet3: string = '';
+
+  mobileDevTitle: string = '';
+  mobileDevBullet1: string = '';
+  mobileDevBullet2: string = '';
+  mobileDevBullet3: string = '';
+
+  aiDevTitle: string = '';
+  aiDevBullet1: string = '';
+  aiDevBullet2: string = '';
+  aiDevBullet3: string = '';
+
+  productsSectionTitle: string = '';
+
+  product1Title: string = '';
+  product1Price: string = '';
+  product1Description: string = '';
+
+  product2Title: string = '';
+  product2Price: string = '';
+  product2Description: string = '';
+
+  ourServicesTitleMobile: string = '';
+
+
+
+  product3Title: string = '';
+  product3Price: string = '';
+  product3Description: string = '';
+
+  shopButtonText: string = '';
+
+  academySectionTitle: string = '';
+  academyPriceLabel: string = '';
+  academyPriceAmount: string = '';
+  academyPriceSuffix: string = '';
+  academyButtonText: string = '';
+
+
   contactFormConfig: FormFieldConfig[] = [];
 
-  constructor(private publicDataService: PublicDataService) { }
+  private destroy$ = new Subject<void>(); // Pro správné odhlášení z odběrů
 
-  ngOnInit(): void {
-    this.contactFormConfig = [
-      {
-        label: 'Téma',
-        name: 'thema',
-        type: 'select',
-        required: true,
-        value: 'web-development', // Výchozí hodnota
-        options: [
-          { value: 'web-development', label: 'Webový vývoj' },
-          { value: 'desktop-development', label: 'Desktopový vývoj' },
-          { value: 'mobile-development', label: 'Mobilní vývoj' },
-          { value: 'ai-development', label: 'AI vývoj' },
-          { value: 'other', label: 'Jiné' }
-        ]
-      },
-      {
-        label: 'E-mail',
-        name: 'contact_email',
-        type: 'email',
-        required: true,
-        placeholder: 'vas.email@priklad.cz',
-        // Základní regex pro e-mail: povolí alfanumerické znaky, tečky, podtržítka, pomlčky,
-        // pak @, pak alfanumerické znaky, tečky, pomlčky, a nakonec 2-4 znaky pro doménu.
-        // Toto je velmi základní a ne pokrývá všechny edge cases, ale pro jednoduchou validaci stačí.
-        pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'
-      },
-      {
-        label: 'Telefon (nepovinné)',
-        name: 'contact_phone',
-        type: 'tel',
-        required: false,
-        placeholder: 'např. +420 123 456 789',
-        // Regex pro telefon: povolí číslice, mezery, pomlčky a znak plus na začátku.
-        // Umožňuje různé formáty telefonních čísel.
-        pattern: '^[0-9\\s\\-+\\(\\)]+$' // Povoluje číslice, mezery, pomlčky, plus, závorky
-      },
-      {
-        label: 'Stručný popis zadání',
-        name: 'order_description',
-        type: 'textarea',
-        required: true,
-        rows: 5,
-        placeholder: 'Popište prosím váš projekt nebo dotaz...'
+  constructor(private publicDataService: PublicDataService,private localizationService: LocalizationService) { }
+
+ngOnInit(): void {
+  this.localizationService.currentTranslations$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(translations => {
+      if (translations) {
+        this.ourServicesTitleMobile = this.localizationService.getText('home.our_services_m');
+        this.headerMain = this.localizationService.getText('home.header_1');
+        this.learnMore = this.localizationService.getText('home.links.learn_more');
+        this.headerSubtitle = this.localizationService.getText('home.header_2');
+
+        this.webDevelopmentHeader = this.localizationService.getText('home.web_header');
+        this.desktopDevelopmentHeader = this.localizationService.getText('home.desktop_header');
+        this.mobileDevelopmentHeader = this.localizationService.getText('home.mobile_header');
+        this.aiDevelopmentHeader = this.localizationService.getText('home.ai_header');
+
+        this.ourServicesTitle = this.localizationService.getText('home.our_services');
+
+        this.statsProjectsLabel = this.localizationService.getText('home.stats_projects_text');
+        this.statsProjectsCount = this.localizationService.getText('home.stats_projects_count');
+        this.statsYearsLabel = this.localizationService.getText('home.stats_years_text');
+        this.statsYearsCount = this.localizationService.getText('home.stats_years_count');
+        this.statsSolutionsLabel = this.localizationService.getText('home.stats_solutions_text');
+        this.statsSolutionsCount = this.localizationService.getText('home.stats_solutions_count');
+
+        this.webDevTitle = this.localizationService.getText('home.links.link_1.header');
+        this.webDevBullet1 = this.localizationService.getText('home.links.link_1.bullet_1');
+        this.webDevBullet2 = this.localizationService.getText('home.links.link_1.bullet_2');
+        this.webDevBullet3 = this.localizationService.getText('home.links.link_1.bullet_3');
+
+        this.desktopDevTitle = this.localizationService.getText('home.links.link_2.header');
+        this.desktopDevBullet1 = this.localizationService.getText('home.links.link_2.bullet_1');
+        this.desktopDevBullet2 = this.localizationService.getText('home.links.link_2.bullet_2');
+        this.desktopDevBullet3 = this.localizationService.getText('home.links.link_2.bullet_3');
+
+        this.mobileDevTitle = this.localizationService.getText('home.links.link_3.header');
+        this.mobileDevBullet1 = this.localizationService.getText('home.links.link_3.bullet_1');
+        this.mobileDevBullet2 = this.localizationService.getText('home.links.link_3.bullet_2');
+        this.mobileDevBullet3 = this.localizationService.getText('home.links.link_3.bullet_3');
+
+        this.aiDevTitle = this.localizationService.getText('home.links.link_4.header');
+        this.aiDevBullet1 = this.localizationService.getText('home.links.link_4.bullet_1');
+        this.aiDevBullet2 = this.localizationService.getText('home.links.link_4.bullet_2');
+        this.aiDevBullet3 = this.localizationService.getText('home.links.link_4.bullet_3');
+
+        this.productsSectionTitle = this.localizationService.getText('home.products_header');
+
+        this.product1Title = this.localizationService.getText('home.products.prod_1.header');
+        this.product1Price = this.localizationService.getText('home.products.prod_1.price');
+        this.product1Description = this.localizationService.getText('home.products.prod_1.description');
+
+        this.product2Title = this.localizationService.getText('home.products.prod_2.header');
+        this.product2Price = this.localizationService.getText('home.products.prod_2.price');
+        this.product2Description = this.localizationService.getText('home.products.prod_2.description');
+
+        this.product3Title = this.localizationService.getText('home.products.prod_3.header');
+        this.product3Price = this.localizationService.getText('home.products.prod_3.price');
+        this.product3Description = this.localizationService.getText('home.products.prod_3.description');
+
+        this.shopButtonText = this.localizationService.getText('home.products.button_shop_text');
+
+        this.academySectionTitle = this.localizationService.getText('home.academy_header');
+        this.academyPriceLabel = this.localizationService.getText('home.price_start');
+        this.academyPriceAmount = this.localizationService.getText('home.price_number');
+        this.academyPriceSuffix = this.localizationService.getText('home.price_end');
+        this.academyButtonText = this.localizationService.getText('home.button_academy_text');
+
+        // 🧩 Formulář: dynamické načtení překladů
+        this.contactFormConfig = [
+          {
+            label: this.localizationService.getText('home.form_topic_label'),
+            name: 'thema',
+            type: 'select',
+            required: true,
+            value: 'web-development',
+            options: [
+              { value: 'web-development', label: this.localizationService.getText('home.form_topic_option_web') },
+              { value: 'desktop-development', label: this.localizationService.getText('home.form_topic_option_desktop') },
+              { value: 'mobile-development', label: this.localizationService.getText('home.form_topic_option_mobile') },
+              { value: 'ai-development', label: this.localizationService.getText('home.form_topic_option_ai') },
+              { value: 'other', label: this.localizationService.getText('home.form_topic_option_other') }
+            ]
+          },
+          {
+            label: this.localizationService.getText('home.form_email_label'),
+            name: 'contact_email',
+            type: 'email',
+            required: true,
+            placeholder: this.localizationService.getText('home.form_email_placeholder'),
+            pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'
+          },
+          {
+            label: this.localizationService.getText('home.form_phone_label'),
+            name: 'contact_phone',
+            type: 'tel',
+            required: false,
+            placeholder: this.localizationService.getText('home.form_phone_placeholder'),
+            pattern: '^[0-9\\s\\-+\\(\\)]+$'
+          },
+          {
+            label: this.localizationService.getText('home.form_description_label'),
+            name: 'order_description',
+            type: 'textarea',
+            required: true,
+            rows: 5,
+            placeholder: this.localizationService.getText('home.form_description_placeholder')
+          }
+        ];
       }
-    ];
-  }
+    });
+}
+
 
   handleFormSubmission(formData: any): void {
     console.log('Data přijata z generického formuláře k odeslání do PublicDataService:', formData);

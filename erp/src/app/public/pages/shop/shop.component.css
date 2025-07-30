@@ -544,8 +544,8 @@ html, body {
     }
     .header-1 {
         font-size: 2.2rem;
-        padding-top: 60px;
-        padding-bottom: 25px;
+        padding-top: 40px;
+        padding-bottom: 5px;
     }
     
     .content-wrp {
@@ -656,7 +656,7 @@ html, body {
         flex-basis: 300px; /* Pevná šířka pro filtry */
         flex-shrink: 0; /* Zabrání zmenšení */
         position: sticky; /* Zůstane na místě při scrollu */
-        top: 20px; /* Mezera odshora */
+        top: 100px; /* Mezera odshora */
     }
 
     .prod-wrp {

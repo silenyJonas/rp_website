@@ -32,7 +32,13 @@ html {
         overflow: hidden !important;
     } */
 }
-
+.services-info-text-2 p {
+    margin-bottom: 25px;
+    line-height: 1.7;
+    font-size: 1.2em;
+    color: #c0c0c0;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
 body {
     min-height: 100vh;
     margin: 0;

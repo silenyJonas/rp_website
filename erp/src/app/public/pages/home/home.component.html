@@ -4,10 +4,10 @@
         <div class="header-0">
             <div class="h-wrp">
                 <div class="header-0-1">
-                    RegioPartner
+                    {{headerMain}}
                 </div>
                 <div class="header-0-2">
-                    víc než IT, stavíme digitální budoucnost
+                    {{headerSubtitle}}
                 </div>
             </div>
             
@@ -21,23 +21,23 @@
     <div class="links-wrp-m-m">
         <div class="link-w-c-m-m">
             <a routerLink="/services" [queryParams]="{ tech: 'web-dev' }" class="l-1-2">
-                Webový vývoj
+                {{webDevelopmentHeader}}
             </a>
             <a routerLink="/services" [queryParams]="{ tech: 'desktop-dev' }" class="l-1-2">
-                Desktopový vývoj
+                {{desktopDevelopmentHeader}}
             </a>
             <a routerLink="/services" [queryParams]="{ tech: 'mobile-dev' }" class="l-1-2">
-                Mobilní vývoj
+                {{mobileDevelopmentHeader}}
             </a>
             <a routerLink="/services" [queryParams]="{ tech: 'ai-dev' }" class="l-1-2">
-                AI vývoj
+                {{aiDevelopmentHeader}}
             </a>
         </div>
     </div>
 </div>
 
         <div class="header-0-2-t">
-            Přinášíme moderní řešení v mnoha oblastech IT
+            {{ourServicesTitleMobile}}
         </div>
 
         <div class="stats-wrp-m">    
@@ -46,26 +46,26 @@
         
         <div class="stat-1">
             <div class="s-1-h">
-                80
+                {{statsProjectsCount}}
             </div>
             <div class="s-1-t">
-                Projektů
+                {{statsProjectsLabel}}
             </div>
         </div>
         <div class="stat-2">
             <div class="s-2-h">
-                28
+                {{statsYearsCount}}
             </div>
             <div class="s-2-t">
-                Let na trhu
+                {{statsYearsLabel}}
             </div>
         </div>
         <div class="stat-3">
             <div class="s-3-h">
-                ∞
+                {{statsSolutionsCount}}
             </div>
             <div class="s-3-t">
-                Řešení
+                {{statsSolutionsLabel}}
             </div>
         </div>
     </div>
@@ -125,10 +125,10 @@
         <div class="header-0">
             <div class="h-wrp">
                 <div class="header-0-1">
-                    RegioPartner
+                    {{headerMain}}
                 </div>
                 <div class="header-0-2">
-                    víc než IT, stavíme digitální budoucnost
+                    {{headerSubtitle}}
                 </div>
             </div>
             
@@ -195,7 +195,7 @@
             <g class="bubble-group bubble-target bubble-1" transform="translate(-30, 130)">
                 <polygon points="20,0 180,0 160,40 0,40" 
                                 fill="#1a1a2e" stroke="#2f2f2f" stroke-width="2" class="parallelogram-shape"/>
-                <text x="90" y="25" text-anchor="middle" class="svg-text">Webový Vývoj</text>
+                <text x="90" y="25" text-anchor="middle" class="svg-text">{{webDevelopmentHeader}}</text>
             </g>
         </a>
 
@@ -219,7 +219,7 @@
             <g class="bubble-group bubble-target bubble-2" transform="translate(-30, 430)">
                 <polygon points="20,0 180,0 160,40 0,40" 
                                 fill="#1a1a2e" stroke="#2f2f2f" stroke-width="2" class="parallelogram-shape"/>
-                <text x="90" y="25" text-anchor="middle" class="svg-text">Mobilní Vývoj</text>
+                <text x="90" y="25" text-anchor="middle" class="svg-text">{{mobileDevelopmentHeader}}</text>
             </g>
         </a>
 
@@ -243,7 +243,7 @@
             <g class="bubble-group bubble-target bubble-3" transform="translate(850, 130)">
                 <polygon points="0,0 160,0 180,40 20,40" 
                                 fill="#1a1a2e" stroke="#2f2f2f" stroke-width="2" class="parallelogram-shape"/>
-                <text x="90" y="25" text-anchor="middle" class="svg-text">Desktopový Vývoj</text>
+                <text x="90" y="25" text-anchor="middle" class="svg-text">{{desktopDevelopmentHeader}}</text>
             </g>
         </a>
 
@@ -267,7 +267,7 @@
             <g class="bubble-group bubble-target bubble-4" transform="translate(850, 430)">
                 <polygon points="0,0 160,0 180,40 20,40" 
                                 fill="#1a1a2e" stroke="#2f2f2f" stroke-width="2" class="parallelogram-shape"/>
-                <text x="90" y="25" text-anchor="middle" class="svg-text">AI Vývoj</text>
+                <text x="90" y="25" text-anchor="middle" class="svg-text">{{aiDevelopmentHeader}}</text>
             </g>
         </a>
         </svg>
@@ -286,16 +286,16 @@
             <div class="links-wrp-m">
                 <div class="link-w-c-m">
                     <a routerLink="/services" [queryParams]="{ tech: 'web-dev' }" class="l-1-2">
-                        Webový vývoj
+                        {{webDevelopmentHeader}}
                     </a>
                     <a routerLink="/services" [queryParams]="{ tech: 'desktop-dev' }" class="l-1-2">
-                        Desktopový vývoj
+                        {{desktopDevelopmentHeader}}
                     </a>
                     <a routerLink="/services" [queryParams]="{ tech: 'mobile-dev' }" class="l-1-2">
-                       Mobilní vývoj
+                       {{mobileDevelopmentHeader}}
                     </a>
                     <a routerLink="/services" [queryParams]="{ tech: 'ai-dev' }" class="l-1-2">
-                        AI vývoj
+                        {{aiDevelopmentHeader}}
                     </a>
                 </div>
             </div>
@@ -307,7 +307,7 @@
 <!-- KABELY VELKE -->
      <div class="header-container" >
         <a style="text-decoration: none" routerLink="/services" class="header-1">
-            <span>Naše služby</span> 
+            <span>{{ourServicesTitle}}</span> 
         </a>
         <svg  class="server-icon" width="138" height="60" viewBox="0 0 138 60" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -347,26 +347,26 @@
         <!-- at do totoho miri ruzovy drat a je to na tom podklade ty stats a treba kazde ve svem chvlivecku tak nejak  -->
         <div class="stat-1">
             <div class="s-1-h">
-                80
+                {{statsProjectsCount}}
             </div>
             <div class="s-1-t">
-                Projektů
+                {{statsProjectsLabel}}
             </div>
         </div>
         <div class="stat-2">
             <div class="s-2-h">
-                28
+                {{statsYearsCount}}
             </div>
             <div class="s-2-t">
-                Let na trhu
+                {{statsYearsLabel}}
             </div>
         </div>
         <div class="stat-3">
             <div class="s-3-h">
-                ∞
+                {{statsSolutionsCount}}
             </div>
             <div class="s-3-t">
-                Řešení
+                {{statsSolutionsLabel}}
             </div>
         </div>
     </div>
@@ -401,14 +401,14 @@
                         <div class="text">
                             <div class="text-in">
                                 <div class="content-container">
-                                    <div class="main-text">Webový vývoj</div>
+                                    <div class="main-text">{{webDevTitle}}</div>
                                     <div class="bullet-points">
-                                        <div class="bullet-item">Nejmodernější technologie</div>
-                                        <div class="bullet-item">Bezpečnost dat</div>
-                                        <div class="bullet-item">Responzivni design</div>
+                                        <div class="bullet-item">{{webDevBullet1}}</div>
+                                        <div class="bullet-item">{{webDevBullet2}}</div>
+                                        <div class="bullet-item">{{webDevBullet3}}</div>
                                     </div>
                                 </div>
-                                <div class="learn-more-text">Zjistit více</div>
+                                <div class="learn-more-text">{{learnMore}}</div>
                             </div>
                         </div>
                     </div>
@@ -441,14 +441,14 @@
                         <div class="text">
                             <div class="text-in">
                                 <div class="content-container">
-                                    <div class="main-text">Desktopový vývoj</div>
+                                    <div class="main-text">{{desktopDevTitle}}</div>
                                     <div class="bullet-points">
-                                        <div class="bullet-item">Výkon a stabilita</div>
-                                        <div class="bullet-item">Pokročilá architektura</div>
-                                        <div class="bullet-item">Proaktivní zabezpečení</div>
+                                        <div class="bullet-item">{{desktopDevBullet1}}</div>
+                                        <div class="bullet-item">{{desktopDevBullet2}}</div>
+                                        <div class="bullet-item">{{desktopDevBullet3}}</div>
                                     </div>
                                 </div>
-                                <div class="learn-more-text">Zjistit více</div>
+                                <div class="learn-more-text">{{learnMore}}</div>
                             </div>
                         </div>
                     </div>
@@ -481,14 +481,14 @@
                         <div class="text">
                             <div class="text-in">
                                 <div class="content-container">
-                                    <div class="main-text">MobiIní vývoj</div>
+                                    <div class="main-text">{{mobileDevTitle}}</div>
                                     <div class="bullet-points">
-                                        <div class="bullet-item">Multiplatformní řešení</div>
-                                        <div class="bullet-item">Inovativní škálovatelnost</div>
-                                        <div class="bullet-item">Rychlá optimalizace</div>
+                                        <div class="bullet-item">{{mobileDevBullet1}}</div>
+                                        <div class="bullet-item">{{mobileDevBullet2}}</div>
+                                        <div class="bullet-item">{{mobileDevBullet3}}</div>
                                     </div>
                                 </div>
-                                <div class="learn-more-text">Zjistit více</div>
+                                <div class="learn-more-text">{{learnMore}}</div>
                             </div>
                         </div>
                     </div>
@@ -522,14 +522,14 @@
                         <div class="text">
                             <div class="text-in">
                                 <div class="content-container">
-                                    <div class="main-text">AI vývoj</div>
+                                    <div class="main-text">{{aiDevTitle}}</div>
                                     <div class="bullet-points">
-                                        <div class="bullet-item">AI-poháněná řešení</div>
-                                        <div class="bullet-item">Chytrá automatizace</div>
-                                        <div class="bullet-item">Prediktivní analýza</div>
+                                        <div class="bullet-item">{{aiDevBullet1}}</div>
+                                        <div class="bullet-item">{{aiDevBullet2}}</div>
+                                        <div class="bullet-item">{{aiDevBullet3}}</div>
                                     </div>
                                 </div>
-                                <div class="learn-more-text">Zjistit více</div>
+                                <div class="learn-more-text">{{learnMore}}</div>
                             </div>
                         </div>
                     </div>
@@ -551,8 +551,8 @@
 
 </div>
 
-      <div class="header-0-2-t">
-            Máme vlastní obchod s digitáními produkty
+      <div class="header-0-2-t pad-0">
+            {{productsSectionTitle}}
         </div>
 
         <div class="product-cards-section">
@@ -561,9 +561,9 @@
             <img [src]="eshop_default">
             </div>
         <div class="product-info">
-            <div class="product-title">Předpřipravený E-Shop</div>
-            <div class="product-price">8 099 Kč</div>
-            <div class="product-description">Předpřipravený E-Shop s možností spustit do 24h.</div>
+            <div class="product-title">{{product1Title}}</div>
+            <div class="product-price">{{product1Price}}</div>
+            <div class="product-description">{{product1Description}}</div>
         </div>
     </a>
 
@@ -572,19 +572,19 @@
               <img [src]="survey_engine">
             </div>
         <div class="product-info">
-            <div class="product-title">Dotazníkový software</div>
-            <div class="product-price">7 999 Kč</div>
-            <div class="product-description">Profesionální dotazníkový software na vlastní doméně.</div>
+            <div class="product-title">{{product2Title}}</div>
+            <div class="product-price">{{product2Price}}</div>
+            <div class="product-description">{{product2Description}}</div>
         </div>
     </a>
-    <a routerLink="/services" class="product-card">
+    <a routerLink="/shop" class="product-card">
         <div class="product-image-placeholder">
             <img [src]="survey_solver">
             </div>
         <div class="product-info">
-            <div class="product-title">Dotazníkový analyzátor</div>
-            <div class="product-price">1 499 Kč</div>
-            <div class="product-description">Rychlá analýza a prezentace dat.</div>
+            <div class="product-title">{{product3Title}}</div>
+            <div class="product-price">{{product3Price}}</div>
+            <div class="product-description">{{product3Description}}</div>
         </div>
     </a>
 
@@ -592,7 +592,7 @@
 
         <div class="button-wrp">
         <div class="button">
-          <a routerLink="/shop" class="ref-button">Navštivte obchod zde</a>
+          <a routerLink="/shop" class="ref-button">{{shopButtonText}}</a>
         </div>
       </div>
 <div class="gradient-seep-wrp">
@@ -604,7 +604,7 @@
 
 
 <div class="header-0-2-t">
-    Učíme děti programovat
+    {{academySectionTitle}}
 </div>
 
 
@@ -636,11 +636,11 @@
     </div>
 </div>
 <div class="lesson-price-note">
-    Cena od <span class="price-highlight">350 Kč</span>/lekce
+    {{academyPriceLabel}} <span class="price-highlight">{{academyPriceAmount}}</span>{{academyPriceSuffix}}
 </div>
 <div class="button-wrp">
     <div class="button">
-        <a routerLink="/academy" class="ref-button">Navštivte akademii zde</a>
+        <a routerLink="/academy" class="ref-button">{{academyButtonText}}</a>
     </div>
 </div>
 
