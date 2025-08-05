@@ -1601,6 +1601,7 @@ button[type="submit"]:active {
         margin-left: 600px;
     }
 }
+
 @media (max-width: 905px) {
     .l-1-2:hover{
         box-shadow: 0 4px 15px rgba(107, 46, 145, 0.4);
@@ -2115,5 +2116,10 @@ button[type="submit"]:active {
         font-size: 1.1rem; /* Zvětšeno pro text */
         color: #b0b0b0; /* Barva textu */
         text-align: center; /* Vycentrování textu uvnitř */
+    }
+}
+@media (min-width: 906px) {
+    .header-0-2-t{
+        font-size: 4rem;
     }
 }

@@ -204,6 +204,8 @@
     color: white; /* Bílá barva šipky */
     transition: transform 0.3s ease-out; /* Animace rotace */
     display: inline-block; /* Důležité pro transformaci */
+transform: rotate(180deg);
+
 }
 
 /* Otočení šipky z '>' na 'v', když je projekt aktivní */
@@ -219,7 +221,6 @@
     padding-right: 25px;
     padding-top: 0; /* Začíná bez horního paddingu */
     padding-bottom: 0; /* Začíná bez spodního paddingu */
-
     box-sizing: border-box;
     color: #c0c0c0;
     font-size: 0.95em;
@@ -500,7 +501,7 @@
     
     .projects-header,
     .project-overview {
-        grid-template-columns: 1.5fr 1fr 1fr 40px; /* Změna rozložení pro lepší využití místa */
+        /* grid-template-columns: 1.5fr 1fr 1fr 40px; Změna rozložení pro lepší využití místa */
         padding: 12px 18px;
     }
     

@@ -443,6 +443,9 @@
     <div class="form-wrp">
         <div class="form">
             <app-generic-form
+                [isOpen]="false"
+                [closedMessage]="form_closed_message"
+                [closedTitle]="form_closed_title"
                 [formConfig]="contactFormConfig"
                 [form_header]="form_header"
                 [form_description]="form_description"

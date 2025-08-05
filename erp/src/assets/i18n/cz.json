@@ -147,6 +147,8 @@
     "validation_invalid_value": "Neplatná hodnota."
   },
   "academy": {
+    "form_closed_title": "Kapacita naplněna",
+    "form_closed_message": "Děkujeme za váš zájem o naše IT kroužky. Momentálně máme plno a nové přihlášky dočasně nepřijímáme.",
     "header": "Naše Akademie",
     "intro_text": "Objevte naše kurzy programování a posuňte své dovednosti na novou úroveň.",
     "common": {

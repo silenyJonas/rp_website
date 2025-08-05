@@ -6,13 +6,12 @@
 
 
 
-Dodělat funkci odemykání a zamykání treba prijimani zaku a neprijimani
-
-Dodělat nastavení formuláře z admin prostředí
 
 upravit texty + preklady
 
-z /home odklazy na /services hodit na spravnou sekci 
+dodelat animace at sedi nejak normalne a vypada to ok 
+
+dodelat si admin prostredi proste at se v tom nejak vyznam a muzu pracovat s tim treba edit/delete atd
 
 
 4

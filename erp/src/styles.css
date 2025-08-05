@@ -2,6 +2,10 @@
 *, *::before, *::after {
     box-sizing: inherit;
 }
+html.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
 html {
     box-sizing: border-box; 
     /* overflow-x: hidden; - Nepotřebné zde, bude na body */
