@@ -344,6 +344,73 @@ transform: rotate(180deg);
 /* Breakpoint 905px: Tabletový a menší desktopový layout */
 
 /* BREAKPOINT 480px */
+
+
+@media (min-width: 906px){
+    .project-overview:hover {
+        background-color: rgba(107, 46, 145, 0.2); /* Trochu tmavší fialové pozadí při hoveru */
+        border-color: rgba(166, 125, 255, 0.6); /* Jemně fialový okraj */
+    }
+    .ref-button:hover {
+        background-color: #7d35ae;
+        border-color: #c09fff;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(166, 125, 255, 0.8);
+    }
+}
+@media (max-width: 905px) {
+   
+        .project-overview:hover{
+        background-color: transparent;
+    }
+    .header-1 {
+        font-size: 3rem;
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    .projects-section {
+        padding: 0 15px;
+    }
+    
+    .projects-header,
+    .project-overview {
+        /* grid-template-columns: 1.5fr 1fr 1fr 40px; Změna rozložení pro lepší využití místa */
+        padding: 12px 18px;
+    }
+    
+    .project-overview div {
+        font-size: 0.9em;
+    }
+
+    .project-description {
+        padding-left: 18px;
+        padding-right: 18px;
+        font-size: 0.85em;
+    }
+    
+    .project-toggle-icon {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .arrow {
+        font-size: 1.3em;
+        transform: rotate(180deg);
+    }
+    
+    .button {
+        width: 100%;
+        max-width: 350px;
+    }
+    .ref-text {
+        font-size: 1em;
+    }
+    .ref-button {
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+}
 @media (max-width: 480px) {
     .project-description p{
         margin-bottom: 0px;
@@ -469,71 +536,5 @@ transform: rotate(180deg);
     }
     .ref-button {
         width: 100%;
-    }
-}
-
-@media (min-width: 906px){
-    .project-overview:hover {
-        background-color: rgba(107, 46, 145, 0.2); /* Trochu tmavší fialové pozadí při hoveru */
-        border-color: rgba(166, 125, 255, 0.6); /* Jemně fialový okraj */
-    }
-    .ref-button:hover {
-        background-color: #7d35ae;
-        border-color: #c09fff;
-        transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(166, 125, 255, 0.8);
-    }
-}
-@media (max-width: 905px) {
-   
-        .project-overview:hover{
-        background-color: transparent;
-    }
-    .header-1 {
-        font-size: 3rem;
-        padding-top: 40px;
-        padding-bottom: 40px;
-    }
-
-    .projects-section {
-        padding: 0 15px;
-    }
-    
-    .projects-header,
-    .project-overview {
-        /* grid-template-columns: 1.5fr 1fr 1fr 40px; Změna rozložení pro lepší využití místa */
-        padding: 12px 18px;
-    }
-    
-    .project-overview div {
-        font-size: 0.9em;
-    }
-
-    .project-description {
-        padding-left: 18px;
-        padding-right: 18px;
-        font-size: 0.85em;
-    }
-    
-    .project-toggle-icon {
-        width: 35px;
-        height: 35px;
-    }
-    
-    .arrow {
-        font-size: 1.3em;
-        transform: rotate(180deg);
-    }
-    
-    .button {
-        width: 100%;
-        max-width: 350px;
-    }
-    .ref-text {
-        font-size: 1em;
-    }
-    .ref-button {
-        padding: 12px 25px;
-        font-size: 1em;
     }
 }

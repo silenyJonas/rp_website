@@ -1154,8 +1154,8 @@ button[type="submit"]:active {
         font-size: 1em;
         padding: 10px;
     }
-    .services-info-text p {
-        font-size: 1em;
+     .services-info-text-2 p{
+        font-size: 1rem;
     }
     .ser-h {
         font-size: 1.8rem;
@@ -1244,7 +1244,7 @@ button[type="submit"]:active {
 
 /* Breakpoint 480px: Mobilní zobrazení */
 @media (max-width: 480px) {
-
+   
     .workflow-diagram{
         margin-bottom: -35px;
     }

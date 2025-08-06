@@ -680,6 +680,11 @@
     "stats_years_count": "28",
     "stats_solutions_text": "Řešení",
     "stats_solutions_count": "∞",
+    "consultation_form": {
+      "header": "Máte nápad ? My máme řešení",
+      "description": "Navázání spolupráce do 24h",
+      "button": "Rezervovat konzultaci"
+    },
     "links": {
       "link_1":{
         "header" : "Webový vývoj",

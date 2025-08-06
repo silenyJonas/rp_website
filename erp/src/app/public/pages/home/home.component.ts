@@ -133,6 +133,10 @@ ngOnInit(): void {
     .pipe(takeUntil(this.destroy$))
     .subscribe(translations => {
       if (translations) {
+        this.form_header = this.localizationService.getText('home.consultation_form.header');
+        this.form_description = this.localizationService.getText('home.consultation_form.description');
+        this.form_button = this.localizationService.getText('home.consultation_form.button');
+
         this.ourServicesTitleMobile = this.localizationService.getText('home.our_services_m');
         this.headerMain = this.localizationService.getText('home.header_1');
         this.learnMore = this.localizationService.getText('home.links.learn_more');

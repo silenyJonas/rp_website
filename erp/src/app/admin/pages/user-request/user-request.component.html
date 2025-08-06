@@ -67,11 +67,11 @@
 
         <!-- Paginace ovládací prvky -->
         <div class="pagination-controls-wrapper">
-          <div class="text-sm text-gray-700">
+          <div class="text-sm text-gray-700 p-b-10">
             Zobrazuji {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ (currentPage - 1) * itemsPerPage + data.length }} z celkem {{ totalItems }} záznamů.
           </div>
 
-          <div class="flex items-center space-x-2">
+          <div class="flex items-center space-x-2 pg-m p-b-10">
             <label for="itemsPerPage" class="text-sm text-gray-700">Položek na stránku:</label>
             <select id="itemsPerPage" (change)="onItemsPerPageChange($event)"
                     class="items-per-page-select">

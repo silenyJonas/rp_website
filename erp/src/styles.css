@@ -43,6 +43,12 @@ html {
     color: #c0c0c0;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
+@media (max-width: 480px) {
+     .services-info-text-2 p{
+        font-size: 1rem;
+    }
+}
+
 body {
     min-height: 100vh;
     margin: 0;

@@ -146,6 +146,8 @@
     "validation_invalid_value": "Invalid value."
   },
     "academy": {
+      "form_closed_title": "Capacity Full",
+    "form_closed_message": "Thank you for your interest in our IT clubs. We are currently full and not accepting new applications at this time.",
     "header": "Our Academy",
     "intro_text": "Discover our programming courses and elevate your skills to a new level.",
     "common": {
@@ -668,6 +670,11 @@
     "stats_years_count": "28",
     "stats_solutions_text": "Solutions",
     "stats_solutions_count": "∞",
+    "consultation_form": {
+      "header": "Got an idea? We've got the solution",
+      "description": "Collaboration set up within 24h",
+      "button": "Book a consultation"
+    },
     "links": {
       "link_1": {
         "header": "Web Development",

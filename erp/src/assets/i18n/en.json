@@ -670,6 +670,11 @@
     "stats_years_count": "28",
     "stats_solutions_text": "Solutions",
     "stats_solutions_count": "∞",
+    "consultation_form": {
+      "header": "Got an idea? We've got the solution",
+      "description": "Collaboration set up within 24h",
+      "button": "Book a consultation"
+    },
     "links": {
       "link_1": {
         "header": "Web Development",

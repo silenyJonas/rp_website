@@ -24,7 +24,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },
     // Zde přidáš HashLocationStrategy do pole 'providers'
-    // { provide: LocationStrategy, useClass: HashLocationStrategy },
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
     // Volitelně můžete přidat PROVIDE_LOCALE, pokud chcete nastavit výchozí locale pro celou aplikaci
     // { provide: LOCALE_ID, useValue: 'cs-CZ' }
   ]
