@@ -1,0 +1,743 @@
+{
+ "faq": {
+    "question_1": "What can you develop?",
+    "answer_1": "We specialize in a wide range of development, including **web applications**, responsive websites, e-shops, mobile applications (iOS/Android), and custom software solutions. Whatever you need, we'll find an effective solution.",
+    "question_2": "How long does website development take?",
+    "answer_2": "Development time depends on the project's complexity. A simple presentation website can be completed in **2-4 weeks**, while a larger e-shop or web application can take **2-4 months** or even longer. We'll always provide you with a realistic estimate after an initial consultation.",
+    "question_3": "Do you also offer maintenance and support after launch?",
+    "answer_3": "Yes, of course! We provide **comprehensive post-sales support and maintenance**, which includes regular updates, security patches, performance monitoring, and technical support. We want your project to function smoothly long-term.",
+    "question_4": "How does the collaboration process work?",
+    "answer_4": "Our collaboration begins with an **initial consultation**, where we discuss your needs and vision. This is followed by the planning and design phase, then the development itself, testing, and finally launch. We will actively keep you informed of the progress and involve you in decision-making throughout the entire process.",
+    "question_5": "What technologies do you use?",
+    "answer_5": "We use modern and proven technologies. For the frontend, these include **Angular, React, Vue.js**, for the backend **Node.js, Python (Django/Flask)**, databases like **PostgreSQL, MongoDB**, and cloud platforms. We always choose the most suitable tools for your specific project.",
+    "question_6": "Can you help me with SEO optimization?",
+    "answer_6": "Yes, SEO optimization is an integral part of our services. Even during development, we focus on technical SEO (loading speed, mobile responsiveness, code structure), and after launch, we can also offer **content optimization and link building strategies** to help you achieve better search engine rankings.",
+    "header_1": "Frequently Asked Questions",
+    "write_us_prompt": "Didn't we answer everything? Write to us"
+  },
+  "common": {
+    "button_text_details": "Show details",
+    "button_close": "Close",
+    "language_cz": "Czech",
+    "language_sk": "Slovak",
+    "language_en": "English",
+    "language_cz_short": "CZ",
+    "language_sk_short": "SK",
+    "language_en_short": "EN"
+  },
+  "navigation": {
+    "home": "Home",
+    "services": "Services",
+    "shop": "Shop",
+    "academy": "Academy",
+    "references": "Projects",
+    "references_full": "Completed Projects",
+    "faq": "FAQ",
+    "faq_full": "Frequently Asked Questions"
+  },
+   "projects": {
+    "header_1": "Top 10 Completed Projects",
+    "table_header_title": "Project Name",
+    "table_header_duration": "Duration",
+    "table_header_client": "Client",
+    "more_button_prompt": "Want to see more?",
+    "more_button_link_text": "Full list here",
+    "project_1": {
+      "name": "Electronics E-shop",
+      "duration": "4 months",
+      "client": "ABC Tech s.r.o.",
+      "description": "Complete development of a modern, custom e-shop with advanced features like order management, payment gateway, inventory tracking, and responsive design for mobile devices."
+    },
+    "project_2": {
+      "name": "Fitness Mobile Application",
+      "duration": "6 months",
+      "client": "FitLife Studios",
+      "description": "Development of a native mobile application for iOS and Android, allowing users to track workouts, plan exercises, monitor progress, and interact with trainers. Includes integration with wearables."
+    },
+    "project_3": {
+      "name": "Logistics Information System",
+      "duration": "8 months",
+      "client": "Global Logistics a.s.",
+      "description": "Custom web-based information system for optimizing logistics processes, including shipment tracking, fleet management, route planning, and reporting. Improves efficiency and reduces costs."
+    },
+    "project_4": {
+      "name": "Presentation Website for Architectural Studio",
+      "duration": "2 months",
+      "client": "ArchiDesign s.r.o.",
+      "description": "Creation of an elegant and visually appealing website showcasing an architectural project portfolio, with interactive galleries and contact forms."
+    },
+    "project_5": {
+      "name": "Booking System for Clinic",
+      "duration": "3 months",
+      "client": "MUDr. Nováková",
+      "description": "A simple and intuitive online booking system for a medical clinic, allowing patients to reserve appointments, receive reminders, and manage their bookings."
+    },
+    "project_6": {
+      "name": "Corporate Website Redesign",
+      "duration": "3.5 months",
+      "client": "Enterprise Solutions Inc.",
+      "description": "Complete redesign of an existing corporate website with an emphasis on modern UI/UX, mobile optimization, and SEO improvement. The goal was to increase conversions and strengthen the brand."
+    },
+    "project_7": {
+      "name": "Online Course Platform",
+      "duration": "7 months",
+      "client": "EduTech Academy",
+      "description": "Development of a comprehensive educational platform with video courses, interactive exercises, user management, and an advanced system for grading and certification."
+    },
+    "project_8": {
+      "name": "Custom CRM System",
+      "duration": "10 months",
+      "client": "ClientCare Ltd.",
+      "description": "Development of a tailor-made CRM (Customer Relationship Management) system for the client's specific needs, including customer management, sales cycles, communication, and analytics."
+    },
+    "project_9": {
+      "name": "Reporting Automation",
+      "duration": "5 months",
+      "client": "Data Insights Corp.",
+      "description": "Software for automating data collection from various sources and generating dynamic reports and dashboards. Reduces the time needed for data analysis and improves decision-making."
+    },
+    "project_10": {
+      "name": "Event Management Web Application",
+      "duration": "4 months",
+      "client": "Eventify Solutions",
+      "description": "Interactive web application for event organizers, enabling registration management, ticket sales, communication with attendees, and event logistics planning."
+    }
+  },
+  "footer": {
+    "company_name": "RegioPartner, s.r.o.",
+    "address_label": "Address",
+    "address_value": "Kytlická 862/6, 190 00 Prague",
+    "ico_label": "Company ID",
+    "ico_value": "12345678",
+    "dic_label": "VAT ID",
+    "dic_value": "CZ12345678",
+    "quick_links_header": "Quick Links",
+    "contact_header": "Contact",
+    "email_label": "Email",
+    "email_value": "info@rpsw.cz",
+    "phone_label": "Phone",
+    "phone_value": "+420 733 188 328",
+    "legal_info_header": "Legal Information",
+    "copyright_text": "©2025 RegioPartner, s.r.o., All rights reserved."
+  },
+  "legal": {
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service"
+  },
+  "form": {
+    "success_title": "Thank You!",
+    "success_message": "The form has been successfully submitted! We will get back to you soon.",
+    "reset_button_text": "Fill again",
+    "sending_text": "Sending...",
+    "error_submit_generic": "An error occurred while submitting the form. Please try again.",
+    "error_validation_generic": "Please fill in all required fields and correct any errors.",
+    "select_default_option": "Select...",
+    "validation_required": "This field is required.",
+    "validation_email": "Enter a valid email address.",
+    "validation_pattern": "Invalid format.",
+    "validation_minlength_prefix": "Minimum length is",
+    "validation_minlength_suffix": "characters.",
+    "validation_maxlength_prefix": "Maximum length is",
+    "validation_maxlength_suffix": "characters.",
+    "validation_min_prefix": "Minimum value is",
+    "validation_min_suffix": ".",
+    "validation_max_prefix": "Maximum value is",
+    "validation_max_suffix": ".",
+    "validation_invalid_value": "Invalid value."
+  },
+    "academy": {
+      "form_closed_title": "Capacity Full",
+    "form_closed_message": "Thank you for your interest in our IT clubs. We are currently full and not accepting new applications at this time.",
+    "header": "Our Academy",
+    "intro_text": "Discover our programming courses and elevate your skills to a new level.",
+    "common": {
+      "duration_header": "Duration",
+      "themes_header": "Main Themes",
+      "new_things_header": "What you will learn",
+      "time_duration": "8 months",
+      "tuesday_time": "Tuesday: 4:00 PM - 5:30 PM",
+      "thursday_time": "Thursday: 4:00 PM - 5:30 PM",
+      "tuesday_time_desktop": "Tuesday: 6:00 PM - 7:30 PM",
+      "thursday_time_desktop": "Thursday: 6:00 PM - 7:30 PM",
+      "course_duration": "32 lessons - 90 minutes per lesson",
+      "internet_basics": "Introduction to the Internet",
+      "website_creation": "Website Creation",
+      "web_app_creation": "Web Application Creation",
+      "database_basics": "Working with Databases",
+      "computer_principles": "Computer Architecture",
+      "cmd_applications": "Command-line Applications",
+      "gui_applications": "Graphical User Interface Applications"
+    },
+    "consultation_form": {
+      "header": "Leave contact for a consultation",
+      "description": "Response within 24 hours",
+      "button": "Book a Consultation",
+      "fields": {
+        "theme_label": "Area:",
+        "theme_option_desktop": "Desktop Development",
+        "theme_option_web": "Web Development",
+        "diff_label": "Difficulty:",
+        "diff_option_begginer": "Beginner",
+        "diff_option_advanced": "Advanced",
+        "diff_option_expert": "Expert",
+        "age_range_begginer": "(9-17 years)",
+        "age_range_advanced": "(11-17 years)",
+        "age_range_expert": "(12-17 years)",
+        "email_label": "Email:",
+        "email_placeholder": "your.email@example.com",
+        "phone_label": "Phone (optional):",
+        "phone_placeholder": "e.g. +420 123 456 789"
+      }
+    },
+    "web_development": {
+      "title": "Web Development - Create Interactive Websites",
+      "description": "Dive into the world of web technologies and learn to create modern and responsive websites and applications.",
+      "timeline": {
+        "1": {
+          "title": "Beginner (9-17 years)",
+          "content": "This course is designed for children with no prior programming experience. We will learn basic concepts of logic, algorithms, and problem-solving using visual programming (e.g., Scratch) and simple text commands. Children will create their first interactive stories and games.",
+          "theme": {
+            "1": "Introduction to the Internet",
+            "2": "What is HTML & CSS",
+            "3": "Basic HTML tags",
+            "4": "CSS Fundamentals",
+            "5": "Header and Footer",
+            "6": "Mini-projects: Gallery, Traffic Light"
+          },
+          "new_thing": {
+            "1": "HTML",
+            "2": "CSS"
+          }
+        },
+        "2": {
+          "title": "Advanced (11-17 years)",
+          "content": "Building on the basics, this course deepens knowledge in a specific programming language (e.g., introduction to Python or JavaScript). We will focus on more complex data structures, functions, and the creation of more comprehensive projects, such as simple applications or advanced games. Children will learn to write code more efficiently and solve more complex problems.",
+          "theme": {
+            "1": "Advanced HTML tags and attributes",
+            "2": "Styles and Layout in CSS (flexbox, grid)",
+            "3": "Introduction to JavaScript",
+            "4": "Modern TypeScript frameworks (Angular)",
+            "5": "Basics of dynamic content (DOM)",
+            "6": "Interactive elements (forms, buttons)",
+            "7": "Projects: Interactive Form, Simple Game, Animation Ball"
+          },
+          "new_thing": {
+            "1": "JavaScript",
+            "2": "TypeScript"
+          }
+        },
+        "3": {
+          "title": "Expert (12-17 years)",
+          "content": "For those who already have a solid foundation and want to become true experts. We will work on individual projects, solve real programming challenges, and learn advanced techniques. Children will refine their debugging skills, optimization, API work, and teamwork. They will be prepared to create their own innovative solutions.",
+          "theme": {
+            "1": "Modern TypeScript frameworks (Angular)",
+            "2": "Basics of backend development (PHP)",
+            "3": "Working with Databases (MySQL, PostgreSQL)",
+            "4": "Creating full-stack applications",
+            "5": "Version Control (Git)",
+            "6": "Projects: Chat Application, E-commerce Website"
+          },
+          "new_thing": {
+            "1": "PHP",
+            "2": "MySQL"
+          }
+        }
+      }
+    },
+    "desktop_development": {
+      "title": "Desktop Development - Create Applications for Desktop Computers",
+      "description": "Gain skills in programming desktop applications with graphical interfaces for various operating systems.",
+      "timeline": {
+        "1": {
+          "title": "Beginner (11-17 years)",
+          "content": "This course is designed for children with no prior programming experience. We will learn basic concepts of logic, algorithms, and problem-solving using visual programming (e.g., Scratch) and simple text commands. Children will create their first interactive stories and games.",
+          "theme": {
+            "1": "Introduction to Programming (logic basics, algorithms)",
+            "2": "Visual Programming (e.g., Scratch)",
+            "3": "Basics of data types and variables",
+            "4": "Conditional statements and loops",
+            "5": "Mini-projects: Simple Calculator, Random Number Generator"
+          },
+          "new_thing": {
+            "1": "Scratch",
+            "2": "Python"
+          }
+        },
+        "2": {
+          "title": "Advanced (13-17 years)",
+          "content": "Building on the basics, this course deepens knowledge in a specific programming language (e.g., introduction to Python with tkinter or C# with WinForms). We will focus on creating graphical user interfaces (GUIs), working with events, saving data to files, and object-oriented programming.",
+          "theme": {
+            "1": "Basics of GUI programming (e.g., Tkinter/WinForms)",
+            "2": "Working with events (clicks, key presses)",
+            "3": "Saving and loading data from files",
+            "4": "Basics of Object-Oriented Programming (OOP)",
+            "5": "Mini-projects: Simple Text Editor, Drawing Program"
+          },
+          "new_thing": {
+            "1": "C#",
+            "2": "MSSQL"
+          }
+        },
+        "3": {
+          "title": "Expert (14-17 years)",
+          "content": "For those who already have a solid foundation and want to become true experts. We will work on complex desktop applications, address performance optimization, work with external libraries, and collaborate on larger projects. The goal is to create robust and user-friendly applications.",
+          "theme": {
+            "1": "Advanced GUI frameworks (e.g., PyQt, WPF)",
+            "2": "Databases in desktop applications (SQLite)",
+            "3": "Multithreading and asynchronous programming",
+            "4": "Deploying applications",
+            "5": "Advanced data structures and algorithms",
+            "6": "Projects: Task Manager with Database, Simple 2D Game"
+          },
+          "new_thing": {
+            "1": "C++",
+            "2": "SQLite"
+          }
+        }
+      }
+    },
+    "icons": {
+      "time": "Time",
+      "online": "Online Courses",
+      "what": "What you will learn",
+      "discord": "Discord Community"
+    },
+    "prices": {
+      "header": "Course Prices",
+      "monthly": {
+        "header": "Monthly Payment",
+        "amount": "1 500 CZK",
+        "note": "When paying monthly"
+      },
+      "quarterly": {
+        "header": "Quarterly Payment",
+        "amount": "4 200 CZK",
+        "note": "Save 300 CZK (100 CZK/month)"
+      },
+      "yearly": {
+        "header": "Annual Payment",
+        "amount": "15 000 CZK",
+        "note": "Save 3 000 CZK (250 CZK/month)"
+      }
+    }
+  },
+  "shop": {
+    "header1": "Our Pre-built Products",
+    "header02T": "Launch on your domain within 24 hours",
+    "searchPlaceholder": "Name",
+    "sortByLabel": "Sort by:",
+    "sortByDefaultOption": "-- Default --",
+    "sortByAz": "A-Z",
+    "sortByZa": "Z-A",
+    "sortByPriceDesc": "Most expensive",
+    "sortByPriceAsc": "Least expensive",
+    "resultsCountText": "Number of results:",
+    "productsSuffix": "products",
+    "filterButtonText": "Filter",
+    "resetButtonText": "Reset",
+    "noProductsMessage": "No products match your selection.",
+    "products_data": [
+      {
+        "id": "prod-001",
+        "name": "Pre-built E-shop",
+        "shortDescription": "Launch within 24 hours on your own domain.",
+        "priceCZK": 8099,
+        "priceEUR": 329.99,
+        "imageUrl": "assets/images/product_images/eshop_default.png",
+        "popupType": "eshop-app",
+        "details": {
+          "longDescription": "Our 'Merchant' e-shop solution is designed for maximum flexibility and ease of use. It includes product, order, and user management, payment gateways, and robust analytics. Fully responsive design ensures perfect display on all devices.",
+          "features": [
+            "Intuitive product management",
+            "Secure payment gateways (Stripe, PayPal, GoPay)",
+            "Automated order management",
+            "User accounts and purchase history",
+            "SEO optimization for better visibility",
+            "Integration with shipping services"
+          ],
+          "technologyStack": "Angular, Laravel, PostgreSQL",
+          "screenshotUrl": "https://placehold.co/600x400/8a5acd/FFFFFF?text=E-shop+Detail",
+          "supportInfo": "24/7 technical support and regular updates."
+        }
+      },
+      {
+        "id": "prod-002",
+        "name": "Survey Software",
+        "shortDescription": "Professional software for creating your own surveys.",
+        "priceCZK": 7999,
+        "priceEUR": 325.99,
+        "imageUrl": "assets/images/product_images/survey_engine.png",
+        "popupType": "task-manager",
+        "details": {
+          "category": "Productivity and Management",
+          "version": "2.1.0",
+          "platforms": "Windows, macOS, Linux",
+          "notes": "Offline functionality with synchronization capability upon internet connection. Supports team collaboration.",
+          "functions": [
+            "Creating and assigning tasks",
+            "Tracking project progress",
+            "Gantt charts and calendar",
+            "Attaching files to tasks",
+            "Generating reports",
+            "Notifications and reminders"
+          ]
+        }
+      },
+      {
+        "id": "prod-003",
+        "name": "Survey Analyzer",
+        "shortDescription": "Fast analysis and presentation of entered data.",
+        "priceCZK": 1499,
+        "priceEUR": 61.99,
+        "imageUrl": "assets/images/product_images/survey_solver.png",
+        "popupType": "ai-assistant",
+        "details": {
+          "aiCapabilities": "Utilizes advanced NLP to understand queries and generate relevant responses. Ability to learn from interactions and integrate with your databases.",
+          "useCases": [
+            "Automatic FAQ response",
+            "Redirecting queries to the correct department",
+            "Collecting client information before connecting with an operator",
+            "Personalized product/service recommendations"
+          ],
+          "customization": "Fully customizable for your brand and tone-of-voice. Can be integrated into websites, mobile applications, and social media."
+        }
+      }
+    ]
+  },
+  "services": {
+    "service_main_text_1": "<p>In the digital world, a strong online presence is key. We offer <strong>comprehensive web development solutions</strong>, from modern and <strong>responsive custom websites</strong> to complex and robust <strong>web applications</strong>. We specialize in using the latest technologies to ensure <strong>optimal performance, security, and an excellent user experience</strong> for every visitor.</p><p>It doesn't matter whether you need a corporate presentation, an e-shop, a portal, or a complex internal system – with us, you'll get a <strong>digital solution that grows with your business</strong> and effectively reaches your target audience. We emphasize clean code, modular architecture, and easy extensibility.</p>",
+    "service_main_text_2": "<p>We deliver <strong>powerful and reliable desktop applications</strong> designed for Windows, macOS, or Linux. Whether you need a tool for internal processes, specialized software for your niche, or a robust analytical application, we will ensure <strong>optimized performance, an intuitive user interface, and maximum security</strong>.</p><p>Our solutions are tailored to the specific needs of your business, guaranteeing <strong>increased productivity, task automation, and more efficient data management</strong>. With an emphasis on stability and easy maintenance, we create applications that are ready for the challenges of today's digital world and grow with your requirements.</p>",
+    "service_main_text_3": "<p>We live in an era of mobile devices, where direct interaction with customers and efficient management of internal processes are key. We offer <strong>complete solutions for mobile applications</strong>, whether you need native applications for <strong>iOS (iPhone, iPad)</strong> and <strong>Android</strong>, or efficient <strong>cross-platform solutions</strong> that reach a wider audience with a single codebase.</p><p>Our scope extends from <strong>commercial applications for public App Store and Google Play</strong> to <strong>specialized internal systems</strong>. We develop mobile CRM solutions, task management tools, field data collection, mobile access to enterprise systems, and much more. We focus on applications that are not only visually appealing and easy to use, but also <strong>powerful, secure, and optimized for specific mobile platforms and corporate environments</strong>. From initial UI/UX design to deployment and publication (whether in stores or internal distribution), we are your partner for digital innovation that keeps pace with the mobile world.</p>",
+    "service_main_text_4": "<p>Unleash the potential of <strong>artificial intelligence</strong> to transform your business and processes. We specialize in the <strong>integration and implementation of advanced AI services and APIs</strong> directly into your existing and new projects. We will help you effectively utilize the best of available AI technologies for <strong>automation, performance improvement, and gaining deeper data insights</strong> that will give you a competitive advantage.</p><p>We implement AI into CRM systems, automate customer support using chatbots, personalize content, perform predictive analysis, or optimize internal processes. Our AI solutions are designed to deliver <strong>concrete and measurable results</strong>, streamline your operations, and move your company forward in the digital era. We focus on practical AI utilization that brings immediate value and supports your growth.</p>",
+    "info_header_web": "Web Development",
+    "info_header_desktop": "Desktop Development",
+    "info_header_mobile": "Mobile Development",
+    "info_header_ai": "AI Solution Development",
+    "header_1_text": "Our Specialization",
+    "web_dev_header": "Web Development",
+    "desktop_dev_header": "Desktop Applications",
+    "mobile_dev_header": "Mobile Applications",
+    "ai_dev_header": "Artificial Intelligence",
+    "info_header_1": "What we love to work with:",
+    "info_header_2": "But we can do much more",
+    "info_header_3": "What you gain with us and MUCH MORE:",
+    "form_description": "Collaboration initiation within 24 hours",
+    "form_button": "Book a Consultation",
+    "form_header": "Have an idea? We have the solution",
+    "show_projects_header": "Browse dozens of completed projects.",
+    "projects_button_text": "Completed Projects",
+    "colab": {
+      "colab_procces_header": "Collaboration Process",
+      "item_1": {
+        "header": "1. Contact",
+        "text": "Non-binding connection – identifying your needs and goals."
+      },
+      "item_2": {
+        "header": "2. Proposal",
+        "text": "We'll prepare a proposal including procedures, technology, timeline, and price."
+      },
+      "item_3": {
+        "header": "3. Development",
+        "text": "We execute the project step by step. We regularly inform you about the progress."
+      },
+      "item_4": {
+        "header": "4. Deployment",
+        "text": "Solution launch and handover of all documentation and optional maintenance."
+      }
+    },
+    "services": {
+      "prices_header": "Prices of Selected Services",
+      "text_preffix": "From",
+      "currency": "CZK",
+      "item_1": {
+        "header": "SMALL CUSTOM WEBSITE/E-SHOP",
+        "price": "8099",
+        "message": "* Price is without VAT"
+      },
+      "item_2": {
+        "header": "MEDIUM CUSTOM WEBSITE/E-SHOP",
+        "price": "14 099",
+        "message": "* Price is without VAT"
+      },
+      "item_3": {
+        "header": "LARGE CUSTOM WEBSITE/E-SHOP",
+        "price": "29 990",
+        "message": "* Price is without VAT"
+      },
+      "item_4": {
+        "header": "CUSTOM CRM SYSTEM",
+        "price": "29 990",
+        "message": "* Price is without VAT"
+      },
+      "item_5": {
+        "header": "CUSTOM ERP SYSTEM",
+        "price": "39 990",
+        "message": "* Price is without VAT"
+      },
+      "item_6": {
+        "header": "MODIFICATION OF EXISTING SYSTEM",
+        "price": "Variable price",
+        "message": ""
+      }
+    },
+    "contact_form": {
+      "thema_label": "Topic",
+      "web_development_label": "Web Development",
+      "desktop_development_label": "Desktop Development",
+      "mobile_development_label": "Mobile Development",
+      "ai_development_label": "AI Development",
+      "other_label": "Other",
+      "email_label": "Email",
+      "email_placeholder": "your.email@example.com",
+      "phone_label": "Phone (optional)",
+      "phone_placeholder": "e.g. +420 123 456 789",
+      "order_description_label": "Brief description of the task",
+      "order_description_placeholder": "Please describe your project or query..."
+    },
+    "webServices": {
+      "item1": {
+        "question": "Custom Development",
+        "answer": "We create unique web solutions precisely according to your needs and goals, from start to finish."
+      },
+      "item2": {
+        "question": "Responsive Design",
+        "answer": "We guarantee perfect display and functionality on all devices – desktop, tablet, and mobile."
+      },
+      "item3": {
+        "question": "Search Engine Optimization (SEO)",
+        "answer": "We implement best SEO practices directly into the code for better visibility in search engines."
+      },
+      "item4": {
+        "question": "API and External Service Integration",
+        "answer": "Seamless connection with payment gateways, CRM systems, social networks, and other tools."
+      },
+      "item5": {
+        "question": "Intuitive Content Management Systems (CMS)",
+        "answer": "We enable you to easily manage website content without technical knowledge."
+      },
+      "item6": {
+        "question": "High Security",
+        "answer": "We protect your data and users using modern security protocols and procedures."
+      },
+      "item7": {
+        "question": "Scalability and Performance",
+        "answer": "We design systems that can handle your growing traffic and future feature expansions."
+      },
+      "item8": {
+        "question": "Interactive User Interface (UI/UX)",
+        "answer": "We focus on a smooth and pleasant user experience for your clients."
+      },
+      "item9": {
+        "question": "Regular Maintenance and Support",
+        "answer": "We ensure long-term functionality and updates of your web solution."
+      }
+    },
+    "desktopServices": {
+      "item1": {
+        "question": "Custom Applications",
+        "answer": "We develop desktop applications precisely according to your specific requirements and business processes."
+      },
+      "item2": {
+        "question": "High Performance and Stability",
+        "answer": "We focus on optimization and robust architecture for seamless operation."
+      },
+      "item3": {
+        "question": "Intuitive User Interface (UI/UX)",
+        "answer": "We design applications that are easy to use and maximize work efficiency."
+      },
+      "item4": {
+        "question": "Integration with Hardware and Systems",
+        "answer": "Possibility of connecting with peripherals, databases, and other enterprise systems."
+      },
+      "item5": {
+        "question": "Offline Functionality",
+        "answer": "Applications can function even without a constant internet connection, increasing flexibility."
+      },
+      "item6": {
+        "question": "Enhanced Data Security",
+        "answer": "We implement strong encryption and security protocols to protect sensitive information."
+      },
+      "item7": {
+        "question": "Regular Updates and Support",
+        "answer": "We provide long-term maintenance, updates, and technical support."
+      },
+      "item8": {
+        "question": "Multi-platform Solutions",
+        "answer": "Option to develop for Windows, macOS, or Linux according to your needs."
+      },
+      "item9": {
+        "question": "License Management and Distribution",
+        "answer": "Assistance with setting up distribution and licensing models for your application."
+      }
+    },
+    "mobileServices": {
+      "item1": {
+        "question": "Applications for Public and Internal Needs",
+        "answer": "Development of commercial applications for App Store/Google Play and specialized corporate solutions (e.g., mobile CRM, process management)."
+      },
+      "item2": {
+        "question": "Native Development",
+        "answer": "We utilize the full potential of iOS and Android platforms for maximum performance and user experience."
+      },
+      "item3": {
+        "question": "Cross-platform Development",
+        "answer": "Efficient solutions with a single codebase for both iOS and Android, saving time and costs."
+      },
+      "item4": {
+        "question": "Intuitive UI/UX Design",
+        "answer": "We focus on a simple and engaging interface that users love."
+      },
+      "item5": {
+        "question": "Integration with Cloud Services and APIs",
+        "answer": "Seamless connection with external data, services, and backend."
+      },
+      "item6": {
+        "question": "Push Notifications",
+        "answer": "Implementation for effective communication with users and maintaining their engagement."
+      },
+      "item7": {
+        "question": "Offline Mode",
+        "answer": "Application functionality even without internet connection for better field accessibility."
+      },
+      "item8": {
+        "question": "Performance and Battery Consumption Optimization",
+        "answer": "We ensure your application runs smoothly and saves device energy."
+      },
+      "item9": {
+        "question": "Data and User Security",
+        "answer": "We prioritize the protection of sensitive information and privacy, important for both public and corporate applications."
+      },
+      "item10": {
+        "question": "Deployment and Distribution",
+        "answer": "Assistance with the entire process from preparation to approval and release (public stores) or internal distribution within the company."
+      }
+    },
+    "aiServices": {
+      "item1": {
+        "question": "AI API Integration",
+        "answer": "We connect your systems with leading AI services (e.g., speech recognition, image analysis, NLP, text generation)."
+      },
+      "item2": {
+        "question": "Intelligent Automation",
+        "answer": "Streamlining repetitive tasks and decision-making processes using smart algorithms."
+      },
+      "item3": {
+        "question": "Chatbots and Assistants",
+        "answer": "Implementation of intelligent chatbots to enhance customer support and internal communication."
+      },
+      "item4": {
+        "question": "Personalization and Recommendations",
+        "answer": "Utilizing AI for dynamic content and service adaptation to users, increasing engagement."
+      },
+      "item5": {
+        "question": "Predictive Analytics",
+        "answer": "Accurate prediction of future trends and customer behavior to optimize strategies."
+      },
+      "item6": {
+        "question": "Efficiency Improvement",
+        "answer": "Identifying bottlenecks and optimizing workflows to reduce costs."
+      },
+      "item7": {
+        "question": "Search Optimization",
+        "answer": "Smart search functions and automatic content categorization for better information accessibility."
+      },
+      "item8": {
+        "question": "Data Analysis with AI",
+        "answer": "Transforming complex data into understandable insights for strategic decision-making."
+      },
+      "item9": {
+        "question": "AI Security and Ethics",
+        "answer": "Emphasis on responsible and secure deployment of AI solutions with data protection in mind."
+      },
+      "item10": {
+        "question": "Training and Support",
+        "answer": "We provide training and continuous support for the smooth operation of AI solutions."
+      }
+    }
+  },
+  "home": {
+    "header_1": "RegioPartner",
+    "header_2": "more than IT, we build the digital future",
+    "web_header": "Web Development",
+    "desktop_header": "Desktop Development",
+    "mobile_header": "Mobile Development",
+    "ai_header": "AI Development",
+    "our_services": "Our Services",
+    "our_services_m": "RegioPartner in numbers",
+    "stats_projects_text": "Projects",
+    "stats_projects_count": "110+",
+    "stats_years_text": "Years on the market",
+    "stats_years_count": "28",
+    "stats_solutions_text": "Solutions",
+    "stats_solutions_count": "∞",
+    "consultation_form": {
+      "header": "Got an idea? We've got the solution",
+      "description": "Collaboration set up within 24h",
+      "button": "Book a consultation"
+    },
+    "links": {
+      "link_1": {
+        "header": "Web Development",
+        "bullet_1": "Modern technologies",
+        "bullet_2": "Modern design",
+        "bullet_3": "Data security"
+      },
+      "link_2": {
+        "header": "Desktop Development",
+        "bullet_1": "Performance and stability",
+        "bullet_2": "Advanced architecture",
+        "bullet_3": "Top-notch security"
+      },
+      "link_3": {
+        "header": "Mobile Development",
+        "bullet_1": "Multi-platform solutions",
+        "bullet_2": "Fast optimization",
+        "bullet_3": "High security"
+      },
+      "link_4": {
+        "header": "AI Development",
+        "bullet_1": "AI-powered solutions",
+        "bullet_2": "Smart automation",
+        "bullet_3": "Predictive analysis"
+      },
+      "learn_more": "Learn more"
+    },
+    "products_header": "Our Pre-built Products",
+    "products": {
+      "prod_1": {
+        "header": "Pre-built E-shop",
+        "price": "8 099 CZK",
+        "description": "Pre-built E-shop with launch possibility within 24h."
+      },
+      "prod_2": {
+        "header": "Survey Software",
+        "price": "7 999 CZK",
+        "description": "Professional survey software on your own domain."
+      },
+      "prod_3": {
+        "header": "Survey Analyzer",
+        "price": "1 499 CZK",
+        "description": "Fast data analysis and presentation."
+      },
+      "button_shop_text": "Visit shop here"
+    },
+    "academy_header": "We Teach Kids to Code",
+    "price_start": "Price from",
+    "price_number": "350 CZK",
+    "price_end": "/lesson",
+    "button_academy_text": "Visit academy here",
+    "form_topic_label": "Topic",
+    "form_topic_option_web": "Web Development",
+    "form_topic_option_desktop": "Desktop Development",
+    "form_topic_option_mobile": "Mobile Development",
+    "form_topic_option_ai": "AI Development",
+    "form_topic_option_other": "Other",
+    "form_email_label": "Email",
+    "form_email_placeholder": "your.email@example.com",
+    "form_phone_label": "Phone (optional)",
+    "form_phone_placeholder": "e.g. +420 123 456 789",
+    "form_description_label": "Brief description of the task",
+    "form_description_placeholder": "Please describe your project or query..."
+  }
+  
+}
