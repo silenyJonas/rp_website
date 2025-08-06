@@ -17,7 +17,29 @@
     background-position: center center;
     background-repeat: no-repeat;
 }
-
+.header-0-2-t{
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #9e9e9e;
+    text-shadow: 0 0 10px rgba(158, 158, 158, 0.3);
+    opacity: 0;
+    transform: translateY(-20px); /* Začíná mírně nad pozicí */
+    animation: fadeInSlideDown 0.8s ease-out 0.2s forwards; /* Spustí se s mírným zpožděním */
+    text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+    margin-bottom: 15px;
+}
+@keyframes fadeInSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px); /* Začíná mírně nad */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Končí v původní pozici */
+    }
+}
 .main-content::before {
     content: "";
     position: absolute;
@@ -1067,7 +1089,13 @@ button[type="submit"]:active {
     }
 }
 
+
 @media (max-width: 480px) {
+
+.header-0-2-t{
+        font-size: 1.2rem;
+        margin-bottom: 0px;
+    }
     .header-3{
         padding-bottom: 40px;
     }
@@ -1089,7 +1117,7 @@ button[type="submit"]:active {
     }
     .header-1 {
         font-size: 2.2rem;
-        padding-top: 60px;
+        padding-top: 40px;
     }
     .p-wrp {
         padding: 10px;

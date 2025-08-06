@@ -51,7 +51,10 @@ export class AcademyComponent implements OnInit, OnDestroy {
 
   form_closed_title: string = '';
   form_closed_message: string = '';
+  
+  second_header: string = '';
 
+  
 
   // --- Obecné texty pro sekci kroužků (budou naplněny z lokalizace) ---
   academyHeader: string = '';
@@ -286,6 +289,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
   private loadLocalizedContent(): void {
     // Načtení obecných textů
     this.academyHeader = this.localizationService.getText('academy.header');
+    this.second_header = this.localizationService.getText('academy.second_header');
 
     this.form_closed_title = this.localizationService.getText('academy.form_closed_title');
     this.form_closed_message = this.localizationService.getText('academy.form_closed_message');
