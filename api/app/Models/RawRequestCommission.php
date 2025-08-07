@@ -7,37 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
-/**
- *
- * @property int $id
- * @property string $thema
- * @property string $contact_email
- * @property string|null $contact_phone
- * @property string $order_description
- * @property string $status
- * @property string $priority
- * @property Carbon $created_at
- * @property Carbon $updated_at // Nyní odkazuje na 'updated_at' v DB
- * @property Carbon|null $deleted_at
- * @method static \Database\Factories\RawRequestCommissionFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereContactEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereContactPhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereOrderDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission wherePriority($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereThema($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission withTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RawRequestCommission withoutTrashed()
- * @mixin \Eloquent
- */
 class RawRequestCommission extends Model
 {
     use HasFactory, SoftDeletes;

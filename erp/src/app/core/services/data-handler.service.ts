@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+// import { PaginatedResponse } from './generic-table.service'; // Správný import
 
 @Injectable({
   providedIn: 'root'
@@ -63,10 +64,23 @@ export class DataHandler {
     return throwError(() => new Error(errorMessage));
   };
 
-
+  
   getCollection<T>(apiUrl: string): Observable<T[]> {
-    return this.http.get<{ data: T[] }>(`${this.baseUrl}${apiUrl}`, { headers: this.getHeaders() }).pipe(
-      map(response => response.data), // Extrahujeme pole 'data' z odpovědi
+    return this.http.get<T[] | { data: T[] }>(`${this.baseUrl}/${apiUrl}`, { headers: this.getHeaders() }).pipe(
+      map(response => {
+        // Kontrola, zda je odpověď objekt s klíčem 'data' (paginovaná odpověď)
+        if (response && typeof response === 'object' && 'data' in response) {
+          return (response as { data: T[] }).data;
+        }
+        // Jinak předpokládáme, že je odpověď přímo pole (nepaginovaná odpověď)
+        return response as T[];
+      }),
+      catchError(this.handleError)
+    );
+  }
+  // NOVÁ METODA: Získání paginované kolekce
+  getPaginatedCollection<T>(apiUrl: string): Observable<T> {
+    return this.http.get<T>(`${this.baseUrl}${apiUrl}`, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }

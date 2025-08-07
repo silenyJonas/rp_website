@@ -1,30 +1,42 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, RouterModule } from '@angular/router'; // Importujeme RouterModule
-import { CommonModule, DatePipe } from '@angular/common'; // Importujeme CommonModule a DatePipe
+import { Component, OnInit, OnDestroy, LOCALE_ID } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../core/auth/auth.service';
+
+// Import české lokalizační sady
+import localeCs from '@angular/common/locales/cs';
+
+// Registrace české lokalizační sady pro celou komponentu
+registerLocaleData(localeCs);
+
 @Component({
   selector: 'app-admin-layout',
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.css'],
-  standalone: true, // Předpokládám, že používáte standalone komponenty
+  standalone: true,
   imports: [
-    CommonModule, // Pro *ngIf a date pipe
-    RouterModule // Pro router-outlet
+    CommonModule,
+    RouterModule,
+    DatePipe
+  ],
+  providers: [
+    // Poskytuje LOCALE_ID s hodnotou 'cs', aby všechny pipes v této komponentě používaly češtinu
+    { provide: LOCALE_ID, useValue: 'cs' }
   ]
 })
 export class AdminLayoutComponent implements OnInit, OnDestroy {
   userEmail: string | null = null;
   isLoggedIn: boolean = false;
+  currentDate: Date = new Date();
+  
   private authSubscription: Subscription | undefined;
-
-  // currentDate již není potřeba, pokud ho nebudete používat jinde
-  // Pokud ho chcete použít, musíte ho zde deklarovat a inicializovat:
-  currentDate: Date = new Date(); 
+  private intervalId: any;
 
   constructor(private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
+    // Přihlášení
     this.authSubscription = this.authService.isLoggedIn$.subscribe(loggedIn => {
       this.isLoggedIn = loggedIn;
       if (loggedIn) {
@@ -42,6 +54,11 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
         this.userEmail = null;
       }
     });
+
+    // Spouštění aktualizace času každou vteřinu
+    this.intervalId = setInterval(() => {
+      this.currentDate = new Date();
+    }, 1000);
   }
 
   logout(): void {
@@ -60,6 +77,10 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
+    }
+    // Důležité: zastavte interval, aby nedocházelo k úniku paměti
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
     }
   }
 }

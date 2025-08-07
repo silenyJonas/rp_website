@@ -66,8 +66,13 @@
   </table>
 </div>
  <div class="toolbar">
+  <button class="neutral_button" (click)="exportToCSV()">
+      Exportovat do CSV
+  </button>
     <label class="checkbox-container">
       <input type="checkbox" [(ngModel)]="isFullWidth">
       Zobrazit tabulku na šířce stránky
     </label>
   </div>
+
+

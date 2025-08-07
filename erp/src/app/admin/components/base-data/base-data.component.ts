@@ -1,4 +1,410 @@
 
+// // import { Directive, OnInit, OnDestroy, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+// // import { Subject, Observable, throwError } from 'rxjs';
+// // import { takeUntil, catchError } from 'rxjs/operators';
+// // import { DataHandler } from '../../../core/services/data-handler.service';
+// // import { HttpErrorResponse } from '@angular/common/http';
+
+// // @Directive()
+// // export abstract class BaseDataComponent<T> implements OnInit, OnDestroy, OnChanges {
+
+// //   data: T[] = [];
+// //   isLoading = false;
+// //   errorMessage: string | null = null;
+
+// //   protected destroy$ = new Subject<void>();
+
+// //   abstract apiEndpoint: string;
+
+// //   constructor(
+// //     protected dataHandler: DataHandler,
+// //     protected cd: ChangeDetectorRef,
+// //   ) {}
+
+// //   ngOnInit(): void {
+// //   }
+
+// //   ngOnChanges(changes: SimpleChanges): void {
+// //   }
+
+// //   ngOnDestroy(): void {
+// //     this.destroy$.next();
+// //     this.destroy$.complete();
+// //   }
+  
+// //   loadData(): void {
+// //     if (!this.apiEndpoint) {
+// //       const msg = 'Chyba: API endpoint není definován v dědící komponentě. Nelze načíst data.';
+// //       this.errorMessage = msg;
+// //       console.error(msg);
+// //       return;
+// //     }
+
+// //     this.isLoading = true;
+// //     this.errorMessage = null;
+
+// //     this.dataHandler.getCollection<T>(this.apiEndpoint)
+// //       .pipe(
+// //         takeUntil(this.destroy$),
+// //         catchError((err: Error) => {
+// //           this.isLoading = false;
+// //           this.errorMessage = err.message || 'Neznámá chyba při načítání dat.';
+// //           console.error(`Chyba při načítání z ${this.apiEndpoint}:`, err);
+// //           this.cd.markForCheck();
+// //           return throwError(() => err);
+// //         })
+// //       )
+// //       .subscribe({
+// //         next: (responseData) => {
+// //           this.data = responseData;
+// //           this.isLoading = false;
+// //           this.cd.markForCheck();
+// //         },
+// //         error: (err) => {
+// //         },
+// //         complete: () => {
+// //           this.isLoading = false;
+// //           this.cd.markForCheck();
+// //         }
+// //       });
+// //   }
+  
+// //   loadAllData(filters?: any): Observable<T[]> {
+// //     if (!this.apiEndpoint) {
+// //       return throwError(() => new Error('Chyba: API endpoint není definován pro načtení všech dat.'));
+// //     }
+// //     const params = new URLSearchParams();
+// //     params.set('no_pagination', 'true');
+// //     if (filters) {
+// //         for (const key in filters) {
+// //             if (filters.hasOwnProperty(key)) {
+// //                 params.set(key, filters[key]);
+// //             }
+// //         }
+// //     }
+// //     const url = `${this.apiEndpoint}?${params.toString()}`;
+// //     return this.dataHandler.getCollection<T>(url).pipe(
+// //       takeUntil(this.destroy$),
+// //       catchError((err: Error) => {
+// //         console.error(`Chyba při načítání všech dat z ${this.apiEndpoint}:`, err);
+// //         return throwError(() => err);
+// //       })
+// //     );
+// //   }
+
+// //   postData(data: T): Observable<T> {
+// //     this.isLoading = true;
+// //     this.errorMessage = null;
+// //     return this.dataHandler.post<T>(this.apiEndpoint, data).pipe(
+// //       takeUntil(this.destroy$),
+// //       catchError((err: Error) => {
+// //         this.isLoading = false;
+// //         this.errorMessage = err.message || 'Neznámá chyba při vytváření dat.';
+// //         console.error(`Chyba při POST na ${this.apiEndpoint}:`, err);
+// //         this.cd.markForCheck();
+// //         return throwError(() => err);
+// //       })
+// //     );
+// //   }
+
+// //   updateData(id: number | undefined, data: T): Observable<T> {
+// //     if (id === undefined || id === null) {
+// //       const msg = 'Chyba: ID záznamu pro aktualizaci není definováno.';
+// //       this.errorMessage = msg;
+// //       console.error(msg);
+// //       return throwError(() => new Error(msg));
+// //     }
+
+// //     this.isLoading = true;
+// //     this.errorMessage = null;
+
+// //     const updateUrl = `${this.apiEndpoint}/${id}`;
+
+// //     return this.dataHandler.put<T>(updateUrl, data).pipe(
+// //       takeUntil(this.destroy$),
+// //       catchError((err: Error) => {
+// //         this.isLoading = false;
+// //         this.errorMessage = err.message || 'Neznámá chyba při aktualizaci dat.';
+// //         console.error(`Chyba při PUT na ${updateUrl}:`, err);
+// //         this.cd.markForCheck();
+// //         return throwError(() => err);
+// //       })
+// //     );
+// //   }
+
+// //   deleteData(id: number | undefined, forceDelete: boolean = false): Observable<void> {
+// //     if (id === undefined || id === null) {
+// //       const msg = 'Chyba: ID záznamu pro smazání není definováno.';
+// //       this.errorMessage = msg;
+// //       console.error(msg);
+// //       return throwError(() => new Error(msg));
+// //     }
+
+// //     this.isLoading = true;
+// //     this.errorMessage = null;
+
+// //     let deleteUrl = `${this.apiEndpoint}/${id}`;
+// //     if (forceDelete) {
+// //       deleteUrl += '?force_delete=true';
+// //     }
+
+// //     return this.dataHandler.delete(deleteUrl).pipe(
+// //       takeUntil(this.destroy$),
+// //       catchError((err: Error) => {
+// //         this.isLoading = false;
+// //         this.errorMessage = err.message || 'Neznámá chyba při mazání dat.';
+// //         console.error(`Chyba při DELETE na ${deleteUrl}:`, err);
+// //         this.cd.markForCheck();
+// //         return throwError(() => err);
+// //       })
+// //     );
+// //   }
+
+// //   // Nová metoda pro soft delete
+// //   softDeleteDataFromApi(id: number): Observable<void> {
+// //     return this.deleteData(id);
+// //   }
+
+// //   // Nová metoda pro hard delete
+// //   hardDeleteDataFromApi(id: number): Observable<void> {
+// //     return this.deleteData(id, true);
+// //   }
+
+// //   uploadData<U>(formData: FormData, targetUrl?: string): Observable<U> {
+// //     const url = targetUrl || this.apiEndpoint;
+// //     this.isLoading = true;
+// //     this.errorMessage = null;
+
+// //     return this.dataHandler.upload<U>(url, formData).pipe(
+// //       takeUntil(this.destroy$),
+// //       catchError((err: Error) => {
+// //         this.isLoading = false;
+// //         this.errorMessage = err.message || 'Neznámá chyba při nahrávání dat.';
+// //         console.error(`Chyba při nahrávání na ${url}:`, err);
+// //         this.cd.markForCheck();
+// //         return throwError(() => err);
+// //       })
+// //     );
+// //   }
+// // }
+
+
+// import { Directive, OnInit, OnDestroy, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+// import { Subject, Observable, throwError } from 'rxjs';
+// import { takeUntil, catchError } from 'rxjs/operators';
+// import { DataHandler } from '../../../core/services/data-handler.service';
+// import { HttpErrorResponse } from '@angular/common/http';
+
+// @Directive()
+// export abstract class BaseDataComponent<T> implements OnInit, OnDestroy, OnChanges {
+
+//   data: T[] = [];
+//   isLoading = false;
+//   errorMessage: string | null = null;
+
+//   protected destroy$ = new Subject<void>();
+
+//   abstract apiEndpoint: string;
+
+//   constructor(
+//     protected dataHandler: DataHandler,
+//     protected cd: ChangeDetectorRef,
+//   ) {}
+
+//   ngOnInit(): void {
+//   }
+
+//   ngOnChanges(changes: SimpleChanges): void {
+//   }
+
+//   ngOnDestroy(): void {
+//     this.destroy$.next();
+//     this.destroy$.complete();
+//   }
+  
+//   /**
+//    * Načte kolekci dat z API.
+//    * Ve výchozím nastavení načítá pouze aktivní (nesmazané) záznamy.
+//    */
+//   loadData(): void {
+//     if (!this.apiEndpoint) {
+//       const msg = 'Chyba: API endpoint není definován v dědící komponentě. Nelze načíst data.';
+//       this.errorMessage = msg;
+//       console.error(msg);
+//       return;
+//     }
+
+//     this.isLoading = true;
+//     this.errorMessage = null;
+    
+//     // Načtení aktivních (nesmazaných) záznamů
+//     const url = this.apiEndpoint;
+
+//     this.dataHandler.getCollection<T>(url)
+//       .pipe(
+//         takeUntil(this.destroy$),
+//         catchError((err: Error) => {
+//           this.isLoading = false;
+//           this.errorMessage = err.message || 'Neznámá chyba při načítání dat.';
+//           console.error(`Chyba při načítání z ${url}:`, err);
+//           this.cd.markForCheck();
+//           return throwError(() => err);
+//         })
+//       )
+//       .subscribe({
+//         next: (responseData) => {
+//           this.data = responseData;
+//           this.isLoading = false;
+//           this.cd.markForCheck();
+//         },
+//         error: (err) => {
+//           // Chyba je již ošetřena v catchError
+//         },
+//         complete: () => {
+//           this.isLoading = false;
+//           this.cd.markForCheck();
+//         }
+//       });
+//   }
+  
+//   /**
+//    * Načte všechna data (bez stránkování).
+//    * @param filters Volitelné filtry.
+//    * @returns Observable s polem dat.
+//    */
+//   loadAllData(filters?: any): Observable<T[]> {
+//     if (!this.apiEndpoint) {
+//       return throwError(() => new Error('Chyba: API endpoint není definován pro načtení všech dat.'));
+//     }
+//     const params = new URLSearchParams();
+//     params.set('no_pagination', 'true');
+//     if (filters) {
+//       for (const key in filters) {
+//         if (filters.hasOwnProperty(key)) {
+//           params.set(key, filters[key]);
+//         }
+//       }
+//     }
+//     const url = `${this.apiEndpoint}?${params.toString()}`;
+//     return this.dataHandler.getCollection<T>(url).pipe(
+//       takeUntil(this.destroy$),
+//       catchError((err: Error) => {
+//         console.error(`Chyba při načítání všech dat z ${this.apiEndpoint}:`, err);
+//         return throwError(() => err);
+//       })
+//     );
+//   }
+
+//   /**
+//    * Načte pouze soft-deletnuté položky z API.
+//    * Přidává parametr `only_trashed=true` do URL.
+//    * @param endpoint API endpoint pro smazané položky.
+//    * @returns Observable s polem smazaných dat.
+//    */
+//   getOnlySoftDeleted(endpoint: string): Observable<T[]> {
+//     const url = `${endpoint}?only_trashed=true`;
+//     return this.dataHandler.getCollection<T>(url).pipe(
+//       takeUntil(this.destroy$),
+//       catchError((err: HttpErrorResponse) => {
+//         console.error(`Chyba při načítání soft-deleted dat z ${endpoint}:`, err);
+//         return throwError(() => err);
+//       })
+//     );
+//   }
+
+//   postData(data: T): Observable<T> {
+//     this.isLoading = true;
+//     this.errorMessage = null;
+//     return this.dataHandler.post<T>(this.apiEndpoint, data).pipe(
+//       takeUntil(this.destroy$),
+//       catchError((err: Error) => {
+//         this.isLoading = false;
+//         this.errorMessage = err.message || 'Neznámá chyba při vytváření dat.';
+//         console.error(`Chyba při POST na ${this.apiEndpoint}:`, err);
+//         this.cd.markForCheck();
+//         return throwError(() => err);
+//       })
+//     );
+//   }
+
+//   updateData(id: number | undefined, data: T): Observable<T> {
+//     if (id === undefined || id === null) {
+//       const msg = 'Chyba: ID záznamu pro aktualizaci není definováno.';
+//       this.errorMessage = msg;
+//       console.error(msg);
+//       return throwError(() => new Error(msg));
+//     }
+
+//     this.isLoading = true;
+//     this.errorMessage = null;
+
+//     const updateUrl = `${this.apiEndpoint}/${id}`;
+
+//     return this.dataHandler.put<T>(updateUrl, data).pipe(
+//       takeUntil(this.destroy$),
+//       catchError((err: Error) => {
+//         this.isLoading = false;
+//         this.errorMessage = err.message || 'Neznámá chyba při aktualizaci dat.';
+//         console.error(`Chyba při PUT na ${updateUrl}:`, err);
+//         this.cd.markForCheck();
+//         return throwError(() => err);
+//       })
+//     );
+//   }
+
+//   deleteData(id: number | undefined, forceDelete: boolean = false): Observable<void> {
+//     if (id === undefined || id === null) {
+//       const msg = 'Chyba: ID záznamu pro smazání není definováno.';
+//       this.errorMessage = msg;
+//       console.error(msg);
+//       return throwError(() => new Error(msg));
+//     }
+
+//     this.isLoading = true;
+//     this.errorMessage = null;
+
+//     let deleteUrl = `${this.apiEndpoint}/${id}`;
+//     if (forceDelete) {
+//       deleteUrl += '?force_delete=true';
+//     }
+
+//     return this.dataHandler.delete(deleteUrl).pipe(
+//       takeUntil(this.destroy$),
+//       catchError((err: Error) => {
+//         this.isLoading = false;
+//         this.errorMessage = err.message || 'Neznámá chyba při mazání dat.';
+//         console.error(`Chyba při DELETE na ${deleteUrl}:`, err);
+//         this.cd.markForCheck();
+//         return throwError(() => err);
+//       })
+//     );
+//   }
+
+//   softDeleteDataFromApi(id: number): Observable<void> {
+//     return this.deleteData(id);
+//   }
+
+//   hardDeleteDataFromApi(id: number): Observable<void> {
+//     return this.deleteData(id, true);
+//   }
+
+//   uploadData<U>(formData: FormData, targetUrl?: string): Observable<U> {
+//     const url = targetUrl || this.apiEndpoint;
+//     this.isLoading = true;
+//     this.errorMessage = null;
+
+//     return this.dataHandler.upload<U>(url, formData).pipe(
+//       takeUntil(this.destroy$),
+//       catchError((err: Error) => {
+//         this.isLoading = false;
+//         this.errorMessage = err.message || 'Neznámá chyba při nahrávání dat.';
+//         console.error(`Chyba při nahrávání na ${url}:`, err);
+//         this.cd.markForCheck();
+//         return throwError(() => err);
+//       })
+//     );
+//   }
+// }
 import { Directive, OnInit, OnDestroy, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { Subject, Observable, throwError } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
@@ -22,22 +428,20 @@ export abstract class BaseDataComponent<T> implements OnInit, OnDestroy, OnChang
   ) {}
 
   ngOnInit(): void {
-    // DŮLEŽITÉ ZMĚNA: ODSTRANĚNO automatické volání loadData() zde.
-    // Dědící komponenty (jako UserRequestComponent) budou volat své specifické metody pro načítání dat.
-    // console.log('BaseDataComponent ngOnInit - loadData() není voláno automaticky.');
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Tato metoda je zde, aby ji dědící třídy mohly implementovat, pokud potřebují reagovat na @Input() změny.
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
-  // Tato metoda loadData() zůstává pro případ, že by dědící komponenta chtěla načítat
-  // nepaginovaná data pomocí DataHandleru.
+  
+  /**
+   * Načte kolekci dat z API.
+   * Ve výchozím nastavení načítá pouze aktivní (nesmazané) záznamy.
+   */
   loadData(): void {
     if (!this.apiEndpoint) {
       const msg = 'Chyba: API endpoint není definován v dědící komponentě. Nelze načíst data.';
@@ -48,14 +452,17 @@ export abstract class BaseDataComponent<T> implements OnInit, OnDestroy, OnChang
 
     this.isLoading = true;
     this.errorMessage = null;
+    
+    // Načtení aktivních (nesmazaných) záznamů
+    const url = this.apiEndpoint;
 
-    this.dataHandler.getCollection<T>(this.apiEndpoint)
+    this.dataHandler.getCollection<T>(url)
       .pipe(
         takeUntil(this.destroy$),
         catchError((err: Error) => {
           this.isLoading = false;
           this.errorMessage = err.message || 'Neznámá chyba při načítání dat.';
-          console.error(`Chyba při načítání z ${this.apiEndpoint}:`, err);
+          console.error(`Chyba při načítání z ${url}:`, err);
           this.cd.markForCheck();
           return throwError(() => err);
         })
@@ -67,7 +474,7 @@ export abstract class BaseDataComponent<T> implements OnInit, OnDestroy, OnChang
           this.cd.markForCheck();
         },
         error: (err) => {
-          // Chyba je již zpracována v catchError výše
+          // Chyba je již ošetřena v catchError
         },
         complete: () => {
           this.isLoading = false;
@@ -75,9 +482,52 @@ export abstract class BaseDataComponent<T> implements OnInit, OnDestroy, OnChang
         }
       });
   }
+  
+  /**
+   * Načte všechna data (bez stránkování).
+   * @param filters Volitelné filtry.
+   * @returns Observable s polem dat.
+   */
+  loadAllData(filters?: any): Observable<T[]> {
+    if (!this.apiEndpoint) {
+      return throwError(() => new Error('Chyba: API endpoint není definován pro načtení všech dat.'));
+    }
+    const params = new URLSearchParams();
+    params.set('no_pagination', 'true');
+    if (filters) {
+      for (const key in filters) {
+        if (filters.hasOwnProperty(key)) {
+          params.set(key, filters[key]);
+        }
+      }
+    }
+    const url = `${this.apiEndpoint}?${params.toString()}`;
+    return this.dataHandler.getCollection<T>(url).pipe(
+      takeUntil(this.destroy$),
+      catchError((err: Error) => {
+        console.error(`Chyba při načítání všech dat z ${this.apiEndpoint}:`, err);
+        return throwError(() => err);
+      })
+    );
+  }
 
-  // Ostatní CRUD metody (postData, updateData, deleteData, uploadData) zůstávají nezměněny,
-  // protože se spoléhají na DataHandler a jsou volány explicitně.
+  /**
+   * Načte pouze soft-deletnuté položky z API.
+   * Přidává parametr `only_trashed=true` do URL.
+   * @param endpoint API endpoint pro smazané položky.
+   * @returns Observable s polem smazaných dat.
+   */
+  getOnlySoftDeleted(endpoint: string): Observable<T[]> {
+    const url = `${endpoint}?only_trashed=true`;
+    return this.dataHandler.getCollection<T>(url).pipe(
+      takeUntil(this.destroy$),
+      catchError((err: HttpErrorResponse) => {
+        console.error(`Chyba při načítání soft-deleted dat z ${endpoint}:`, err);
+        return throwError(() => err);
+      })
+    );
+  }
+
   postData(data: T): Observable<T> {
     this.isLoading = true;
     this.errorMessage = null;
@@ -118,7 +568,7 @@ export abstract class BaseDataComponent<T> implements OnInit, OnDestroy, OnChang
     );
   }
 
-  deleteData(id: number | undefined): Observable<void> {
+  deleteData(id: number | undefined, forceDelete: boolean = false): Observable<void> {
     if (id === undefined || id === null) {
       const msg = 'Chyba: ID záznamu pro smazání není definováno.';
       this.errorMessage = msg;
@@ -129,7 +579,10 @@ export abstract class BaseDataComponent<T> implements OnInit, OnDestroy, OnChang
     this.isLoading = true;
     this.errorMessage = null;
 
-    const deleteUrl = `${this.apiEndpoint}/${id}`;
+    let deleteUrl = `${this.apiEndpoint}/${id}`;
+    if (forceDelete) {
+      deleteUrl += '?force_delete=true';
+    }
 
     return this.dataHandler.delete(deleteUrl).pipe(
       takeUntil(this.destroy$),
@@ -141,6 +594,14 @@ export abstract class BaseDataComponent<T> implements OnInit, OnDestroy, OnChang
         return throwError(() => err);
       })
     );
+  }
+
+  softDeleteDataFromApi(id: number): Observable<void> {
+    return this.deleteData(id);
+  }
+
+  hardDeleteDataFromApi(id: number): Observable<void> {
+    return this.deleteData(id, true);
   }
 
   uploadData<U>(formData: FormData, targetUrl?: string): Observable<U> {
