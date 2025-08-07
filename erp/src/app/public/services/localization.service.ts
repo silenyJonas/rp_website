@@ -42,10 +42,8 @@ export class LocalizationService {
         this.currentTranslationsSource.next(this.translations); // <--- Publikujeme nové překlady
       }),
       catchError(error => {
-        console.error(`Chyba při načítání překladů pro ${languageCode}:`, error);
         // Volitelná logika: načíst výchozí jazyk, pokud vybraný selže
         if (languageCode !== this.defaultLanguage) {
-          console.warn(`Pokus o načtení výchozího jazyka (${this.defaultLanguage}) kvůli chybě.`);
           this.loadTranslations(this.defaultLanguage); // Rekurzivně načíst výchozí jazyk
         } else {
           // Pokud selže i výchozí jazyk, můžeme nastavit prázdné překlady
@@ -75,7 +73,6 @@ export class LocalizationService {
         current = current[k];
       } else {
         // Klíč nebyl nalezen
-        console.warn(`Lokalizační klíč '${key}' nenalezen.`);
         return key; // Vrátíme samotný klíč, aby bylo vidět, co chybí
       }
     }

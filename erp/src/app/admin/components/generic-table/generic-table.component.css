@@ -1,19 +1,40 @@
 /* Responsive table container */
 .table-responsive {
   overflow-x: auto; /* Zajistí horizontální scroll, pokud je tabulka širší než obrazovka */
-  margin-bottom: 1rem;
   border: 1px solid #dee2e6;
   border-radius: 6px;
-  max-width: 100%; /* Zajišťuje, že kontejner nepřesáhne šířku rodiče */
+  width: calc(100vw - 355.55px);
 }
-
+.toolbar{
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 15px;
+}
 /* Compact table styling */
 table {
   width: 100%;
   border-collapse: collapse;
   font-family: Arial, sans-serif;
   font-size: 0.85rem; /* Smaller font */
-  table-layout: fixed; /* KLÍČOVÉ: Zajistí pevnou šířku sloupců a zabrání přetékání */
+  table-layout: fixed; /* Roztáhne tabulku na celou šířku */
+}
+.neutral_button{
+  padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: 1px solid transparent;
+    text-transform: uppercase;
+}
+/* NOVÉ: Styly pro tabulku s auto-rozvržením s vyšší prioritou */
+table.fit-content-table {
+  width: fit-content;
+  table-layout: auto;
 }
 
 caption {
@@ -27,7 +48,7 @@ caption {
 
 /* Base styling for table cells */
 th, td {
-  padding: 0.4rem 0.6rem; /* Smaller padding */
+  padding: 2px 4px;
   text-align: left;
   border: 1px solid #dee2e6;
   vertical-align: middle;
@@ -36,16 +57,15 @@ th, td {
   overflow: hidden; /* Skryje přetékající obsah */
   text-overflow: ellipsis; /* Zobrazí tři tečky (...) */
   white-space: nowrap; /* Udrží text na jedné řádce */
-  
-  /* position: relative; - ODEBRÁNO, NENÍ TŘEBA BEZ TOOLTIPU */
+}
 
-  /* Příklad nastavení šířky sloupců. Můžete upravit dle potřeby.
-      Pro dynamické sloupce je to složitější, ale fixed layout toto vyžaduje.
-      Pokud nemáte pevný počet sloupců, můžete nechat prohlížeč rozdělit rovnoměrně,
-      nebo použít JavaScript pro dynamické nastavení šířek.
-      Prozatím necháme prohlížeč rozdělit rovnoměrně na základě šířky tabulky.
-      Pokud byste chtěl konkrétní šířky, museli bychom je definovat pro každý th/td.
-  */
+/* Styly pro hlavičky sloupců s tlačítky */
+th.button-header {
+  text-align: center;
+  width: 78px; /* Pevná šířka sloupce s tlačítky */
+  overflow: visible; /* Aby se nápisy v hlavičce nezkracovaly */
+  white-space: normal;
+  text-overflow: clip;
 }
 
 thead {
@@ -59,10 +79,6 @@ tr:nth-child(even) {
 tr:hover {
   background-color: #f0f8ff; /* Light blue background on hover */
 }
-
-/* STYLY PRO TOOLTIP (td::after, td::before, td:hover::after, td:hover::before) ODSTRANĚNY */
-/* Dočasný testovací styl pro žluté zabarvení také odstraněn */
-
 
 /* Base paragraph style (reconciled) */
 p {
@@ -91,4 +107,67 @@ p {
   font-size: 0.85rem;
   padding-left: 15px;
   text-align: center; /* Centrujeme zprávu */
+}
+
+/* Styly pro akční tlačítka - nyní v samostatných buňkách */
+td.action-button-cell {
+  text-align: center;
+  width: 120px; /* Pevná šířka sloupce s tlačítky */
+  min-width: 120px; /* Pevná minimální šířka */
+  overflow: visible; /* Zajistí, že tlačítko nebude ořezáno */
+  white-space: normal;
+  text-overflow: clip;
+}
+
+.action-button-cell button {
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+}
+
+/* Styly pro jednotlivé typy tlačítek */
+.info_button {
+  background-color: #007bff; /* modrá */
+  color: white;
+}
+
+.info_button:hover {
+  background-color: #0056b3;
+}
+
+.neutral_button {
+  background-color: #6c757d; /* šedá */
+  color: white;
+}
+
+.neutral_button:hover {
+  background-color: #5a6268;
+}
+
+.delete_button {
+  background-color: #dc3545; /* červená */
+  color: white;
+}
+
+.delete_button:hover {
+  background-color: #c82333;
+}
+
+/* NOVÉ: Styly pro checkbox a jeho kontejner */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #4a5568;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-container input {
+  margin-right: 0.5rem;
 }

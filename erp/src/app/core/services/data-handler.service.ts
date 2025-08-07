@@ -6,7 +6,9 @@ import { catchError, map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class DataHandler { 
+export class DataHandler {
+  // Nová vlastnost pro základní URL API
+  private baseUrl = 'api/';
 
   constructor(
     private http: HttpClient,
@@ -62,51 +64,50 @@ export class DataHandler {
   };
 
 
-
   getCollection<T>(apiUrl: string): Observable<T[]> {
-    return this.http.get<{ data: T[] }>(apiUrl, { headers: this.getHeaders() }).pipe(
+    return this.http.get<{ data: T[] }>(`${this.baseUrl}${apiUrl}`, { headers: this.getHeaders() }).pipe(
       map(response => response.data), // Extrahujeme pole 'data' z odpovědi
       catchError(this.handleError)
     );
   }
 
   getOne<T>(apiUrl: string): Observable<T> {
-    return this.http.get<{ data: T }>(apiUrl, { headers: this.getHeaders() }).pipe(
+    return this.http.get<{ data: T }>(`${this.baseUrl}${apiUrl}`, { headers: this.getHeaders() }).pipe(
       map(response => response.data), // Extrahujeme objekt 'data' z odpovědi
       catchError(this.handleError)
     );
   }
 
   post<T>(apiUrl: string, data: T): Observable<T> {
-    return this.http.post<{ data: T }>(apiUrl, data, { headers: this.getHeaders() }).pipe(
+    return this.http.post<{ data: T }>(`${this.baseUrl}${apiUrl}`, data, { headers: this.getHeaders() }).pipe(
       map(response => response.data), // Extrahujeme objekt 'data' z odpovědi
       catchError(this.handleError)
     );
   }
 
   put<T>(apiUrl: string, data: T): Observable<T> {
-    return this.http.put<{ data: T }>(apiUrl, data, { headers: this.getHeaders() }).pipe(
+    return this.http.put<{ data: T }>(`${this.baseUrl}${apiUrl}`, data, { headers: this.getHeaders() }).pipe(
       map(response => response.data), // Extrahujeme objekt 'data' z odpovědi
       catchError(this.handleError)
     );
   }
 
   patch<T>(apiUrl: string, data: Partial<T>): Observable<T> {
-    return this.http.patch<{ data: T }>(apiUrl, data, { headers: this.getHeaders() }).pipe(
+    return this.http.patch<{ data: T }>(`${this.baseUrl}${apiUrl}`, data, { headers: this.getHeaders() }).pipe(
       map(response => response.data), // Extrahujeme objekt 'data' z odpovědi
       catchError(this.handleError)
     );
   }
 
   delete(apiUrl: string): Observable<void> {
-    console.log(`DataService: Mažu data z ${apiUrl}`);
-    return this.http.delete<void>(apiUrl, { headers: this.getHeaders() }).pipe(
+    console.log(`DataService: Mažu data z ${this.baseUrl}${apiUrl}`);
+    return this.http.delete<void>(`${this.baseUrl}${apiUrl}`, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
   upload<T>(apiUrl: string, formData: FormData): Observable<T> {
-    console.log('DataService: Odesílám FormData na', apiUrl);
+    console.log('DataService: Odesílám FormData na', `${this.baseUrl}${apiUrl}`);
 
     // Kód pro výpis obsahu formuláře (pro ladění, volitelné)
     const dataToSend: { [key: string]: any } = {};
@@ -121,7 +122,7 @@ export class DataHandler {
 
     // HttpClient automaticky nastaví Content-Type na multipart/form-data pro FormData,
     // takže zde NENASTAVUJEME hlavičku 'Content-Type'.
-    return this.http.post<T>(apiUrl, formData, { headers: this.getHeaders('multipart/form-data') }).pipe(
+    return this.http.post<T>(`${this.baseUrl}${apiUrl}`, formData, { headers: this.getHeaders('multipart/form-data') }).pipe(
       catchError(this.handleError)
     );
   }

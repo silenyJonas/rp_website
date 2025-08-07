@@ -1,4 +1,3 @@
-<!-- src/app/admin/pages/user-request/user-request.component.html -->
 
 <div class="user-request-container container mx-auto p-4">
 
@@ -6,9 +5,7 @@
   <div *ngIf="errorMessage" class="text-center text-red-500">{{ errorMessage }}</div>
 
   <div *ngIf="!isLoading && !errorMessage">
-    <!-- Nový kontejner pro rozložení filtrů a tabulky -->
     <div class="main-content-layout">
-      <!-- Filtrovací formulář - nyní v levém sloupci -->
       <div class="filter-form-container">
         <h3 class="filter-form-title">Filtrovat požadavky</h3>
         <div class="filter-grid">
@@ -53,19 +50,19 @@
         </div>
       </div>
 
-      <!-- Kontejner pro tabulku a paginaci - nyní v pravém sloupci -->
       <div class="table-and-pagination-container">
-        <!-- Používáme GenericTableComponent -->
+      
         <app-generic-table
+          [buttons]="buttons"
           [data]="data"
           [columns]="userRequestColumns"
           [tableCaption]="'Seznam požadavků na provize'"
           [isLoading]="isLoading"
+          [apiEndpoint]="apiEndpoint"
           [uploadsBaseUrl]="'https://your-upload-domain.com/uploads/'"
           >
         </app-generic-table>
 
-        <!-- Paginace ovládací prvky -->
         <div class="pagination-controls-wrapper">
           <div class="text-sm text-gray-700 p-b-10">
             Zobrazuji {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ (currentPage - 1) * itemsPerPage + data.length }} z celkem {{ totalItems }} záznamů.

@@ -1,0 +1,88 @@
+/* Základní styly pro dialog, můžete je sdílet s confirm-dialog.component.css */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 90%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-header {
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.dialog-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.dialog-body {
+  padding: 16px;
+  flex-grow: 1;
+}
+
+.dialog-message {
+  margin: 0;
+}
+
+.dialog-footer {
+  padding: 16px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dialog-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Styly pro různé typy upozornění */
+.info-dialog .dialog-header {
+  background-color: #f0f8ff; /* Světle modrá */
+}
+
+.warning-dialog .dialog-header {
+  background-color: #fff8f0; /* Světle oranžová */
+}
+.warning-dialog .ok-button {
+  background-color: #ffc107; /* Oranžová */
+  color: #333;
+}
+
+.danger-dialog .dialog-header {
+  background-color: #fff0f0; /* Světle červená */
+}
+.danger-dialog .ok-button {
+  background-color: #dc3545; /* Červená */
+  color: white;
+}
+
+.success-dialog .dialog-header {
+  background-color: #f0fff0; /* Světle zelená */
+}
+.success-dialog .ok-button {
+  background-color: #28a745; /* Zelená */
+  color: white;
+}

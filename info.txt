@@ -12,7 +12,6 @@ sprava uzivatelu:
     -admin/sysadmin + prava
 -dashboard tam budou oznameni treba 3 nove requesty za dnesek v: ...
 -opravit ayb cas byl aktualni a aktualizoval se
--udelat aby tabulka sla roztahnout treba check boxem a pak to nebude zkracene na stranku
 -dodelat create/edit/delete vsude
 -dodelat reset hesla nejak a zmena osobnich informaci
 -udelat /my-acc treba a tam budou informace o mne
