@@ -51,12 +51,26 @@
       </div>
 
       <div class="table-and-pagination-container">
-      
-        <app-generic-table
+        <button (click)="toggleTable()">
+          Vymenit table
+        </button>
+         
+        <app-generic-table *ngIf="showTrashTable == true"
           [buttons]="buttons"
           [data]="data"
           [columns]="userRequestColumns"
           [tableCaption]="'Seznam požadavků na provize'"
+          [isLoading]="isLoading"
+          [apiEndpoint]="apiEndpoint"
+          [uploadsBaseUrl]="'https://your-upload-domain.com/uploads/'"
+          >
+        </app-generic-table>
+
+        <app-generic-table *ngIf="showTrashTable == false"
+          [buttons]="buttons"
+          [data]="data"
+          [columns]="userRequestColumns"
+          [tableCaption]="'Obnova dat'"
           [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
           [uploadsBaseUrl]="'https://your-upload-domain.com/uploads/'"
