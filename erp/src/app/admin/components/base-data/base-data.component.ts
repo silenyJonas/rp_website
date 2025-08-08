@@ -1,13 +1,13 @@
-
 // import { Directive, OnInit, OnDestroy, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 // import { Subject, Observable, throwError } from 'rxjs';
-// import { takeUntil, catchError } from 'rxjs/operators';
+// import { takeUntil, catchError, map } from 'rxjs/operators';
 // import { DataHandler } from '../../../core/services/data-handler.service';
 // import { HttpErrorResponse } from '@angular/common/http';
 
 // @Directive()
-// export abstract class BaseDataComponent<T> implements OnInit, OnDestroy, OnChanges {
-
+// export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: string | null }> implements OnInit, OnDestroy, OnChanges {
+//   // Rozšířeno o typ T, aby se zaručilo, že má vlastnosti id a deleted_at
+  
 //   data: T[] = [];
 //   trashData: T[] = [];
 //   isLoading = false;
@@ -113,7 +113,7 @@
 //    * @returns Observable s polem smazaných dat.
 //    */
 //   getOnlySoftDeleted(endpoint: string): Observable<T[]> {
-//     const url = `${endpoint}?only_trashed=true&no_pagination=true`; // Přidán no_pagination=true
+//     const url = `${endpoint}?only_trashed=true&no_pagination=true`;
 //     return this.dataHandler.getCollection<T>(url).pipe(
 //       takeUntil(this.destroy$),
 //       catchError((err: HttpErrorResponse) => {
@@ -191,12 +191,55 @@
 //     );
 //   }
 
-//   softDeleteDataFromApi(id: number): Observable<void> {
-//     return this.deleteData(id);
+//   /**
+//    * Provádí soft-delete záznamu pomocí PUT requestu na API.
+//    * @param id ID záznamu, který se má soft-smazat.
+//    * @returns Observable s aktualizovaným záznamem.
+//    */
+//   softDeleteDataFromApi(id: number): Observable<T> {
+//     const softDeleteUrl = `${this.apiEndpoint}/${id}`;
+//     const payload = { deleted_at: new Date().toISOString() };
+//     return this.dataHandler.put<T>(softDeleteUrl, payload as T).pipe(
+//       takeUntil(this.destroy$),
+//       catchError((err: HttpErrorResponse) => {
+//         console.error(`Chyba při soft-delete na ${softDeleteUrl}:`, err);
+//         return throwError(() => err);
+//       })
+//     );
 //   }
 
+//   /**
+//    * Provádí trvalé smazání záznamu voláním DELETE s parametrem force_delete.
+//    * @param id ID záznamu, který se má trvale smazat.
+//    * @returns Observable<void>.
+//    */
 //   hardDeleteDataFromApi(id: number): Observable<void> {
 //     return this.deleteData(id, true);
+//   }
+  
+//   /**
+//    * Obnoví soft-smazanou položku z API.
+//    * @param id ID položky, která se má obnovit.
+//    * @returns Observable s aktualizovaným záznamem.
+//    */
+//   restoreDataFromApi(id: number): Observable<T> {
+//     this.isLoading = true;
+//     this.errorMessage = null;
+    
+//     // Změna URL adresy pro obnovení, aby odpovídala nové API routě
+//     const restoreUrl = `${this.apiEndpoint}/${id}/restore`;
+
+//     // Použijeme metodu PUT, ale bez posílání payloadu, protože stav se mění na API straně
+//     return this.dataHandler.put<T>(restoreUrl, {} as T).pipe(
+//       takeUntil(this.destroy$),
+//       catchError((err: HttpErrorResponse) => {
+//         this.isLoading = false;
+//         this.errorMessage = err.message || 'Neznámá chyba při obnovování dat.';
+//         console.error(`Chyba při obnovování na ${restoreUrl}:`, err);
+//         this.cd.markForCheck();
+//         return throwError(() => err);
+//       })
+//     );
 //   }
 
 //   uploadData<U>(formData: FormData, targetUrl?: string): Observable<U> {
@@ -224,7 +267,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 @Directive()
 export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: string | null }> implements OnInit, OnDestroy, OnChanges {
-  // Rozšířeno o typ T, aby se zaručilo, že má vlastnosti id a deleted_at
   
   data: T[] = [];
   trashData: T[] = [];
@@ -266,7 +308,6 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
     this.isLoading = true;
     this.errorMessage = null;
     
-    // Načtení aktivních (nesmazaných) záznamů
     const url = this.apiEndpoint;
 
     this.dataHandler.getCollection<T>(url)
@@ -381,6 +422,13 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
     );
   }
 
+  /**
+   * Provádí smazání (soft-delete) nebo trvalé smazání záznamu pomocí DELETE requestu na API.
+   * Backend se stará o logiku soft-delete, pokud parametr `forceDelete` není true.
+   * @param id ID záznamu, který se má smazat.
+   * @param forceDelete Pokud je true, provede trvalé smazání.
+   * @returns Observable<void>.
+   */
   deleteData(id: number | undefined, forceDelete: boolean = false): Observable<void> {
     if (id === undefined || id === null) {
       const msg = 'Chyba: ID záznamu pro smazání není definováno.';
@@ -408,24 +456,7 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
       })
     );
   }
-
-  /**
-   * Provádí soft-delete záznamu pomocí PUT requestu na API.
-   * @param id ID záznamu, který se má soft-smazat.
-   * @returns Observable s aktualizovaným záznamem.
-   */
-  softDeleteDataFromApi(id: number): Observable<T> {
-    const softDeleteUrl = `${this.apiEndpoint}/${id}`;
-    const payload = { deleted_at: new Date().toISOString() };
-    return this.dataHandler.put<T>(softDeleteUrl, payload as T).pipe(
-      takeUntil(this.destroy$),
-      catchError((err: HttpErrorResponse) => {
-        console.error(`Chyba při soft-delete na ${softDeleteUrl}:`, err);
-        return throwError(() => err);
-      })
-    );
-  }
-
+  
   /**
    * Provádí trvalé smazání záznamu voláním DELETE s parametrem force_delete.
    * @param id ID záznamu, který se má trvale smazat.
@@ -436,18 +467,19 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
   }
   
   /**
-   * Obnoví soft-smazanou položku z API nastavením deleted_at na null.
+   * Obnoví soft-smazanou položku z API.
    * @param id ID položky, která se má obnovit.
    * @returns Observable s aktualizovaným záznamem.
    */
   restoreDataFromApi(id: number): Observable<T> {
     this.isLoading = true;
     this.errorMessage = null;
-    const restoreUrl = `${this.apiEndpoint}/${id}`;
-    const restorePayload = { deleted_at: null };
     
-    // Použijeme metodu PUT pro aktualizaci záznamu
-    return this.dataHandler.put<T>(restoreUrl, restorePayload as T).pipe(
+    // Změna URL adresy pro obnovení, aby odpovídala nové API routě
+    const restoreUrl = `${this.apiEndpoint}/${id}/restore`;
+
+    // Použijeme metodu PUT, ale bez posílání payloadu, protože stav se mění na API straně
+    return this.dataHandler.put<T>(restoreUrl, {} as T).pipe(
       takeUntil(this.destroy$),
       catchError((err: HttpErrorResponse) => {
         this.isLoading = false;
