@@ -67,7 +67,10 @@
 </div>
  <div class="toolbar">
   <button class="neutral_button" (click)="exportToCSV()">
-      Exportovat do CSV
+      Exportovat tabulku
+  </button>
+  <button class="confirm_button" (click)="openCreateForm()">
+      Přidat záznam
   </button>
     <label class="checkbox-container">
       <input type="checkbox" [(ngModel)]="isFullWidth">

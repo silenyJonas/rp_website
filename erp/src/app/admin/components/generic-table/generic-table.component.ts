@@ -1,4 +1,3 @@
-
 import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { CommonModule, CurrencyPipe, KeyValuePipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -40,6 +39,8 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
 
   // Nová událost pro komunikaci s nadřazenou komponentou
   @Output() itemDeleted = new EventEmitter<any>();
+  // Nová událost pro tlačítko "Přidat záznam"
+  @Output() createFormOpened = new EventEmitter<void>();
 
   public isFullWidth: boolean = true;
 
@@ -141,9 +142,9 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
       this.cd.markForCheck();
       
       const responseData = await firstValueFrom(this.loadAllData());
-   
+    
       const allData: any[] = Array.isArray(responseData) ? responseData : [];
-     
+      
       if (allData.length > 0) {
         let csv = '';
         const headers = this.columnDefinitions.map(col => col.header || col.key).join(';');
@@ -185,5 +186,9 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
       this.isLoading = false;
       this.cd.markForCheck();
     }
+  }
+
+  openCreateForm(){
+    this.createFormOpened.emit();
   }
 }

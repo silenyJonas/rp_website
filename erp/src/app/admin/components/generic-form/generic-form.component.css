@@ -1,0 +1,240 @@
+/* Globální styly pro overlay a kontejner formuláře */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.form-container {
+  padding: 1rem; 
+  border-radius: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+  max-width: 700px; 
+  width: 90%;
+  position: relative;
+  animation: fadeIn 0.3s ease-out;
+  border: 1px solid #dee2e6;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box; 
+}
+
+/* Hlavička formuláře */
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem; 
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.5rem; 
+}
+
+.form-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #adb5bd;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+  padding: 0;
+}
+
+.close-button:hover {
+  color: #495057;
+}
+
+/* Dvousloupcové rozložení */
+.form-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem; /* Mezera mezi sloupci a řádky */
+}
+
+/* Formulářová skupina */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0; 
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 0.15rem; 
+  font-family: Arial, sans-serif;
+}
+
+/* Styly pro inputy, selecty a textarea */
+.form-control {
+  width: 100%;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  font-size: 0.85rem;
+  color: #444;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #6366F1;
+  box-shadow: 0 0 0 1px #6366F1, 0 0 0 3px rgba(99, 102, 241, 0.2);
+  background-color: #fff;
+}
+
+/* Textarea zabírá oba sloupce */
+.form-group:has(textarea) {
+  grid-column: span 2;
+}
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Styly pro validaci */
+.form-control.ng-invalid.ng-touched,
+.form-control.ng-invalid.ng-dirty {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 1px #dc3545, 0 0 0 3px rgba(220,53,69,.25);
+}
+
+.validation-message {
+  color: #dc3545;
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+
+.required-star {
+  color: #dc3545;
+  margin-left: 2px;
+}
+
+.required-note {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 1rem;
+}
+
+/* Styly pro radio a checkbox */
+.radio-group,
+.checkbox-container {
+  display: flex;
+  flex-direction: row; 
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.radio-option {
+  font-weight: normal;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.radio-option input[type="radio"],
+.checkbox-container input[type="checkbox"] {
+  width: auto;
+  margin-right: 0.4rem; 
+  transform: scale(1.1);
+}
+
+/* Akční tlačítka a poznámka */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.required-note {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-right: auto;
+  margin-top: 0;
+  padding-top: 0.5rem;
+}
+
+/* Styly tlačítek - PŘIZPŮSOBENO */
+.submit-button, .cancel-button {
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  color: white;
+  box-shadow: none; /* Odstraněno pro čistší vzhled */
+}
+
+/* Tlačítko Zrušit - odpovídá neutral_button */
+.cancel-button {
+  background-color: #6c757d; /* šedá */
+}
+.cancel-button:hover {
+  background-color: #5a6268;
+}
+
+/* Tlačítko Potvrdit - odpovídá confirm_button */
+.submit-button {
+  background-color: #28a745; /* zelená */
+}
+.submit-button:hover:not(:disabled) {
+  background-color: #218838;
+}
+.submit-button:disabled {
+  background-color: #c8d1d8; /* světlejší šedá pro disabled stav */
+  cursor: not-allowed;
+  opacity: 0.8;
+  border-color: transparent;
+}
+
+
+/* Doplňkové styly pro slider */
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.slider-value {
+  font-size: 0.85rem;
+  font-weight: 500;
+  min-width: 50px;
+  text-align: right;
+}
+
+/* Animace */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

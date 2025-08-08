@@ -52,7 +52,7 @@
       
       <div class="table-and-pagination-container">
         
-        <app-generic-table *ngIf="!showTrashTable"
+       <app-generic-table *ngIf="!showTrashTable"
           [buttons]="buttons"
           [data]="data"
           [columns]="userRequestColumns"
@@ -61,8 +61,8 @@
           [apiEndpoint]="apiEndpoint"
           [uploadsBaseUrl]="'[https://your-upload-domain.com/uploads/](https://your-upload-domain.com/uploads/)'"
           (itemDeleted)="handleItemDeleted()"
-          >
-        </app-generic-table>
+          (createFormOpened)="handleCreateFormOpened()">
+      </app-generic-table>
 
         <app-generic-trash-table *ngIf="showTrashTable"
           [data]="trashData"
@@ -74,6 +74,11 @@
           (itemRestored)="handleItemRestored()">
         </app-generic-trash-table>
 
+        <button (click)="toggleTable()" class="toggle-table-btn neutral_button m-b-10">
+          {{ showTrashTable ? 'Zobrazit Aktivní Požadavky' : 'Zobrazit Smazané Požadavky' }}
+        </button>
+
+        
         <div class="pagination-controls-wrapper" *ngIf="!showTrashTable">
           <div class="text-sm text-gray-700 p-b-10">
             Zobrazuji {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ (currentPage - 1) * itemsPerPage + data.length }} z celkem {{ totalItems }} záznamů.
@@ -115,7 +120,7 @@
             </button>
           </nav>
         </div>
-
+       
         <div class="pagination-controls-wrapper" *ngIf="showTrashTable">
           <div class="text-sm text-gray-700 p-b-10">
             Zobrazuji {{ (trashCurrentPage - 1) * trashItemsPerPage + 1 }} - {{ (trashCurrentPage - 1) * trashItemsPerPage + trashData.length }} z celkem {{ trashTotalItems }} záznamů.
@@ -158,10 +163,17 @@
           </nav>
         </div>
         
-        <button (click)="toggleTable()" class="toggle-table-btn">
-          {{ showTrashTable ? 'Zobrazit Aktivní Požadavky' : 'Zobrazit Smazané Požadavky' }}
-        </button>
+        
       </div>
     </div>
   </div>
 </div>
+
+
+
+<app-generic-form 
+  *ngIf="showCreateForm" 
+  [inputDefinitions]="formFields" 
+  (formSubmitted)="handleFormSubmitted($event)"
+  (formCanceled)="onCancelForm()">
+</app-generic-form>

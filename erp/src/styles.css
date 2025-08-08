@@ -164,3 +164,72 @@ input, textarea { cursor: text; }
 .yellow { background-color: yellow; }
 .white { background-color: white; }
 .red { background-color: red; }
+
+/* Styly pro jednotlivé typy tlačítek */
+.info_button {
+    padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  background-color: #007bff; /* modrá */
+  color: white;
+}
+
+.info_button:hover {
+  background-color: #0056b3;
+}
+
+.neutral_button {
+    padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  background-color: #6c757d; /* šedá */
+  color: white;
+}
+
+.neutral_button:hover {
+  background-color: #5a6268;
+}
+
+.delete_button {
+    padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  background-color: #dc3545; /* červená */
+  color: white;
+}
+
+.delete_button:hover {
+  background-color: #c82333;
+}
+
+.confirm_button {
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  background-color: #28a745; /* zelená */
+  color: white;
+}
+
+.confirm_button:hover {
+  background-color: #218838;
+}

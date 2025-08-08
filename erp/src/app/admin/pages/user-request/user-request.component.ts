@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +10,8 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { Router } from '@angular/router';
 import { GenericTrashTableComponent } from '../../components/generic-trash-table/generic-trash-table.component';
 import { RawRequestCommission } from '../../../shared/interfaces/raw-request-commission';
+import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
+import { InputDefinition } from '../../components/generic-form/generic-form.component';
 
 // Rozšířený interface pro filtry smazaných dat
 interface TrashFilterParams extends FilterParams {
@@ -24,7 +25,8 @@ interface TrashFilterParams extends FilterParams {
     CommonModule,
     FormsModule,
     GenericTableComponent,
-    GenericTrashTableComponent
+    GenericTrashTableComponent,
+    GenericFormComponent,
   ],
   templateUrl: './user-request.component.html',
   styleUrl: './user-request.component.css',
@@ -37,6 +39,45 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     { display_name: 'Editovat', isActive: true, type: 'neutral_button' },
     { display_name: 'Nove button', isActive: false, type: 'neutral_button' },
     { display_name: 'Smazat', isActive: true, type: 'delete_button' },
+  ];
+
+  // Pole pro definici polí dynamického formuláře (upraveno dle InputDefinition)
+  formFields: InputDefinition[] = [
+    {
+      column_name: 'thema',
+      label: 'Téma',
+      placeholder: 'Zadejte téma požadavku',
+      type: 'text',
+      required: true,
+      pattern: '^[a-zA-Z0-9ěščřžýáíéóúůďťňĚŠČŘŽÝÁÍÉÚŮĎŤŇ\\s]{3,100}$',
+      errorMessage: 'Téma musí mít 3-100 znaků.',
+    },
+    {
+      column_name: 'contact_email',
+      label: 'Kontaktní e-mail',
+      placeholder: 'Zadejte e-mail',
+      type: 'email',
+      required: true,
+      pattern: '[^@]+@[^@]+\.[^@]+',
+      errorMessage: 'Zadejte platnou e-mailovou adresu.',
+    },
+    {
+      column_name: 'contact_phone',
+      label: 'Telefon',
+      placeholder: 'Zadejte telefonní číslo (volitelné)',
+      type: 'tel',
+      required: false,
+      pattern: '^[0-9+\\s-]{9,20}$',
+      errorMessage: 'Zadejte platné telefonní číslo.',
+    },
+    {
+      column_name: 'order_description',
+      label: 'Popis objednávky',
+      placeholder: 'Popište svůj požadavek',
+      type: 'textarea',
+      required: true,
+      errorMessage: 'Popis je povinný.',
+    }
   ];
 
   userRequestColumns: ColumnDefinition[] = [
@@ -65,6 +106,8 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   ];
 
   showTrashTable: boolean = false;
+  showCreateForm: boolean = false;
+  
   override trashData: RawRequestCommission[] = [];
   override apiEndpoint: string = 'raw_request_commissions';
 
@@ -433,5 +476,49 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     this.trashRequestsCache.clear();
     this.loadActiveRequests();
     this.loadTrashRequests();
+  }
+
+  // Metoda pro vytvoření záznamu
+  handleCreateFormOpened(): void {
+    this.showCreateForm = !this.showCreateForm;
+    console.log('Tlačítko "Přidat záznam" bylo stisknuto.');
+  }
+
+  // Metoda pro zachycení odeslaných dat z formuláře
+  handleFormSubmitted(formData: RawRequestCommission): void {
+  // Ověříme, zda formulářová data obsahují ID
+  if (formData.id) {
+    // Pokud ID existuje, jedná se o aktualizaci dat
+    this.updateData(formData.id, formData).subscribe({
+      next: (response) => {
+        // Skryjeme formulář
+        this.showCreateForm = false;
+        // Načteme aktualizovaný seznam dat
+        this.loadActiveRequests();
+      },
+      error: (err) => {
+        // Chyba je již ošetřena v metodě updateData, zde jen pro jistotu
+        console.error('Chyba při aktualizaci dat:', err);
+      }
+    });
+  } else {
+    // Pokud ID neexistuje, jedná se o vytvoření nového záznamu
+    this.postData(formData).subscribe({
+      next: (response) => {
+        // Skryjeme formulář
+        this.showCreateForm = false;
+        // Načteme aktualizovaný seznam dat
+        this.loadActiveRequests();
+      },
+      error: (err) => {
+        // Chyba je již ošetřena v metodě postData, zde jen pro jistotu
+        console.error('Chyba při odeslání dat:', err);
+      }
+    });
+  }
+}
+
+  onCancelForm() {
+    this.showCreateForm = false;
   }
 }

@@ -21,16 +21,7 @@ table {
   font-size: 0.85rem; /* Smaller font */
   table-layout: fixed; /* Roztáhne tabulku na celou šířku */
 }
-.neutral_button{
-  padding: 0.3rem 0.5rem;
-    border-radius: 4px;
-    font-weight: bold;
-    font-size: 0.65rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    border: 1px solid transparent;
-    text-transform: uppercase;
-}
+
 /* NOVÉ: Styly pro tabulku s auto-rozvržením s vyšší prioritou */
 table.fit-content-table {
   width: fit-content;
@@ -119,44 +110,6 @@ td.action-button-cell {
   text-overflow: clip;
 }
 
-.action-button-cell button {
-  padding: 0.3rem 0.5rem;
-  border-radius: 4px;
-  font-weight: bold;
-  font-size: 0.65rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  border: 1px solid transparent;
-  text-transform: uppercase;
-}
-
-/* Styly pro jednotlivé typy tlačítek */
-.info_button {
-  background-color: #007bff; /* modrá */
-  color: white;
-}
-
-.info_button:hover {
-  background-color: #0056b3;
-}
-
-.neutral_button {
-  background-color: #6c757d; /* šedá */
-  color: white;
-}
-
-.neutral_button:hover {
-  background-color: #5a6268;
-}
-
-.delete_button {
-  background-color: #dc3545; /* červená */
-  color: white;
-}
-
-.delete_button:hover {
-  background-color: #c82333;
-}
 
 /* NOVÉ: Styly pro checkbox a jeho kontejner */
 .checkbox-container {
