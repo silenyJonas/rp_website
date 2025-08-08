@@ -49,35 +49,31 @@
           </button>
         </div>
       </div>
-
+      
       <div class="table-and-pagination-container">
-        <button (click)="toggleTable()">
-          Vymenit table
-        </button>
-         
-        <app-generic-table *ngIf="showTrashTable == true"
+        
+        <app-generic-table *ngIf="!showTrashTable"
           [buttons]="buttons"
           [data]="data"
           [columns]="userRequestColumns"
           [tableCaption]="'Seznam požadavků na provize'"
           [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
-          [uploadsBaseUrl]="'https://your-upload-domain.com/uploads/'"
+          [uploadsBaseUrl]="'[https://your-upload-domain.com/uploads/](https://your-upload-domain.com/uploads/)'"
           >
         </app-generic-table>
 
-        <app-generic-table *ngIf="showTrashTable == false"
-          [buttons]="buttons"
-          [data]="data"
-          [columns]="userRequestColumns"
+        <app-generic-trash-table *ngIf="showTrashTable"
+          [data]="trashData"
+          [columns]="trashUserRequestColumns"
           [tableCaption]="'Obnova dat'"
           [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
-          [uploadsBaseUrl]="'https://your-upload-domain.com/uploads/'"
+          [uploadsBaseUrl]="'[https://your-upload-domain.com/uploads/](https://your-upload-domain.com/uploads/)'"
           >
-        </app-generic-table>
+        </app-generic-trash-table>
 
-        <div class="pagination-controls-wrapper">
+        <div class="pagination-controls-wrapper" *ngIf="!showTrashTable">
           <div class="text-sm text-gray-700 p-b-10">
             Zobrazuji {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ (currentPage - 1) * itemsPerPage + data.length }} z celkem {{ totalItems }} záznamů.
           </div>
@@ -85,10 +81,10 @@
           <div class="flex items-center space-x-2 pg-m p-b-10">
             <label for="itemsPerPage" class="text-sm text-gray-700">Položek na stránku:</label>
             <select id="itemsPerPage" (change)="onItemsPerPageChange($event)"
-                    class="items-per-page-select">
+                     class="items-per-page-select" [(ngModel)]="itemsPerPage">
               <option value="5">5</option>
               <option value="10">10</option>
-              <option value="15" [selected]="itemsPerPage === 15">15</option>
+              <option value="15">15</option>
               <option value="20">20</option>
               <option value="50">50</option>
             </select>
@@ -98,7 +94,7 @@
             <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1"
                     class="pagination-button first-page-btn">
               <span class="sr-only">Předchozí</span>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
               </svg>
             </button>
@@ -112,17 +108,59 @@
             <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages"
                     class="pagination-button last-page-btn">
               <span class="sr-only">Další</span>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
               </svg>
             </button>
           </nav>
         </div>
-        <button routerLink="rash">
-          Obnova Dat
+
+        <div class="pagination-controls-wrapper" *ngIf="showTrashTable">
+          <div class="text-sm text-gray-700 p-b-10">
+            Zobrazuji {{ (trashCurrentPage - 1) * trashItemsPerPage + 1 }} - {{ (trashCurrentPage - 1) * trashItemsPerPage + trashData.length }} z celkem {{ trashTotalItems }} záznamů.
+          </div>
+
+          <div class="flex items-center space-x-2 pg-m p-b-10">
+            <label for="trashItemsPerPage" class="text-sm text-gray-700">Položek na stránku:</label>
+            <select id="trashItemsPerPage" (change)="onTrashItemsPerPageChange($event)"
+                     class="items-per-page-select" [(ngModel)]="trashItemsPerPage">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+
+          <nav class="pagination-nav" aria-label="Pagination">
+            <button (click)="goToTrashPage(trashCurrentPage - 1)" [disabled]="trashCurrentPage === 1"
+                    class="pagination-button first-page-btn">
+              <span class="sr-only">Předchozí</span>
+              <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <ng-container *ngFor="let page of trashPagesArray">
+              <button (click)="goToTrashPage(page)"
+                      [ngClass]="{ 'active-page': page === trashCurrentPage }"
+                      class="pagination-button">
+                {{ page }}
+              </button>
+            </ng-container>
+            <button (click)="goToTrashPage(trashCurrentPage + 1)" [disabled]="trashCurrentPage === trashTotalPages"
+                    class="pagination-button last-page-btn">
+              <span class="sr-only">Další</span>
+              <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </nav>
+        </div>
+        
+        <button (click)="toggleTable()" class="toggle-table-btn">
+          {{ showTrashTable ? 'Zobrazit Aktivní Požadavky' : 'Zobrazit Smazané Požadavky' }}
         </button>
       </div>
-      
     </div>
   </div>
 </div>

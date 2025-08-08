@@ -124,26 +124,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   }
 
   // Příklad metody pro hard delete, pokud ji potřebujete
-  public hardDeleteData(id: number): void {
-    this.confirmDialogService.open('Trvalé smazání', 'Opravdu si přejete trvale smazat tuto položku? Tato akce je nevratná!').then(result => {
-      if (result) {
-        this.hardDeleteDataFromApi(id).subscribe({
-          next: () => {
-            this.alertDialogService.open('Úspěch', 'Položka byla trvale smazána.', 'success');
-            const index = this.data.findIndex(dataItem => dataItem.id === id);
-            if (index > -1) {
-              this.data.splice(index, 1);
-              this.cd.markForCheck();
-            }
-          },
-          error: (err) => {
-            this.alertDialogService.open('Chyba', 'Při trvalém mazání položky nastala chyba.', 'danger');
-            console.error('Hard delete error:', err);
-          }
-        });
-      }
-    });
-  }
+
 
   get colspanValue(): number {
     const activeButtonsCount = this.buttons?.filter(b => b.isActive).length || 0;
