@@ -60,6 +60,7 @@
           [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
           [uploadsBaseUrl]="'[https://your-upload-domain.com/uploads/](https://your-upload-domain.com/uploads/)'"
+          (itemDeleted)="handleItemDeleted()"
           >
         </app-generic-table>
 
@@ -70,7 +71,7 @@
           [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
           [uploadsBaseUrl]="'[https://your-upload-domain.com/uploads/](https://your-upload-domain.com/uploads/)'"
-          >
+          (itemRestored)="handleItemRestored()">
         </app-generic-trash-table>
 
         <div class="pagination-controls-wrapper" *ngIf="!showTrashTable">
