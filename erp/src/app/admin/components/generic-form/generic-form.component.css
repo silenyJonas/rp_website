@@ -5,7 +5,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); 
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,17 +13,17 @@
 }
 
 .form-container {
-  padding: 1rem; 
+  padding: 1rem;
   border-radius: 6px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   background-color: #ffffff;
-  max-width: 700px; 
+  max-width: 700px;
   width: 90%;
   position: relative;
   animation: fadeIn 0.3s ease-out;
   border: 1px solid #dee2e6;
   font-family: Arial, sans-serif;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 /* Hlavička formuláře */
@@ -31,9 +31,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem; 
+  margin-bottom: 0.75rem;
   border-bottom: 1px solid #e9ecef;
-  padding-bottom: 0.5rem; 
+  padding-bottom: 0.5rem;
 }
 
 .form-header h2 {
@@ -62,14 +62,14 @@
 .form-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem; /* Mezera mezi sloupci a řádky */
+  gap: 1rem;
 }
 
 /* Formulářová skupina */
 .form-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 0; 
+  margin-bottom: 0;
 }
 
 label {
@@ -77,7 +77,7 @@ label {
   font-size: 0.85rem;
   font-weight: 500;
   color: #444;
-  margin-bottom: 0.15rem; 
+  margin-bottom: 0.15rem;
   font-family: Arial, sans-serif;
 }
 
@@ -97,8 +97,8 @@ label {
 
 .form-control:focus {
   outline: none;
-  border-color: #6366F1;
-  box-shadow: 0 0 0 1px #6366F1, 0 0 0 3px rgba(99, 102, 241, 0.2);
+  border-color: #6366f1;
+  box-shadow: 0 0 0 1px #6366f1, 0 0 0 3px rgba(99, 102, 241, 0.2);
   background-color: #fff;
 }
 
@@ -106,6 +106,7 @@ label {
 .form-group:has(textarea) {
   grid-column: span 2;
 }
+
 textarea.form-control {
   min-height: 100px;
   resize: vertical;
@@ -115,7 +116,7 @@ textarea.form-control {
 .form-control.ng-invalid.ng-touched,
 .form-control.ng-invalid.ng-dirty {
   border-color: #dc3545;
-  box-shadow: 0 0 0 1px #dc3545, 0 0 0 3px rgba(220,53,69,.25);
+  box-shadow: 0 0 0 1px #dc3545, 0 0 0 3px rgba(220, 53, 69, 0.25);
 }
 
 .validation-message {
@@ -139,7 +140,7 @@ textarea.form-control {
 .radio-group,
 .checkbox-container {
   display: flex;
-  flex-direction: row; 
+  flex-direction: row;
   flex-wrap: wrap;
   gap: 0.8rem;
 }
@@ -155,7 +156,7 @@ textarea.form-control {
 .radio-option input[type="radio"],
 .checkbox-container input[type="checkbox"] {
   width: auto;
-  margin-right: 0.4rem; 
+  margin-right: 0.4rem;
   transform: scale(1.1);
 }
 
@@ -177,8 +178,9 @@ textarea.form-control {
   padding-top: 0.5rem;
 }
 
-/* Styly tlačítek - PŘIZPŮSOBENO */
-.submit-button, .cancel-button {
+/* Styly tlačítek */
+.submit-button,
+.cancel-button {
   padding: 0.3rem 0.5rem;
   border-radius: 4px;
   font-weight: bold;
@@ -188,31 +190,33 @@ textarea.form-control {
   border: 1px solid transparent;
   text-transform: uppercase;
   color: white;
-  box-shadow: none; /* Odstraněno pro čistší vzhled */
+  box-shadow: none;
 }
 
-/* Tlačítko Zrušit - odpovídá neutral_button */
+/* Tlačítko Zrušit */
 .cancel-button {
-  background-color: #6c757d; /* šedá */
+  background-color: #6c757d;
 }
+
 .cancel-button:hover {
   background-color: #5a6268;
 }
 
-/* Tlačítko Potvrdit - odpovídá confirm_button */
+/* Tlačítko Potvrdit */
 .submit-button {
-  background-color: #28a745; /* zelená */
+  background-color: #28a745;
 }
+
 .submit-button:hover:not(:disabled) {
   background-color: #218838;
 }
+
 .submit-button:disabled {
-  background-color: #c8d1d8; /* světlejší šedá pro disabled stav */
+  background-color: #c8d1d8;
   cursor: not-allowed;
   opacity: 0.8;
   border-color: transparent;
 }
-
 
 /* Doplňkové styly pro slider */
 .slider-container {
@@ -220,6 +224,7 @@ textarea.form-control {
   align-items: center;
   gap: 10px;
 }
+
 .slider-value {
   font-size: 0.85rem;
   font-weight: 500;
@@ -237,4 +242,24 @@ textarea.form-control {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Nové styly pro needitovatelná pole */
+.form-control[disabled] {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.radio-option[disabled],
+.checkbox-container[disabled] {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+select[disabled],
+input[type="radio"][disabled] + label,
+input[type="checkbox"][disabled] + label {
+  cursor: not-allowed;
+  opacity: 0.8;
 }

@@ -65,23 +65,6 @@
   border-top: 1px solid #eceff1; /* Velmi jemná oddělovací čára */
 }
 
-.sidebar-footer button {
-  background-color: #ff7043; /* **Jemná oranžovo-červená pro logout** */
-  color: white;
-  border: none;
-  padding: 8px 18px; /* Trochu větší tlačítko pro lepší stisk */
-  border-radius: 4px; /* Lehce zaoblenější */
-  cursor: pointer;
-  font-size: 0.9em;
-  font-weight: 500; /* Střední tučnost */
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.sidebar-footer button:hover {
-  background-color: #f4511e; /* **Tmavší oranžovo-červená na hover** */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Mírně výraznější stín */
-}
-
 /* --- Admin Content --- */
 .admin-content {
     flex-grow: 1;

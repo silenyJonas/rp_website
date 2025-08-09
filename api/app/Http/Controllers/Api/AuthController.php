@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -33,9 +32,8 @@ class AuthController extends Controller
             Log::info('Login attempt successful. User object acquired.');
 
             // 1. Generování přístupového tokenu (Access Token)
-            // Nastavíme mu krátkou životnost (např. 15 minut)
-            // ZMĚNA ZDE: Pro účely testování nastavíme expiraci na 10 sekund
-            $accessToken = $user->createToken('access-token', ['*'], now()->addSeconds(10))->plainTextToken;
+            // Nastavíme životnost na 30 minut
+            $accessToken = $user->createToken('access-token', ['*'], now()->addMinutes(30))->plainTextToken;
 
             // 2. Generování obnovovacího tokenu (Refresh Token)
             $refreshToken = Str::random(60); // Generujeme náhodný řetězec (NEHASHUJE SE)
@@ -83,8 +81,8 @@ class AuthController extends Controller
 
         $hashedRefreshToken = hash('sha256', $refreshToken); // Hashujeme přijatý token pro porovnání
         $dbRefreshToken = RefreshToken::where('token', $hashedRefreshToken) // Hledáme podle HASHe
-                                    ->where('expires_at', '>', now())
-                                    ->first();
+                                     ->where('expires_at', '>', now())
+                                     ->first();
 
         if (!$dbRefreshToken || !$dbRefreshToken->user) {
             Log::warning('Invalid or expired refresh token.');
@@ -99,10 +97,8 @@ class AuthController extends Controller
         // Zneplatníme starý obnovovací token z databáze
         $dbRefreshToken->delete();
 
-        // Vygenerujeme nový přístupový token
-        // ZMĚNA ZDE: Pro účely testování nastavíme expiraci na 10 sekund
-        // $newAccessToken = $user->createToken('access-token', ['*'], now()->addMinutes(30))->plainTextToken;
-        $newAccessToken = $user->createToken('access-token', ['*'], now()->addSecond(10))->plainTextToken;
+        // Vygenerujeme nový přístupový token s platností 30 minut
+        $newAccessToken = $user->createToken('access-token', ['*'], now()->addMinutes(30))->plainTextToken;
 
         // Vygenerujeme nový obnovovací token (NEHASHUJE SE)
         $newRefreshToken = Str::random(60);
@@ -162,5 +158,30 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         return response()->json($request->user());
+    }
+}
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class RefreshToken extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'user_login_id',
+        'token',
+        'expires_at',
+    ];
+
+    protected $casts = [
+        'expires_at' => 'datetime',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_login_id', 'user_login_id');
     }
 }
