@@ -1,22 +1,13 @@
 <?php
-
 namespace App\Http\Controllers\Api;
-
 use App\Http\Controllers\Controller;
 use App\Models\RawRequestCommission;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreRawRequestCommissionRequest;
 use App\Http\Requests\UpdateRawRequestCommissionRequest;
 use Illuminate\Http\JsonResponse;
-
 class RawRequestCommissionController extends Controller
 {
-    /**
-     * Zobrazí zoznam všetkých provízií, vrátane soft-deletnutých, ak je požadované.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page', 15);
@@ -69,12 +60,6 @@ class RawRequestCommissionController extends Controller
         return response()->json($commissions);
     }
 
-    /**
-     * Uloží novo vytvorenú províziu.
-     *
-     * @param StoreRawRequestCommissionRequest $request
-     * @return JsonResponse
-     */
     public function store(StoreRawRequestCommissionRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
@@ -92,40 +77,24 @@ class RawRequestCommissionController extends Controller
         return response()->json($commission, 201);
     }
 
-    /**
-     * Zobrazí konkrétnu províziu.
-     *
-     * @param RawRequestCommission $rawRequestCommission
-     * @return JsonResponse
-     */
     public function show(RawRequestCommission $rawRequestCommission): JsonResponse
     {
         return response()->json($rawRequestCommission);
     }
 
-    /**
-     * Aktualizuje existujúcu províziu.
-     *
-     * @param UpdateRawRequestCommissionRequest $request
-     * @param RawRequestCommission $rawRequestCommission
-     * @return JsonResponse
-     */
     public function update(UpdateRawRequestCommissionRequest $request, RawRequestCommission $rawRequestCommission): JsonResponse
     {
         $rawRequestCommission->update($request->validated());
         return response()->json($rawRequestCommission);
     }
 
-    /**
-     * Smaže províziu. Vo východiskovom nastavení vykoná soft delete.
-     * Pre trvalé zmazanie (hard delete) použite parameter ?force_delete=true.
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function destroy(Request $request, int $id): JsonResponse
+    public function destroy(Request $request, $id): JsonResponse
     {
+        // Přidáno: Ověření, že $id je validní číslo, pro prevenci chyb 500.
+        if (!is_numeric($id)) {
+            return response()->json(['message' => 'Invalid ID format.'], 404);
+        }
+
         $forceDelete = $request->input('force_delete', false);
         $rawRequestCommission = RawRequestCommission::withTrashed()->findOrFail($id);
 
@@ -138,16 +107,22 @@ class RawRequestCommissionController extends Controller
         return response()->json(null, 204);
     }
 
-    /**
-     * Obnoví soft-deleted províziu.
-     *
-     * @param int $id
-     * @return JsonResponse
-     */
     public function restore(int $id): JsonResponse
     {
         $rawRequestCommission = RawRequestCommission::withTrashed()->findOrFail($id);
         $rawRequestCommission->restore();
         return response()->json($rawRequestCommission);
+    }
+
+    public function forceDeleteAllTrashed(): JsonResponse
+    {
+        try {
+            RawRequestCommission::onlyTrashed()->forceDelete();
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            // Logování chyby pro snadnější debugování
+            \Log::error('Chyba při hromadném trvalém mazání: ' . $e->getMessage());
+            return response()->json(['message' => 'Něco se pokazilo.', 'error' => $e->getMessage()], 500);
+        }
     }
 }

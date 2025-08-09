@@ -4,12 +4,9 @@ import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../core/auth/auth.service';
 
-// Import české lokalizační sady
 import localeCs from '@angular/common/locales/cs';
 
-// Registrace české lokalizační sady pro celou komponentu
 registerLocaleData(localeCs);
-
 @Component({
   selector: 'app-admin-layout',
   templateUrl: './admin-layout.component.html',
@@ -21,7 +18,6 @@ registerLocaleData(localeCs);
     DatePipe
   ],
   providers: [
-    // Poskytuje LOCALE_ID s hodnotou 'cs', aby všechny pipes v této komponentě používaly češtinu
     { provide: LOCALE_ID, useValue: 'cs' }
   ]
 })

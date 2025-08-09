@@ -37,7 +37,6 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
   @Input() override isLoading: boolean = false;
   @Input() uploadsBaseUrl: string = '';
   
-  // Změněny typy tlačítek pro lepší sémantiku
   buttons: Buttons[] = [
     {display_name: 'Obnovit', isActive: true, type: 'confirm_button'},
     {display_name: 'Trvale Smazat', isActive: true, type: 'delete_button'},
@@ -45,7 +44,6 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
 
   public isFullWidth: boolean = true;
 
-  // 🆕 Nový Output, který pošle událost, když je položka obnovena.
   @Output() itemRestored = new EventEmitter<void>();
 
   constructor(
@@ -58,8 +56,6 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
   }
 
   override ngOnChanges(changes: SimpleChanges): void {
-    // ⚠️ Oprava: Tato komponenta už nenačítá data sama. Čeká na data z rodičovské komponenty.
-    // Metoda `loadTrashData()` byla odstraněna, aby nedocházelo k duplicitnímu volání.
     if (changes['data']) {
       console.log('Stav pole data v GenericTrashTableComponent po ngOnChanges:');
       console.table(this.data);
@@ -69,16 +65,8 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
 
   override ngOnInit(): void {
     super.ngOnInit();
-    // ⚠️ Oprava: Již se nenačítají data v ngOnInit.
     console.log('Stav pole data po ngOnInit:');
     console.table(this.data);
-  }
-  
-  /**
-   * Načte pouze soft-smazané položky, což je primární účel této tabulky.
-   */
-  loadTrashData(): void {
-    // Tato metoda je nyní prázdná, nebo by měla být odstraněna, protože data jsou poskytována zvenčí.
   }
 
   getCellValue(item: any, column: ColumnDefinition): any {
@@ -170,6 +158,39 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
         // Ostatní typy tlačítek (pokud by se v budoucnu přidaly)
         break;
     }
+  }
+
+  deleteAll(): void {
+    // Ověření, zda existují nějaká data ke smazání
+    if (this.data.length === 0) {
+      this.alertDialogService.open('Upozornění', 'Nejsou k dispozici žádné položky ke smazání.', 'warning');
+      return;
+    }
+    
+    // Zobrazení potvrzovacího dialogu
+    this.confirmDialogService.open('Trvalé smazání všech položek', 'Opravdu si přejete TRVALE smazat VŠECHNY položky? Tato akce je nevratná!')
+      .then(result => {
+        if (result) {
+          // Pokud uživatel potvrdí, zavoláme metodu pro smazání
+          this.hardDeleteAllTrashedDataFromApi().subscribe({
+            next: () => {
+              this.alertDialogService.open('Úspěch', 'Všechny položky byly trvale smazány.', 'success');
+              // Vyprázdníme lokální pole s daty, protože byly smazány
+              this.data = [];
+              this.cd.markForCheck();
+            },
+            error: (err) => {
+              this.alertDialogService.open('Chyba', 'Při trvalém mazání položek nastala chyba.', 'danger');
+              console.error('Hard delete all error:', err);
+            }
+          });
+        } else {
+          this.alertDialogService.open('Zrušeno', 'Trvalé smazání položek bylo zrušeno.', 'warning');
+        }
+      }).catch(error => {
+        this.alertDialogService.open('Chyba', 'Při pokusu o smazání nastala chyba.', 'danger');
+        console.error('Dialog error:', error);
+      });
   }
 
   get colspanValue(): number {
