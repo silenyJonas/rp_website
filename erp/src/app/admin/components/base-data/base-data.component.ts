@@ -1,8 +1,10 @@
+
 import { Directive, OnInit, OnDestroy, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { Subject, Observable, throwError } from 'rxjs';
 import { takeUntil, catchError, map } from 'rxjs/operators';
 import { DataHandler } from '../../../core/services/data-handler.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FilterParams } from '../../../core/services/generic-table.service';
 
 @Directive()
 export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: string | null }> implements OnInit, OnDestroy, OnChanges {
@@ -12,13 +14,19 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
   errorMessage: string | null = null;
   protected destroy$ = new Subject<void>();
   abstract apiEndpoint: string;
+  
   constructor(protected dataHandler: DataHandler, protected cd: ChangeDetectorRef) {}
+  
   ngOnInit(): void {}
   ngOnChanges(changes: SimpleChanges): void {}
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  // Původní loadData() již není využita v user-request.component.ts
+  // Pro zachování zpětné kompatibility ji můžete ponechat,
+  // ale doporučuje se přejít na paginované načítání.
   loadData(): void {
     if (!this.apiEndpoint) {
       const msg = 'Chyba: API endpoint není definován v dědící komponentě. Nelze načíst data.';
@@ -55,21 +63,26 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
         }
       });
   }
-  loadAllData(filters?: any): Observable<T[]> {
+
+  // Upravená metoda pro načítání dat s filtry a řazením
+  loadAllData(filters?: FilterParams): Observable<T[]> {
     if (!this.apiEndpoint) {
       return throwError(() => new Error('Chyba: API endpoint není definován pro načtení všech dat.'));
     }
     const params = new URLSearchParams();
     params.set('no_pagination', 'true');
+
     if (filters) {
-      for (const key in filters) {
-        if (filters.hasOwnProperty(key)) {
-          params.set(key, filters[key]);
+      Object.keys(filters).forEach(key => {
+        const value = filters[key as keyof FilterParams];
+        if (value !== '' && value !== null && value !== undefined) {
+          params.set(key, value.toString());
         }
-      }
+      });
     }
+
     const url = `${this.apiEndpoint}?${params.toString()}`;
-    console.log('base-data: Spouštím načítání všech dat.');
+    console.log('base-data: Spouštím načítání všech dat s filtry:', filters);
     return this.dataHandler.getCollection<T>(url).pipe(
       takeUntil(this.destroy$),
       catchError((err: Error) => {
@@ -78,9 +91,22 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
       })
     );
   }
-  getOnlySoftDeleted(endpoint: string): Observable<T[]> {
-    const url = `${endpoint}?only_trashed=true&no_pagination=true`;
-    console.log('base-data: Spouštím načítání soft-deleted dat.');
+
+  getOnlySoftDeleted(endpoint: string, filters?: FilterParams): Observable<T[]> {
+    const params = new URLSearchParams();
+    params.set('only_trashed', 'true');
+    params.set('no_pagination', 'true');
+    
+    if (filters) {
+      Object.keys(filters).forEach(key => {
+        const value = filters[key as keyof FilterParams];
+        if (value !== '' && value !== null && value !== undefined) {
+          params.set(key, value.toString());
+        }
+      });
+    }
+    const url = `${endpoint}?${params.toString()}`;
+    console.log('base-data: Spouštím načítání soft-deleted dat s filtry:', filters);
     return this.dataHandler.getCollection<T>(url).pipe(
       takeUntil(this.destroy$),
       catchError((err: HttpErrorResponse) => {
@@ -89,6 +115,7 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
       })
     );
   }
+
   postData(data: T): Observable<T> {
     console.log('base-data: Spouštím POST request. isLoading je true.');
     this.isLoading = true;
@@ -105,6 +132,7 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
       })
     );
   }
+  
   updateData(id: number | undefined, data: T): Observable<T> {
     if (id === undefined || id === null) {
       const msg = 'Chyba: ID záznamu pro aktualizaci není definováno.';
@@ -128,6 +156,7 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
       })
     );
   }
+  
   deleteData(id: number | undefined, forceDelete: boolean = false): Observable<void> {
     if (id === undefined || id === null) {
       const msg = 'Chyba: ID záznamu pro smazání není definováno.';
@@ -154,10 +183,12 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
       })
     );
   }
+  
   hardDeleteDataFromApi(id: number): Observable<void> {
     console.log('base-data: Spouštím trvalé smazání dat.');
     return this.deleteData(id, true);
   }
+  
   hardDeleteAllTrashedDataFromApi(): Observable<void> {
     if (!this.apiEndpoint) {
       return throwError(() => new Error('Chyba: API endpoint není definován pro hromadné smazání.'));
@@ -181,6 +212,7 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
       })
     );
   }
+  
   restoreDataFromApi(id: number): Observable<T> {
     console.log('base-data: Spouštím obnovení dat. isLoading je true.');
     this.isLoading = true;
@@ -198,6 +230,7 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
       })
     );
   }
+  
   uploadData<U>(formData: FormData, targetUrl?: string): Observable<U> {
     const url = targetUrl || this.apiEndpoint;
     console.log('base-data: Spouštím nahrávání dat. isLoading je true.');

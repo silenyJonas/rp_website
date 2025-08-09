@@ -47,7 +47,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   @Output() editFormOpened = new EventEmitter<any>();
 
   public isFullWidth: boolean = true;
-
+  
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,

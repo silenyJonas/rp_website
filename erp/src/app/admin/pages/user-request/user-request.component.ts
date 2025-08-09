@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,8 +12,8 @@ import { Router } from '@angular/router';
 import { GenericTrashTableComponent } from '../../components/generic-trash-table/generic-trash-table.component';
 import { RawRequestCommission } from '../../../shared/interfaces/raw-request-commission';
 import { GenericFormComponent, InputDefinition } from '../../components/generic-form/generic-form.component';
-import { Observable, of, forkJoin } from 'rxjs'; // Důležitý import 'forkJoin'
-import { tap, retry } from 'rxjs/operators';
+import { Observable, of, forkJoin, BehaviorSubject } from 'rxjs';
+import { tap, retry, finalize } from 'rxjs/operators';
 import {
   USER_REQUEST_BUTTONS,
   USER_REQUEST_FORM_FIELDS,
@@ -23,30 +24,31 @@ import {
 } from './user-request.config';
 
 interface TrashFilterParams extends FilterParams {
-  only_trashed?: string;
+  only_trashed?: string;
 }
 
 @Component({
-  selector: 'app-user-request',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    GenericTableComponent,
-    GenericTrashTableComponent,
-    GenericFormComponent,
-  ],
-  templateUrl: './user-request.component.html',
-  styleUrl: './user-request.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-user-request',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    GenericTableComponent,
+    GenericTrashTableComponent,
+    GenericFormComponent,
+  ],
+  templateUrl: './user-request.component.html',
+  styleUrl: './user-request.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserRequestComponent extends BaseDataComponent<RawRequestCommission> implements OnInit {
 
   override apiEndpoint: string = 'raw_request_commissions';
   override trashData: RawRequestCommission[] = [];
   override isLoading: boolean = false;
+  isTrashTableLoading: boolean = false;
 
-  buttons: Buttons[] = USER_REQUEST_BUTTONS;
+  buttons: Buttons[] = USER_REQUEST_BUTTONS;
   formFields: InputDefinition[] = USER_REQUEST_FORM_FIELDS;
   userRequestColumns: ColumnDefinition[] = USER_REQUEST_COLUMNS
   trashUserRequestColumns: ColumnDefinition[] = USER_REQUEST_TRASH_COLUMNS
@@ -55,8 +57,7 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
 
   showTrashTable: boolean = false;
   showCreateForm: boolean = false;
-  isTrashTableLoading: boolean = false;
-
+  
   currentPage: number = 1;
   itemsPerPage: number = 15;
   totalItems: number = 0;
@@ -71,6 +72,9 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   filterStatus: string = '';
   filterPriority: string = '';
   filterEmail: string = '';
+
+  filterSortBy: string = '';
+  filterSortDirection: 'asc' | 'desc' = 'asc';
 
   private activeRequestsCache: Map<number, RawRequestCommission[]> = new Map();
   private trashRequestsCache: Map<number, RawRequestCommission[]> = new Map();
@@ -101,16 +105,17 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   }
 
   loadActiveRequests(): Observable<PaginatedResponse<RawRequestCommission>> {
-    this.isLoading = true;
-    this.cd.detectChanges();
-
     const currentFilters: FilterParams = {
       search: this.filterSearch,
       status: this.filterStatus,
       priority: this.filterPriority,
       email: this.filterEmail,
-      is_deleted: 'false'
+      is_deleted: 'false',
+      sort_by: this.filterSortBy,
+      sort_direction: this.filterSortDirection
     };
+
+    console.log('loadActiveRequests: Načítání dat s filtry:', currentFilters);
 
     if (JSON.stringify(currentFilters) !== JSON.stringify(this.currentActiveFilters)) {
       this.activeRequestsCache.clear();
@@ -120,10 +125,16 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
 
     if (this.activeRequestsCache.has(this.currentPage)) {
       this.data = this.activeRequestsCache.get(this.currentPage)!;
-      this.isLoading = false;
       this.cd.detectChanges();
       this.preloadActivePage(this.currentPage + 1);
-      return of({} as PaginatedResponse<RawRequestCommission>);
+      console.log('loadActiveRequests: Data načtena z cache pro stránku', this.currentPage);
+      // Vrátíme observable s daty z cache, aby navazující operace fungovaly stejně
+      return of({
+        data: this.data,
+        current_page: this.currentPage,
+        last_page: this.totalPages,
+        total: this.totalItems
+      } as PaginatedResponse<RawRequestCommission>);
     }
 
     return this.genericTableService.getPaginatedData<RawRequestCommission>(
@@ -134,14 +145,19 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     ).pipe(
       retry(1),
       tap((response: PaginatedResponse<RawRequestCommission>) => {
+        console.log('loadActiveRequests: Odpověď z API pro stránku', response.current_page, ':', response);
+
         this.data = response.data;
         this.totalItems = response.total;
         this.totalPages = response.last_page;
         this.currentPage = response.current_page;
-        this.isLoading = false;
         this.activeRequestsCache.set(this.currentPage, response.data);
         this.cd.detectChanges();
         this.preloadActivePage(this.currentPage + 1);
+
+        // Nově přidaný řádek pro výpis dat v tabulce do konzole
+        console.log('loadActiveRequests: Data tabulky (aktivní):');
+        console.table(this.data);
       })
     );
   }
@@ -156,8 +172,12 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       status: this.filterStatus,
       priority: this.filterPriority,
       email: this.filterEmail,
-      is_deleted: 'false'
+      is_deleted: 'false',
+      sort_by: this.filterSortBy,
+      sort_direction: this.filterSortDirection
     };
+
+    console.log('preloadActivePage: Pre-fetching aktivních dat pro stránku', page);
 
     this.genericTableService.getPaginatedData<RawRequestCommission>(
       this.apiEndpoint,
@@ -167,6 +187,7 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     ).subscribe({
       next: (response: PaginatedResponse<RawRequestCommission>) => {
         this.activeRequestsCache.set(page, response.data);
+        console.log('preloadActivePage: Úspěšně přednačtená data pro stránku', page);
       },
       error: (error) => {
         console.error(`Chyba při pre-fetching aktivních dat pro stránku ${page}:`, error);
@@ -175,16 +196,18 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   }
 
   loadTrashRequests(): Observable<PaginatedResponse<RawRequestCommission>> {
-    this.isTrashTableLoading = true;
-    this.cd.detectChanges();
-
     const trashFilters: TrashFilterParams = {
       only_trashed: 'true',
       search: this.filterSearch,
       status: this.filterStatus,
       priority: this.filterPriority,
-      email: this.filterEmail
+      email: this.filterEmail,
+      sort_by: this.filterSortBy,
+      sort_direction: this.filterSortDirection
     };
+
+    console.log('loadTrashRequests: Načítání smazaných dat s filtry:', trashFilters);
+
 
     if (JSON.stringify(trashFilters) !== JSON.stringify(this.currentTrashFilters)) {
       this.trashRequestsCache.clear();
@@ -194,10 +217,15 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
 
     if (this.trashRequestsCache.has(this.trashCurrentPage)) {
       this.trashData = this.trashRequestsCache.get(this.trashCurrentPage)!;
-      this.isTrashTableLoading = false;
       this.cd.detectChanges();
       this.preloadTrashPage(this.trashCurrentPage + 1);
-      return of({} as PaginatedResponse<RawRequestCommission>);
+      console.log('loadTrashRequests: Data načtena z cache pro smazané stránky', this.trashCurrentPage);
+      return of({
+        data: this.trashData,
+        current_page: this.trashCurrentPage,
+        last_page: this.trashTotalPages,
+        total: this.trashTotalItems
+      } as PaginatedResponse<RawRequestCommission>);
     }
 
     return this.genericTableService.getPaginatedData<RawRequestCommission>(
@@ -208,14 +236,19 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     ).pipe(
       retry(1),
       tap((response: PaginatedResponse<RawRequestCommission>) => {
+        console.log('loadTrashRequests: Odpověď z API pro smazaná data, stránka', response.current_page, ':', response);
+
         this.trashData = response.data;
         this.trashTotalItems = response.total;
         this.trashTotalPages = response.last_page;
         this.trashCurrentPage = response.current_page;
-        this.isTrashTableLoading = false;
         this.trashRequestsCache.set(this.trashCurrentPage, response.data);
         this.cd.detectChanges();
         this.preloadTrashPage(this.trashCurrentPage + 1);
+
+        // Nově přidaný řádek pro výpis dat v tabulce do konzole
+        console.log('loadTrashRequests: Data tabulky (smazané):');
+        console.table(this.trashData);
       })
     );
   }
@@ -230,8 +263,12 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       search: this.filterSearch,
       status: this.filterStatus,
       priority: this.filterPriority,
-      email: this.filterEmail
+      email: this.filterEmail,
+      sort_by: this.filterSortBy,
+      sort_direction: this.filterSortDirection
     };
+
+    console.log('preloadTrashPage: Pre-fetching smazaných dat pro stránku', page);
 
     this.genericTableService.getPaginatedData<RawRequestCommission>(
       this.apiEndpoint,
@@ -241,18 +278,22 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     ).subscribe({
       next: (response: PaginatedResponse<RawRequestCommission>) => {
         this.trashRequestsCache.set(page, response.data);
+        console.log('preloadTrashPage: Úspěšně přednačtená data pro smazané stránky', page);
       },
       error: (error) => {
+        console.error(`Chyba při pre-fetching smazaných dat pro stránku ${page}:`, error);
       }
     });
   }
 
   toggleTable(): void {
     this.showTrashTable = !this.showTrashTable;
+    console.log('toggleTable: Přepínám na tabulku:', this.showTrashTable ? 'smazané' : 'aktivní');
     this.forceFullRefresh();
   }
 
   applyFilters(): void {
+    console.log('applyFilters: Aplikuji nové filtry.');
     this.forceFullRefresh();
   }
 
@@ -261,12 +302,16 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     this.filterStatus = '';
     this.filterPriority = '';
     this.filterEmail = '';
+    this.filterSortBy = '';
+    this.filterSortDirection = 'asc';
+    console.log('clearFilters: Filtry vyčištěny.');
     this.forceFullRefresh();
   }
 
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
       this.currentPage = page;
+      console.log('goToPage: Přejít na stránku', page);
       this.loadActiveRequests().subscribe();
     }
   }
@@ -274,6 +319,7 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   goToTrashPage(page: number): void {
     if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
       this.trashCurrentPage = page;
+      console.log('goToTrashPage: Přejít na smazanou stránku', page);
       this.loadTrashRequests().subscribe();
     }
   }
@@ -283,6 +329,7 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     const newItemsPerPage = Number(selectElement.value);
     if (newItemsPerPage !== this.itemsPerPage) {
       this.itemsPerPage = newItemsPerPage;
+      console.log('onItemsPerPageChange: Změna počtu položek na stránku na', newItemsPerPage);
       this.forceFullRefresh();
     }
   }
@@ -292,6 +339,7 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     const newItemsPerPage = Number(selectElement.value);
     if (newItemsPerPage !== this.trashItemsPerPage) {
       this.trashItemsPerPage = newItemsPerPage;
+      console.log('onTrashItemsPerPageChange: Změna počtu položek na stránku na', newItemsPerPage);
       this.forceFullRefresh();
     }
   }
@@ -325,71 +373,81 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   }
 
   handleItemRestored(): void {
+    console.log('handleItemRestored: Položka obnovena.');
     this.forceFullRefresh();
   }
 
   handleItemDeleted(): void {
+    console.log('handleItemDeleted: Položka smazána.');
     this.forceFullRefresh();
   }
 
-  private forceFullRefresh(): void {
+  private forceFullRefresh(): void {
     this.activeRequestsCache.clear();
     this.trashRequestsCache.clear();
     this.currentPage = 1;
     this.trashCurrentPage = 1;
+
+    // Set loading flags once at the beginning
     this.isLoading = true;
     this.isTrashTableLoading = true;
     this.cd.detectChanges();
 
-    const activeObs$ = this.loadActiveRequests();
-    const trashObs$ = this.loadTrashRequests();
+    console.log('forceFullRefresh: Spouštím plný refresh tabulek.');
 
-    forkJoin([activeObs$, trashObs$]).subscribe(() => {
+    forkJoin([
+      this.loadActiveRequests(),
+      this.loadTrashRequests()
+    ]).pipe(
+      finalize(() => {
+        // Clear loading flags once all data is fetched
         this.isLoading = false;
         this.isTrashTableLoading = false;
         this.cd.detectChanges();
-    });
+        console.log('forceFullRefresh: Všechny tabulky byly obnoveny.');
+      })
+    ).subscribe();
   }
 
-  handleCreateFormOpened(): void {
-    this.selectedItemForEdit = null;
-    this.showCreateForm = !this.showCreateForm;
-  }
+  handleCreateFormOpened(): void {
+    this.selectedItemForEdit = null;
+    this.showCreateForm = !this.showCreateForm;
+  }
 
-  handleEditFormOpened(item: RawRequestCommission): void {
-    this.selectedItemForEdit = item;
-    this.showCreateForm = true;
-  }
+  handleEditFormOpened(item: RawRequestCommission): void {
+    this.selectedItemForEdit = item;
+    this.showCreateForm = true;
+  }
 
-  handleFormSubmitted(formData: RawRequestCommission): void {
-    this.showCreateForm = false;
-    if (formData.id) {
-      this.isLoading = true;
-      this.updateData(formData.id, formData).subscribe({
-        next: (response) => {
-          this.forceFullRefresh();
-        },
-        error: (err) => {
-          this.isLoading = false;
-          this.cd.detectChanges();
-        }
-      });
-    } else {
-      this.isLoading = true;
-      this.postData(formData).subscribe({
-        next: (response) => {
-          this.forceFullRefresh();
-        },
-        error: (err) => {
-          this.isLoading = false;
-          this.cd.detectChanges();
-        }
-      });
-    }
-  }
+  handleFormSubmitted(formData: RawRequestCommission): void {
+    this.showCreateForm = false;
+    if (formData.id) {
+      this.isLoading = true;
+      this.updateData(formData.id, formData).subscribe({
+        next: (response) => {
+          this.forceFullRefresh();
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.cd.detectChanges();
+        }
+      });
+    } else {
+      this.isLoading = true;
+      this.postData(formData).subscribe({
+        next: (response) => {
+          this.forceFullRefresh();
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.cd.detectChanges();
+        }
+      });
+    }
+  }
 
-  onCancelForm() {
-    this.showCreateForm = false;
-    this.selectedItemForEdit = null;
-  }
+  onCancelForm() {
+    this.showCreateForm = false;
+    this.selectedItemForEdit = null;
+  }
 }

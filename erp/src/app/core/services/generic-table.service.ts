@@ -30,7 +30,9 @@ export interface FilterParams {
   status?: string;
   priority?: string;
   email?: string;
-  is_deleted?: string; // TOTO BYLO PŘIDÁNO
+  is_deleted?: string;
+  sort_by?: string; // Nově přidaný parametr pro název sloupce řazení
+  sort_direction?: 'asc' | 'desc'; // Nově přidaný parametr pro směr řazení
 }
 
 @Injectable({
