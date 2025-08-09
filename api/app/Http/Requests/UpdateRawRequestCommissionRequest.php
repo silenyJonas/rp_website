@@ -25,10 +25,10 @@ class UpdateRawRequestCommissionRequest extends FormRequest
             'thema' => ['sometimes', 'string', 'max:255'],
             'contact_email' => ['sometimes', 'email', 'max:255'],
             'contact_phone' => ['nullable', 'string', 'max:255'],
-            'order_description' => ['sometimes', 'string', 'max:255'],
+            // Pravidlo 'max:255' bylo odstraněno, protože v databázi je typ 'text', který nemá limit délky.
+            'order_description' => ['sometimes', 'string'],
             'status' => ['sometimes', 'string', 'in:Nově zadané,Zpracovává se,Dokončeno,Zrušeno'],
             'priority' => ['sometimes', 'string', 'in:Nízká,Neutrální,Vysoká'],
-            // 'is_deleted' a 'deleted_at' pravidla odstraněna, spravuje SoftDeletes
         ];
     }
 }

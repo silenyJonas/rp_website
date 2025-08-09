@@ -1,3 +1,4 @@
+
 import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { CommonModule, CurrencyPipe, KeyValuePipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -41,6 +42,9 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   @Output() itemDeleted = new EventEmitter<any>();
   // Nová událost pro tlačítko "Přidat záznam"
   @Output() createFormOpened = new EventEmitter<void>();
+
+  // 🆕 Nová událost pro editaci
+  @Output() editFormOpened = new EventEmitter<any>();
 
   public isFullWidth: boolean = true;
 
@@ -124,7 +128,8 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
         });
         break;
       case 'neutral_button':
-        this.alertDialogService.open('Neutrální akce', 'Byla provedena neutrální akce s položkou.', 'info');
+        // 🆕 Volání události pro editaci a předání dat
+        this.editFormOpened.emit(item);
         break;
       default:
         console.warn('Neznámý typ tlačítka:', buttonType);

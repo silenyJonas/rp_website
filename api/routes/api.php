@@ -18,14 +18,12 @@
 // // Routa pro obnovení přístupového tokenu pomocí obnovovacího tokenu
 // Route::post('/refresh', [AuthController::class, 'refresh']);
 
-// // NOVÁ ŘEŠENÍ: Povolení POST (store) pro 'raw_request_commissions' bez autentizace
-// // Tato routa musí být definována PŘED Route::middleware('auth:sanctum') blokem.
+// // Povolení POST (store) pro 'raw_request_commissions' bez autentizace
 // Route::post('raw_request_commissions', [RawRequestCommissionController::class, 'store']);
 
 
 // // --- Chráněné routy (vyžadují autentizaci pomocí Bearer Tokenu) ---
 
-// // Všechny routy uvnitř této skupiny budou chráněny middlewarem 'auth:sanctum'.
 // Route::middleware('auth:sanctum')->group(function () {
 
 //     // Routa pro odhlášení uživatele (zneplatnění tokenu)
@@ -36,12 +34,14 @@
 //         return $request->user();
 //     });
 
+//     // KĽÚČOVÁ ZMENA: NOVÁ ROUTA pre obnovenie soft-deleted záznamu.
+//     // Táto routa musí byť definovaná PRED apiResource, aby nedošlo ku konfliktu.
+//     Route::put('raw_request_commissions/{id}/restore', [RawRequestCommissionController::class, 'restore']);
+
 //     // API Resource routy pro RawRequestCommissionController
 //     // Nyní vyloučíme 'store' akci, protože jsme ji definovali jako veřejnou výše.
-//     // Tím zajistíme, že ostatní akce (index, show, update, destroy) zůstanou chráněné.
 //     Route::apiResource('raw_request_commissions', RawRequestCommissionController::class)->except(['store']);
 
-//     // Pokud máte další API resource, přidejte je sem
 // });
 
 use Illuminate\Http\Request;
@@ -51,7 +51,7 @@ use App\Http\Controllers\Api\RawRequestCommissionController;
 
 // --- Veřejné routy (nevyžadují autentizaci) ---
 
-// Routa pro získání CSRF cookie (pro tokeny již není striktně nutná, ale může zůstat)
+// Routa pro získání CSRF cookie
 Route::get('/sanctum/csrf-cookie', function (Request $request) {
     return response()->json([], 204);
 });
@@ -62,7 +62,7 @@ Route::post('/login', [AuthController::class, 'login']);
 // Routa pro obnovení přístupového tokenu pomocí obnovovacího tokenu
 Route::post('/refresh', [AuthController::class, 'refresh']);
 
-// Povolení POST (store) pro 'raw_request_commissions' bez autentizace
+// Routa pro uložení nového požadavku bez autentizace
 Route::post('raw_request_commissions', [RawRequestCommissionController::class, 'store']);
 
 
@@ -84,6 +84,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // API Resource routy pro RawRequestCommissionController
     // Nyní vyloučíme 'store' akci, protože jsme ji definovali jako veřejnou výše.
-    Route::apiResource('raw_request_commissions', RawRequestCommissionController::class)->except(['store']);
+    // Dále vyloučíme 'create' a 'edit', protože se jedná o API, ne o webové rozhraní.
+    Route::apiResource('raw_request_commissions', RawRequestCommissionController::class)->except(['store', 'create', 'edit']);
 
 });

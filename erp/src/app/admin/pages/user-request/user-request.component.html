@@ -61,7 +61,8 @@
           [apiEndpoint]="apiEndpoint"
           [uploadsBaseUrl]="'[https://your-upload-domain.com/uploads/](https://your-upload-domain.com/uploads/)'"
           (itemDeleted)="handleItemDeleted()"
-          (createFormOpened)="handleCreateFormOpened()">
+          (createFormOpened)="handleCreateFormOpened()"
+          (editFormOpened)="handleEditFormOpened($event)">
       </app-generic-table>
 
         <app-generic-trash-table *ngIf="showTrashTable"
@@ -171,9 +172,16 @@
 
 
 
+<!-- <app-generic-form 
+  *ngIf="showCreateForm" 
+  [inputDefinitions]="formFields" 
+  (formSubmitted)="handleFormSubmitted($event)"
+  (formCanceled)="onCancelForm()">
+</app-generic-form> -->
 <app-generic-form 
   *ngIf="showCreateForm" 
   [inputDefinitions]="formFields" 
+  [formDataToEdit]="selectedItemForEdit"
   (formSubmitted)="handleFormSubmitted($event)"
   (formCanceled)="onCancelForm()">
 </app-generic-form>

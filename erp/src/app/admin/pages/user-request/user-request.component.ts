@@ -11,533 +11,606 @@
 // import { Router } from '@angular/router';
 // import { GenericTrashTableComponent } from '../../components/generic-trash-table/generic-trash-table.component';
 // import { RawRequestCommission } from '../../../shared/interfaces/raw-request-commission';
-// import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
-// import { InputDefinition } from '../../components/generic-form/generic-form.component';
+// import { GenericFormComponent, InputDefinition } from '../../components/generic-form/generic-form.component';
 
-// // Rozšířený interface pro filtry smazaných dat
 // interface TrashFilterParams extends FilterParams {
-//   only_trashed?: string;
+//   only_trashed?: string;
 // }
 
 // @Component({
-//   selector: 'app-user-request',
-//   standalone: true,
-//   imports: [
-//     CommonModule,
-//     FormsModule,
-//     GenericTableComponent,
-//     GenericTrashTableComponent,
-//     GenericFormComponent,
-//   ],
-//   templateUrl: './user-request.component.html',
-//   styleUrl: './user-request.component.css',
-//   changeDetection: ChangeDetectionStrategy.OnPush
+//   selector: 'app-user-request',
+//   standalone: true,
+//   imports: [
+//     CommonModule,
+//     FormsModule,
+//     GenericTableComponent,
+//     GenericTrashTableComponent,
+//     GenericFormComponent,
+//   ],
+//   templateUrl: './user-request.component.html',
+//   styleUrl: './user-request.component.css',
+//   changeDetection: ChangeDetectionStrategy.OnPush
 // })
 // export class UserRequestComponent extends BaseDataComponent<RawRequestCommission> implements OnInit {
 
-//   buttons: Buttons[] = [
-//     { display_name: 'Detaily', isActive: true, type: 'info_button' },
-//     { display_name: 'Editovat', isActive: true, type: 'neutral_button' },
-//     { display_name: 'Nove button', isActive: false, type: 'neutral_button' },
-//     { display_name: 'Smazat', isActive: true, type: 'delete_button' },
-//   ];
+//   buttons: Buttons[] = [
+//     { display_name: 'Detaily', isActive: true, type: 'info_button' },
+//     { display_name: 'Editovat', isActive: true, type: 'neutral_button' },
+//     { display_name: 'Nove button', isActive: false, type: 'neutral_button' },
+//     { display_name: 'Smazat', isActive: true, type: 'delete_button' },
+//   ];
 
-//   // Pole pro definici polí dynamického formuláře (upraveno dle InputDefinition)
-//   formFields: InputDefinition[] = [
-//     {
-//       column_name: 'thema',
-//       label: 'Téma',
-//       placeholder: 'Zadejte téma požadavku',
-//       type: 'text',
-//       required: true,
-//       pattern: '^[a-zA-Z0-9ěščřžýáíéóúůďťňĚŠČŘŽÝÁÍÉÚŮĎŤŇ\\s]{3,100}$',
-//       errorMessage: 'Téma musí mít 3-100 znaků.',
-//     },
-//     {
-//       column_name: 'contact_email',
-//       label: 'Kontaktní e-mail',
-//       placeholder: 'Zadejte e-mail',
-//       type: 'email',
-//       required: true,
-//       pattern: '[^@]+@[^@]+\.[^@]+',
-//       errorMessage: 'Zadejte platnou e-mailovou adresu.',
-//     },
-//     {
-//       column_name: 'contact_phone',
-//       label: 'Telefon',
-//       placeholder: 'Zadejte telefonní číslo (volitelné)',
-//       type: 'tel',
-//       required: false,
-//       pattern: '^[0-9+\\s-]{9,20}$',
-//       errorMessage: 'Zadejte platné telefonní číslo.',
-//     },
-//     {
-//       column_name: 'order_description',
-//       label: 'Popis objednávky',
-//       placeholder: 'Popište svůj požadavek',
-//       type: 'textarea',
-//       required: true,
-//       errorMessage: 'Popis je povinný.',
-//     }
-//   ];
+//   formFields: InputDefinition[] = [
+//     {
+//       column_name: 'thema',
+//       label: 'Téma',
+//       placeholder: 'Zadejte téma požadavku',
+//       type: 'text',
+//       required: true,
+//       pattern: '^[a-zA-Z0-9ěščřžýáíéóúůďťňĚŠČŘŽÝÁÍÉÚŮĎŤŇ\\s]{3,100}$',
+//       errorMessage: 'Téma musí mít 3-100 znaků.',
+//       editable: true,
+//       show_in_edit: true,
+//       show_in_create: true,
+//     },
+//     {
+//       column_name: 'contact_email',
+//       label: 'Kontaktní e-mail',
+//       placeholder: 'Zadejte e-mail',
+//       type: 'email',
+//       required: true,
+//       pattern: '[^@]+@[^@]+\.[^@]+',
+//       errorMessage: 'Zadejte platnou e-mailovou adresu.',
+//       editable: true,
+//       show_in_edit: true,
+//       show_in_create: true
+//     },
+//     {
+//       column_name: 'contact_phone',
+//       label: 'Telefon',
+//       placeholder: 'Zadejte telefonní číslo (volitelné)',
+//       type: 'tel',
+//       required: false,
+//       pattern: '^[0-9+\\s-]{9,20}$',
+//       errorMessage: 'Zadejte platné telefonní číslo.',
+//       editable: true,
+//       show_in_edit: true,
+//       show_in_create: true
+//     },
+//     {
+//       column_name: 'order_description',
+//       label: 'Popis objednávky',
+//       placeholder: 'Popište svůj požadavek',
+//       type: 'textarea',
+//       required: true,
+//       errorMessage: 'Popis je povinný.',
+//       editable: true,
+//       show_in_edit: true,
+//       show_in_create: true
+//     },
+//     {
+//       column_name: 'status',
+//       label: 'Status',
+//       placeholder: '',
+//       type: 'select',
+//       options: [
+//         {value: 'Nově zadané', label: 'Nízká'},
+//         {value: 'Zpracovává se', label: 'Zpracovává se'},
+//         {value: 'Dokončeno', label: 'Dokončeno'},
+//         {value: 'Zrušeno', label: 'Zrušeno'},
+//       ],
+//       required: true,
+//       errorMessage: 'Pole je povinné.',
+//       editable: true,
+//       show_in_edit: true,
+//       show_in_create: true
+//     },
+//     {
+//       column_name: 'priority',
+//       label: 'Priorita',
+//       placeholder: '',
+//       type: 'select',
+//       options: [
+//         {value: 'Nízká', label: 'Nízká'},
+//         {value: 'Neutrální', label: 'Neutrální'},
+//         {value: 'Vysoká', label: 'Vysoká'},
+//       ],
+//       required: true,
+//       errorMessage: 'Pole je povinné.',
+//       editable: true,
+//       show_in_edit: true,
+//       show_in_create: true
+//     },
+//     {
+//       column_name: 'id',
+//       label: 'ID záznamu',
+//       type: 'text',
+//       editable: false,
+//       show_in_edit: false,
+//       show_in_create: false
+//     },
+//     {
+//       column_name: 'created_at',
+//       label: 'Vytvořeno',
+//       type: 'text',
+//       editable: false,
+//       show_in_edit: false,
+//       show_in_create: false
+//     }
+//   ];
 
-//   userRequestColumns: ColumnDefinition[] = [
-//     { key: 'id', header: 'ID', type: 'text' },
-//     { key: 'thema', header: 'Téma', type: 'text' },
-//     { key: 'contact_email', header: 'Email', type: 'text' },
-//     { key: 'contact_phone', header: 'Telefon', type: 'text' },
-//     { key: 'status', header: 'Stav', type: 'text' },
-//     { key: 'priority', header: 'Priorita', type: 'text' },
-//     { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' },
-//     { key: 'order_description', header: 'Popis objednávky', type: 'text' },
-//     { key: 'last_changed_at', header: 'Změněno', type: 'date', format: 'short' }
-//   ];
+//   userRequestColumns: ColumnDefinition[] = [
+//     { key: 'id', header: 'ID', type: 'text' },
+//     { key: 'thema', header: 'Téma', type: 'text' },
+//     { key: 'contact_email', header: 'Email', type: 'text' },
+//     { key: 'contact_phone', header: 'Telefon', type: 'text' },
+//     { key: 'status', header: 'Stav', type: 'text' },
+//     { key: 'priority', header: 'Priorita', type: 'text' },
+//     { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' },
+//     { key: 'order_description', header: 'Popis objednávky', type: 'text' },
+//     { key: 'updated_at', header: 'Změněno', type: 'date', format: 'short' }
+//   ];
 
-//   trashUserRequestColumns: ColumnDefinition[] = [
-//     { key: 'id', header: 'ID', type: 'text' },
-//     { key: 'thema', header: 'Téma', type: 'text' },
-//     { key: 'contact_email', header: 'Email', type: 'text' },
-//     { key: 'contact_phone', header: 'Telefon', type: 'text' },
-//     { key: 'status', header: 'Stav', type: 'text' },
-//     { key: 'priority', header: 'Priorita', type: 'text' },
-//     { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' },
-//     { key: 'order_description', header: 'Popis objednávky', type: 'text' },
-//     { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' },
-//     { key: 'last_changed_at', header: 'Změněno', type: 'date', format: 'short' }
-//   ];
+//   trashUserRequestColumns: ColumnDefinition[] = [
+//     { key: 'id', header: 'ID', type: 'text' },
+//     { key: 'thema', header: 'Téma', type: 'text' },
+//     { key: 'contact_email', header: 'Email', type: 'text' },
+//     { key: 'contact_phone', header: 'Telefon', type: 'text' },
+//     { key: 'status', header: 'Stav', type: 'text' },
+//     { key: 'priority', header: 'Priorita', type: 'text' },
+//     { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' },
+//     { key: 'order_description', header: 'Popis objednávky', type: 'text' },
+//     { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' },
+//     { key: 'updated_at', header: 'Změněno', type: 'date', format: 'short' }
+//   ];
 
-//   showTrashTable: boolean = false;
-//   showCreateForm: boolean = false;
-//   
-//   override trashData: RawRequestCommission[] = [];
-//   override apiEndpoint: string = 'raw_request_commissions';
+//   showTrashTable: boolean = false;
+//   showCreateForm: boolean = false;
+  
+//   override trashData: RawRequestCommission[] = [];
+//   override apiEndpoint: string = 'raw_request_commissions';
 
-//   // 🆕 Lokální stav pro načítání dat
-//   isDataLoading: boolean = false;
-//   isTrashDataLoading: boolean = false;
+//   override isLoading: boolean = false;
+//   isTrashTableLoading: boolean = false;
 
-//   // Proměnné pro stránkování aktivních dat
-//   currentPage: number = 1;
-//   itemsPerPage: number = 15;
-//   totalItems: number = 0;
-//   totalPages: number = 0;
+//   currentPage: number = 1;
+//   itemsPerPage: number = 15;
+//   totalItems: number = 0;
+//   totalPages: number = 0;
 
-//   // Proměnné pro stránkování smazaných dat
-//   trashCurrentPage: number = 1;
-//   trashItemsPerPage: number = 15;
-//   trashTotalItems: number = 0;
-//   trashTotalPages: number = 0;
+//   trashCurrentPage: number = 1;
+//   trashItemsPerPage: number = 15;
+//   trashTotalItems: number = 0;
+//   trashTotalPages: number = 0;
 
-//   // Proměnné pro filtry
-//   filterSearch: string = '';
-//   filterStatus: string = '';
-//   filterPriority: string = '';
-//   filterEmail: string = '';
+//   filterSearch: string = '';
+//   filterStatus: string = '';
+//   filterPriority: string = '';
+//   filterEmail: string = '';
 
-//   statusOptions: string[] = ['Nově zadané', 'Zpracovává se', 'Dokončeno', 'Zrušeno'];
-//   priorityOptions: string[] = ['Nízká', 'Neutrální', 'Vysoká'];
+//   statusOptions: string[] = ['Nově zadané', 'Zpracovává se', 'Dokončeno', 'Zrušeno'];
+//   priorityOptions: string[] = ['Nízká', 'Neutrální', 'Vysoká'];
 
-//   // Kešování stránek
-//   private activeRequestsCache: Map<number, RawRequestCommission[]> = new Map();
-//   private trashRequestsCache: Map<number, RawRequestCommission[]> = new Map();
-//   private currentActiveFilters: FilterParams = {};
-//   private currentTrashFilters: FilterParams = {};
+//   private activeRequestsCache: Map<number, RawRequestCommission[]> = new Map();
+//   private trashRequestsCache: Map<number, RawRequestCommission[]> = new Map();
+//   private currentActiveFilters: FilterParams = {};
+//   private currentTrashFilters: FilterParams = {};
 
-//   constructor(
-//     protected override dataHandler: DataHandler,
-//     protected override cd: ChangeDetectorRef,
-//     private genericTableService: GenericTableService,
-//     private authService: AuthService,
-//     private router: Router
-//   ) {
-//     super(dataHandler, cd);
-//   }
+//   selectedItemForEdit: RawRequestCommission | null = null;
 
-//   override ngOnInit(): void {
-//     super.ngOnInit();
-//     this.authService.isLoggedIn$.subscribe(loggedIn => {
-//       if (loggedIn) {
-//         this.loadActiveRequests();
-//         if (this.showTrashTable) {
-//           this.loadTrashRequests();
-//         }
-//       } else {
-//         this.router.navigate(['/auth/login']);
-//       }
-//     });
-//   }
+//   constructor(
+//     protected override dataHandler: DataHandler,
+//     protected override cd: ChangeDetectorRef,
+//     private genericTableService: GenericTableService,
+//     private authService: AuthService,
+//     private router: Router
+//   ) {
+//     super(dataHandler, cd);
+//   }
 
-//   // Načítá aktivní požadavky s kešováním a pre-fetchingem
-//   loadActiveRequests(): void {
-//     console.log('user-request: Spouštím načítání aktivních požadavků. isLoading je true.');
-//     this.isDataLoading = true;
-//     this.errorMessage = null;
+//   override ngOnInit(): void {
+//     console.log('NGONINIT: Spuštěn.');
+//     super.ngOnInit();
+//     this.authService.isLoggedIn$.subscribe(loggedIn => {
+//       console.log(`NGONINIT: Sledování stavu přihlášení. Uživatel je přihlášen: ${loggedIn}.`);
+//       if (loggedIn) {
+//         this.loadActiveRequests();
+//       } else {
+//         console.log('NGONINIT: Uživatel není přihlášen, přesměrování na login.');
+//         this.router.navigate(['/auth/login']);
+//       }
+//     });
+//   }
 
-//     const currentFilters: FilterParams = {
-//       search: this.filterSearch,
-//       status: this.filterStatus,
-//       priority: this.filterPriority,
-//       email: this.filterEmail,
-//       is_deleted: 'false'
-//     };
+//   loadActiveRequests(): void {
+//     console.log('LOAD ACTIVE REQUESTS: Spouštím načítání aktivních požadavků.');
+//     this.isLoading = true;
+//     this.isTrashTableLoading = false;
+//     this.errorMessage = null;
+//     this.cd.detectChanges();
+//     console.log(`LOAD ACTIVE REQUESTS: Nastaveno isLoading na true. cd.detectChanges() voláno.`);
 
-//     if (JSON.stringify(currentFilters) !== JSON.stringify(this.currentActiveFilters)) {
-//       this.activeRequestsCache.clear();
-//       this.currentPage = 1;
-//       this.currentActiveFilters = currentFilters;
-//     }
+//     const currentFilters: FilterParams = {
+//       search: this.filterSearch,
+//       status: this.filterStatus,
+//       priority: this.filterPriority,
+//       email: this.filterEmail,
+//       is_deleted: 'false'
+//     };
 
-//     if (this.activeRequestsCache.has(this.currentPage)) {
-//       console.log('user-request: Data pro aktivní požadavky načtena z keše. isLoading je false.');
-//       this.data = this.activeRequestsCache.get(this.currentPage)!;
-//       this.isDataLoading = false;
-//       this.cd.detectChanges();
-//       this.preloadActivePage(this.currentPage + 1);
-//       return;
-//     }
+//     console.log('LOAD ACTIVE REQUESTS: Aktuální filtry:', currentFilters);
+//     console.log('LOAD ACTIVE REQUESTS: Minulé aktivní filtry:', this.currentActiveFilters);
 
-//     this.genericTableService.getPaginatedData<RawRequestCommission>(
-//       this.apiEndpoint,
-//       this.currentPage,
-//       this.itemsPerPage,
-//       currentFilters
-//     ).subscribe({
-//       next: (response: PaginatedResponse<RawRequestCommission>) => {
-//         console.log('user-request: Načtení aktivních požadavků z API bylo úspěšné. isLoading je false.');
-//         this.data = response.data;
-//         this.totalItems = response.total;
-//         this.totalPages = response.last_page;
-//         this.currentPage = response.current_page;
-//         this.isDataLoading = false;
-//         this.activeRequestsCache.set(this.currentPage, response.data);
-//         this.cd.detectChanges();
-//         this.preloadActivePage(this.currentPage + 1);
-//       },
-//       error: (error) => {
-//         console.error('user-request: Chyba při načítání aktivních požadavků uživatelů:', error);
-//         this.errorMessage = 'Nepodařilo se načíst aktivní data požadavků.';
-//         console.log('user-request: Načítání aktivních požadavků selhalo. isLoading je false.');
-//         this.isDataLoading = false;
-//         this.cd.detectChanges();
-//       }
-//     });
-//   }
+//     if (JSON.stringify(currentFilters) !== JSON.stringify(this.currentActiveFilters)) {
+//       console.log('LOAD ACTIVE REQUESTS: Filtry se změnily, vyprázdňuji cache a resetuji stránku.');
+//       this.activeRequestsCache.clear();
+//       this.currentPage = 1;
+//       this.currentActiveFilters = currentFilters;
+//     }
 
-//   // Pomocná metoda pro pre-fetching (načtení do keše bez změny UI)
-//   private preloadActivePage(page: number): void {
-//     if (page > this.totalPages || this.activeRequestsCache.has(page)) {
-//       return;
-//     }
+//     if (this.activeRequestsCache.has(this.currentPage)) {
+//       console.log(`LOAD ACTIVE REQUESTS: Data pro stránku ${this.currentPage} nalezena v keši.`);
+//       this.data = this.activeRequestsCache.get(this.currentPage)!;
+//       this.isLoading = false;
+//       this.cd.detectChanges();
+//       console.log('LOAD ACTIVE REQUESTS: Data z keše načtena, isLoading je false.');
+//       this.preloadActivePage(this.currentPage + 1);
+//       return;
+//     }
 
-//     const currentFilters: FilterParams = {
-//       search: this.filterSearch,
-//       status: this.filterStatus,
-//       priority: this.filterPriority,
-//       email: this.filterEmail,
-//       is_deleted: 'false'
-//     };
+//     console.log(`LOAD ACTIVE REQUESTS: Data pro stránku ${this.currentPage} nejsou v keši, načítám z API.`);
+//     this.genericTableService.getPaginatedData<RawRequestCommission>(
+//       this.apiEndpoint,
+//       this.currentPage,
+//       this.itemsPerPage,
+//       currentFilters
+//     ).subscribe({
+//       next: (response: PaginatedResponse<RawRequestCommission>) => {
+//         console.log('LOAD ACTIVE REQUESTS: Načtení z API bylo úspěšné. Odpověď:', response);
+//         this.data = response.data;
+//         this.totalItems = response.total;
+//         this.totalPages = response.last_page;
+//         this.currentPage = response.current_page;
+//         this.isLoading = false;
+//         this.activeRequestsCache.set(this.currentPage, response.data);
+//         this.cd.detectChanges();
+//         console.log('LOAD ACTIVE REQUESTS: Data z API uložena do keše, isLoading je false, cd.detectChanges() voláno.');
+//         this.preloadActivePage(this.currentPage + 1);
+//       },
+//       error: (error) => {
+//         console.error('LOAD ACTIVE REQUESTS: Chyba při načítání aktivních požadavků z API:', error);
+//         this.errorMessage = 'Nepodařilo se načíst aktivní data požadavků.';
+//         this.isLoading = false;
+//         this.cd.detectChanges();
+//         console.log('LOAD ACTIVE REQUESTS: Načítání selhalo, isLoading je false, cd.detectChanges() voláno.');
+//       }
+//     });
+//   }
 
-//     this.genericTableService.getPaginatedData<RawRequestCommission>(
-//       this.apiEndpoint,
-//       page,
-//       this.itemsPerPage,
-//       currentFilters
-//     ).subscribe({
-//       next: (response: PaginatedResponse<RawRequestCommission>) => {
-//         this.activeRequestsCache.set(page, response.data);
-//       },
-//       error: (error) => {
-//         console.error(`user-request: Chyba při pre-fetching aktivních dat pro stránku ${page}:`, error);
-//       }
-//     });
-//   }
+//   private preloadActivePage(page: number): void {
+//     console.log(`PRELOAD ACTIVE PAGE: Pokouším se pre-fetchovat stránku ${page}.`);
+//     if (page > this.totalPages || this.activeRequestsCache.has(page)) {
+//       console.log(`PRELOAD ACTIVE PAGE: Stránka ${page} je buď mimo rozsah, nebo již v keši. Pre-fetch zrušen.`);
+//       return;
+//     }
 
-//   // Načítá smazané požadavky s kešováním a pre-fetchingem
-//   loadTrashRequests(): void {
-//     console.log('user-request: Spouštím načítání smazaných požadavků. isTrashDataLoading je true.');
-//     this.isTrashDataLoading = true;
-//     this.errorMessage = null;
+//     const currentFilters: FilterParams = {
+//       search: this.filterSearch,
+//       status: this.filterStatus,
+//       priority: this.filterPriority,
+//       email: this.filterEmail,
+//       is_deleted: 'false'
+//     };
 
-//     const trashFilters: TrashFilterParams = {
-//       only_trashed: 'true',
-//       search: this.filterSearch,
-//       status: this.filterStatus,
-//       priority: this.filterPriority,
-//       email: this.filterEmail
-//     };
+//     this.genericTableService.getPaginatedData<RawRequestCommission>(
+//       this.apiEndpoint,
+//       page,
+//       this.itemsPerPage,
+//       currentFilters
+//     ).subscribe({
+//       next: (response: PaginatedResponse<RawRequestCommission>) => {
+//         console.log(`PRELOAD ACTIVE PAGE: Pre-fetch stránky ${page} úspěšný, data uložena do keše.`);
+//         this.activeRequestsCache.set(page, response.data);
+//       },
+//       error: (error) => {
+//         console.error(`PRELOAD ACTIVE PAGE: Chyba při pre-fetching aktivních dat pro stránku ${page}:`, error);
+//       }
+//     });
+//   }
 
-//     if (JSON.stringify(trashFilters) !== JSON.stringify(this.currentTrashFilters)) {
-//       this.trashRequestsCache.clear();
-//       this.trashCurrentPage = 1;
-//       this.currentTrashFilters = trashFilters;
-//     }
+//   loadTrashRequests(): void {
+//     console.log('LOAD TRASH REQUESTS: Spouštím načítání smazaných požadavků.');
+//     this.isTrashTableLoading = true;
+//     this.isLoading = false;
+//     this.errorMessage = null;
+//     this.cd.detectChanges();
+//     console.log('LOAD TRASH REQUESTS: Nastaveno isTrashTableLoading na true. cd.detectChanges() voláno.');
 
-//     if (this.trashRequestsCache.has(this.trashCurrentPage)) {
-//       console.log('user-request: Data pro smazané požadavky načtena z keše. isTrashDataLoading je false.');
-//       this.trashData = this.trashRequestsCache.get(this.trashCurrentPage)!;
-//       this.isTrashDataLoading = false;
-//       this.cd.detectChanges();
-//       this.preloadTrashPage(this.trashCurrentPage + 1);
-//       return;
-//     }
+//     const trashFilters: TrashFilterParams = {
+//       only_trashed: 'true',
+//       search: this.filterSearch,
+//       status: this.filterStatus,
+//       priority: this.filterPriority,
+//       email: this.filterEmail
+//     };
 
-//     this.genericTableService.getPaginatedData<RawRequestCommission>(
-//       this.apiEndpoint,
-//       this.trashCurrentPage,
-//       this.trashItemsPerPage,
-//       trashFilters
-//     ).subscribe({
-//       next: (response: PaginatedResponse<RawRequestCommission>) => {
-//         console.log('user-request: Načtení smazaných požadavků z API bylo úspěšné. isTrashDataLoading je false.');
-//         this.trashData = response.data;
-//         this.trashTotalItems = response.total;
-//         this.trashTotalPages = response.last_page;
-//         this.trashCurrentPage = response.current_page;
-//         this.isTrashDataLoading = false;
-//         this.trashRequestsCache.set(this.trashCurrentPage, response.data);
-//         this.cd.detectChanges();
-//         this.preloadTrashPage(this.trashCurrentPage + 1);
-//       },
-//       error: (error) => {
-//         console.error('user-request: Chyba při načítání smazaných požadavků uživatelů:', error);
-//         this.errorMessage = 'Nepodařilo se načíst smazaná data požadavků.';
-//         console.log('user-request: Načítání smazaných požadavků selhalo. isTrashDataLoading je false.');
-//         this.isTrashDataLoading = false;
-//         this.cd.detectChanges();
-//       }
-//     });
-//   }
+//     console.log('LOAD TRASH REQUESTS: Aktuální filtry pro smazané:', trashFilters);
+//     console.log('LOAD TRASH REQUESTS: Minulé smazané filtry:', this.currentTrashFilters);
 
-//   // Pomocná metoda pro pre-fetching (načtení do keše bez změny UI)
-//   private preloadTrashPage(page: number): void {
-//     if (page > this.trashTotalPages || this.trashRequestsCache.has(page)) {
-//       return;
-//     }
+//     if (JSON.stringify(trashFilters) !== JSON.stringify(this.currentTrashFilters)) {
+//       console.log('LOAD TRASH REQUESTS: Filtry pro smazané se změnily, vyprázdňuji cache a resetuji stránku.');
+//       this.trashRequestsCache.clear();
+//       this.trashCurrentPage = 1;
+//       this.currentTrashFilters = trashFilters;
+//     }
 
-//     const trashFilters: TrashFilterParams = {
-//       only_trashed: 'true',
-//       search: this.filterSearch,
-//       status: this.filterStatus,
-//       priority: this.filterPriority,
-//       email: this.filterEmail
-//     };
+//     if (this.trashRequestsCache.has(this.trashCurrentPage)) {
+//       console.log(`LOAD TRASH REQUESTS: Data pro smazanou stránku ${this.trashCurrentPage} nalezena v keši.`);
+//       this.trashData = this.trashRequestsCache.get(this.trashCurrentPage)!;
+//       this.isTrashTableLoading = false;
+//       this.cd.detectChanges();
+//       console.log('LOAD TRASH REQUESTS: Data z keše načtena, isTrashTableLoading je false.');
+//       this.preloadTrashPage(this.trashCurrentPage + 1);
+//       return;
+//     }
 
-//     this.genericTableService.getPaginatedData<RawRequestCommission>(
-//       this.apiEndpoint,
-//       page,
-//       this.trashItemsPerPage,
-//       trashFilters
-//     ).subscribe({
-//       next: (response: PaginatedResponse<RawRequestCommission>) => {
-//         this.trashRequestsCache.set(page, response.data);
-//       },
-//       error: (error) => {
-//         console.error(`user-request: Chyba při pre-fetching smazaných dat pro stránku ${page}:`, error);
-//       }
-//     });
-//   }
+//     console.log(`LOAD TRASH REQUESTS: Data pro smazanou stránku ${this.trashCurrentPage} nejsou v keši, načítám z API.`);
+//     this.genericTableService.getPaginatedData<RawRequestCommission>(
+//       this.apiEndpoint,
+//       this.trashCurrentPage,
+//       this.trashItemsPerPage,
+//       trashFilters
+//     ).subscribe({
+//       next: (response: PaginatedResponse<RawRequestCommission>) => {
+//         console.log('LOAD TRASH REQUESTS: Načtení z API bylo úspěšné. Odpověď:', response);
+//         this.trashData = response.data;
+//         this.trashTotalItems = response.total;
+//         this.trashTotalPages = response.last_page;
+//         this.trashCurrentPage = response.current_page;
+//         this.isTrashTableLoading = false;
+//         this.trashRequestsCache.set(this.trashCurrentPage, response.data);
+//         this.cd.detectChanges();
+//         console.log('LOAD TRASH REQUESTS: Data z API uložena do keše, isTrashTableLoading je false, cd.detectChanges() voláno.');
+//         this.preloadTrashPage(this.trashCurrentPage + 1);
+//       },
+//       error: (error) => {
+//         console.error('LOAD TRASH REQUESTS: Chyba při načítání smazaných požadavků z API:', error);
+//         this.errorMessage = 'Nepodařilo se načíst smazaná data požadavků.';
+//         this.isTrashTableLoading = false;
+//         this.cd.detectChanges();
+//         console.log('LOAD TRASH REQUESTS: Načítání selhalo, isTrashTableLoading je false, cd.detectChanges() voláno.');
+//       }
+//     });
+//   }
 
-//   // Přepíná mezi aktivní a smazanou tabulkou
-//   toggleTable(): void {
-//     this.showTrashTable = !this.showTrashTable;
-//     if (this.showTrashTable) {
-//       console.log('user-request: Přepnuto na smazanou tabulku. isTrashDataLoading je true.');
-//       this.isTrashDataLoading = true;
-//       this.isDataLoading = false;
-//       this.loadTrashRequests();
-//     } else {
-//       console.log('user-request: Přepnuto na aktivní tabulku. isDataLoading je true.');
-//       this.isDataLoading = true;
-//       this.isTrashDataLoading = false;
-//       this.loadActiveRequests();
-//     }
-//   }
+//   private preloadTrashPage(page: number): void {
+//     console.log(`PRELOAD TRASH PAGE: Pokouším se pre-fetchovat smazanou stránku ${page}.`);
+//     if (page > this.trashTotalPages || this.trashRequestsCache.has(page)) {
+//       console.log(`PRELOAD TRASH PAGE: Smazaná stránka ${page} je buď mimo rozsah, nebo již v keši. Pre-fetch zrušen.`);
+//       return;
+//     }
 
-//   // Aplikuje filtry a načítá data z API. Vyčistí keš, aby se načetla nová data.
-//   applyFilters(): void {
-//     if (this.showTrashTable) {
-//       this.trashRequestsCache.clear();
-//       this.trashCurrentPage = 1;
-//       console.log('user-request: Aplikuji filtry na smazanou tabulku. isTrashDataLoading je true.');
-//       this.isTrashDataLoading = true;
-//       this.loadTrashRequests();
-//     } else {
-//       this.activeRequestsCache.clear();
-//       this.currentPage = 1;
-//       console.log('user-request: Aplikuji filtry na aktivní tabulku. isDataLoading je true.');
-//       this.isDataLoading = true;
-//       this.loadActiveRequests();
-//     }
-//   }
+//     const trashFilters: TrashFilterParams = {
+//       only_trashed: 'true',
+//       search: this.filterSearch,
+//       status: this.filterStatus,
+//       priority: this.filterPriority,
+//       email: this.filterEmail
+//     };
 
-//   // Čistí filtry a načítá data z API. Vyčistí keš.
-//   clearFilters(): void {
-//     this.filterSearch = '';
-//     this.filterStatus = '';
-//     this.filterPriority = '';
-//     this.filterEmail = '';
-//     if (this.showTrashTable) {
-//       this.trashRequestsCache.clear();
-//       this.trashCurrentPage = 1;
-//       console.log('user-request: Čistím filtry na smazané tabulce. isTrashDataLoading je true.');
-//       this.isTrashDataLoading = true;
-//       this.loadTrashRequests();
-//     } else {
-//       this.activeRequestsCache.clear();
-//       this.currentPage = 1;
-//       console.log('user-request: Čistím filtry na aktivní tabulce. isDataLoading je true.');
-//       this.isDataLoading = true;
-//       this.loadActiveRequests();
-//     }
-//   }
+//     this.genericTableService.getPaginatedData<RawRequestCommission>(
+//       this.apiEndpoint,
+//       page,
+//       this.trashItemsPerPage,
+//       trashFilters
+//     ).subscribe({
+//       next: (response: PaginatedResponse<RawRequestCommission>) => {
+//         console.log(`PRELOAD TRASH PAGE: Pre-fetch smazané stránky ${page} úspěšný, data uložena do keše.`);
+//         this.trashRequestsCache.set(page, response.data);
+//       },
+//       error: (error) => {
+//         console.error(`PRELOAD TRASH PAGE: Chyba při pre-fetching smazaných dat pro stránku ${page}:`, error);
+//       }
+//     });
+//   }
 
-//   // Přejde na danou stránku v aktivní tabulce
-//   goToPage(page: number): void {
-//     if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
-//       this.currentPage = page;
-//       console.log(`user-request: Přejdu na aktivní stránku ${page}. isDataLoading je true.`);
-//       this.isDataLoading = true;
-//       this.loadActiveRequests();
-//     }
-//   }
+//   toggleTable(): void {
+//     console.log(`TOGGLE TABLE: Přepínám zobrazení tabulky. showTrashTable se mění z ${this.showTrashTable} na ${!this.showTrashTable}.`);
+//     this.showTrashTable = !this.showTrashTable;
+//     this.forceFullRefresh();
+//   }
 
-//   // Přejde na danou stránku ve smazané tabulce
-//   goToTrashPage(page: number): void {
-//     if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
-//       this.trashCurrentPage = page;
-//       console.log(`user-request: Přejdu na smazanou stránku ${page}. isTrashDataLoading je true.`);
-//       this.isTrashDataLoading = true;
-//       this.loadTrashRequests();
-//     }
-//   }
+//   applyFilters(): void {
+//     console.log('APPLY FILTERS: Spouštím aplikaci filtrů.');
+//     if (this.showTrashTable) {
+//       console.log('APPLY FILTERS: Aplikuji filtry na smazanou tabulku.');
+//       this.trashRequestsCache.clear();
+//       this.trashCurrentPage = 1;
+//       this.isTrashTableLoading = true;
+//       this.loadTrashRequests();
+//     } else {
+//       console.log('APPLY FILTERS: Aplikuji filtry na aktivní tabulku.');
+//       this.activeRequestsCache.clear();
+//       this.currentPage = 1;
+//       this.isLoading = true;
+//       this.loadActiveRequests();
+//     }
+//   }
 
-//   // Změní počet položek na stránku pro aktivní tabulku
-//   onItemsPerPageChange(event: Event): void {
-//     const selectElement = event.target as HTMLSelectElement;
-//     const newItemsPerPage = Number(selectElement.value);
-//     if (newItemsPerPage !== this.itemsPerPage) {
-//       this.itemsPerPage = newItemsPerPage;
-//       this.currentPage = 1;
-//       this.activeRequestsCache.clear();
-//       console.log('user-request: Změna položek na stránku. isDataLoading je true.');
-//       this.isDataLoading = true;
-//       this.loadActiveRequests();
-//     }
-//   }
+//   clearFilters(): void {
+//     console.log('CLEAR FILTERS: Vymazání všech filtrů.');
+//     this.filterSearch = '';
+//     this.filterStatus = '';
+//     this.filterPriority = '';
+//     this.filterEmail = '';
+//     this.forceFullRefresh();
+//   }
 
-//   // Změní počet položek na stránku pro smazanou tabulku
-//   onTrashItemsPerPageChange(event: Event): void {
-//     const selectElement = event.target as HTMLSelectElement;
-//     const newItemsPerPage = Number(selectElement.value);
-//     if (newItemsPerPage !== this.trashItemsPerPage) {
-//       this.trashItemsPerPage = newItemsPerPage;
-//       this.trashCurrentPage = 1;
-//       this.trashRequestsCache.clear();
-//       console.log('user-request: Změna položek na stránku pro smazanou tabulku. isTrashDataLoading je true.');
-//       this.isTrashDataLoading = true;
-//       this.loadTrashRequests();
-//     }
-//   }
+//   goToPage(page: number): void {
+//     console.log(`GO TO PAGE: Požadavek na přesun na aktivní stránku ${page}. Aktuální stránka: ${this.currentPage}.`);
+//     if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+//       this.currentPage = page;
+//       this.isLoading = true;
+//       this.loadActiveRequests();
+//     } else {
+//       console.log(`GO TO PAGE: Neplatný požadavek na stránku ${page}.`);
+//     }
+//   }
 
-//   // Generuje pole stránek pro aktivní tabulku
-//   get pagesArray(): number[] {
-//     const maxPagesToShow = 5;
-//     let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
-//     let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
-//     if (endPage - startPage + 1 < maxPagesToShow) {
-//       startPage = Math.max(1, endPage - maxPagesToShow + 1);
-//     }
-//     const pages = [];
-//     for (let i = startPage; i <= endPage; i++) {
-//       pages.push(i);
-//     }
-//     return pages;
-//   }
+//   goToTrashPage(page: number): void {
+//     console.log(`GO TO TRASH PAGE: Požadavek na přesun na smazanou stránku ${page}. Aktuální stránka: ${this.trashCurrentPage}.`);
+//     if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
+//       this.trashCurrentPage = page;
+//       this.isTrashTableLoading = true;
+//       this.loadTrashRequests();
+//     } else {
+//       console.log(`GO TO TRASH PAGE: Neplatný požadavek na smazanou stránku ${page}.`);
+//     }
+//   }
 
-//   // Generuje pole stránek pro smazanou tabulku
-//   get trashPagesArray(): number[] {
-//     const maxPagesToShow = 5;
-//     let startPage = Math.max(1, this.trashCurrentPage - Math.floor(maxPagesToShow / 2));
-//     let endPage = Math.min(this.trashTotalPages, startPage + maxPagesToShow - 1);
-//     if (endPage - startPage + 1 < maxPagesToShow) {
-//       startPage = Math.max(1, endPage - maxPagesToShow + 1);
-//     }
-//     const pages = [];
-//     for (let i = startPage; i <= endPage; i++) {
-//       pages.push(i);
-//     }
-//     return pages;
-//   }
+//   onItemsPerPageChange(event: Event): void {
+//     const selectElement = event.target as HTMLSelectElement;
+//     const newItemsPerPage = Number(selectElement.value);
+//     console.log(`ON ITEMS PER PAGE CHANGE: Změna počtu položek na stránce. Nová hodnota: ${newItemsPerPage}.`);
+//     if (newItemsPerPage !== this.itemsPerPage) {
+//       this.itemsPerPage = newItemsPerPage;
+//       this.currentPage = 1;
+//       this.activeRequestsCache.clear();
+//       this.isLoading = true;
+//       this.loadActiveRequests();
+//     }
+//   }
 
-//   // Metoda pro zachycení události obnovy dat.
-//   handleItemRestored(): void {
-//     console.log('user-request: Událost obnovení dat zachycena. isDataLoading a isTrashDataLoading jsou true.');
-//     this.isDataLoading = true;
-//     this.isTrashDataLoading = true;
-//     this.activeRequestsCache.clear();
-//     this.trashRequestsCache.clear();
-//     this.loadActiveRequests();
-//     this.loadTrashRequests();
-//   }
+//   onTrashItemsPerPageChange(event: Event): void {
+//     const selectElement = event.target as HTMLSelectElement;
+//     const newItemsPerPage = Number(selectElement.value);
+//     console.log(`ON TRASH ITEMS PER PAGE CHANGE: Změna počtu položek pro smazanou tabulku. Nová hodnota: ${newItemsPerPage}.`);
+//     if (newItemsPerPage !== this.trashItemsPerPage) {
+//       this.trashItemsPerPage = newItemsPerPage;
+//       this.trashCurrentPage = 1;
+//       this.trashRequestsCache.clear();
+//       this.isTrashTableLoading = true;
+//       this.loadTrashRequests();
+//     }
+//   }
 
-//   // Metoda pro zachycení události smazání dat.
-//   handleItemDeleted(): void {
-//     console.log('user-request: Událost smazání dat zachycena. isDataLoading a isTrashDataLoading jsou true.');
-//     this.isDataLoading = true;
-//     this.isTrashDataLoading = true;
-//     this.activeRequestsCache.clear();
-//     this.trashRequestsCache.clear();
-//     this.loadActiveRequests();
-//     this.loadTrashRequests();
-//   }
+//   get pagesArray(): number[] {
+//     // Logika pole stránek je ponechána beze změn
+//     const maxPagesToShow = 5;
+//     let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
+//     let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+//     if (endPage - startPage + 1 < maxPagesToShow) {
+//       startPage = Math.max(1, endPage - maxPagesToShow + 1);
+//     }
+//     const pages = [];
+//     for (let i = startPage; i <= endPage; i++) {
+//       pages.push(i);
+//     }
+//     return pages;
+//   }
 
-//   // Metoda pro vytvoření záznamu
-//   handleCreateFormOpened(): void {
-//     console.log('user-request: Otevření formuláře pro vytvoření záznamu.');
-//     this.showCreateForm = !this.showCreateForm;
-//   }
+//   get trashPagesArray(): number[] {
+//     // Logika pole stránek je ponechána beze změn
+//     const maxPagesToShow = 5;
+//     let startPage = Math.max(1, this.trashCurrentPage - Math.floor(maxPagesToShow / 2));
+//     let endPage = Math.min(this.trashTotalPages, startPage + maxPagesToShow - 1);
+//     if (endPage - startPage + 1 < maxPagesToShow) {
+//       startPage = Math.max(1, endPage - maxPagesToShow + 1);
+//     }
+//     const pages = [];
+//     for (let i = startPage; i <= endPage; i++) {
+//       pages.push(i);
+//     }
+//     return pages;
+//   }
 
+//   handleItemRestored(): void {
+//     console.log('HANDLE ITEM RESTORED: Událost obnovení dat zachycena. Spouštím celkovou obnovu.');
+//     this.forceFullRefresh();
+//   }
 
-//   handleFormSubmitted(formData: RawRequestCommission): void {
-//     if (formData.id) {
-//       console.log('user-request: Spouštím aktualizaci dat. isDataLoading je true.');
-//       this.updateData(formData.id, formData).subscribe({
-//         next: (response) => {
-//           console.log('user-request: Aktualizace dat proběhla úspěšně. isDataLoading je false.');
-//           this.showCreateForm = false;
-//           this.activeRequestsCache.clear();
-//           this.currentPage = 1;
-//           console.log('user-request: Spouštím nové načítání dat po aktualizaci. isDataLoading je true.');
-//           this.loadActiveRequests();
-//         },
-//         error: (err) => {
-//           console.error('user-request: Chyba při aktualizaci dat:', err);
-//           console.log('user-request: Aktualizace dat selhala. isDataLoading je false.');
-//         }
-//       });
-//     } else {
-//       console.log('user-request: Spouštím vytvoření nového záznamu. isDataLoading je true.');
-//       this.postData(formData).subscribe({
-//         next: (response) => {
-//           console.log('user-request: Vytvoření nového záznamu proběhlo úspěšně. isDataLoading je false.');
-//           this.showCreateForm = false;
-//           this.activeRequestsCache.clear();
-//           this.currentPage = 1;
-//           console.log('user-request: Spouštím nové načítání dat po vytvoření. isDataLoading je true.');
-//           this.loadActiveRequests();
-//         },
-//         error: (err) => {
-//           console.error('user-request: Chyba při odeslání dat:', err);
-//           console.log('user-request: Vytvoření nového záznamu selhalo. isDataLoading je false.');
-//         }
-//       });
-//     }
-//   }
+//   handleItemDeleted(): void {
+//     console.log('HANDLE ITEM DELETED: Událost smazání dat zachycena. Spouštím celkovou obnovu.');
+//     this.forceFullRefresh();
+//   }
+  
+//   private refreshActiveTable(): void {
+//     console.log('REFRESH ACTIVE TABLE: Spouštím obnovu aktivní tabulky.');
+//     this.showCreateForm = false;
+//     this.selectedItemForEdit = null;
+//     this.activeRequestsCache.clear();
+//     this.currentPage = 1;
+//     this.isLoading = true;
+//     this.loadActiveRequests();
+//     this.cd.detectChanges();
+//   }
 
-//   onCancelForm() {
-//     console.log('user-request: Formulář pro vytvoření záznamu byl zrušen.');
-//     this.showCreateForm = false;
-//   }
+//   private forceFullRefresh(): void {
+//     console.log('FORCE FULL REFRESH: Spouštím kompletní obnovu dat.');
+//     this.showCreateForm = false;
+//     this.selectedItemForEdit = null;
+//     this.activeRequestsCache.clear();
+//     this.trashRequestsCache.clear();
+//     this.currentPage = 1;
+//     this.trashCurrentPage = 1;
+//     this.isLoading = true;
+//     this.isTrashTableLoading = true;
+//     this.cd.detectChanges();
+//     console.log('FORCE FULL REFRESH: Cache vyčištěna, isLoading je true, cd.detectChanges() voláno.');
+//     this.loadActiveRequests();
+//     this.loadTrashRequests();
+//   }
+
+//   handleCreateFormOpened(): void {
+//     console.log('HANDLE CREATE FORM OPENED: Otevření formuláře pro vytvoření záznamu.');
+//     this.selectedItemForEdit = null;
+//     this.showCreateForm = !this.showCreateForm;
+//   }
+
+//   handleEditFormOpened(item: RawRequestCommission): void {
+//     console.log(`HANDLE EDIT FORM OPENED: Otevření formuláře pro editaci záznamu s ID ${item.id}.`);
+//     this.selectedItemForEdit = item;
+//     this.showCreateForm = true;
+//   }
+
+//   handleFormSubmitted(formData: RawRequestCommission): void {
+//     console.log('HANDLE FORM SUBMITTED: Formulář byl odeslán. Data:', formData);
+//     if (formData.id) {
+//       console.log(`HANDLE FORM SUBMITTED: Volám updateData pro ID: ${formData.id}.`);
+//       this.isLoading = true;
+//       this.updateData(formData.id, formData).subscribe({
+//         next: (response) => {
+//           console.log('HANDLE FORM SUBMITTED: Úprava záznamu proběhla úspěšně. Odpověď:', response);
+//           this.forceFullRefresh();
+//         },
+//         error: (err) => {
+//           console.error('HANDLE FORM SUBMITTED: Chyba při úpravě záznamu:', err);
+//           this.isLoading = false;
+//           this.cd.detectChanges();
+//         }
+//       });
+//     } else {
+//       console.log('HANDLE FORM SUBMITTED: Volám postData pro vytvoření nového záznamu.');
+//       this.isLoading = true;
+//       this.postData(formData).subscribe({
+//         next: (response) => {
+//           console.log('HANDLE FORM SUBMITTED: Vytvoření nového záznamu proběhlo úspěšně. Odpověď:', response);
+//           this.forceFullRefresh();
+//         },
+//         error: (err) => {
+//           console.error('HANDLE FORM SUBMITTED: Chyba při odeslání dat:', err);
+//           this.isLoading = false;
+//           this.cd.detectChanges();
+//         }
+//       });
+//     }
+//   }
+
+//   onCancelForm() {
+//     console.log('ON CANCEL FORM: Formulář byl zrušen.');
+//     this.showCreateForm = false;
+//     this.selectedItemForEdit = null;
+//   }
 // }
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
@@ -551,10 +624,10 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { Router } from '@angular/router';
 import { GenericTrashTableComponent } from '../../components/generic-trash-table/generic-trash-table.component';
 import { RawRequestCommission } from '../../../shared/interfaces/raw-request-commission';
-import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
-import { InputDefinition } from '../../components/generic-form/generic-form.component';
+import { GenericFormComponent, InputDefinition } from '../../components/generic-form/generic-form.component';
+import { Observable, of } from 'rxjs'; // Import 'of'
+import { switchMap, tap, retry } from 'rxjs/operators'; // Import 'retry'
 
-// Rozšířený interface pro filtry smazaných dat
 interface TrashFilterParams extends FilterParams {
   only_trashed?: string;
 }
@@ -582,7 +655,6 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     { display_name: 'Smazat', isActive: true, type: 'delete_button' },
   ];
 
-  // Pole pro definici polí dynamického formuláře (upraveno dle InputDefinition)
   formFields: InputDefinition[] = [
     {
       column_name: 'thema',
@@ -592,6 +664,9 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       required: true,
       pattern: '^[a-zA-Z0-9ěščřžýáíéóúůďťňĚŠČŘŽÝÁÍÉÚŮĎŤŇ\\s]{3,100}$',
       errorMessage: 'Téma musí mít 3-100 znaků.',
+      editable: true,
+      show_in_edit: true,
+      show_in_create: true,
     },
     {
       column_name: 'contact_email',
@@ -601,6 +676,9 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       required: true,
       pattern: '[^@]+@[^@]+\.[^@]+',
       errorMessage: 'Zadejte platnou e-mailovou adresu.',
+      editable: true,
+      show_in_edit: true,
+      show_in_create: true
     },
     {
       column_name: 'contact_phone',
@@ -610,6 +688,9 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       required: false,
       pattern: '^[0-9+\\s-]{9,20}$',
       errorMessage: 'Zadejte platné telefonní číslo.',
+      editable: true,
+      show_in_edit: true,
+      show_in_create: true
     },
     {
       column_name: 'order_description',
@@ -618,6 +699,58 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       type: 'textarea',
       required: true,
       errorMessage: 'Popis je povinný.',
+      editable: true,
+      show_in_edit: true,
+      show_in_create: true
+    },
+    {
+      column_name: 'status',
+      label: 'Status',
+      placeholder: '',
+      type: 'select',
+      options: [
+        { value: 'Nově zadané', label: 'Nízká' },
+        { value: 'Zpracovává se', label: 'Zpracovává se' },
+        { value: 'Dokončeno', label: 'Dokončeno' },
+        { value: 'Zrušeno', label: 'Zrušeno' },
+      ],
+      required: true,
+      errorMessage: 'Pole je povinné.',
+      editable: true,
+      show_in_edit: true,
+      show_in_create: true
+    },
+    {
+      column_name: 'priority',
+      label: 'Priorita',
+      placeholder: '',
+      type: 'select',
+      options: [
+        { value: 'Nízká', label: 'Nízká' },
+        { value: 'Neutrální', label: 'Neutrální' },
+        { value: 'Vysoká', label: 'Vysoká' },
+      ],
+      required: true,
+      errorMessage: 'Pole je povinné.',
+      editable: true,
+      show_in_edit: true,
+      show_in_create: true
+    },
+    {
+      column_name: 'id',
+      label: 'ID záznamu',
+      type: 'text',
+      editable: false,
+      show_in_edit: false,
+      show_in_create: false
+    },
+    {
+      column_name: 'created_at',
+      label: 'Vytvořeno',
+      type: 'text',
+      editable: false,
+      show_in_edit: false,
+      show_in_create: false
     }
   ];
 
@@ -630,7 +763,7 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     { key: 'priority', header: 'Priorita', type: 'text' },
     { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' },
     { key: 'order_description', header: 'Popis objednávky', type: 'text' },
-    { key: 'last_changed_at', header: 'Změněno', type: 'date', format: 'short' }
+    { key: 'updated_at', header: 'Změněno', type: 'date', format: 'short' }
   ];
 
   trashUserRequestColumns: ColumnDefinition[] = [
@@ -643,32 +776,28 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' },
     { key: 'order_description', header: 'Popis objednávky', type: 'text' },
     { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' },
-    { key: 'last_changed_at', header: 'Změněno', type: 'date', format: 'short' }
+    { key: 'updated_at', header: 'Změněno', type: 'date', format: 'short' }
   ];
 
   showTrashTable: boolean = false;
   showCreateForm: boolean = false;
-  
+
   override trashData: RawRequestCommission[] = [];
   override apiEndpoint: string = 'raw_request_commissions';
 
-  // 🆕 Zjednodušená správa stavu načítání
   override isLoading: boolean = false;
   isTrashTableLoading: boolean = false;
 
-  // Proměnné pro stránkování aktivních dat
   currentPage: number = 1;
   itemsPerPage: number = 15;
   totalItems: number = 0;
   totalPages: number = 0;
 
-  // Proměnné pro stránkování smazaných dat
   trashCurrentPage: number = 1;
   trashItemsPerPage: number = 15;
   trashTotalItems: number = 0;
   trashTotalPages: number = 0;
 
-  // Proměnné pro filtry
   filterSearch: string = '';
   filterStatus: string = '';
   filterPriority: string = '';
@@ -677,11 +806,12 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   statusOptions: string[] = ['Nově zadané', 'Zpracovává se', 'Dokončeno', 'Zrušeno'];
   priorityOptions: string[] = ['Nízká', 'Neutrální', 'Vysoká'];
 
-  // Kešování stránek
   private activeRequestsCache: Map<number, RawRequestCommission[]> = new Map();
   private trashRequestsCache: Map<number, RawRequestCommission[]> = new Map();
   private currentActiveFilters: FilterParams = {};
   private currentTrashFilters: FilterParams = {};
+
+  selectedItemForEdit: RawRequestCommission | null = null;
 
   constructor(
     protected override dataHandler: DataHandler,
@@ -694,22 +824,27 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   }
 
   override ngOnInit(): void {
+    console.log('NGONINIT: Spuštěn.');
     super.ngOnInit();
     this.authService.isLoggedIn$.subscribe(loggedIn => {
+      console.log(`NGONINIT: Sledování stavu přihlášení. Uživatel je přihlášen: ${loggedIn}.`);
       if (loggedIn) {
-        this.loadActiveRequests();
+        this.loadActiveRequests().subscribe();
       } else {
+        console.log('NGONINIT: Uživatel není přihlášen, přesměrování na login.');
         this.router.navigate(['/auth/login']);
       }
     });
   }
-
-  // Načítá aktivní požadavky s kešováním a pre-fetchingem
-  loadActiveRequests(): void {
-    console.log('user-request: Spouštím načítání aktivních požadavků. isLoading je true.');
+  
+  // Změněno: Metoda nyní vrací Observable<PaginatedResponse<RawRequestCommission>>
+  loadActiveRequests(): Observable<PaginatedResponse<RawRequestCommission>> {
+    console.log('LOAD ACTIVE REQUESTS: Spouštím načítání aktivních požadavků.');
     this.isLoading = true;
-    this.isTrashTableLoading = false; // Zajistíme, že druhá tabulka nenatáhne "loading" stav
+    this.isTrashTableLoading = false;
     this.errorMessage = null;
+    this.cd.detectChanges();
+    console.log(`LOAD ACTIVE REQUESTS: Nastaveno isLoading na true. cd.detectChanges() voláno.`);
 
     const currentFilters: FilterParams = {
       search: this.filterSearch,
@@ -719,29 +854,37 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       is_deleted: 'false'
     };
 
+    console.log('LOAD ACTIVE REQUESTS: Aktuální filtry:', currentFilters);
+    console.log('LOAD ACTIVE REQUESTS: Minulé aktivní filtry:', this.currentActiveFilters);
+
     if (JSON.stringify(currentFilters) !== JSON.stringify(this.currentActiveFilters)) {
+      console.log('LOAD ACTIVE REQUESTS: Filtry se změnily, vyprázdňuji cache a resetuji stránku.');
       this.activeRequestsCache.clear();
       this.currentPage = 1;
       this.currentActiveFilters = currentFilters;
     }
 
     if (this.activeRequestsCache.has(this.currentPage)) {
-      console.log('user-request: Data pro aktivní požadavky načtena z keše. isLoading je false.');
+      console.log(`LOAD ACTIVE REQUESTS: Data pro stránku ${this.currentPage} nalezena v keši.`);
       this.data = this.activeRequestsCache.get(this.currentPage)!;
       this.isLoading = false;
       this.cd.detectChanges();
+      console.log('LOAD ACTIVE REQUESTS: Data z keše načtena, isLoading je false.');
       this.preloadActivePage(this.currentPage + 1);
-      return;
+      return of({} as PaginatedResponse<RawRequestCommission>);
     }
 
-    this.genericTableService.getPaginatedData<RawRequestCommission>(
+    console.log(`LOAD ACTIVE REQUESTS: Data pro stránku ${this.currentPage} nejsou v keši, načítám z API.`);
+    return this.genericTableService.getPaginatedData<RawRequestCommission>(
       this.apiEndpoint,
       this.currentPage,
       this.itemsPerPage,
       currentFilters
-    ).subscribe({
-      next: (response: PaginatedResponse<RawRequestCommission>) => {
-        console.log('user-request: Načtení aktivních požadavků z API bylo úspěšné. isLoading je false.');
+    ).pipe(
+      // Přidání retry(1) pro zopakování požadavku při chybě (např. 401)
+      retry(1),
+      tap((response: PaginatedResponse<RawRequestCommission>) => {
+        console.log('LOAD ACTIVE REQUESTS: Načtení z API bylo úspěšné. Odpověď:', response);
         this.data = response.data;
         this.totalItems = response.total;
         this.totalPages = response.last_page;
@@ -749,21 +892,23 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
         this.isLoading = false;
         this.activeRequestsCache.set(this.currentPage, response.data);
         this.cd.detectChanges();
+        console.log('LOAD ACTIVE REQUESTS: Data z API uložena do keše, isLoading je false, cd.detectChanges() voláno.');
         this.preloadActivePage(this.currentPage + 1);
       },
-      error: (error) => {
-        console.error('user-request: Chyba při načítání aktivních požadavků uživatelů:', error);
+      (error) => {
+        console.error('LOAD ACTIVE REQUESTS: Chyba při načítání aktivních požadavků z API:', error);
         this.errorMessage = 'Nepodařilo se načíst aktivní data požadavků.';
-        console.log('user-request: Načítání aktivních požadavků selhalo. isLoading je false.');
         this.isLoading = false;
         this.cd.detectChanges();
-      }
-    });
+        console.log('LOAD ACTIVE REQUESTS: Načítání selhalo, isLoading je false, cd.detectChanges() voláno.');
+      })
+    );
   }
 
-  // Pomocná metoda pro pre-fetching (načtení do keše bez změny UI)
   private preloadActivePage(page: number): void {
+    console.log(`PRELOAD ACTIVE PAGE: Pokouším se pre-fetchovat stránku ${page}.`);
     if (page > this.totalPages || this.activeRequestsCache.has(page)) {
+      console.log(`PRELOAD ACTIVE PAGE: Stránka ${page} je buď mimo rozsah, nebo již v keši. Pre-fetch zrušen.`);
       return;
     }
 
@@ -782,20 +927,23 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       currentFilters
     ).subscribe({
       next: (response: PaginatedResponse<RawRequestCommission>) => {
+        console.log(`PRELOAD ACTIVE PAGE: Pre-fetch stránky ${page} úspěšný, data uložena do keše.`);
         this.activeRequestsCache.set(page, response.data);
       },
       error: (error) => {
-        console.error(`user-request: Chyba při pre-fetching aktivních dat pro stránku ${page}:`, error);
+        console.error(`PRELOAD ACTIVE PAGE: Chyba při pre-fetching aktivních dat pro stránku ${page}:`, error);
       }
     });
   }
 
-  // Načítá smazané požadavky s kešováním a pre-fetchingem
-  loadTrashRequests(): void {
-    console.log('user-request: Spouštím načítání smazaných požadavků. isTrashTableLoading je true.');
+  // Změněno: Metoda nyní vrací Observable<PaginatedResponse<RawRequestCommission>>
+  loadTrashRequests(): Observable<PaginatedResponse<RawRequestCommission>> {
+    console.log('LOAD TRASH REQUESTS: Spouštím načítání smazaných požadavků.');
     this.isTrashTableLoading = true;
-    this.isLoading = false; // Zajistíme, že první tabulka nenatáhne "loading" stav
+    this.isLoading = false;
     this.errorMessage = null;
+    this.cd.detectChanges();
+    console.log('LOAD TRASH REQUESTS: Nastaveno isTrashTableLoading na true. cd.detectChanges() voláno.');
 
     const trashFilters: TrashFilterParams = {
       only_trashed: 'true',
@@ -805,29 +953,37 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       email: this.filterEmail
     };
 
+    console.log('LOAD TRASH REQUESTS: Aktuální filtry pro smazané:', trashFilters);
+    console.log('LOAD TRASH REQUESTS: Minulé smazané filtry:', this.currentTrashFilters);
+
     if (JSON.stringify(trashFilters) !== JSON.stringify(this.currentTrashFilters)) {
+      console.log('LOAD TRASH REQUESTS: Filtry pro smazané se změnily, vyprázdňuji cache a resetuji stránku.');
       this.trashRequestsCache.clear();
       this.trashCurrentPage = 1;
       this.currentTrashFilters = trashFilters;
     }
 
     if (this.trashRequestsCache.has(this.trashCurrentPage)) {
-      console.log('user-request: Data pro smazané požadavky načtena z keše. isTrashTableLoading je false.');
+      console.log(`LOAD TRASH REQUESTS: Data pro smazanou stránku ${this.trashCurrentPage} nalezena v keši.`);
       this.trashData = this.trashRequestsCache.get(this.trashCurrentPage)!;
       this.isTrashTableLoading = false;
       this.cd.detectChanges();
+      console.log('LOAD TRASH REQUESTS: Data z keše načtena, isTrashTableLoading je false.');
       this.preloadTrashPage(this.trashCurrentPage + 1);
-      return;
+      return of({} as PaginatedResponse<RawRequestCommission>);
     }
 
-    this.genericTableService.getPaginatedData<RawRequestCommission>(
+    console.log(`LOAD TRASH REQUESTS: Data pro smazanou stránku ${this.trashCurrentPage} nejsou v keši, načítám z API.`);
+    return this.genericTableService.getPaginatedData<RawRequestCommission>(
       this.apiEndpoint,
       this.trashCurrentPage,
       this.trashItemsPerPage,
       trashFilters
-    ).subscribe({
-      next: (response: PaginatedResponse<RawRequestCommission>) => {
-        console.log('user-request: Načtení smazaných požadavků z API bylo úspěšné. isTrashTableLoading je false.');
+    ).pipe(
+      // Přidání retry(1) pro zopakování požadavku při chybě
+      retry(1),
+      tap((response: PaginatedResponse<RawRequestCommission>) => {
+        console.log('LOAD TRASH REQUESTS: Načtení z API bylo úspěšné. Odpověď:', response);
         this.trashData = response.data;
         this.trashTotalItems = response.total;
         this.trashTotalPages = response.last_page;
@@ -835,21 +991,24 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
         this.isTrashTableLoading = false;
         this.trashRequestsCache.set(this.trashCurrentPage, response.data);
         this.cd.detectChanges();
+        console.log('LOAD TRASH REQUESTS: Data z API uložena do keše, isTrashTableLoading je false, cd.detectChanges() voláno.');
         this.preloadTrashPage(this.trashCurrentPage + 1);
       },
-      error: (error) => {
-        console.error('user-request: Chyba při načítání smazaných požadavků uživatelů:', error);
+      (error) => {
+        console.error('LOAD TRASH REQUESTS: Chyba při načítání smazaných požadavků z API:', error);
         this.errorMessage = 'Nepodařilo se načíst smazaná data požadavků.';
-        console.log('user-request: Načítání smazaných požadavků selhalo. isTrashTableLoading je false.');
         this.isTrashTableLoading = false;
         this.cd.detectChanges();
-      }
-    });
+        console.log('LOAD TRASH REQUESTS: Načítání selhalo, isTrashTableLoading je false, cd.detectChanges() voláno.');
+      })
+    );
   }
 
-  // Pomocná metoda pro pre-fetching (načtení do keše bez změny UI)
+  // Přidání chybějící metody
   private preloadTrashPage(page: number): void {
+    console.log(`PRELOAD TRASH PAGE: Pokouším se pre-fetchovat smazanou stránku ${page}.`);
     if (page > this.trashTotalPages || this.trashRequestsCache.has(page)) {
+      console.log(`PRELOAD TRASH PAGE: Smazaná stránka ${page} je buď mimo rozsah, nebo již v keši. Pre-fetch zrušen.`);
       return;
     }
 
@@ -868,117 +1027,95 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       trashFilters
     ).subscribe({
       next: (response: PaginatedResponse<RawRequestCommission>) => {
+        console.log(`PRELOAD TRASH PAGE: Pre-fetch smazané stránky ${page} úspěšný, data uložena do keše.`);
         this.trashRequestsCache.set(page, response.data);
       },
       error: (error) => {
-        console.error(`user-request: Chyba při pre-fetching smazaných dat pro stránku ${page}:`, error);
+        console.error(`PRELOAD TRASH PAGE: Chyba při pre-fetching smazaných dat pro stránku ${page}:`, error);
       }
     });
   }
 
-  // Přepíná mezi aktivní a smazanou tabulkou
   toggleTable(): void {
+    console.log(`TOGGLE TABLE: Přepínám zobrazení tabulky. showTrashTable se mění z ${this.showTrashTable} na ${!this.showTrashTable}.`);
     this.showTrashTable = !this.showTrashTable;
-    if (this.showTrashTable) {
-      console.log('user-request: Přepnuto na smazanou tabulku. isTrashTableLoading je true.');
-      this.isTrashTableLoading = true;
-      this.isLoading = false;
-      this.loadTrashRequests();
-    } else {
-      console.log('user-request: Přepnuto na aktivní tabulku. isLoading je true.');
-      this.isLoading = true;
-      this.isTrashTableLoading = false;
-      this.loadActiveRequests();
-    }
+    this.forceFullRefresh();
   }
 
-  // Aplikuje filtry a načítá data z API. Vyčistí keš, aby se načetla nová data.
   applyFilters(): void {
+    console.log('APPLY FILTERS: Spouštím aplikaci filtrů.');
     if (this.showTrashTable) {
+      console.log('APPLY FILTERS: Aplikuji filtry na smazanou tabulku.');
       this.trashRequestsCache.clear();
       this.trashCurrentPage = 1;
-      console.log('user-request: Aplikuji filtry na smazanou tabulku. isTrashTableLoading je true.');
       this.isTrashTableLoading = true;
-      this.loadTrashRequests();
+      this.loadTrashRequests().subscribe();
     } else {
+      console.log('APPLY FILTERS: Aplikuji filtry na aktivní tabulku.');
       this.activeRequestsCache.clear();
       this.currentPage = 1;
-      console.log('user-request: Aplikuji filtry na aktivní tabulku. isLoading je true.');
       this.isLoading = true;
-      this.loadActiveRequests();
+      this.loadActiveRequests().subscribe();
     }
   }
 
-  // Čistí filtry a načítá data z API. Vyčistí keš.
   clearFilters(): void {
+    console.log('CLEAR FILTERS: Vymazání všech filtrů.');
     this.filterSearch = '';
     this.filterStatus = '';
     this.filterPriority = '';
     this.filterEmail = '';
-    if (this.showTrashTable) {
-      this.trashRequestsCache.clear();
-      this.trashCurrentPage = 1;
-      console.log('user-request: Čistím filtry na smazané tabulce. isTrashTableLoading je true.');
-      this.isTrashTableLoading = true;
-      this.loadTrashRequests();
-    } else {
-      this.activeRequestsCache.clear();
-      this.currentPage = 1;
-      console.log('user-request: Čistím filtry na aktivní tabulce. isLoading je true.');
-      this.isLoading = true;
-      this.loadActiveRequests();
-    }
+    this.forceFullRefresh();
   }
 
-  // Přejde na danou stránku v aktivní tabulce
   goToPage(page: number): void {
+    console.log(`GO TO PAGE: Požadavek na přesun na aktivní stránku ${page}. Aktuální stránka: ${this.currentPage}.`);
     if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
       this.currentPage = page;
-      console.log(`user-request: Přejdu na aktivní stránku ${page}. isLoading je true.`);
       this.isLoading = true;
-      this.loadActiveRequests();
+      this.loadActiveRequests().subscribe();
+    } else {
+      console.log(`GO TO PAGE: Neplatný požadavek na stránku ${page}.`);
     }
   }
 
-  // Přejde na danou stránku ve smazané tabulce
   goToTrashPage(page: number): void {
+    console.log(`GO TO TRASH PAGE: Požadavek na přesun na smazanou stránku ${page}. Aktuální stránka: ${this.trashCurrentPage}.`);
     if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
       this.trashCurrentPage = page;
-      console.log(`user-request: Přejdu na smazanou stránku ${page}. isTrashTableLoading je true.`);
       this.isTrashTableLoading = true;
-      this.loadTrashRequests();
+      this.loadTrashRequests().subscribe();
+    } else {
+      console.log(`GO TO TRASH PAGE: Neplatný požadavek na smazanou stránku ${page}.`);
     }
   }
 
-  // Změní počet položek na stránku pro aktivní tabulku
   onItemsPerPageChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const newItemsPerPage = Number(selectElement.value);
+    console.log(`ON ITEMS PER PAGE CHANGE: Změna počtu položek na stránce. Nová hodnota: ${newItemsPerPage}.`);
     if (newItemsPerPage !== this.itemsPerPage) {
       this.itemsPerPage = newItemsPerPage;
       this.currentPage = 1;
       this.activeRequestsCache.clear();
-      console.log('user-request: Změna položek na stránku. isLoading je true.');
       this.isLoading = true;
-      this.loadActiveRequests();
+      this.loadActiveRequests().subscribe();
     }
   }
 
-  // Změní počet položek na stránku pro smazanou tabulku
   onTrashItemsPerPageChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const newItemsPerPage = Number(selectElement.value);
+    console.log(`ON TRASH ITEMS PER PAGE CHANGE: Změna počtu položek pro smazanou tabulku. Nová hodnota: ${newItemsPerPage}.`);
     if (newItemsPerPage !== this.trashItemsPerPage) {
       this.trashItemsPerPage = newItemsPerPage;
       this.trashCurrentPage = 1;
       this.trashRequestsCache.clear();
-      console.log('user-request: Změna položek na stránku pro smazanou tabulku. isTrashTableLoading je true.');
       this.isTrashTableLoading = true;
-      this.loadTrashRequests();
+      this.loadTrashRequests().subscribe();
     }
   }
 
-  // Generuje pole stránek pro aktivní tabulku
   get pagesArray(): number[] {
     const maxPagesToShow = 5;
     let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
@@ -993,7 +1130,6 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     return pages;
   }
 
-  // Generuje pole stránek pro smazanou tabulku
   get trashPagesArray(): number[] {
     const maxPagesToShow = 5;
     let startPage = Math.max(1, this.trashCurrentPage - Math.floor(maxPagesToShow / 2));
@@ -1008,78 +1144,109 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     return pages;
   }
 
-  // Metoda pro zachycení události obnovy dat.
   handleItemRestored(): void {
-    console.log('user-request: Událost obnovení dat zachycena. isLoading a isTrashTableLoading jsou true.');
-    this.isLoading = true;
-    this.isTrashTableLoading = true;
-    this.activeRequestsCache.clear();
-    this.trashRequestsCache.clear();
-    this.loadActiveRequests();
-    this.loadTrashRequests();
+    console.log('HANDLE ITEM RESTORED: Událost obnovení dat zachycena. Spouštím celkovou obnovu.');
+    this.forceFullRefresh();
   }
 
-  // Metoda pro zachycení události smazání dat.
   handleItemDeleted(): void {
-    console.log('user-request: Událost smazání dat zachycena. isLoading a isTrashTableLoading jsou true.');
-    this.isLoading = true;
-    this.isTrashTableLoading = true;
+    console.log('HANDLE ITEM DELETED: Událost smazání dat zachycena. Spouštím celkovou obnovu.');
+    this.forceFullRefresh();
+  }
+  
+  private refreshActiveTable(): void {
+    console.log('REFRESH ACTIVE TABLE: Spouštím obnovu aktivní tabulky.');
+    this.showCreateForm = false;
+    this.selectedItemForEdit = null;
     this.activeRequestsCache.clear();
-    this.trashRequestsCache.clear();
-    this.loadActiveRequests();
-    this.loadTrashRequests();
+    this.currentPage = 1;
+    this.isLoading = true;
+    this.loadActiveRequests().subscribe();
+    this.cd.detectChanges();
   }
 
-  // Metoda pro vytvoření záznamu
+  private forceFullRefresh(): void {
+    console.log('FORCE FULL REFRESH: Spouštím kompletní obnovu dat.');
+    this.showCreateForm = false;
+    this.selectedItemForEdit = null;
+    this.activeRequestsCache.clear();
+    this.trashRequestsCache.clear();
+    this.currentPage = 1;
+    this.trashCurrentPage = 1;
+    this.isLoading = true;
+    this.isTrashTableLoading = true;
+    this.cd.detectChanges();
+    console.log('FORCE FULL REFRESH: Cache vyčištěna, isLoading je true, cd.detectChanges() voláno.');
+
+    this.loadActiveRequests().pipe(
+      switchMap(() => {
+        console.log('FORCE FULL REFRESH: Načítání aktivních požadavků dokončeno. Pokračuji s načítáním smazaných.');
+        return this.loadTrashRequests();
+      })
+    ).subscribe({
+      next: () => {
+        console.log('FORCE FULL REFRESH: Všechna data úspěšně načtena.');
+        this.isLoading = false;
+        this.isTrashTableLoading = false;
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('FORCE FULL REFRESH: Chyba při obnově dat.', err);
+        this.isLoading = false;
+        this.isTrashTableLoading = false;
+        this.cd.detectChanges();
+      }
+    });
+  }
+
   handleCreateFormOpened(): void {
-    console.log('user-request: Otevření formuláře pro vytvoření záznamu.');
+    console.log('HANDLE CREATE FORM OPENED: Otevření formuláře pro vytvoření záznamu.');
+    this.selectedItemForEdit = null;
     this.showCreateForm = !this.showCreateForm;
   }
 
+  handleEditFormOpened(item: RawRequestCommission): void {
+    console.log(`HANDLE EDIT FORM OPENED: Otevření formuláře pro editaci záznamu s ID ${item.id}.`);
+    this.selectedItemForEdit = item;
+    this.showCreateForm = true;
+  }
+
   handleFormSubmitted(formData: RawRequestCommission): void {
+    console.log('HANDLE FORM SUBMITTED: Formulář byl odeslán. Data:', formData);
     if (formData.id) {
-      console.log('user-request: Spouštím aktualizaci dat. isLoading je true.');
+      console.log(`HANDLE FORM SUBMITTED: Volám updateData pro ID: ${formData.id}.`);
       this.isLoading = true;
       this.updateData(formData.id, formData).subscribe({
         next: (response) => {
-          console.log('user-request: Aktualizace dat proběhla úspěšně. isLoading je false.');
-          this.showCreateForm = false;
-          this.activeRequestsCache.clear();
-          this.currentPage = 1;
-          this.isLoading = false; // Nastavíme isLoading na false po aktualizaci, aby se formulář skryl.
-          console.log('user-request: Spouštím nové načítání dat po aktualizaci. isLoading je true.');
-          this.loadActiveRequests();
+          console.log('HANDLE FORM SUBMITTED: Úprava záznamu proběhla úspěšně. Odpověď:', response);
+          this.forceFullRefresh();
         },
         error: (err) => {
-          console.error('user-request: Chyba při aktualizaci dat:', err);
-          console.log('user-request: Aktualizace dat selhala. isLoading je false.');
+          console.error('HANDLE FORM SUBMITTED: Chyba při úpravě záznamu:', err);
           this.isLoading = false;
+          this.cd.detectChanges();
         }
       });
     } else {
-      console.log('user-request: Spouštím vytvoření nového záznamu. isLoading je true.');
+      console.log('HANDLE FORM SUBMITTED: Volám postData pro vytvoření nového záznamu.');
       this.isLoading = true;
       this.postData(formData).subscribe({
         next: (response) => {
-          console.log('user-request: Vytvoření nového záznamu proběhlo úspěšně. isLoading je false.');
-          this.showCreateForm = false;
-          this.activeRequestsCache.clear();
-          this.currentPage = 1;
-          this.isLoading = false; // Nastavíme isLoading na false po vytvoření, aby se formulář skryl.
-          console.log('user-request: Spouštím nové načítání dat po vytvoření. isLoading je true.');
-          this.loadActiveRequests();
+          console.log('HANDLE FORM SUBMITTED: Vytvoření nového záznamu proběhlo úspěšně. Odpověď:', response);
+          this.forceFullRefresh();
         },
         error: (err) => {
-          console.error('user-request: Chyba při odeslání dat:', err);
-          console.log('user-request: Vytvoření nového záznamu selhalo. isLoading je false.');
+          console.error('HANDLE FORM SUBMITTED: Chyba při odeslání dat:', err);
           this.isLoading = false;
+          this.cd.detectChanges();
         }
       });
     }
   }
 
   onCancelForm() {
-    console.log('user-request: Formulář pro vytvoření záznamu byl zrušen.');
+    console.log('ON CANCEL FORM: Formulář byl zrušen.');
     this.showCreateForm = false;
+    this.selectedItemForEdit = null;
   }
 }
