@@ -1,0 +1,105 @@
+/* src/app/admin/components/generic-filter-form/generic-filter-form.component.css */
+
+.filter-form-container {
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.filter-form-title {
+  margin-top: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-family: Arial, sans-serif;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.filter-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 0.15rem;
+  font-family: Arial, sans-serif;
+}
+
+.filter-input,
+.filter-select {
+  margin-top: 0.15rem;
+  display: block;
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  padding: 0.3rem 0.5rem;
+  font-size: 0.8rem;
+  color: #444;
+  outline: none;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  font-family: Arial, sans-serif;
+}
+
+.filter-input::placeholder {
+  color: #9CA3AF;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+  border-color: #6366F1;
+  box-shadow: 0 0 0 1px #6366F1, 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.filter-buttons-container {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.filter-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  cursor: pointer;
+  outline: none;
+  font-family: Arial, sans-serif;
+}
+
+.filter-button:focus {
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.filter-button.clear {
+  border: 1px solid #dee2e6;
+  background-color: #FFFFFF;
+  color: #444;
+}
+
+.filter-button.clear:hover {
+  background-color: #f0f8ff;
+}
+
+.filter-button.apply {
+  border: 1px solid transparent;
+  background-color: #4F46E5;
+  color: #FFFFFF;
+}
+
+.filter-button.apply:hover {
+  background-color: #4338CA;
+}

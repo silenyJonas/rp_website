@@ -3,6 +3,7 @@
 import { Buttons } from '../../components/generic-table/generic-table.component';
 import { InputDefinition } from '../../components/generic-form/generic-form.component';
 import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
+import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 
 export const USER_REQUEST_BUTTONS: Buttons[] = [
   { display_name: 'Detaily', isActive: true, type: 'info_button' },
@@ -137,3 +138,72 @@ export const USER_REQUEST_TRASH_COLUMNS: ColumnDefinition[] = [
 
 export const USER_REQUEST_STATUS_OPTIONS: string[] = ['Nově zadané', 'Zpracovává se', 'Dokončeno', 'Zrušeno'];
 export const USER_REQUEST_PRIORITY_OPTIONS: string[] = ['Nízká', 'Neutrální', 'Vysoká'];
+
+
+export const USER_REQUEST_FILTER_COLUMNS: FilterColumns[] = [
+  {
+    key: 'id',
+    header: 'ID',
+    type: 'text',
+    placeholder: 'Hledat podle ID',
+    canSort: true,
+  },
+  {
+    key: 'thema',
+    header: 'Téma',
+    type: 'text',
+    placeholder: 'Hledat téma',
+    canSort: true,
+  },
+  {
+    key: 'contact_email',
+    header: 'E-mail',
+    type: 'email',
+    placeholder: 'Hledat podle e-mailu',
+    canSort: true,
+  },
+  {
+    key: 'contact_phone',
+    header: 'Telefon',
+    type: 'text',
+    placeholder: 'Hledat telefon',
+    canSort: true,
+  },
+  {
+    key: 'order_description',
+    header: 'Popis objednávky',
+    type: 'text',
+    placeholder: 'Hledat v popisu objednávky',
+    canSort: true,
+  },
+  {
+    key: 'status',
+    header: 'Stav',
+    type: 'select',
+    options: USER_REQUEST_STATUS_OPTIONS,
+    placeholder: '-- Vybrat stav --',
+    canSort: true,
+  },
+  {
+    key: 'priority',
+    header: 'Priorita',
+    type: 'select',
+    options: USER_REQUEST_PRIORITY_OPTIONS,
+    placeholder: '-- Vybrat prioritu --',
+    canSort: true,
+  },
+  {
+    key: 'created_at',
+    header: 'Datum vytvoření',
+    type: 'text',
+    placeholder: 'Hledat podle data vytvoření',
+    canSort: true,
+  },
+  {
+    key: 'updated_at',
+    header: 'Datum aktualizace',
+    type: 'text',
+    placeholder: 'Hledat podle data aktualizace',
+    canSort: true,
+  },
+];

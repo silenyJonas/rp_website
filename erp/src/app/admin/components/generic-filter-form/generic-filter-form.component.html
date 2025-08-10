@@ -1,0 +1,57 @@
+<div class="filter-form-container">
+    <h3 class="filter-form-title">{{ filterFormTitle }}</h3>
+    <div class="filter-grid">
+        <!-- Dynamické generování vstupních polí podle definice -->
+        <div *ngFor="let column of filterColumns">
+            <label [for]="'filter' + column.key" class="filter-label">{{ column.header }}</label>
+            <!-- Vstupní pole pro text, email nebo hledání -->
+            <input *ngIf="column.type === 'text' || column.type === 'email' || column.type === 'search'"
+                   [type]="column.type"
+                   [id]="'filter' + column.key"
+                   [(ngModel)]="filterForm[column.key]"
+                   (keyup.enter)="applyFilters()"
+                   class="filter-input"
+                   [placeholder]="column.placeholder">
+
+            <!-- Rozbalovací seznam pro výběr stavu nebo priority -->
+            <select *ngIf="column.type === 'select'"
+                    [id]="'filter' + column.key"
+                    [(ngModel)]="filterForm[column.key]"
+                    class="filter-select">
+                <option value="">{{ column.placeholder }}</option>
+                <option *ngFor="let option of column.options" [value]="option">{{ option }}</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Řazení podle sloupce a směru -->
+    <!-- Nyní se opíráme pouze o filterColumns, a vybíráme ty, které mají vlastnost canSort: true -->
+    <div class="filter-grid">
+        <div>
+            <label for="filterSortBy" class="filter-label">Seřadit podle</label>
+            <select id="filterSortBy" [(ngModel)]="sortBy" class="filter-select">
+                <option value="">-- Vybrat sloupec --</option>
+                <ng-container *ngFor="let column of filterColumns">
+                    <option *ngIf="column.canSort" [value]="column.key">{{ column.header }}</option>
+                </ng-container>
+            </select>
+        </div>
+        <div>
+            <label for="filterSortDirection" class="filter-label">Směr řazení</label>
+            <select id="filterSortDirection" [(ngModel)]="sortDirection" class="filter-select">
+                <option value="asc">Vzestupně (A-Z, od nejmenšího)</option>
+                <option value="desc">Sestupně (Z-A, od největšího)</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="filter-buttons-container">
+        <button (click)="clearFilters()" class="filter-button clear">
+            Vyčistit filtry
+        </button>
+        <button (click)="applyFilters()" class="filter-button apply">
+            Použít filtry
+        </button>
+    </div>
+</div>

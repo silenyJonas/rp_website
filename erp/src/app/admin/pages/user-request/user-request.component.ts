@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,13 +13,16 @@ import { RawRequestCommission } from '../../../shared/interfaces/raw-request-com
 import { GenericFormComponent, InputDefinition } from '../../components/generic-form/generic-form.component';
 import { Observable, of, forkJoin, BehaviorSubject } from 'rxjs';
 import { tap, retry, finalize } from 'rxjs/operators';
+import { FilterColumns } from '../../../shared/interfaces/filter-columns';
+import { GenericFilterFormComponent } from '../../components/generic-filter-form/generic-filter-form.component';
 import {
   USER_REQUEST_BUTTONS,
   USER_REQUEST_FORM_FIELDS,
   USER_REQUEST_COLUMNS,
   USER_REQUEST_TRASH_COLUMNS,
   USER_REQUEST_STATUS_OPTIONS,
-  USER_REQUEST_PRIORITY_OPTIONS
+  USER_REQUEST_PRIORITY_OPTIONS,
+  USER_REQUEST_FILTER_COLUMNS
 } from './user-request.config';
 
 interface TrashFilterParams extends FilterParams {
@@ -36,6 +38,7 @@ interface TrashFilterParams extends FilterParams {
     GenericTableComponent,
     GenericTrashTableComponent,
     GenericFormComponent,
+    GenericFilterFormComponent
   ],
   templateUrl: './user-request.component.html',
   styleUrl: './user-request.component.css',
@@ -54,6 +57,9 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   trashUserRequestColumns: ColumnDefinition[] = USER_REQUEST_TRASH_COLUMNS
   statusOptions: string[] = USER_REQUEST_STATUS_OPTIONS;
   priorityOptions: string[] = USER_REQUEST_PRIORITY_OPTIONS;
+  filterColumns: FilterColumns[] = USER_REQUEST_FILTER_COLUMNS;
+
+  filterFormFields: string[] = []
 
   showTrashTable: boolean = false;
   showCreateForm: boolean = false;
@@ -292,21 +298,27 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     this.forceFullRefresh();
   }
 
-  applyFilters(): void {
-    console.log('applyFilters: Aplikuji nové filtry.');
+  applyFilters(filters: any): void {
+    console.log('UserRequestComponent: Filters applied:', filters);
+    this.filterSearch = filters.search || '';
+    this.filterStatus = filters.status || '';
+    this.filterPriority = filters.priority || '';
+    this.filterEmail = filters.email || '';
+    this.filterSortBy = filters.sortBy || '';
+    this.filterSortDirection = filters.sortDirection || 'asc';
     this.forceFullRefresh();
   }
 
   clearFilters(): void {
+    console.log('UserRequestComponent: Filters cleared.');
     this.filterSearch = '';
     this.filterStatus = '';
     this.filterPriority = '';
     this.filterEmail = '';
     this.filterSortBy = '';
     this.filterSortDirection = 'asc';
-    console.log('clearFilters: Filtry vyčištěny.');
     this.forceFullRefresh();
-  }
+}
 
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {

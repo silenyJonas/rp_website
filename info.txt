@@ -10,11 +10,8 @@ admin:
 dodelat:
 sprava uzivatelu:
     -admin/sysadmin + prava
--dashboard tam budou oznameni treba 3 nove requesty za dnesek v: ...
--dodelat create/edit/delete vsude
 -dodelat reset hesla nejak a zmena osobnich informaci
 -udelat /my-acc treba a tam budou informace o mne
 -udelat logovani a logovani vseho v /logs rpozdeleni na systemlogs a bussines logs a treba takhle jak je podle db
--udelat obnovu dat udelat slozku /kos neco takoveho a kdyz neco vymazu soft delete to tam hodi a ja to budu moct obnovit a nebo vysypat kos
 -dodelat autorefresh dat co 30 sekund treba 
--opravit aby se pri smazani takovy to kde je napsano kolik z kolika zaznamu take aktualizovalo
+-hodit filter form jako znovupouztitelnou komponentu

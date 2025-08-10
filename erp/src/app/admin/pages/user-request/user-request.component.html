@@ -4,81 +4,29 @@
   <div *ngIf="errorMessage" class="text-center text-red-500">{{ errorMessage }}</div>
   <div *ngIf="!isLoading && !errorMessage">
     <div class="main-content-layout">
-      <div class="filter-form-container">
-        <h3 class="filter-form-title">Filtrovat požadavky</h3>
-        <div class="filter-grid">
-          <div>
-            <label for="filterSearch" class="filter-label">Obecné hledání</label>
-            <input type="text" id="filterSearch" [(ngModel)]="filterSearch" (keyup.enter)="applyFilters()"
-                   class="filter-input"
-                   placeholder="Hledat téma, popis, e-mail, telefon">
-          </div>
-          <div>
-            <label for="filterEmail" class="filter-label">E-mail</label>
-            <input type="email" id="filterEmail" [(ngModel)]="filterEmail" (keyup.enter)="applyFilters()"
-                   class="filter-input"
-                   placeholder="Hledat podle e-mailu">
-          </div>
-          <div>
-            <label for="filterStatus" class="filter-label">Stav</label>
-            <select id="filterStatus" [(ngModel)]="filterStatus"
-                    class="filter-select">
-              <option value="">-- Vybrat stav --</option>
-              <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
-            </select>
-          </div>
-          <div>
-            <label for="filterPriority" class="filter-label">Priorita</label>
-            <select id="filterPriority" [(ngModel)]="filterPriority"
-                    class="filter-select">
-              <option value="">-- Vybrat prioritu --</option>
-              <option *ngFor="let priority of priorityOptions" [value]="priority">{{ priority }}</option>
-            </select>
-          </div>
-        </div>
 
-         <div class="filter-grid">
-            <div>
-                <label for="filterSortBy" class="filter-label">Seřadit podle</label>
-                <select id="filterSortBy" [(ngModel)]="filterSortBy" class="filter-select">
-                    <option value="">-- Vybrat sloupec --</option>
-                    <option *ngFor="let column of userRequestColumns" [value]="column.key">{{ column.header }}</option>
-                </select>
-            </div>
-            <div>
-                <label for="filterSortDirection" class="filter-label">Směr řazení</label>
-                <select id="filterSortDirection" [(ngModel)]="filterSortDirection" class="filter-select">
-                    <option value="asc">Vzestupně (A-Z, od nejmenšího)</option>
-                    <option value="desc">Sestupně (Z-A, od největšího)</option>
-                </select>
-            </div>
-        </div>
-
-
-        <div class="filter-buttons-container">
-          <button (click)="clearFilters()"
-                  class="filter-button clear">
-            Vyčistit filtry
-          </button>
-          <button (click)="applyFilters()"
-                  class="filter-button apply">
-            Použít filtry
-          </button>
-        </div>
-      </div>
+      <app-generic-filter-form
+        [filterColumns]="filterColumns"
+        [initialFilters]="{ search: filterSearch, status: filterStatus, priority: filterPriority, email: filterEmail }"
+        [initialSortBy]="filterSortBy"
+        [initialSortDirection]="filterSortDirection"
+        (filtersApplied)="applyFilters($event)"
+        (filtersCleared)="clearFilters()">
+      </app-generic-filter-form>
+      
       <div class="table-and-pagination-container">
 
         <app-generic-table *ngIf="!showTrashTable"
-          [buttons]="buttons"
-          [data]="data"
-          [columns]="userRequestColumns"
-          [tableCaption]="'Seznam požadavků na provize'"
-          [isLoading]="isLoading"
-          [apiEndpoint]="apiEndpoint"
-          [uploadsBaseUrl]="'[https://your-upload-domain.com/uploads/](https://your-upload-domain.com/uploads/)'"
-          (itemDeleted)="handleItemDeleted()"
-          (createFormOpened)="handleCreateFormOpened()"
-          (editFormOpened)="handleEditFormOpened($event)">
+          [buttons]="buttons"
+          [data]="data"
+          [columns]="userRequestColumns"
+          [tableCaption]="'Seznam požadavků na provize'"
+          [isLoading]="isLoading"
+          [apiEndpoint]="apiEndpoint"
+          [uploadsBaseUrl]="'[https://your-upload-domain.com/uploads/](https://your-upload-domain.com/uploads/)'"
+          (itemDeleted)="handleItemDeleted()"
+          (createFormOpened)="handleCreateFormOpened()"
+          (editFormOpened)="handleEditFormOpened($event)">
         </app-generic-table>
 
         <app-generic-trash-table *ngIf="showTrashTable"
@@ -100,7 +48,7 @@
           <div class="flex items-center space-x-2 pg-m p-b-10">
             <label for="itemsPerPage" class="text-sm text-gray-700">Položek na stránku:</label>
             <select id="itemsPerPage" (change)="onItemsPerPageChange($event)"
-                     class="items-per-page-select" [(ngModel)]="itemsPerPage">
+                      class="items-per-page-select" [(ngModel)]="itemsPerPage">
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>
@@ -110,7 +58,7 @@
           </div>
           <nav class="pagination-nav" aria-label="Pagination">
             <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1"
-                    class="pagination-button first-page-btn">
+                      class="pagination-button first-page-btn">
               <span class="sr-only">Předchozí</span>
               <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -118,13 +66,13 @@
             </button>
             <ng-container *ngFor="let page of pagesArray">
               <button (click)="goToPage(page)"
-                      [ngClass]="{ 'active-page': page === currentPage }"
-                      class="pagination-button">
+                        [ngClass]="{ 'active-page': page === currentPage }"
+                        class="pagination-button">
                 {{ page }}
               </button>
             </ng-container>
             <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages"
-                    class="pagination-button last-page-btn">
+                      class="pagination-button last-page-btn">
               <span class="sr-only">Další</span>
               <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
@@ -139,7 +87,7 @@
           <div class="flex items-center space-x-2 pg-m p-b-10">
             <label for="trashItemsPerPage" class="text-sm text-gray-700">Položek na stránku:</label>
             <select id="trashItemsPerPage" (change)="onTrashItemsPerPageChange($event)"
-                     class="items-per-page-select" [(ngModel)]="trashItemsPerPage">
+                      class="items-per-page-select" [(ngModel)]="trashItemsPerPage">
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>
@@ -149,7 +97,7 @@
           </div>
           <nav class="pagination-nav" aria-label="Pagination">
             <button (click)="goToTrashPage(trashCurrentPage - 1)" [disabled]="trashCurrentPage === 1"
-                    class="pagination-button first-page-btn">
+                      class="pagination-button first-page-btn">
               <span class="sr-only">Předchozí</span>
               <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -157,13 +105,13 @@
             </button>
             <ng-container *ngFor="let page of trashPagesArray">
               <button (click)="goToTrashPage(page)"
-                      [ngClass]="{ 'active-page': page === trashCurrentPage }"
-                      class="pagination-button">
+                        [ngClass]="{ 'active-page': page === trashCurrentPage }"
+                        class="pagination-button">
                 {{ page }}
               </button>
             </ng-container>
             <button (click)="goToTrashPage(trashCurrentPage + 1)" [disabled]="trashCurrentPage === trashTotalPages"
-                    class="pagination-button last-page-btn">
+                      class="pagination-button last-page-btn">
               <span class="sr-only">Další</span>
               <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
