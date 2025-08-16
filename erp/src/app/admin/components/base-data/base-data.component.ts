@@ -15,6 +15,9 @@
 //   protected destroy$ = new Subject<void>();
 //   abstract apiEndpoint: string;
   
+//   // Přidáváme proměnnou pro uložení reference na časovač
+//   private showLoaderTimeout: any;
+
 //   constructor(protected dataHandler: DataHandler, protected cd: ChangeDetectorRef) {}
   
 //   ngOnInit(): void {}
@@ -22,6 +25,10 @@
 //   ngOnDestroy(): void {
 //     this.destroy$.next();
 //     this.destroy$.complete();
+//     // Ujistíme se, že časovač je vyčištěn, pokud komponenta zaniká
+//     if (this.showLoaderTimeout) {
+//       clearTimeout(this.showLoaderTimeout);
+//     }
 //   }
 
 //   // Původní loadData() již není využita v user-request.component.ts
@@ -92,7 +99,56 @@
 //     );
 //   }
 
+//   /**
+//    * Načte detailní data jednoho záznamu z API endpointu s formátem /{id}/details.
+//    * @param id ID záznamu, jehož detaily chceme načíst.
+//    * @returns Observable s typem T, který reprezentuje detailní data.
+//    */
+//   getItemDetails(id: number | undefined): Observable<T> {
+//     if (id === undefined || id === null) {
+//       const msg = 'Chyba: ID záznamu pro načtení detailů není definováno.';
+//       this.errorMessage = msg;
+//       console.error(msg);
+//       return throwError(() => new Error(msg));
+//     }
 
+//     const url = `${this.apiEndpoint}/${id}/details`;
+//     console.log(`base-data: Spouštím načítání detailů pro ID ${id}.`);
+
+//     // Nastavíme časovač na 3000ms (3 sekundy)
+//     this.showLoaderTimeout = setTimeout(() => {
+//       this.isLoading = true;
+//       this.cd.markForCheck();
+//       console.log('base-data: Načítání trvá déle, zobrazuji loader.');
+//     }, 3000);
+
+//     this.errorMessage = null;
+
+//     // Volání nové metody get<T>() z DataHandleru
+//     return this.dataHandler.get<T>(url).pipe(
+//       takeUntil(this.destroy$),
+//       catchError((err: HttpErrorResponse) => {
+//         // Vyčistíme časovač bez ohledu na výsledek
+//         if (this.showLoaderTimeout) {
+//           clearTimeout(this.showLoaderTimeout);
+//         }
+//         console.error(`base-data: Chyba při načítání detailů z ${url}:`, err);
+//         this.isLoading = false;
+//         this.errorMessage = err.message || 'Neznámá chyba při načítání detailů.';
+//         this.cd.markForCheck();
+//         return throwError(() => err);
+//       }),
+//       map(data => {
+//         // Vyčistíme časovač, protože data byla úspěšně načtena
+//         if (this.showLoaderTimeout) {
+//           clearTimeout(this.showLoaderTimeout);
+//         }
+//         this.isLoading = false;
+//         this.cd.markForCheck();
+//         return data;
+//       })
+//     );
+//   }
 
 //   getOnlySoftDeleted(endpoint: string, filters?: FilterParams): Observable<T[]> {
 //     const params = new URLSearchParams();
@@ -220,18 +276,18 @@
 //     this.isLoading = true;
 //     this.errorMessage = null;
 //     const restoreUrl = `${this.apiEndpoint}/${id}/restore`;
-//     return this.dataHandler.put<T>(restoreUrl, {} as T).pipe(
-//       takeUntil(this.destroy$),
-//       catchError((err: HttpErrorResponse) => {
-//         console.error(`base-data: Chyba při obnovování na ${restoreUrl}:`, err);
-//         console.log('base-data: Obnovení dat selhalo. isLoading je false.');
-//         this.isLoading = false;
-//         this.errorMessage = err.message || 'Neznámá chyba při obnovování dat.';
-//         this.cd.markForCheck();
-//         return throwError(() => err);
-//       })
+//     return this.dataHandler.post<T>(restoreUrl, {} as T).pipe( // Změna z .put() na .post()
+//         takeUntil(this.destroy$),
+//         catchError((err: HttpErrorResponse) => {
+//             console.error(`base-data: Chyba při obnovování na ${restoreUrl}:`, err);
+//             console.log('base-data: Obnovení dat selhalo. isLoading je false.');
+//             this.isLoading = false;
+//             this.errorMessage = err.message || 'Neznámá chyba při obnovování dat.';
+//             this.cd.markForCheck();
+//             return throwError(() => err);
+//         })
 //     );
-//   }
+// }
   
 //   uploadData<U>(formData: FormData, targetUrl?: string): Observable<U> {
 //     const url = targetUrl || this.apiEndpoint;
@@ -247,37 +303,6 @@
 //         this.errorMessage = err.message || 'Neznámá chyba při nahrávání dat.';
 //         this.cd.markForCheck();
 //         return throwError(() => err);
-//       })
-//     );
-//   }
-//   // ---------------
-//  getItemDetails(id: number | undefined): Observable<T> {
-//     if (id === undefined || id === null) {
-//       const msg = 'Chyba: ID záznamu pro načtení detailů není definováno.';
-//       this.errorMessage = msg;
-//       console.error(msg);
-//       return throwError(() => new Error(msg));
-//     }
-
-//     const url = `${this.apiEndpoint}/${id}/details`;
-//     console.log(`base-data: Spouštím načítání detailů pro ID ${id}. isLoading je true.`);
-//     this.isLoading = true;
-//     this.errorMessage = null;
-
-//     // Volání nové metody get<T>() z DataHandleru
-//     return this.dataHandler.get<T>(url).pipe(
-//       takeUntil(this.destroy$),
-//       catchError((err: HttpErrorResponse) => {
-//         console.error(`base-data: Chyba při načítání detailů z ${url}:`, err);
-//         this.isLoading = false;
-//         this.errorMessage = err.message || 'Neznámá chyba při načítání detailů.';
-//         this.cd.markForCheck();
-//         return throwError(() => err);
-//       }),
-//       map(data => {
-//         this.isLoading = false;
-//         this.cd.markForCheck();
-//         return data;
 //       })
 //     );
 //   }
@@ -459,7 +484,8 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
   }
 
   postData(data: T): Observable<T> {
-    console.log('base-data: Spouštím POST request. isLoading je true.');
+    console.log('base-data: Spouštím POST request.');
+    console.log('base-data: Odesílám data:', data);
     this.isLoading = true;
     this.errorMessage = null;
     return this.dataHandler.post<T>(this.apiEndpoint, data).pipe(
@@ -482,7 +508,8 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
       console.error(msg);
       return throwError(() => new Error(msg));
     }
-    console.log('base-data: Spouštím PUT request. isLoading je true.');
+    console.log('base-data: Spouštím PUT request.');
+    console.log('base-data: Odesílám data k aktualizaci:', data);
     this.isLoading = true;
     this.errorMessage = null;
     const updateUrl = `${this.apiEndpoint}/${id}`;
