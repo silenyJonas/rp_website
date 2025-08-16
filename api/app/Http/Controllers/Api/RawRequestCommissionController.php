@@ -1,5 +1,6 @@
 <?php
 
+
 // namespace App\Http\Controllers\Api;
 
 // use App\Http\Controllers\Controller;
@@ -205,7 +206,6 @@
 //     }
 // }
 
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -228,8 +228,8 @@ class RawRequestCommissionController extends Controller
         // Získání parametrů s použitím názvů, které jsou kompatibilní s Angular frontendem
         $perPage = $request->input('per_page', 15);
         $page = $request->input('page', 1);
-        $noPagination = $request->input('no_pagination', false);
-        $onlyTrashed = $request->input('only_trashed', false);
+        $noPagination = filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN);
+        $onlyTrashed = filter_var($request->input('only_trashed', false), FILTER_VALIDATE_BOOLEAN);
 
         $search = $request->input('search');
         $status = $request->input('status');
@@ -293,11 +293,11 @@ class RawRequestCommissionController extends Controller
         
         // NOVÁ LOGIKA pro filtrování POUZE podle dne created_at a updated_at
         if ($createdAt) {
-            $query->whereDay('created_at', '=', $createdAt);
+            $query->whereDate('created_at', '=', $createdAt);
         }
 
         if ($updatedAt) {
-            $query->whereDay('updated_at', '=', $updatedAt);
+            $query->whereDate('updated_at', '=', $updatedAt);
         }
 
         // Kód pro řazení
@@ -307,6 +307,9 @@ class RawRequestCommissionController extends Controller
         } else {
             $query->latest();
         }
+
+        // Kvůli chybějícím vazbám nenačítáme žádné relace
+        // $query->with(['user', 'commissionDetails', 'rawRequestAttachments']);
 
         if ($noPagination) {
             $commissions = $query->get();
@@ -344,6 +347,31 @@ class RawRequestCommissionController extends Controller
     }
 
     /**
+     * Zobrazení detailů konkrétního požadavku s navázanými daty.
+     *
+     * @param RawRequestCommission $rawRequestCommission
+     * @return JsonResponse
+     */
+    public function showDetails(RawRequestCommission $rawRequestCommission): JsonResponse
+{
+    // Vytvoření pole s požadovanými sloupci
+    $selectedData = [
+        'id' => $rawRequestCommission->id,
+        'thema' => $rawRequestCommission->thema,
+        'contact_email' => $rawRequestCommission->contact_email,
+        'contact_phone' => $rawRequestCommission->contact_phone,
+        'order_description' => $rawRequestCommission->order_description,
+        'status' => $rawRequestCommission->status,
+        'priority' => $rawRequestCommission->priority,
+        'created_at' => $rawRequestCommission->created_at,
+        'updated_at' => $rawRequestCommission->updated_at,
+        'note' => $rawRequestCommission->note,
+    ];
+
+    return response()->json($selectedData);
+}
+
+    /**
      * Aktualizace konkrétního požadavku.
      *
      * @param UpdateRawRequestCommissionRequest $request
@@ -369,7 +397,7 @@ class RawRequestCommissionController extends Controller
             return response()->json(['message' => 'Invalid ID format.'], 404);
         }
 
-        $forceDelete = $request->input('force_delete', false);
+        $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
         $rawRequestCommission = RawRequestCommission::withTrashed()->findOrFail($id);
 
         if ($forceDelete) {

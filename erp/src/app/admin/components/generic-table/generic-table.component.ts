@@ -9,6 +9,9 @@ import { DataHandler } from '../../../core/services/data-handler.service';
 import { ConfirmDialogService } from '../../../core/services/confirm-dialog.service';
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
 
+/**
+ * Původní rozhraní Buttons, které jasně definuje typ tlačítka.
+ */
 export interface Buttons {
   display_name: string;
   isActive: boolean;
@@ -24,7 +27,7 @@ export interface Buttons {
     CurrencyPipe,
     KeyValuePipe,
     DatePipe
-],
+  ],
   templateUrl: './generic-table.component.html',
   styleUrls: ['./generic-table.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -38,13 +41,12 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   @Input() uploadsBaseUrl: string = '';
   @Input() buttons: Buttons[] = [];
 
-  // Nová událost pro komunikaci s nadřazenou komponentou
+  // Nové události pro komunikaci s nadřazenou komponentou
   @Output() itemDeleted = new EventEmitter<any>();
-  // Nová událost pro tlačítko "Přidat záznam"
   @Output() createFormOpened = new EventEmitter<void>();
-
-  // 🆕 Nová událost pro editaci
   @Output() editFormOpened = new EventEmitter<any>();
+  // Událost pro zobrazení detailů, kterou vyvoláme při info_button
+  @Output() viewDetailsOpened = new EventEmitter<any>();
 
   public isFullWidth: boolean = true;
   
@@ -90,23 +92,27 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     return typeof value === 'object' && value !== null && !Array.isArray(value);
   }
   
+  /**
+   * Zpracovává akce tlačítek na základě jejich 'type'.
+   * @param item Data řádku, na který se kliklo.
+   * @param buttonType Typ tlačítka (např. 'info_button', 'delete_button').
+   */
   handleAction(item: any, buttonType: string): void {
     switch (buttonType) {
       case 'info_button':
-        this.alertDialogService.open('Informace o položce', 'Zde je detailní informace o vybrané položce.', 'info');
+        // Volá událost pro zobrazení detailů
+        this.viewDetailsOpened.emit(item);
         break;
       case 'create_button':
-        this.alertDialogService.open('Vytvoření položky', 'Nová položka byla úspěšně vytvořena.', 'success');
+        // Toto tlačítko se normálně nepoužívá na řádku, ale pro jistotu to tu nechám
+        this.createFormOpened.emit();
         break;
       case 'delete_button':
         this.confirmDialogService.open('Potvrzení smazání', 'Opravdu si přejete smazat tuto položku?').then(result => {
           if (result) {
-            // Změna: Voláme metodu deleteData z BaseDataComponent
-            // Backend by měl na DELETE požadavek provést soft-delete
             this.deleteData(item.id).subscribe({
               next: () => {
                 this.alertDialogService.open('Úspěch', 'Položka byla úspěšně smazána.', 'success');
-                // Následně se odstraní z lokálního pole a vyšle se událost
                 const index = this.data.findIndex(dataItem => dataItem.id === item.id);
                 if (index > -1) {
                   this.data.splice(index, 1);
@@ -128,7 +134,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
         });
         break;
       case 'neutral_button':
-        // 🆕 Volání události pro editaci a předání dat
+        // Volá událost pro editaci a předání dat
         this.editFormOpened.emit(item);
         break;
       default:

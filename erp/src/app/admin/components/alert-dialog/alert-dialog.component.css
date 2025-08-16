@@ -1,5 +1,6 @@
 /* Základní styly pro dialog, můžete je sdílet s confirm-dialog.component.css */
 .dialog-overlay {
+  cursor: default;
   position: fixed;
   top: 0;
   left: 0;
@@ -54,7 +55,6 @@
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
-  cursor: pointer;
   font-weight: bold;
 }
 

@@ -1,0 +1,124 @@
+/* Globální styly pro overlay a kontejner formuláře */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.form-container {
+  padding: 1rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+  max-width: 700px;
+  width: 90%;
+  position: relative;
+  animation: fadeIn 0.3s ease-out;
+  border: 1px solid #dee2e6;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  max-height: 80vh; /* Maximální výška celého kontejneru */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hlavička formuláře */
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.5rem;
+}
+
+.form-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #adb5bd;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+  padding: 0;
+}
+
+.close-button:hover {
+  color: #495057;
+}
+
+/* Styly pro sekci s detaily s posouváním */
+.details-content {
+  margin-top: 1rem;
+  flex: 1; /* Umožní obsahu roztáhnout se a zabrat dostupný prostor */
+  overflow-y: auto; /* Povolí scrollbar pouze pro tento obsah */
+  padding-right: 1rem; /* Posuvník se nebude překrývat s obsahem */
+}
+
+/* Styly pro posuvník */
+.details-content {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+.details-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.details-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.details-content::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.details-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.75rem;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #ececec;
+}
+
+.details-item strong {
+  color: #444;
+  font-weight: 500;
+  margin-bottom: 0.15rem;
+  font-size: 0.85rem;
+}
+
+/* Animace */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

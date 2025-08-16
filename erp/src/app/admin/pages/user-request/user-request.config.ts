@@ -4,6 +4,7 @@ import { Buttons } from '../../components/generic-table/generic-table.component'
 import { InputDefinition } from '../../components/generic-form/generic-form.component';
 import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
 import { FilterColumns } from '../../../shared/interfaces/filter-columns';
+import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 
 export const USER_REQUEST_BUTTONS: Buttons[] = [
   { display_name: 'Detaily', isActive: true, type: 'info_button' },
@@ -119,7 +120,8 @@ export const USER_REQUEST_FORM_FIELDS: InputDefinition[] = [
     editable: false,
     show_in_edit: false,
     show_in_create: false
-  }
+  },
+  
 ];
 
 export const USER_REQUEST_COLUMNS: ColumnDefinition[] = [
@@ -151,7 +153,6 @@ export const USER_REQUEST_TRASH_COLUMNS: ColumnDefinition[] = [
 
 export const USER_REQUEST_STATUS_OPTIONS: string[] = ['Nově zadané', 'Zpracovává se', 'Dokončeno', 'Zrušeno'];
 export const USER_REQUEST_PRIORITY_OPTIONS: string[] = ['Nízká', 'Neutrální', 'Vysoká'];
-
 
 export const USER_REQUEST_FILTER_COLUMNS: FilterColumns[] = [
   {
@@ -219,4 +220,48 @@ export const USER_REQUEST_FILTER_COLUMNS: FilterColumns[] = [
     placeholder: 'Hledat podle data aktualizace',
     canSort: true,
   },
+];
+
+export const USER_REQUEST_DETAILS_COLUMNS: ItemDetailsColumns[] = [
+  {
+    key: 'id',
+    display_name: 'ID položky'
+  },
+  {
+    key: 'thema',
+    display_name: 'Téma'
+  },
+  {
+    key: 'contact_email',
+    display_name: 'Kontaktní Email'
+  },
+  {
+    key: 'contact_phone',
+    display_name: 'Kontaktní Telefon'
+  },
+  {
+    key: 'order_description',
+    display_name: 'Popip Požadavku'
+  },
+  {
+    key: 'status',
+    display_name: 'Status'
+  },
+  {
+    key: 'priority',
+    display_name: 'Priorita'
+  },
+  {
+    key: 'created_at',
+    display_name: 'Datum Vytvoření'
+  },
+  {
+    key: 'updated_at',
+    display_name: 'Poslední Datum Změny'
+  },
+  {
+    key: 'note',
+    display_name: 'Interní Poznámka'
+  },
+
 ];

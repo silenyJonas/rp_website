@@ -23,4 +23,5 @@ main {
 /* Speciální styl pro main, když jsme v adminu (bez public layoutu) */
 main.admin-main {
   padding: 0; /* Admin layout má vlastní padding */
+  cursor: default;
 }

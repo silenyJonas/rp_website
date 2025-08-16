@@ -124,3 +124,8 @@ td.action-button-cell {
 .checkbox-container input {
   margin-right: 0.5rem;
 }
+@media (max-width: 1024px){
+  .table-responsive{
+    width: 100%;
+  }
+}

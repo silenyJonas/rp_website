@@ -1,5 +1,3 @@
-
-
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +15,8 @@ import { Observable, of, forkJoin, BehaviorSubject } from 'rxjs';
 import { tap, retry, finalize, filter } from 'rxjs/operators';
 import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { GenericFilterFormComponent } from '../../components/generic-filter-form/generic-filter-form.component';
+import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
+import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 import {
   USER_REQUEST_BUTTONS,
   USER_REQUEST_FORM_FIELDS,
@@ -24,7 +24,8 @@ import {
   USER_REQUEST_TRASH_COLUMNS,
   USER_REQUEST_STATUS_OPTIONS,
   USER_REQUEST_PRIORITY_OPTIONS,
-  USER_REQUEST_FILTER_COLUMNS
+  USER_REQUEST_FILTER_COLUMNS,
+  USER_REQUEST_DETAILS_COLUMNS
 } from './user-request.config';
 
 // Rozhraní TrashFilterParams již není potřeba, protože FilterParams je univerzální
@@ -42,8 +43,10 @@ import {
     GenericTableComponent,
     GenericTrashTableComponent,
     GenericFormComponent,
-    GenericFilterFormComponent
-  ],
+    GenericFilterFormComponent,
+    GenericDetailsComponent,
+    GenericDetailsComponent
+],
   templateUrl: './user-request.component.html',
   styleUrl: './user-request.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -62,6 +65,7 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   statusOptions: string[] = USER_REQUEST_STATUS_OPTIONS;
   priorityOptions: string[] = USER_REQUEST_PRIORITY_OPTIONS;
   filterColumns: FilterColumns[] = USER_REQUEST_FILTER_COLUMNS;
+  detailsColumns: ItemDetailsColumns[] = USER_REQUEST_DETAILS_COLUMNS;
 
   filterFormFields: string[] = []
 
@@ -72,6 +76,10 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   itemsPerPage: number = 15;
   totalItems: number = 0;
   totalPages: number = 0;
+
+  showDetails: boolean = false; // Nová proměnná pro zobrazení/skrytí detailů
+  selectedItemForDetails: any | null = null; // Nová proměnná pro data v detailu
+  
 
   trashCurrentPage: number = 1;
   trashItemsPerPage: number = 15;
@@ -522,5 +530,50 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
    */
   trackById(index: number, item: RawRequestCommission): number {
     return item.id!;
+  }
+
+  // handleViewDetails(item: RawRequestCommission): void {
+
+  //   this.selectedItemForDetails = item;
+
+  //   this.showDetails = true;
+  //   console.log('detaily otevreny')
+  //   console.log('detailID:', item.id)
+  // }
+   handleViewDetails(item: RawRequestCommission): void {
+    if (item.id === undefined || item.id === null) {
+      console.error('Chyba: Záznam nemá definované ID pro zobrazení detailů.');
+      return;
+    }
+    
+    // Zobrazení načítacího indikátoru, pokud je potřeba
+    // this.isLoading = true;
+    this.errorMessage = null;
+
+    console.log('Spouštím načítání detailů pro položku:', item);
+    
+    // Voláme novou metodu z BaseDataComponent a přihlásíme se k odběru
+    this.getItemDetails(item.id).subscribe({
+      next: (details) => {
+        this.selectedItemForDetails = details;
+        this.showDetails = true;
+        console.log('Detaily otevřeny:', details);
+        this.isLoading = false;
+        this.cd.markForCheck(); // Ujistěte se, že Angular detekuje změnu
+      },
+      error: (err) => {
+        console.error('Chyba při načítání detailů:', err);
+        this.isLoading = false;
+        this.errorMessage = 'Nepodařilo se načíst detaily položky.';
+        this.cd.markForCheck();
+      }
+    });
+  }
+  // Nová metoda pro zavření detailů
+  handleCloseDetails(): void {
+
+    this.selectedItemForDetails = null;
+    console.log('detaily zavreny')
+    this.showDetails = false;
   }
 }
