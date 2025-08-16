@@ -87,6 +87,8 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   filterPhone: string = '';
   filterThema: string = '';
   filterDescription: string = '';
+  filterCreatedAt: string = '';
+  filterUpdatedAt: string = '';
   filterId: string = '';
   filterSortDirection: 'asc' | 'desc' = 'asc';
 
@@ -128,6 +130,8 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       id: this.filterId,
       order_description:this.filterDescription,
       thema: this.filterThema,
+      created_at: this.filterCreatedAt, 
+      updated_at: this.filterUpdatedAt,
       is_deleted: 'false',
       sort_by: this.filterSortBy,
       sort_direction: this.filterSortDirection
@@ -192,7 +196,8 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       contact_email: this.filterEmail,
       contact_phone: this.filterPhone,
       id: this.filterId,
-
+      created_at: this.filterCreatedAt, 
+      updated_at: this.filterUpdatedAt,
       order_description:this.filterDescription,
       thema: this.filterThema,
       is_deleted: 'false',
@@ -228,7 +233,8 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       contact_email: this.filterEmail,
       contact_phone: this.filterPhone,
       id: this.filterId,
-
+      created_at: this.filterCreatedAt, 
+      updated_at: this.filterUpdatedAt,
       order_description:this.filterDescription,
       thema: this.filterThema,
       sort_by: this.filterSortBy,
@@ -294,7 +300,8 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       priority: this.filterPriority,
       contact_email: this.filterEmail,
       id: this.filterId,
-
+      created_at: this.filterCreatedAt, 
+      updated_at: this.filterUpdatedAt,
       contact_phone: this.filterPhone,
       order_description:this.filterDescription,
       thema: this.filterThema,
@@ -336,10 +343,13 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     this.filterEmail = filters.contact_email || '';
     this.filterPhone = filters.contact_phone || '';
     this.filterThema = filters.thema || '';
+    this.filterCreatedAt = filters.created_at || '';
+    this.filterUpdatedAt = filters.updated_at || '';
     this.filterId = filters.id || '';
     this.filterDescription = filters.order_description || '';
     this.filterSortBy = filters.sort_by || ''; // Pozor na název, měl by odpovídat konfiguraci
     this.filterSortDirection = filters.sort_direction || 'asc';
+
     this.forceFullRefresh();
   }
 
@@ -352,6 +362,8 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     this.filterPhone = '';
     this.filterThema = '';
     this.filterId = '';
+    this.filterCreatedAt = '';
+    this.filterUpdatedAt = '';
     this.filterDescription = '';
     this.filterSortBy = '';
     this.filterSortDirection = 'asc';

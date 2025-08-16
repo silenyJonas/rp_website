@@ -61,6 +61,17 @@ export const USER_REQUEST_FORM_FIELDS: InputDefinition[] = [
     show_in_create: true
   },
   {
+    column_name: 'note',
+    label: 'Poznámka',
+    placeholder: 'Napište poznámku',
+    type: 'textarea',
+    required: false,
+    errorMessage: '',
+    editable: true,
+    show_in_edit: true,
+    show_in_create: true
+  },
+  {
     column_name: 'status',
     label: 'Status',
     placeholder: '',
@@ -120,6 +131,7 @@ export const USER_REQUEST_COLUMNS: ColumnDefinition[] = [
   { key: 'priority', header: 'Priorita', type: 'text' },
   { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' },
   { key: 'order_description', header: 'Popis objednávky', type: 'text' },
+  { key: 'note', header: 'Poznámka', type: 'text' },
   { key: 'updated_at', header: 'Změněno', type: 'date', format: 'short' }
 ];
 
@@ -132,6 +144,7 @@ export const USER_REQUEST_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'priority', header: 'Priorita', type: 'text' },
   { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' },
   { key: 'order_description', header: 'Popis objednávky', type: 'text' },
+  { key: 'note', header: 'Poznámka', type: 'text' },
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' },
   { key: 'updated_at', header: 'Změněno', type: 'date', format: 'short' }
 ];

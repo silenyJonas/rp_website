@@ -14,8 +14,4 @@ sprava uzivatelu:
 -udelat /my-acc treba a tam budou informace o mne
 -udelat logovani a logovani vseho v /logs rpozdeleni na systemlogs a bussines logs a treba takhle jak je podle db
 -dodelat autorefresh dat co 30 sekund treba 
--filter radi podle STAV priorita a i abecedne a ciselne ALE nefunguje vyhledavani podle textu treba napsat do 'tema' nejaky texta to to nehleda problem bude nejspis ze sloupecky nejsou konzistentne pojmenovani frontend x db ale nejsem si jisty
 
-
-NOW:
-pridat filtraci podle id proste dopsat ty sloupecky a udelat aby se udrzeli hodnoty po vyhledani
