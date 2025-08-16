@@ -1,3 +1,5 @@
+
+
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +14,7 @@ import { GenericTrashTableComponent } from '../../components/generic-trash-table
 import { RawRequestCommission } from '../../../shared/interfaces/raw-request-commission';
 import { GenericFormComponent, InputDefinition } from '../../components/generic-form/generic-form.component';
 import { Observable, of, forkJoin, BehaviorSubject } from 'rxjs';
-import { tap, retry, finalize } from 'rxjs/operators';
+import { tap, retry, finalize, filter } from 'rxjs/operators';
 import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { GenericFilterFormComponent } from '../../components/generic-filter-form/generic-filter-form.component';
 import {
@@ -25,10 +27,12 @@ import {
   USER_REQUEST_FILTER_COLUMNS
 } from './user-request.config';
 
-interface TrashFilterParams extends FilterParams {
-  only_trashed?: string;
-}
+// Rozhraní TrashFilterParams již není potřeba, protože FilterParams je univerzální
 
+/**
+ * Komponenta pro správu uživatelských požadavků a provizí.
+ * Zobrazuje aktivní a smazané požadavky s podporou paginace, filtrování a CRUD operací.
+ */
 @Component({
   selector: 'app-user-request',
   standalone: true,
@@ -74,12 +78,16 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   trashTotalItems: number = 0;
   trashTotalPages: number = 0;
 
+  // Stavy filtrů, které se budou posílat do servisu
   filterSearch: string = '';
   filterStatus: string = '';
   filterPriority: string = '';
   filterEmail: string = '';
-
   filterSortBy: string = '';
+  filterPhone: string = '';
+  filterThema: string = '';
+  filterDescription: string = '';
+  filterId: string = '';
   filterSortDirection: 'asc' | 'desc' = 'asc';
 
   private activeRequestsCache: Map<number, RawRequestCommission[]> = new Map();
@@ -115,7 +123,11 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       search: this.filterSearch,
       status: this.filterStatus,
       priority: this.filterPriority,
-      email: this.filterEmail,
+      contact_email: this.filterEmail,
+      contact_phone: this.filterPhone,
+      id: this.filterId,
+      order_description:this.filterDescription,
+      thema: this.filterThema,
       is_deleted: 'false',
       sort_by: this.filterSortBy,
       sort_direction: this.filterSortDirection
@@ -177,7 +189,12 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       search: this.filterSearch,
       status: this.filterStatus,
       priority: this.filterPriority,
-      email: this.filterEmail,
+      contact_email: this.filterEmail,
+      contact_phone: this.filterPhone,
+      id: this.filterId,
+
+      order_description:this.filterDescription,
+      thema: this.filterThema,
       is_deleted: 'false',
       sort_by: this.filterSortBy,
       sort_direction: this.filterSortDirection
@@ -202,12 +219,18 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   }
 
   loadTrashRequests(): Observable<PaginatedResponse<RawRequestCommission>> {
-    const trashFilters: TrashFilterParams = {
+    // Vytvoříme objekt filtrů. Klíč 'only_trashed' je zde specifický pro tuto tabulku.
+    const trashFilters: FilterParams = {
       only_trashed: 'true',
       search: this.filterSearch,
       status: this.filterStatus,
       priority: this.filterPriority,
-      email: this.filterEmail,
+      contact_email: this.filterEmail,
+      contact_phone: this.filterPhone,
+      id: this.filterId,
+
+      order_description:this.filterDescription,
+      thema: this.filterThema,
       sort_by: this.filterSortBy,
       sort_direction: this.filterSortDirection
     };
@@ -264,12 +287,17 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       return;
     }
 
-    const trashFilters: TrashFilterParams = {
+    const trashFilters: FilterParams = {
       only_trashed: 'true',
       search: this.filterSearch,
       status: this.filterStatus,
       priority: this.filterPriority,
-      email: this.filterEmail,
+      contact_email: this.filterEmail,
+      id: this.filterId,
+
+      contact_phone: this.filterPhone,
+      order_description:this.filterDescription,
+      thema: this.filterThema,
       sort_by: this.filterSortBy,
       sort_direction: this.filterSortDirection
     };
@@ -298,14 +326,20 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     this.forceFullRefresh();
   }
 
+  // Tady se získávají filtry a sestavuje se objekt, který je pak předán dál
   applyFilters(filters: any): void {
     console.log('UserRequestComponent: Filters applied:', filters);
+    // Všechny klíče z dynamického filtru si uložíme do stavových proměnných
     this.filterSearch = filters.search || '';
     this.filterStatus = filters.status || '';
     this.filterPriority = filters.priority || '';
-    this.filterEmail = filters.email || '';
-    this.filterSortBy = filters.sortBy || '';
-    this.filterSortDirection = filters.sortDirection || 'asc';
+    this.filterEmail = filters.contact_email || '';
+    this.filterPhone = filters.contact_phone || '';
+    this.filterThema = filters.thema || '';
+    this.filterId = filters.id || '';
+    this.filterDescription = filters.order_description || '';
+    this.filterSortBy = filters.sort_by || ''; // Pozor na název, měl by odpovídat konfiguraci
+    this.filterSortDirection = filters.sort_direction || 'asc';
     this.forceFullRefresh();
   }
 
@@ -315,6 +349,10 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     this.filterStatus = '';
     this.filterPriority = '';
     this.filterEmail = '';
+    this.filterPhone = '';
+    this.filterThema = '';
+    this.filterId = '';
+    this.filterDescription = '';
     this.filterSortBy = '';
     this.filterSortDirection = 'asc';
     this.forceFullRefresh();
@@ -356,13 +394,21 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     }
   }
 
-  get pagesArray(): number[] {
+  /**
+   * Generuje pole čísel stránek pro zobrazení v paginaci.
+   * @param currentPage Aktuální stránka
+   * @param totalPages Celkový počet stránek
+   * @returns Pole čísel stránek k zobrazení
+   */
+  private getPaginationArray(currentPage: number, totalPages: number): number[] {
     const maxPagesToShow = 5;
-    let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
-    let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
     if (endPage - startPage + 1 < maxPagesToShow) {
       startPage = Math.max(1, endPage - maxPagesToShow + 1);
     }
+
     const pages = [];
     for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
@@ -370,18 +416,12 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     return pages;
   }
 
+  get pagesArray(): number[] {
+    return this.getPaginationArray(this.currentPage, this.totalPages);
+  }
+
   get trashPagesArray(): number[] {
-    const maxPagesToShow = 5;
-    let startPage = Math.max(1, this.trashCurrentPage - Math.floor(maxPagesToShow / 2));
-    let endPage = Math.min(this.trashTotalPages, startPage + maxPagesToShow - 1);
-    if (endPage - startPage + 1 < maxPagesToShow) {
-      startPage = Math.max(1, endPage - maxPagesToShow + 1);
-    }
-    const pages = [];
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-    return pages;
+    return this.getPaginationArray(this.trashCurrentPage, this.trashTotalPages);
   }
 
   handleItemRestored(): void {
@@ -461,5 +501,14 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   onCancelForm() {
     this.showCreateForm = false;
     this.selectedItemForEdit = null;
+  }
+
+  /**
+   * Funkce pro trackování prvků v *ngFor pro optimalizaci výkonu.
+   * @param index Index prvku
+   * @param item Položka
+   */
+  trackById(index: number, item: RawRequestCommission): number {
+    return item.id!;
   }
 }

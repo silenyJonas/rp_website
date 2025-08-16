@@ -5,6 +5,12 @@ import { Observable, tap } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { DataHandler } from './data-handler.service';
 
+// Rozhraní FilterParams je nyní univerzální, bez explicitně definovaných klíčů.
+// Přijme jakýkoliv klíč (string) s hodnotou, která může být string, číslo, boolean atd.
+export interface FilterParams {
+  [key: string]: string | number | boolean | undefined | null;
+}
+
 export interface PaginatedResponse<T> {
   current_page: number;
   data: T[];
@@ -19,20 +25,6 @@ export interface PaginatedResponse<T> {
   prev_page_url: string | null;
   to: number;
   total: number;
-}
-
-export interface AllDataResponse<T> {
-  data: T[];
-}
-
-export interface FilterParams {
-  search?: string;
-  status?: string;
-  priority?: string;
-  email?: string;
-  is_deleted?: string;
-  sort_by?: string; // Nově přidaný parametr pro název sloupce řazení
-  sort_direction?: 'asc' | 'desc'; // Nově přidaný parametr pro směr řazení
 }
 
 @Injectable({
@@ -50,6 +42,7 @@ export class GenericTableService {
     perPage: number = 15,
     filters: FilterParams = {}
   ): Observable<PaginatedResponse<T>> {
+    // Kód pro správu cache je perfektní, funguje jak má
     if (JSON.stringify(filters) !== JSON.stringify(this.lastFilterParams)) {
       this.clearCache();
       this.lastFilterParams = { ...filters };
@@ -64,14 +57,12 @@ export class GenericTableService {
     params = params.append('page', page.toString());
     params = params.append('per_page', perPage.toString());
 
+    // Klíčová část, která dynamicky přidává jakékoliv filtry
     for (const key in filters) {
-      if (
-        filters.hasOwnProperty(key) &&
-        filters[key as keyof FilterParams] !== undefined &&
-        filters[key as keyof FilterParams] !== null &&
-        filters[key as keyof FilterParams] !== ''
-      ) {
-        params = params.append(key, filters[key as keyof FilterParams]!.toString());
+      const value = filters[key];
+      // Kontrolujeme, zda hodnota existuje
+      if (value !== undefined && value !== null && value !== '') {
+        params = params.append(key, value.toString());
       }
     }
 
@@ -132,7 +123,7 @@ export class GenericTableService {
   ): string {
     const sortedFilterKeys = Object.keys(filters).sort();
     const normalizedFilters = sortedFilterKeys.reduce((acc, key) => {
-      const value = filters[key as keyof FilterParams];
+      const value = filters[key];
       if (value !== undefined && value !== null && value !== '') {
         acc[key] = value;
       }
@@ -145,13 +136,9 @@ export class GenericTableService {
     let params = new HttpParams();
 
     for (const key in filters) {
-      if (
-        filters.hasOwnProperty(key) &&
-        filters[key as keyof FilterParams] !== undefined &&
-        filters[key as keyof FilterParams] !== null &&
-        filters[key as keyof FilterParams] !== ''
-      ) {
-        params = params.append(key, filters[key as keyof FilterParams]!.toString());
+      const value = filters[key];
+      if (value !== undefined && value !== null && value !== '') {
+        params = params.append(key, value.toString());
       }
     }
 
