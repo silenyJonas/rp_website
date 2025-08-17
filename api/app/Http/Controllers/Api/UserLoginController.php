@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\UserLogin;
@@ -13,8 +12,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Models\Role;
 
-class UserLoginController extends Controller{
-    public function index(Request $request): JsonResponse{
+class UserLoginController extends Controller
+{
+    public function index(Request $request): JsonResponse
+    {
         $perPage = $request->input('per_page', 15);
         $page = $request->input('page', 1);
         $noPagination = filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN);
@@ -26,9 +27,11 @@ class UserLoginController extends Controller{
         $createdAt = $request->input('created_at');
         $updatedAt = $request->input('updated_at');
         $lastLoginAt = $request->input('last_login_at');
-        $roleName = $request->input('roles.0.role_name');
         
-        Log::info('roles.0.role_name:', [$roleName]);
+        // Změněno na role_name
+        $roleName = $request->input('role_name');
+        
+        Log::info('role_name:', [$roleName]);
 
         $sortBy = $request->input('sort_by');
         $sortDirection = $request->input('sort_direction', 'asc');
@@ -42,12 +45,14 @@ class UserLoginController extends Controller{
             // Sjednocená logika pro řazení
             if ($sortBy) {
                 $sortDirection = in_array(strtolower($sortDirection), ['asc', 'desc']) ? $sortDirection : 'asc';
-                if ($sortBy === 'roles.0.role_name') {
+                
+                // Změněno na role_name
+                if ($sortBy === 'role_name') {
                     // Přidání aliasů a JOINů
                     $query->leftJoin('user_roles as ur', 'user_login.user_login_id', '=', 'ur.user_login_id')
-                          ->leftJoin('roles as r', 'ur.role_id', '=', 'r.role_id')
-                          ->orderBy('r.role_name', $sortDirection);
-                          
+                        ->leftJoin('roles as r', 'ur.role_id', '=', 'r.role_id')
+                        ->orderBy('r.role_name', $sortDirection);
+                        
                     // Zajištění, že se vybírají jen sloupce z user_login, aby se předešlo dalším konfliktům
                     $query->select('user_login.*');
                 } else {
@@ -79,7 +84,7 @@ class UserLoginController extends Controller{
                 if (is_numeric($createdAt) && strlen($createdAt) <= 2) {
                     $query->where(function($q) use ($createdAt) {
                         $q->whereRaw('DAY(user_login.created_at) = ?', [$createdAt])
-                          ->orWhereRaw('MONTH(user_login.created_at) = ?', [$createdAt]);
+                            ->orWhereRaw('MONTH(user_login.created_at) = ?', [$createdAt]);
                     });
                 } else {
                     $query->whereDate('user_login.created_at', '=', $createdAt);
@@ -90,7 +95,7 @@ class UserLoginController extends Controller{
                 if (is_numeric($updatedAt) && strlen($updatedAt) <= 2) {
                     $query->where(function($q) use ($updatedAt) {
                         $q->whereRaw('DAY(user_login.updated_at) = ?', [$updatedAt])
-                          ->orWhereRaw('MONTH(user_login.updated_at) = ?', [$updatedAt]);
+                            ->orWhereRaw('MONTH(user_login.updated_at) = ?', [$updatedAt]);
                     });
                 } else {
                     $query->whereDate('user_login.updated_at', '=', $updatedAt);
@@ -101,13 +106,14 @@ class UserLoginController extends Controller{
                 if (is_numeric($lastLoginAt) && strlen($lastLoginAt) <= 2) {
                     $query->where(function($q) use ($lastLoginAt) {
                         $q->whereRaw('DAY(user_login.last_login_at) = ?', [$lastLoginAt])
-                          ->orWhereRaw('MONTH(user_login.last_login_at) = ?', [$lastLoginAt]);
+                            ->orWhereRaw('MONTH(user_login.last_login_at) = ?', [$lastLoginAt]);
                     });
                 } else {
                     $query->whereDate('user_login.last_login_at', '=', $lastLoginAt);
                 }
             }
 
+            // Změněno na role_name
             if ($roleName) {
                 $query->whereHas('roles', function ($q) use ($roleName) {
                     $q->where('role_name', 'like', '%' . $roleName . '%');
@@ -133,7 +139,8 @@ class UserLoginController extends Controller{
             return response()->json(['message' => 'Něco se pokazilo. Prosím, zkontrolujte parametry dotazu.', 'error' => $e->getMessage()], 500);
         }
     }
-    public function store(StoreUserLoginRequest $request): JsonResponse{
+    public function store(StoreUserLoginRequest $request): JsonResponse
+    {
         $validatedData = $request->validated();
         $user = UserLogin::create([
             'user_email' => $validatedData['user_email'],
@@ -144,11 +151,13 @@ class UserLoginController extends Controller{
         }
         return response()->json(new UserLoginResource($user), 201);
     }
-    public function show(UserLogin $userLogin): JsonResponse{
+    public function show(UserLogin $userLogin): JsonResponse
+    {
         $userLogin->load('roles');
         return response()->json(new UserLoginResource($userLogin));
     }
-    public function update(UpdateUserLoginRequest $request, UserLogin $userLogin): JsonResponse{
+    public function update(UpdateUserLoginRequest $request, UserLogin $userLogin): JsonResponse
+    {
         $validatedData = $request->validated();
         $updateData = [];
         if (isset($validatedData['user_password_hash'])) {
@@ -164,7 +173,8 @@ class UserLoginController extends Controller{
         $userLogin->load('roles');
         return response()->json(new UserLoginResource($userLogin));
     }
-    public function destroy(Request $request, $id): JsonResponse{
+    public function destroy(Request $request, $id): JsonResponse
+    {
         if (!is_numeric($id)) {
             return response()->json(['message' => 'Invalid ID format.'], 404);
         }
@@ -177,12 +187,14 @@ class UserLoginController extends Controller{
         }
         return response()->json(null, 204);
     }
-    public function restore(int $id): JsonResponse{
+    public function restore(int $id): JsonResponse
+    {
         $userLogin = UserLogin::withTrashed()->findOrFail($id);
         $userLogin->restore();
         return response()->json(new UserLoginResource($userLogin));
     }
-    public function forceDeleteAllTrashed(): JsonResponse{
+    public function forceDeleteAllTrashed(): JsonResponse
+    {
         try {
             UserLogin::onlyTrashed()->forceDelete();
             return response()->json(null, 204);
@@ -192,4 +204,3 @@ class UserLoginController extends Controller{
         }
     }
 }
-

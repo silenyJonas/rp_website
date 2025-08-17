@@ -16,6 +16,7 @@ class RawRequestCommissionController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {

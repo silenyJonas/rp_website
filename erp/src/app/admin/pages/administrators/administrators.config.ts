@@ -112,7 +112,7 @@ export const FILTER_COLUMNS: FilterColumns[] = [
     canSort: true,
   },
   {
-    key: 'roles.0.role_name',
+    key: 'role_name',
     header: 'Role',
     type: 'text',
     placeholder: 'Hledat podle role',

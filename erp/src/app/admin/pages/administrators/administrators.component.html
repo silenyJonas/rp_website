@@ -8,16 +8,12 @@
       <app-generic-filter-form
         [filterColumns]="filterColumns"
         [initialFilters]="{ 
-          search: filterSearch, 
-          status: filterStatus, 
-          priority: filterPriority, 
-          contact_email: filterEmail,
-          contact_phone: filterPhone,
-          thema: filterThema,
-          id: filterId,
-          order_description: filterDescription,
+          user_login_id: filterUserLoginId, 
+          user_email: filterUserEmail, 
+          last_login_at: filterLastLoginAt,
           created_at: filterCreatedAt,
-          updated_at: filterUpdatedAt
+          updated_at: filterUpdatedAt,
+          role_name: filterRoleName,
         }"
         [initialSortBy]="filterSortBy"
         [initialSortDirection]="filterSortDirection"
