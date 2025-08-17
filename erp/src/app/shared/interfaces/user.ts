@@ -21,8 +21,3 @@ export interface UserLogin {
   deleted_at: string | null;
   roles: UserRole[]; // Pole vnořených rolí
 }
-
-// Rozhraní pro transformovaná data (s 'roles.role_name')
-export interface TransformedUserLogin extends UserLogin {
-  'roles.role_name': string | null; // Klíč pro zobrazení v tabulce
-}

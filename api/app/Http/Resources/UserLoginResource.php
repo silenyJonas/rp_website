@@ -15,7 +15,7 @@ class UserLoginResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'user_login_id' => $this->user_login_id,
+            'id' => $this->user_login_id,
             'user_email' => $this->user_email,
             'last_login_at' => $this->last_login_at,
             'is_deleted' => (bool) $this->is_deleted,

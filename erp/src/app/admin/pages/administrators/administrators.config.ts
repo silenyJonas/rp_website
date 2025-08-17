@@ -58,7 +58,7 @@ export const STATUS_OPTIONS: string[] = ['Nově zadané', 'Zpracovává se', 'Do
 export const PRIORITY_OPTIONS: string[] = ['Nízká', 'Neutrální', 'Vysoká'];
 
 export const TABLE_COLUMNS: ColumnDefinition[] = [
-  { key: 'user_login_id', header: 'ID', type: 'text' },
+  { key: 'id', header: 'ID', type: 'text' },
   { key: 'user_email', header: 'Email', type: 'text' },
   { key: 'last_login_at', header: 'Naposled přihlášen', type: 'date', format: 'short' },
   { key: 'created_at', header: 'Vytvořen', type: 'date', format: 'short' },
@@ -67,7 +67,7 @@ export const TABLE_COLUMNS: ColumnDefinition[] = [
 ];
 
 export const TRASH_TABLE_COLUMNS: ColumnDefinition[] = [
-  { key: 'user_login_id', header: 'ID', type: 'text' },
+  { key: 'id', header: 'ID', type: 'text' },
   { key: 'user_email', header: 'Email', type: 'text' },
   { key: 'last_login_at', header: 'Naposled přihlášen', type: 'date', format: 'short' },
   { key: 'created_at', header: 'Vytvořen', type: 'date', format: 'short' },
@@ -78,7 +78,7 @@ export const TRASH_TABLE_COLUMNS: ColumnDefinition[] = [
 
 export const FILTER_COLUMNS: FilterColumns[] = [
   {
-    key: 'user_login_id',
+    key: 'id',
     header: 'ID',
     type: 'text',
     placeholder: 'Hledat podle ID',
@@ -124,7 +124,7 @@ export const FILTER_COLUMNS: FilterColumns[] = [
 
 export const DETAILS_COLUMNS: ItemDetailsColumns[] = [
   {
-    key: 'user_login_id',
+    key: 'id',
     display_name: 'ID',
   },
   {
