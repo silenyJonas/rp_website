@@ -17,421 +17,415 @@ import { GenericFilterFormComponent } from '../../components/generic-filter-form
 import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 import {
-  BUTTONS,
-  FORM_FIELDS,
-  TABLE_COLUMNS,
-  TRASH_TABLE_COLUMNS,
-  STATUS_OPTIONS,
-  PRIORITY_OPTIONS,
-  FILTER_COLUMNS,
-  DETAILS_COLUMNS
+  BUTTONS,
+  FORM_FIELDS,
+  TABLE_COLUMNS,
+  TRASH_TABLE_COLUMNS,
+  STATUS_OPTIONS,
+  PRIORITY_OPTIONS,
+  FILTER_COLUMNS,
+  DETAILS_COLUMNS
 } from './administrators.config';
 
 type ItemType = any; // You should replace 'any' with the specific interface if needed, e.g., RawRequestCommission
 
 @Component({
-  selector: 'app-administrators',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    GenericTableComponent,
-    GenericTrashTableComponent,
-    GenericFormComponent,
-    GenericFilterFormComponent,
-    GenericDetailsComponent
-  ],
-  templateUrl: './administrators.component.html',
-  styleUrl: './administrators.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-administrators',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    GenericTableComponent,
+    GenericTrashTableComponent,
+    GenericFormComponent,
+    GenericFilterFormComponent,
+    GenericDetailsComponent
+  ],
+  templateUrl: './administrators.component.html',
+  styleUrl: './administrators.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdministratorsComponent extends BaseDataComponent<ItemType> implements OnInit {
 
-  override apiEndpoint: string = 'user_login';
-  override trashData: ItemType[] = [];
-  override isLoading: boolean = false;
-  isTrashTableLoading: boolean = false;
+  override apiEndpoint: string = 'user_login';
+  override trashData: ItemType[] = [];
+  override isLoading: boolean = false;
+  isTrashTableLoading: boolean = false;
 
-  buttons: Buttons[] = BUTTONS;
-  formFields: InputDefinition[] = FORM_FIELDS;
-  tableColumns: ColumnDefinition[] = TABLE_COLUMNS
-  trashTableColumns: ColumnDefinition[] = TRASH_TABLE_COLUMNS
-  statusOptions: string[] = STATUS_OPTIONS;
-  priorityOptions: string[] = PRIORITY_OPTIONS;
-  filterColumns: FilterColumns[] = FILTER_COLUMNS;
-  detailsColumns: ItemDetailsColumns[] = DETAILS_COLUMNS;
-  filterFormFields: string[] = []
-  showTrashTable: boolean = false;
-  showCreateForm: boolean = false;
-  currentPage: number = 1;
-  itemsPerPage: number = 15;
-  totalItems: number = 0;
-  totalPages: number = 0;
-  showDetails: boolean = false;
-  selectedItemForDetails: any | null = null;
-  trashCurrentPage: number = 1;
-  trashItemsPerPage: number = 15;
-  trashTotalItems: number = 0;
-  trashTotalPages: number = 0;
-  filterSearch: string = '';
-  filterStatus: string = '';
-  filterPriority: string = '';
-  filterEmail: string = '';
-  filterSortBy: string = '';
-  filterPhone: string = '';
-  filterThema: string = '';
-  filterDescription: string = '';
-  filterCreatedAt: string = '';
-  filterUpdatedAt: string = '';
-  filterId: string = '';
-  filterSortDirection: 'asc' | 'desc' = 'asc';
+  buttons: Buttons[] = BUTTONS;
+  formFields: InputDefinition[] = FORM_FIELDS;
+  tableColumns: ColumnDefinition[] = TABLE_COLUMNS
+  trashTableColumns: ColumnDefinition[] = TRASH_TABLE_COLUMNS
+  statusOptions: string[] = STATUS_OPTIONS;
+  priorityOptions: string[] = PRIORITY_OPTIONS;
+  filterColumns: FilterColumns[] = FILTER_COLUMNS;
+  detailsColumns: ItemDetailsColumns[] = DETAILS_COLUMNS;
+  filterFormFields: string[] = []
+  showTrashTable: boolean = false;
+  showCreateForm: boolean = false;
+  currentPage: number = 1;
+  itemsPerPage: number = 15;
+  totalItems: number = 0;
+  totalPages: number = 0;
+  showDetails: boolean = false;
+  selectedItemForDetails: any | null = null;
+  trashCurrentPage: number = 1;
+  trashItemsPerPage: number = 15;
+  trashTotalItems: number = 0;
+  trashTotalPages: number = 0;
+  
+  // Opravené filtrovací proměnné, aby odpovídaly konfigu
+  filterUserLoginId: string = '';
+  filterUserEmail: string = '';
+  filterLastLoginAt: string = '';
+  filterCreatedAt: string = '';
+  filterUpdatedAt: string = '';
+  filterRoleName: string = '';
+  filterSortBy: string = '';
+  filterSortDirection: 'asc' | 'desc' = 'asc';
 
-  private activeRequestsCache: Map<number, ItemType[]> = new Map();
-  private trashRequestsCache: Map<number, ItemType[]> = new Map();
-  private currentActiveFilters: FilterParams = {};
-  private currentTrashFilters: FilterParams = {};
+  private activeRequestsCache: Map<number, ItemType[]> = new Map();
+  private trashRequestsCache: Map<number, ItemType[]> = new Map();
+  private currentActiveFilters: FilterParams = {};
+  private currentTrashFilters: FilterParams = {};
 
-  selectedItemForEdit: ItemType | null = null;
+  selectedItemForEdit: ItemType | null = null;
 
-  constructor(
-    protected override dataHandler: DataHandler,
-    protected override cd: ChangeDetectorRef,
-    private genericTableService: GenericTableService,
-    private authService: AuthService,
-    private router: Router
-  ) {
-    super(dataHandler, cd);
-  }
+  constructor(
+    protected override dataHandler: DataHandler,
+    protected override cd: ChangeDetectorRef,
+    private genericTableService: GenericTableService,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    super(dataHandler, cd);
+  }
 
-  override ngOnInit(): void {
-    super.ngOnInit();
-    this.authService.isLoggedIn$.subscribe(loggedIn => {
-      if (loggedIn) {
-        this.forceFullRefresh();
-      } else {
-        this.router.navigate(['/auth/login']);
-      }
-    });
-  }
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.authService.isLoggedIn$.subscribe(loggedIn => {
+      if (loggedIn) {
+        this.forceFullRefresh();
+      } else {
+        this.router.navigate(['/auth/login']);
+      }
+    });
+  }
 
-  private getBaseFilters(): FilterParams {
-    return {
-      search: this.filterSearch,
-      status: this.filterStatus,
-      priority: this.filterPriority,
-      contact_email: this.filterEmail,
-      contact_phone: this.filterPhone,
-      id: this.filterId,
-      order_description: this.filterDescription,
-      thema: this.filterThema,
-      created_at: this.filterCreatedAt,
-      updated_at: this.filterUpdatedAt,
-      sort_by: this.filterSortBy,
-      sort_direction: this.filterSortDirection
-    };
-  }
+  private getBaseFilters(): FilterParams {
+    // Filtrovací pole nyní přesně odpovídají klíčům z administratori.config.ts
+    return {
+      user_login_id: this.filterUserLoginId,
+      user_email: this.filterUserEmail,
+      last_login_at: this.filterLastLoginAt,
+      created_at: this.filterCreatedAt,
+      updated_at: this.filterUpdatedAt,
+      'roles.0.role_name': this.filterRoleName,
+      sort_by: this.filterSortBy,
+      sort_direction: this.filterSortDirection
+    };
+  }
 
-  // Přejmenovaná metoda, která nahradila původní 'loadData'
-  private fetchPaginatedData(
-    isTrash: boolean,
-    page: number,
-    itemsPerPage: number,
-    cache: Map<number, ItemType[]>,
-    currentFilters: FilterParams
-  ): Observable<PaginatedResponse<ItemType>> {
-    const newFilters = this.getBaseFilters();
-    if (isTrash) {
-      newFilters['only_trashed'] = 'true';
-    } else {
-      newFilters['is_deleted'] = 'false';
-    }
+  private fetchPaginatedData(
+    isTrash: boolean,
+    page: number,
+    itemsPerPage: number,
+    cache: Map<number, ItemType[]>,
+    currentFilters: FilterParams
+  ): Observable<PaginatedResponse<ItemType>> {
+    const newFilters = this.getBaseFilters();
+    if (isTrash) {
+      newFilters['only_trashed'] = 'true';
+    } else {
+      newFilters['is_deleted'] = 'false';
+    }
 
-    if (JSON.stringify(newFilters) !== JSON.stringify(currentFilters)) {
-      cache.clear();
-      if (isTrash) {
-        this.trashCurrentPage = 1;
-        this.currentTrashFilters = newFilters;
-      } else {
-        this.currentPage = 1;
-        this.currentActiveFilters = newFilters;
-      }
-    }
+    console.log('Sending filters to backend:', newFilters);
 
-    if (cache.has(page)) {
-      const cachedData = cache.get(page)!;
-      if (isTrash) {
-        this.trashData = cachedData;
-      } else {
-        this.data = cachedData;
-      }
-      this.cd.detectChanges();
-      this.preloadPage(isTrash, page + 1, itemsPerPage, cache);
-      return of({
-        data: cachedData,
-        current_page: page,
-        last_page: isTrash ? this.trashTotalPages : this.totalPages,
-        total: isTrash ? this.trashTotalItems : this.totalItems
-      } as PaginatedResponse<ItemType>);
-    }
+    if (JSON.stringify(newFilters) !== JSON.stringify(currentFilters)) {
+      cache.clear();
+      if (isTrash) {
+        this.trashCurrentPage = 1;
+        this.currentTrashFilters = newFilters;
+      } else {
+        this.currentPage = 1;
+        this.currentActiveFilters = newFilters;
+      }
+    }
 
-    return this.genericTableService.getPaginatedData<ItemType>(
-      this.apiEndpoint,
-      page,
-      itemsPerPage,
-      newFilters
-    ).pipe(
-      retry(1),
-      tap((response: PaginatedResponse<ItemType>) => {
-        if (isTrash) {
-          this.trashData = response.data;
-          this.trashTotalItems = response.total;
-          this.trashTotalPages = response.last_page;
-          this.trashCurrentPage = response.current_page;
-        } else {
-          this.data = response.data;
-          this.totalItems = response.total;
-          this.totalPages = response.last_page;
-          this.currentPage = response.current_page;
-        }
-        cache.set(page, response.data);
-        this.cd.detectChanges();
-        this.preloadPage(isTrash, page + 1, itemsPerPage, cache);
-      })
-    );
-  }
+    if (cache.has(page)) {
+      const cachedData = cache.get(page)!;
+      if (isTrash) {
+        this.trashData = cachedData;
+      } else {
+        this.data = cachedData;
+      }
+      this.cd.detectChanges();
+      this.preloadPage(isTrash, page + 1, itemsPerPage, cache);
+      return of({
+        data: cachedData,
+        current_page: page,
+        last_page: isTrash ? this.trashTotalPages : this.totalPages,
+        total: isTrash ? this.trashTotalItems : this.totalItems
+      } as PaginatedResponse<ItemType>);
+    }
 
-  private preloadPage(
-    isTrash: boolean,
-    page: number,
-    itemsPerPage: number,
-    cache: Map<number, ItemType[]>
-  ): void {
-    const totalPages = isTrash ? this.trashTotalPages : this.totalPages;
-    if (page > totalPages || cache.has(page)) {
-      return;
-    }
+    return this.genericTableService.getPaginatedData<ItemType>(
+      this.apiEndpoint,
+      page,
+      itemsPerPage,
+      newFilters
+    ).pipe(
+      retry(1),
+      tap((response: PaginatedResponse<ItemType>) => {
+        if (isTrash) {
+          this.trashData = response.data;
+          this.trashTotalItems = response.total;
+          this.trashTotalPages = response.last_page;
+          this.trashCurrentPage = response.current_page;
+        } else {
+          this.data = response.data;
+          this.totalItems = response.total;
+          this.totalPages = response.last_page;
+          this.currentPage = response.current_page;
+        }
+        cache.set(page, response.data);
+        this.cd.detectChanges();
+        this.preloadPage(isTrash, page + 1, itemsPerPage, cache);
+      })
+    );
+  }
 
-    const filters = this.getBaseFilters();
-    if (isTrash) {
-      filters['only_trashed'] = 'true';
-    } else {
-      filters['is_deleted'] = 'false';
-    }
+  private preloadPage(
+    isTrash: boolean,
+    page: number,
+    itemsPerPage: number,
+    cache: Map<number, ItemType[]>
+  ): void {
+    const totalPages = isTrash ? this.trashTotalPages : this.totalPages;
+    if (page > totalPages || cache.has(page)) {
+      return;
+    }
 
-    this.genericTableService.getPaginatedData<ItemType>(
-      this.apiEndpoint,
-      page,
-      itemsPerPage,
-      filters
-    ).subscribe({
-      next: (response: PaginatedResponse<ItemType>) => {
-        cache.set(page, response.data);
-      },
-      error: (error) => {
-        // Handle error silently, as it's a preload
-      }
-    });
-  }
+    const filters = this.getBaseFilters();
+    if (isTrash) {
+      filters['only_trashed'] = 'true';
+    } else {
+      filters['is_deleted'] = 'false';
+    }
 
-  loadActiveRequests(): Observable<PaginatedResponse<ItemType>> {
-    return this.fetchPaginatedData(false, this.currentPage, this.itemsPerPage, this.activeRequestsCache, this.currentActiveFilters);
-  }
+    this.genericTableService.getPaginatedData<ItemType>(
+      this.apiEndpoint,
+      page,
+      itemsPerPage,
+      filters
+    ).subscribe({
+      next: (response: PaginatedResponse<ItemType>) => {
+        cache.set(page, response.data);
+      },
+      error: (error) => {
+        // Handle error silently, as it's a preload
+      }
+    });
+  }
 
-  loadTrashRequests(): Observable<PaginatedResponse<ItemType>> {
-    return this.fetchPaginatedData(true, this.trashCurrentPage, this.trashItemsPerPage, this.trashRequestsCache, this.currentTrashFilters);
-  }
+  loadActiveRequests(): Observable<PaginatedResponse<ItemType>> {
+    return this.fetchPaginatedData(false, this.currentPage, this.itemsPerPage, this.activeRequestsCache, this.currentActiveFilters);
+  }
 
-  toggleTable(): void {
-    this.showTrashTable = !this.showTrashTable;
-    this.forceFullRefresh();
-  }
+  loadTrashRequests(): Observable<PaginatedResponse<ItemType>> {
+    return this.fetchPaginatedData(true, this.trashCurrentPage, this.trashItemsPerPage, this.trashRequestsCache, this.currentTrashFilters);
+  }
 
-  applyFilters(filters: any): void {
-    this.filterSearch = filters.search || '';
-    this.filterStatus = filters.status || '';
-    this.filterPriority = filters.priority || '';
-    this.filterEmail = filters.contact_email || '';
-    this.filterPhone = filters.contact_phone || '';
-    this.filterThema = filters.thema || '';
-    this.filterCreatedAt = filters.created_at || '';
-    this.filterUpdatedAt = filters.updated_at || '';
-    this.filterId = filters.id || '';
-    this.filterDescription = filters.order_description || '';
-    this.filterSortBy = filters.sort_by || '';
-    this.filterSortDirection = filters.sort_direction || 'asc';
-    this.forceFullRefresh();
-  }
+  toggleTable(): void {
+    this.showTrashTable = !this.showTrashTable;
+    this.forceFullRefresh();
+  }
 
-  clearFilters(): void {
-    this.filterSearch = '';
-    this.filterStatus = '';
-    this.filterPriority = '';
-    this.filterEmail = '';
-    this.filterPhone = '';
-    this.filterThema = '';
-    this.filterId = '';
-    this.filterCreatedAt = '';
-    this.filterUpdatedAt = '';
-    this.filterDescription = '';
-    this.filterSortBy = '';
-    this.filterSortDirection = 'asc';
-    this.forceFullRefresh();
-  }
+  applyFilters(filters: any): void {
+    this.filterUserLoginId = filters.user_login_id || '';
+    this.filterUserEmail = filters.user_email || '';
+    this.filterLastLoginAt = filters.last_login_at || '';
+    this.filterCreatedAt = filters.created_at || '';
+    this.filterUpdatedAt = filters.updated_at || '';
+    this.filterRoleName = filters['roles.0.role_name'] || '';
+    this.filterSortBy = filters.sort_by || '';
+    this.filterSortDirection = filters.sort_direction || 'asc';
+    this.forceFullRefresh();
+  }
 
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
-      this.currentPage = page;
-      this.loadActiveRequests().subscribe();
-    }
-  }
+  clearFilters(): void {
+    this.filterUserLoginId = '';
+    this.filterUserEmail = '';
+    this.filterLastLoginAt = '';
+    this.filterCreatedAt = '';
+    this.filterUpdatedAt = '';
+    this.filterRoleName = '';
+    this.filterSortBy = '';
+    this.filterSortDirection = 'asc';
+    this.forceFullRefresh();
+  }
 
-  goToTrashPage(page: number): void {
-    if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
-      this.trashCurrentPage = page;
-      this.loadTrashRequests().subscribe();
-    }
-  }
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+      this.currentPage = page;
+      this.loadActiveRequests().subscribe();
+    }
+  }
 
-  onItemsPerPageChange(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
-    const newItemsPerPage = Number(selectElement.value);
-    if (newItemsPerPage !== this.itemsPerPage) {
-      this.itemsPerPage = newItemsPerPage;
-      this.forceFullRefresh();
-    }
-  }
+  goToTrashPage(page: number): void {
+    if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
+      this.trashCurrentPage = page;
+      this.loadTrashRequests().subscribe();
+    }
+  }
 
-  onTrashItemsPerPageChange(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
-    const newItemsPerPage = Number(selectElement.value);
-    if (newItemsPerPage !== this.trashItemsPerPage) {
-      this.trashItemsPerPage = newItemsPerPage;
-      this.forceFullRefresh();
-    }
-  }
+  onItemsPerPageChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const newItemsPerPage = Number(selectElement.value);
+    if (newItemsPerPage !== this.itemsPerPage) {
+      this.itemsPerPage = newItemsPerPage;
+      this.forceFullRefresh();
+    }
+  }
 
-  private getPaginationArray(currentPage: number, totalPages: number): number[] {
-    const maxPagesToShow = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
-    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+  onTrashItemsPerPageChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const newItemsPerPage = Number(selectElement.value);
+    if (newItemsPerPage !== this.trashItemsPerPage) {
+      this.trashItemsPerPage = newItemsPerPage;
+      this.forceFullRefresh();
+    }
+  }
 
-    if (endPage - startPage + 1 < maxPagesToShow) {
-      startPage = Math.max(1, endPage - maxPagesToShow + 1);
-    }
+  private getPaginationArray(currentPage: number, totalPages: number): number[] {
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
 
-    const pages = [];
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-    return pages;
-  }
+    if (endPage - startPage + 1 < maxPagesToShow) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
 
-  get pagesArray(): number[] {
-    return this.getPaginationArray(this.currentPage, this.totalPages);
-  }
+    const pages = [];
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
 
-  get trashPagesArray(): number[] {
-    return this.getPaginationArray(this.trashCurrentPage, this.trashTotalPages);
-  }
+  get pagesArray(): number[] {
+    return this.getPaginationArray(this.currentPage, this.totalPages);
+  }
 
-  handleItemRestored(): void {
-    this.forceFullRefresh();
-  }
+  get trashPagesArray(): number[] {
+    return this.getPaginationArray(this.trashCurrentPage, this.trashTotalPages);
+  }
 
-  handleItemDeleted(): void {
-    this.forceFullRefresh();
-  }
+  handleItemRestored(): void {
+    this.forceFullRefresh();
+  }
 
-  private forceFullRefresh(): void {
-    this.activeRequestsCache.clear();
-    this.trashRequestsCache.clear();
-    this.currentPage = 1;
-    this.trashCurrentPage = 1;
-    this.isLoading = true;
-    this.isTrashTableLoading = true;
-    this.cd.detectChanges();
+  handleItemDeleted(): void {
+    this.forceFullRefresh();
+  }
 
-    forkJoin([
-      this.loadActiveRequests(),
-      this.loadTrashRequests()
-    ]).pipe(
-      finalize(() => {
-        this.isLoading = false;
-        this.isTrashTableLoading = false;
-        this.cd.detectChanges();
-      })
-    ).subscribe();
-  }
+  private forceFullRefresh(): void {
+    this.activeRequestsCache.clear();
+    this.trashRequestsCache.clear();
+    this.currentPage = 1;
+    this.trashCurrentPage = 1;
+    this.isLoading = true;
+    this.isTrashTableLoading = true;
+    this.cd.detectChanges();
 
-  handleCreateFormOpened(): void {
-    this.selectedItemForEdit = null;
-    this.showCreateForm = !this.showCreateForm;
-  }
+    forkJoin([
+      this.loadActiveRequests(),
+      this.loadTrashRequests()
+    ]).pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.isTrashTableLoading = false;
+        this.cd.detectChanges();
+      })
+    ).subscribe();
+  }
 
-  handleEditFormOpened(item: ItemType): void {
-    this.selectedItemForEdit = item;
-    this.showCreateForm = true;
-  }
+  handleCreateFormOpened(): void {
+    this.selectedItemForEdit = null;
+    this.showCreateForm = !this.showCreateForm;
+  }
 
-  handleFormSubmitted(formData: ItemType): void {
-    this.showCreateForm = false;
-    this.isLoading = true;
+  handleEditFormOpened(item: ItemType): void {
+    const itemToEdit = { ...item };
+    
+    if (itemToEdit.roles && itemToEdit.roles.length > 0) {
+      itemToEdit.role_id = itemToEdit.roles[0].role_id;
+    }
 
-    let request$: Observable<any>;
-    if (formData.id) {
-      request$ = this.updateData(formData.id, formData);
-    } else {
-      request$ = this.postData(formData);
-    }
+    this.selectedItemForEdit = itemToEdit;
+    this.showCreateForm = true;
+  }
 
-    request$.pipe(
-      finalize(() => {
-        this.isLoading = false;
-        this.cd.detectChanges();
-      })
-    ).subscribe({
-      next: () => {
-        this.forceFullRefresh();
-      },
-      error: (err) => {
-        // Handle error
-      }
-    });
-  }
+  handleFormSubmitted(formData: ItemType): void {
+    this.showCreateForm = false;
+    this.isLoading = true;
 
-  onCancelForm() {
-    this.showCreateForm = false;
-    this.selectedItemForEdit = null;
-  }
+    let request$: Observable<any>;
+    if (formData.id) {
+      request$ = this.updateData(formData.id, formData);
+    } else {
+      request$ = this.postData(formData);
+    }
 
-  trackById(index: number, item: ItemType): number {
-    return item.id!;
-  }
+    request$.pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.cd.detectChanges();
+      })
+    ).subscribe({
+      next: () => {
+        this.forceFullRefresh();
+      },
+      error: (err) => {
+        // Handle error
+      }
+    });
+  }
 
-  handleViewDetails(item: ItemType): void {
-    if (item.id === undefined || item.id === null) {
-      return;
-    }
-    this.errorMessage = null;
+  onCancelForm() {
+    this.showCreateForm = false;
+    this.selectedItemForEdit = null;
+  }
 
-    this.isLoading = true;
-    this.getItemDetails(item.id).subscribe({
-      next: (details) => {
-        this.selectedItemForDetails = details;
-        this.showDetails = true;
-        this.isLoading = false;
-        this.cd.markForCheck();
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = 'Nepodařilo se načíst detaily položky.';
-        this.cd.markForCheck();
-      }
-    });
-  }
+  trackById(index: number, item: ItemType): number {
+    return item.id!;
+  }
 
-  handleCloseDetails(): void {
-    this.selectedItemForDetails = null;
-    this.showDetails = false;
-  }
+  handleViewDetails(item: ItemType): void {
+    if (item.id === undefined || item.id === null) {
+      return;
+    }
+    this.errorMessage = null;
+
+    this.isLoading = true;
+    this.getItemDetails(item.id).subscribe({
+      next: (details) => {
+        this.selectedItemForDetails = details;
+        this.showDetails = true;
+        this.isLoading = false;
+        this.cd.markForCheck();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = 'Nepodařilo se načíst detaily položky.';
+        this.cd.markForCheck();
+      }
+    });
+  }
+
+  handleCloseDetails(): void {
+    this.selectedItemForDetails = null;
+    this.showDetails = false;
+  }
 }

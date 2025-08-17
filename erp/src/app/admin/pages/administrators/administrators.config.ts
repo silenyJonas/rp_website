@@ -1,4 +1,3 @@
-// src/app/pages/user-request/user-request.config.ts
 
 import { Buttons } from '../../components/generic-table/generic-table.component';
 import { InputDefinition } from '../../components/generic-form/generic-form.component';
@@ -35,7 +34,7 @@ export const FORM_FIELDS: InputDefinition[] = [
     pattern: '^.{8,}$',
     errorMessage: 'Zadejte heslo minimalne 8 znaku',
     editable: true,
-    show_in_edit: true,
+    show_in_edit: false,
     show_in_create: true
   },
   {
@@ -78,7 +77,7 @@ export const TRASH_TABLE_COLUMNS: ColumnDefinition[] = [
 
 export const FILTER_COLUMNS: FilterColumns[] = [
   {
-    key: 'id',
+    key: 'user_login_id',
     header: 'ID',
     type: 'text',
     placeholder: 'Hledat podle ID',

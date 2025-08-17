@@ -3,15 +3,15 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateRoleRequest extends FormRequest
+class UpdateUserLoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        // Upravte podle oprávnění uživatele.
         return true;
     }
 
@@ -22,11 +22,20 @@ class UpdateRoleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $roleId = $this->route('role')->role_id;
-
         return [
-            'role_name' => ['sometimes', 'string', 'max:50', 'unique:roles,role_name,' . $roleId . ',role_id'],
-            'description' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'user_email' => [
+                'sometimes', 
+                'string', 
+                'email', 
+                'max:255', 
+                // Správně ignoruje unikátní e-mail pro aktuálního uživatele
+                Rule::unique('user_login', 'user_email')->ignore($this->route('userLogin')->user_login_id, 'user_login_id')
+            ],
+            // Změněno z user_password na user_password_hash, aby odpovídalo datům z frontendu
+            'user_password_hash' => ['sometimes', 'string', 'min:8'],
+            // Přidáno pole role_id, protože jej chcete aktualizovat
+            'role_id' => ['sometimes', 'numeric', 'exists:roles,role_id'],
+            'is_deleted' => ['sometimes', 'boolean'],
         ];
     }
 }
