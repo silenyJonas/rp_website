@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,29 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
-class RawRequestCommission extends Model
+class Role extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public $timestamps = true;
+    protected $table = 'roles';
+    protected $primaryKey = 'role_id';
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var array
      */
     protected $fillable = [
-        'thema',
-        'contact_email',
-        'contact_phone',
-        'order_description',
-        'status',
-        'priority',
-        'note', // Přidán sloupec 'note'
+        'role_name',
+        'description',
     ];
 
     /**
-     * The attributes that should be cast.
+     * The attributes that should be cast to native types.
      *
      * @var array
      */
@@ -40,5 +35,11 @@ class RawRequestCommission extends Model
         'deleted_at' => 'datetime',
     ];
 
-    // ... (další kód modelu) ...
+    /**
+     * Get the users that have this role.
+     */
+    public function users()
+    {
+        return $this->belongsToMany(UserLogin::class, 'user_roles', 'role_id', 'user_login_id');
+    }
 }
