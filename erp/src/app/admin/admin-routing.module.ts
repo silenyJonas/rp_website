@@ -9,8 +9,6 @@ import { AuthGuard } from '../core/auth/guards/auth.guard';
 import { AdministratorsComponent } from './pages/administrators/administrators.component';
 import { BusinessLogsComponent } from './pages/business-logs/business-logs.component';
 import { PersonalInfoComponent } from './pages/personal-info/personal-info.component';
-import { SystemLogsComponent } from './pages/system-logs/system-logs.component';
-import { RecoveryComponent } from './pages/recovery/recovery.component';
 
 
 const routes: Routes = [
@@ -43,14 +41,6 @@ const routes: Routes = [
       {
         path: 'personal-info',
         component: PersonalInfoComponent
-      },
-      {
-        path: 'system-logs',
-        component: SystemLogsComponent
-      },
-      {
-        path: 'recovery',
-        component: RecoveryComponent
       }
     ]
   }

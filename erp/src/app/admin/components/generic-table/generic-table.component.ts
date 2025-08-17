@@ -40,6 +40,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   @Input() override isLoading: boolean = false;
   @Input() uploadsBaseUrl: string = '';
   @Input() buttons: Buttons[] = [];
+  @Input() isLogsTable: boolean = false;
 
   // Nové události pro komunikaci s nadřazenou komponentou
   @Output() itemDeleted = new EventEmitter<any>();
@@ -121,7 +122,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
                 }
               },
               error: (err) => {
-                this.alertDialogService.open('Chyba', 'Při mazání položky nastala chyba.', 'danger');
+                // this.alertDialogService.open('Chyba', 'Při mazání položky nastala chyba.', 'danger');
                 console.error('Soft delete error:', err);
               }
             });

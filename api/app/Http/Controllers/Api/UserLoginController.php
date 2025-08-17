@@ -38,7 +38,6 @@ class UserLoginController extends Controller
         // Změněno na role_name
         $roleName = $request->input('role_name');
         
-        Log::info('role_name:', [$roleName]);
 
         $sortBy = $request->input('sort_by');
         $sortDirection = $request->input('sort_direction', 'asc');
@@ -221,6 +220,15 @@ class UserLoginController extends Controller
      */
     public function destroy(Request $request, $id): JsonResponse
     {
+        // Kontrola, zda se přihlášený uživatel pokouší smazat svůj vlastní účet
+        $authenticatedUser = $request->user();
+        if ($authenticatedUser && (int)$authenticatedUser->user_login_id === (int)$id) {
+            return response()->json([
+                'message' => 'Nelze smazat účet, za který jste právě přihlášený/á.',
+                'error_code' => 'CANNOT_DELETE_OWN_ACCOUNT' // Vlastní chybový kód pro frontend
+            ], 403);
+        }
+
         if (!is_numeric($id)) {
             return response()->json(['message' => 'Invalid ID format.'], 404);
         }

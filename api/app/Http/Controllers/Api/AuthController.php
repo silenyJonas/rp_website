@@ -31,6 +31,9 @@ class AuthController extends Controller
 
             Log::info('Login attempt successful. User object acquired.');
 
+            // AKTUALIZACE: Nastavení času posledního přihlášení
+            $user->update(['last_login_at' => now()]);
+
             // 1. Generování přístupového tokenu (Access Token)
             // Nastavíme životnost na 30 minut
             $accessToken = $user->createToken('access-token', ['*'], now()->addMinutes(30))->plainTextToken;

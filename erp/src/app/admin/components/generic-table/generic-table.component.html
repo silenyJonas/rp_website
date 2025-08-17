@@ -69,7 +69,7 @@
   <button class="neutral_button" (click)="exportToCSV()">
       Exportovat tabulku
   </button>
-  <button class="confirm_button" (click)="openCreateForm()">
+  <button *ngIf="isLogsTable == false" class="confirm_button" (click)="openCreateForm()">
       Přidat záznam
   </button>
     <label class="checkbox-container">

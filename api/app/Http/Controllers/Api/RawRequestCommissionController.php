@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\RawRequestCommission;
-use App\Models\BusinessLog; // Import modelu BusinessLog
+use App\Models\BusinessLog;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreRawRequestCommissionRequest;
 use App\Http\Requests\UpdateRawRequestCommissionRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log; // Import pro použití loggeru
+use Illuminate\Support\Facades\Log;
 
 class RawRequestCommissionController extends Controller
 {
@@ -129,7 +129,8 @@ class RawRequestCommissionController extends Controller
         $validatedData['priority'] = $validatedData['priority'] ?? 'Nízká';
         $commission = RawRequestCommission::create($validatedData);
 
-        // Vytvoření logu
+        // Zde dochází k logování akce pro uložení nového požadavku.
+        // Metoda logAction je volána s typem události 'create' a id nově vytvořeného záznamu.
         $this->logAction($request, 'create', 'RawRequestCommission', 'Uložení nového požadavku na provizi', $commission->id);
 
         return response()->json($commission, 201);
@@ -182,7 +183,7 @@ class RawRequestCommissionController extends Controller
     {
         $rawRequestCommission->update($request->validated());
 
-        // Vytvoření logu
+        // Zde dochází k logování akce pro aktualizaci požadavku.
         $this->logAction($request, 'update', 'RawRequestCommission', 'Aktualizace požadavku na provizi', $rawRequestCommission->id);
 
         return response()->json($rawRequestCommission);
@@ -206,11 +207,11 @@ class RawRequestCommissionController extends Controller
 
         if ($forceDelete) {
             $rawRequestCommission->forceDelete();
-            // Vytvoření logu pro trvalé smazání
+            // Zde dochází k logování pro trvalé smazání
             $this->logAction($request, 'hard_delete', 'RawRequestCommission', 'Trvalé smazání požadavku na provizi', $id);
         } else {
             $rawRequestCommission->delete();
-            // Vytvoření logu pro soft smazání
+            // Zde dochází k logování pro soft smazání
             $this->logAction($request, 'soft_delete', 'RawRequestCommission', 'Soft smazání požadavku na provizi', $id);
         }
 
@@ -228,7 +229,7 @@ class RawRequestCommissionController extends Controller
         $rawRequestCommission = RawRequestCommission::withTrashed()->findOrFail($id);
         $rawRequestCommission->restore();
         
-        // Vytvoření logu pro obnovení
+        // Zde dochází k logování pro obnovení záznamu.
         $this->logAction(request(), 'restore', 'RawRequestCommission', 'Obnova smazaného požadavku na provizi', $rawRequestCommission->id);
 
         return response()->json($rawRequestCommission);
@@ -245,7 +246,7 @@ class RawRequestCommissionController extends Controller
             $count = RawRequestCommission::onlyTrashed()->count();
             RawRequestCommission::onlyTrashed()->forceDelete();
             
-            // Vytvoření logu pro hromadné smazání
+            // Zde dochází k logování pro hromadné smazání
             $this->logAction(request(), 'force_delete_all', 'RawRequestCommission', "Trvalé smazání všech smazaných požadavků na provize. Počet: {$count}");
 
             return response()->json(null, 204);
@@ -267,6 +268,11 @@ class RawRequestCommissionController extends Controller
     protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedEntityId = null)
     {
         try {
+            // Používáme operátor null-safe pro bezpečný přístup k user_login_id.
+            // Pokud je $request->user() null (nepřihlášený uživatel), celý výraz vyhodnotí na null.
+            // Tím se zabrání chybě a zároveň se správně zaznamená, že akci provedl neautentizovaný uživatel.
+            $userLoginId = $request->user()?->user_login_id;
+
             BusinessLog::create([
                 'origin' => $request->ip(),
                 'event_type' => $eventType,
@@ -274,8 +280,8 @@ class RawRequestCommissionController extends Controller
                 'description' => $description,
                 'affected_entity_type' => 'RawRequestCommission',
                 'affected_entity_id' => $affectedEntityId,
-                'user_login_id' => $request->user()->user_login_id,
-                'context_data' => json_encode($request->all()), // Uložíme celá data požadavku
+                'user_login_id' => $userLoginId,
+                'context_data' => json_encode($request->all()),
             ]);
         } catch (\Exception $e) {
             Log::error('Chyba při logování akce: ' . $e->getMessage());

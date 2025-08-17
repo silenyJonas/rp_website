@@ -6,10 +6,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens; // <-- Důležité: Tento use statement je správný a potřebný
+use Laravel\Sanctum\HasApiTokens;
 
 /**
- * 
+ *
  *
  * @property int $user_login_id
  * @property string $user_email
@@ -41,21 +41,21 @@ use Laravel\Sanctum\HasApiTokens; // <-- Důležité: Tento use statement je spr
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable; // <-- Použití traitu HasApiTokens je správné
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'user_login'; // <-- Název vaší tabulky pro přihlášení
+    protected $table = 'user_login';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'user_login_id'; // <-- Váš primární klíč
+    protected $primaryKey = 'user_login_id';
 
     /**
      * The attributes that are mass assignable.
@@ -63,9 +63,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_email',           // <-- Váš sloupec pro e-mail
-        'user_password_hash',   // <-- Váš sloupec pro hash hesla
-        'user_password_salt',   // <--- Pokud používáte salt samostatně
+        'user_email',
+        'user_password_hash',
+        'user_password_salt',
+        'last_login_at', // Změna: Přidán last_login_at
     ];
 
     /**
@@ -74,9 +75,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'user_password_hash', // <-- Skrýt hash hesla
-        'user_password_salt', // <-- Skrýt salt
-        // 'remember_token',   // Můžeš zakomentovat, pokud ho nemáš v DB
+        'user_password_hash',
+        'user_password_salt',
     ];
 
     /**
@@ -85,13 +85,12 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        // 'email_verified_at' => 'datetime', // Můžeš zakomentovat, pokud nepoužíváš ověření e-mailu
-        'last_login_at' => 'datetime',        // <-- Pokud máte
+        'last_login_at' => 'datetime',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',           // <-- Pokud máte
-        'is_deleted' => 'boolean',            // <-- Pokud máte
-        // 'password' => 'hashed', // <-- TOTO ODSTRANIT! Vaši metodu getAuthPassword() použijeme pro hash hesla
+        'updated_at' => 'datetime', // Změna: Opraveno na updated_at
+        'last_changed_at' => 'datetime', // Změna: Přidáno pro kompatibilitu s obrázkem
+        'deleted_at' => 'datetime',
+        'is_deleted' => 'boolean',
     ];
 
     // --- KLÍČOVÉ METODY PRO AUTENTIZACI ---
@@ -104,7 +103,7 @@ class User extends Authenticatable
      */
     public function getAuthIdentifierName()
     {
-        return 'user_email'; // <-- Váš sloupec pro e-mail
+        return 'user_email';
     }
 
     /**
@@ -114,7 +113,7 @@ class User extends Authenticatable
      */
     public function getAuthIdentifier()
     {
-        return $this->user_email; // <-- Vracíme hodnotu z vašeho e-mailového sloupce
+        return $this->user_email;
     }
 
     /**
@@ -125,7 +124,7 @@ class User extends Authenticatable
      */
     public function getAuthPassword()
     {
-        return $this->user_password_hash; // <-- Váš sloupec s hashovaným heslem
+        return $this->user_password_hash;
     }
 
     /**
@@ -136,13 +135,17 @@ class User extends Authenticatable
      */
     public function getRememberTokenName()
     {
-        return null; // <--- DŮLEŽITÉ: Nastavit na null, pokud nemáš 'remember_token' sloupec
+        return null;
     }
 
-    // Volitelné: Metoda pro automatické hashování hesla při nastavení
-    // Pokud hesla hashujes už při vkládání do DB, není nutné ji mít.
-    // protected function setPasswordAttribute($value)
-    // {
-    //    $this->attributes['user_password_hash'] = Hash::make($value);
-    // }
+    /**
+     * Overwrite `setPasswordAttribute` to handle `user_password_hash`
+     *
+     * @param string $value
+     * @return void
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['user_password_hash'] = \Illuminate\Support\Facades\Hash::make($value);
+    }
 }
