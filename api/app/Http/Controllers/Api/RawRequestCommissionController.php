@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\RawRequestCommission;
+use App\Models\BusinessLog; // Import modelu BusinessLog
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreRawRequestCommissionRequest;
 use App\Http\Requests\UpdateRawRequestCommissionRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log; // Import pro použití loggeru
 
 class RawRequestCommissionController extends Controller
 {
@@ -15,7 +17,6 @@ class RawRequestCommissionController extends Controller
      * Získání seznamu požadavků na provize s podporou filtrování, řazení a paginace.
      *
      * @param Request $request
-     * @return JsonResponse
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
@@ -34,8 +35,8 @@ class RawRequestCommissionController extends Controller
         $thema = $request->input('thema');
         $orderDescription = $request->input('order_description');
         $id = $request->input('id');
-        $createdAt = $request->input('created_at'); // NOVÝ FILTR pro datum vytvoření
-        $updatedAt = $request->input('updated_at'); // NOVÝ FILTR pro datum aktualizace
+        $createdAt = $request->input('created_at');
+        $updatedAt = $request->input('updated_at');
 
         $sortBy = $request->input('sort_by');
         $sortDirection = $request->input('sort_direction', 'asc');
@@ -127,6 +128,10 @@ class RawRequestCommissionController extends Controller
         $validatedData['status'] = $validatedData['status'] ?? 'Nově zadané';
         $validatedData['priority'] = $validatedData['priority'] ?? 'Nízká';
         $commission = RawRequestCommission::create($validatedData);
+
+        // Vytvoření logu
+        $this->logAction($request, 'create', 'RawRequestCommission', 'Uložení nového požadavku na provizi', $commission->id);
+
         return response()->json($commission, 201);
     }
 
@@ -148,23 +153,23 @@ class RawRequestCommissionController extends Controller
      * @return JsonResponse
      */
     public function showDetails(RawRequestCommission $rawRequestCommission): JsonResponse
-{
-    // Vytvoření pole s požadovanými sloupci
-    $selectedData = [
-        'id' => $rawRequestCommission->id,
-        'thema' => $rawRequestCommission->thema,
-        'contact_email' => $rawRequestCommission->contact_email,
-        'contact_phone' => $rawRequestCommission->contact_phone,
-        'order_description' => $rawRequestCommission->order_description,
-        'status' => $rawRequestCommission->status,
-        'priority' => $rawRequestCommission->priority,
-        'created_at' => $rawRequestCommission->created_at,
-        'updated_at' => $rawRequestCommission->updated_at,
-        'note' => $rawRequestCommission->note,
-    ];
+    {
+        // Vytvoření pole s požadovanými sloupci
+        $selectedData = [
+            'id' => $rawRequestCommission->id,
+            'thema' => $rawRequestCommission->thema,
+            'contact_email' => $rawRequestCommission->contact_email,
+            'contact_phone' => $rawRequestCommission->contact_phone,
+            'order_description' => $rawRequestCommission->order_description,
+            'status' => $rawRequestCommission->status,
+            'priority' => $rawRequestCommission->priority,
+            'created_at' => $rawRequestCommission->created_at,
+            'updated_at' => $rawRequestCommission->updated_at,
+            'note' => $rawRequestCommission->note,
+        ];
 
-    return response()->json($selectedData);
-}
+        return response()->json($selectedData);
+    }
 
     /**
      * Aktualizace konkrétního požadavku.
@@ -176,6 +181,10 @@ class RawRequestCommissionController extends Controller
     public function update(UpdateRawRequestCommissionRequest $request, RawRequestCommission $rawRequestCommission): JsonResponse
     {
         $rawRequestCommission->update($request->validated());
+
+        // Vytvoření logu
+        $this->logAction($request, 'update', 'RawRequestCommission', 'Aktualizace požadavku na provizi', $rawRequestCommission->id);
+
         return response()->json($rawRequestCommission);
     }
 
@@ -197,8 +206,12 @@ class RawRequestCommissionController extends Controller
 
         if ($forceDelete) {
             $rawRequestCommission->forceDelete();
+            // Vytvoření logu pro trvalé smazání
+            $this->logAction($request, 'hard_delete', 'RawRequestCommission', 'Trvalé smazání požadavku na provizi', $id);
         } else {
             $rawRequestCommission->delete();
+            // Vytvoření logu pro soft smazání
+            $this->logAction($request, 'soft_delete', 'RawRequestCommission', 'Soft smazání požadavku na provizi', $id);
         }
 
         return response()->json(null, 204);
@@ -214,6 +227,10 @@ class RawRequestCommissionController extends Controller
     {
         $rawRequestCommission = RawRequestCommission::withTrashed()->findOrFail($id);
         $rawRequestCommission->restore();
+        
+        // Vytvoření logu pro obnovení
+        $this->logAction(request(), 'restore', 'RawRequestCommission', 'Obnova smazaného požadavku na provizi', $rawRequestCommission->id);
+
         return response()->json($rawRequestCommission);
     }
 
@@ -225,11 +242,43 @@ class RawRequestCommissionController extends Controller
     public function forceDeleteAllTrashed(): JsonResponse
     {
         try {
+            $count = RawRequestCommission::onlyTrashed()->count();
             RawRequestCommission::onlyTrashed()->forceDelete();
+            
+            // Vytvoření logu pro hromadné smazání
+            $this->logAction(request(), 'force_delete_all', 'RawRequestCommission', "Trvalé smazání všech smazaných požadavků na provize. Počet: {$count}");
+
             return response()->json(null, 204);
         } catch (\Exception $e) {
-            \Log::error('Chyba při hromadném trvalém mazání: ' . $e->getMessage());
+            Log::error('Chyba při hromadném trvalém mazání: ' . $e->getMessage());
             return response()->json(['message' => 'Něco se pokazilo.', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Ukládá akci do business logu.
+     *
+     * @param Request $request
+     * @param string $eventType
+     * @param string $module
+     * @param string $description
+     * @param int|null $affectedEntityId
+     */
+    protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedEntityId = null)
+    {
+        try {
+            BusinessLog::create([
+                'origin' => $request->ip(),
+                'event_type' => $eventType,
+                'module' => $module,
+                'description' => $description,
+                'affected_entity_type' => 'RawRequestCommission',
+                'affected_entity_id' => $affectedEntityId,
+                'user_login_id' => $request->user()->user_login_id,
+                'context_data' => json_encode($request->all()), // Uložíme celá data požadavku
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Chyba při logování akce: ' . $e->getMessage());
         }
     }
 }

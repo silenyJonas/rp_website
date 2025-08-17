@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RawRequestCommissionController;
 use App\Http\Controllers\Api\UserLoginController;
 use App\Http\Controllers\Api\RoleController;
-
+use App\Http\Controllers\Api\BusinessLogController; // Import nového controlleru
 
 Route::get('/sanctum/csrf-cookie', function (Request $request) {
     return response()->json([], 204);
@@ -18,11 +18,14 @@ Route::post('/refresh', [AuthController::class, 'refresh']);
 Route::post('raw_request_commissions', [RawRequestCommissionController::class, 'store']);
 
 // Routy vyžadující autentizaci
-// Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    // Nová routa pro BusinessLogs
+    Route::get('/business_logs', [BusinessLogController::class, 'index']);
 
     // Skupina rout pro RawRequestCommission
     Route::prefix('raw_request_commissions')->group(function () {
@@ -50,4 +53,4 @@ Route::post('raw_request_commissions', [RawRequestCommissionController::class, '
         Route::delete('/force-delete-all', [RoleController::class, 'forceDeleteAllTrashed']);
     });
     Route::apiResource('roles', RoleController::class)->except(['store', 'create', 'edit']);
-// });
+});

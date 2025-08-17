@@ -11,9 +11,16 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Models\Role;
+use App\Models\BusinessLog; // Důležitý import pro logování
 
 class UserLoginController extends Controller
 {
+    /**
+     * Získání seznamu uživatelů s podporou filtrování, řazení a paginace.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page', 15);
@@ -140,6 +147,13 @@ class UserLoginController extends Controller
             return response()->json(['message' => 'Něco se pokazilo. Prosím, zkontrolujte parametry dotazu.', 'error' => $e->getMessage()], 500);
         }
     }
+
+    /**
+     * Uložení nového uživatele.
+     *
+     * @param StoreUserLoginRequest $request
+     * @return JsonResponse
+     */
     public function store(StoreUserLoginRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
@@ -150,13 +164,32 @@ class UserLoginController extends Controller
         if ($request->has('role_id')) {
             $user->roles()->attach($validatedData['role_id']);
         }
+        
+        // Logování vytvoření uživatele
+        $this->logAction($request, 'create', 'UserLogin', 'Vytvoření nového uživatele', $user->user_login_id);
+        
         return response()->json(new UserLoginResource($user), 201);
     }
+
+    /**
+     * Zobrazení konkrétního uživatele.
+     *
+     * @param UserLogin $userLogin
+     * @return JsonResponse
+     */
     public function show(UserLogin $userLogin): JsonResponse
     {
         $userLogin->load('roles');
         return response()->json(new UserLoginResource($userLogin));
     }
+    
+    /**
+     * Aktualizace uživatelského účtu.
+     *
+     * @param UpdateUserLoginRequest $request
+     * @param UserLogin $userLogin
+     * @return JsonResponse
+     */
     public function update(UpdateUserLoginRequest $request, UserLogin $userLogin): JsonResponse
     {
         $validatedData = $request->validated();
@@ -171,9 +204,21 @@ class UserLoginController extends Controller
         if ($request->has('role_id')) {
             $userLogin->roles()->sync([$validatedData['role_id']]);
         }
+        
+        // Logování aktualizace uživatele
+        $this->logAction($request, 'update', 'UserLogin', 'Aktualizace údajů uživatele', $userLogin->user_login_id);
+        
         $userLogin->load('roles');
         return response()->json(new UserLoginResource($userLogin));
     }
+    
+    /**
+     * Smazání nebo trvalé smazání uživatele.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
     public function destroy(Request $request, $id): JsonResponse
     {
         if (!is_numeric($id)) {
@@ -181,29 +226,64 @@ class UserLoginController extends Controller
         }
         $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
         $userLogin = UserLogin::withTrashed()->findOrFail($id);
+        
         if ($forceDelete) {
             $userLogin->forceDelete();
+            // Logování trvalého smazání
+            $this->logAction($request, 'hard_delete', 'UserLogin', 'Trvalé smazání uživatele', $id);
         } else {
             $userLogin->delete();
+            // Logování soft smazání
+            $this->logAction($request, 'soft_delete', 'UserLogin', 'Soft smazání uživatele', $id);
         }
+        
         return response()->json(null, 204);
     }
+    
+    /**
+     * Obnova smazaného uživatele.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     public function restore(int $id): JsonResponse
     {
         $userLogin = UserLogin::withTrashed()->findOrFail($id);
         $userLogin->restore();
+        
+        // Logování obnovy uživatele
+        $this->logAction(request(), 'restore', 'UserLogin', 'Obnova smazaného uživatele', $userLogin->user_login_id);
+        
         return response()->json(new UserLoginResource($userLogin));
     }
+    
+    /**
+     * Trvalé smazání všech smazaných uživatelů.
+     *
+     * @return JsonResponse
+     */
     public function forceDeleteAllTrashed(): JsonResponse
     {
         try {
+            $count = UserLogin::onlyTrashed()->count();
             UserLogin::onlyTrashed()->forceDelete();
+            
+            // Logování hromadného smazání
+            $this->logAction(request(), 'force_delete_all', 'UserLogin', "Trvalé smazání všech smazaných uživatelů. Počet: {$count}");
+            
             return response()->json(null, 204);
         } catch (\Exception $e) {
             Log::error('Chyba při hromadném trvalém mazání: ' . $e->getMessage());
             return response()->json(['message' => 'Něco se pokazilo.', 'error' => $e->getMessage()], 500);
         }
     }
+    
+    /**
+     * Zobrazení detailů konkrétního uživatele.
+     *
+     * @param UserLogin $userLogin
+     * @return JsonResponse
+     */
     public function showDetails(UserLogin $userLogin): JsonResponse
     {
         // Načtení přiřazených rolí k uživateli
@@ -228,5 +308,34 @@ class UserLoginController extends Controller
         ];
 
         return response()->json($selectedData);
+    }
+
+    /**
+     * Ukládá akci do business logu.
+     *
+     * @param Request $request
+     * @param string $eventType
+     * @param string $module
+     * @param string $description
+     * @param int|null $affectedEntityId
+     */
+    protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedEntityId = null)
+    {
+        try {
+            $user = $request->user();
+            
+            BusinessLog::create([
+                'origin' => $request->ip(),
+                'event_type' => $eventType,
+                'module' => $module,
+                'description' => $description,
+                'affected_entity_type' => 'UserLogin',
+                'affected_entity_id' => $affectedEntityId,
+                'user_login_id' => $user ? $user->user_login_id : null,
+                'context_data' => json_encode($request->all()),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Chyba při logování akce v UserLoginController: ' . $e->getMessage());
+        }
     }
 }
