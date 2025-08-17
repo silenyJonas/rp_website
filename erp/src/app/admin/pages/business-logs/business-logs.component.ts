@@ -22,10 +22,15 @@ import {
   DETAILS_COLUMNS
 } from './business-logs.config';
 
-type ItemType = any; // You should replace 'any' with the specific interface if needed, e.g., RawRequestCommission
+type ItemType = any;
 
+/**
+ * BusinessLogsComponent manages the display and interaction for business log data.
+ * It handles fetching, filtering, and displaying log entries in a generic table.
+ * It also supports opening a details view for a selected log entry.
+ */
 @Component({
-  selector: 'app-administrators',
+  selector: 'app-business-logs',
   standalone: true,
   imports: [
     CommonModule,
@@ -41,33 +46,47 @@ type ItemType = any; // You should replace 'any' with the specific interface if 
 })
 export class BusinessLogsComponent extends BaseDataComponent<ItemType> implements OnInit {
 
-  // Proměnné týkající se koše byly odstraněny, protože se v HTML nepoužívají
+  // API endpoint for fetching business logs
   override apiEndpoint: string = 'business_logs';
+
+  // State flags for UI feedback
   override isLoading: boolean = false;
   override errorMessage: string | null = null;
 
+  // Configuration data from the business-logs.config.ts file
   buttons: Buttons[] = BUTTONS;
   tableColumns: ColumnDefinition[] = TABLE_COLUMNS;
   filterColumns: FilterColumns[] = FILTER_COLUMNS;
   detailsColumns: ItemDetailsColumns[] = DETAILS_COLUMNS;
+
+  // Component state variables
   showCreateForm: boolean = false;
   currentPage: number = 1;
   itemsPerPage: number = 15;
   totalItems: number = 0;
   totalPages: number = 0;
+
+  // State variables for the details view
   showDetails: boolean = false;
   selectedItemForDetails: any | null = null;
 
-  // Proměnné filtrů
+  // Variables to hold filter values, adjusted to match the configuration
+  filterBusinessLogId: string = '';
+  filterCreatedAt: string = '';
+  filterOrigin: string = '';
+  filterEventType: string = '';
+  filterModule: string = '';
+  filterDescription: string = '';
+  filterAffectedEntityType: string = '';
+  filterAffectedEntityId: string = '';
   filterUserLoginId: string = '';
   filterUserEmail: string = '';
-  filterLastLoginAt: string = '';
-  filterCreatedAt: string = '';
-  filterUpdatedAt: string = '';
-  filterRoleName: string = '';
+  filterContextData: string = '';
+
   filterSortBy: string = '';
   filterSortDirection: 'asc' | 'desc' = 'asc';
 
+  // Cache and filter state for performance
   private activeRequestsCache: Map<number, ItemType[]> = new Map();
   private currentActiveFilters: FilterParams = {};
   selectedItemForEdit: ItemType | null = null;
@@ -93,29 +112,45 @@ export class BusinessLogsComponent extends BaseDataComponent<ItemType> implement
     });
   }
 
+  /**
+   * Public method to trigger a full data refresh.
+   */
   public refreshData(): void {
     this.forceFullRefresh();
   }
 
+  /**
+   * Gathers all current filter values into a single object.
+   * @returns An object containing all active filters.
+   */
   private getBaseFilters(): FilterParams {
     const filters: FilterParams = {
+      business_log_id: this.filterBusinessLogId,
+      created_at: this.filterCreatedAt,
+      origin: this.filterOrigin,
+      event_type: this.filterEventType,
+      module: this.filterModule,
+      description: this.filterDescription,
+      affected_entity_type: this.filterAffectedEntityType,
+      affected_entity_id: this.filterAffectedEntityId,
       user_login_id: this.filterUserLoginId,
       user_email: this.filterUserEmail,
-      last_login_at: this.filterLastLoginAt,
-      created_at: this.filterCreatedAt,
-      updated_at: this.filterUpdatedAt,
+      context_data: this.filterContextData,
       sort_by: this.filterSortBy,
       sort_direction: this.filterSortDirection
     };
 
-    if (this.filterRoleName) {
-      filters['role_name'] = this.filterRoleName;
-    }
-
     return filters;
   }
 
-  // Zjednodušená metoda, která pracuje pouze s aktivními daty
+  /**
+   * Fetches paginated data from the API, with caching and preloading.
+   * @param page The page number to fetch.
+   * @param itemsPerPage The number of items per page.
+   * @param cache The cache map.
+   * @param currentFilters The currently active filters.
+   * @returns An Observable of the paginated response.
+   */
   private fetchPaginatedData(
     page: number,
     itemsPerPage: number,
@@ -124,9 +159,7 @@ export class BusinessLogsComponent extends BaseDataComponent<ItemType> implement
   ): Observable<PaginatedResponse<ItemType>> {
     this.errorMessage = null;
     const newFilters = this.getBaseFilters();
-    newFilters['is_deleted'] = 'false'; // Pouze pro aktivní položky
-
-    console.log('Sending filters to backend:', newFilters);
+    newFilters['is_deleted'] = 'false';
 
     if (JSON.stringify(newFilters) !== JSON.stringify(currentFilters)) {
       cache.clear();
@@ -166,7 +199,12 @@ export class BusinessLogsComponent extends BaseDataComponent<ItemType> implement
     );
   }
 
-  // Zjednodušená metoda preload
+  /**
+   * Preloads the next page of data to improve user experience.
+   * @param page The page number to preload.
+   * @param itemsPerPage The number of items per page.
+   * @param cache The cache map.
+   */
   private preloadPage(
     page: number,
     itemsPerPage: number,
@@ -194,36 +232,60 @@ export class BusinessLogsComponent extends BaseDataComponent<ItemType> implement
     });
   }
 
+  /**
+   * Loads the current page's data.
+   * @returns An Observable of the paginated response.
+   */
   loadActiveRequests(): Observable<PaginatedResponse<ItemType>> {
     return this.fetchPaginatedData(this.currentPage, this.itemsPerPage, this.activeRequestsCache, this.currentActiveFilters);
   }
 
-  // Odstraněna metoda loadTrashRequests
-
+  /**
+   * Applies the received filters and refreshes the data.
+   * @param filters The filter values from the filter form.
+   */
   applyFilters(filters: any): void {
-    this.filterUserLoginId = filters.user_login_id || '';
-    this.filterUserEmail = filters.user_email || '';
-    this.filterLastLoginAt = filters.last_login_at || '';
-    this.filterCreatedAt = filters.created_at || '';
-    this.filterUpdatedAt = filters.updated_at || '';
-    this.filterRoleName = filters.role_name || '';
+    this.filterBusinessLogId = filters['business_log_id'] || '';
+    this.filterCreatedAt = filters['created_at'] || '';
+    this.filterOrigin = filters['origin'] || '';
+    this.filterEventType = filters['event_type'] || '';
+    this.filterModule = filters['module'] || '';
+    this.filterDescription = filters['description'] || '';
+    this.filterAffectedEntityType = filters['affected_entity_type'] || '';
+    this.filterAffectedEntityId = filters['affected_entity_id'] || '';
+    this.filterUserLoginId = filters['user_login_id'] || '';
+    this.filterUserEmail = filters['user.user_email'] || '';
+    this.filterContextData = filters['context_data'] || '';
+
     this.filterSortBy = filters.sort_by || '';
     this.filterSortDirection = filters.sort_direction || 'asc';
     this.forceFullRefresh();
   }
 
+  /**
+   * Clears all filters and refreshes the data.
+   */
   clearFilters(): void {
+    this.filterBusinessLogId = '';
+    this.filterCreatedAt = '';
+    this.filterOrigin = '';
+    this.filterEventType = '';
+    this.filterModule = '';
+    this.filterDescription = '';
+    this.filterAffectedEntityType = '';
+    this.filterAffectedEntityId = '';
     this.filterUserLoginId = '';
     this.filterUserEmail = '';
-    this.filterLastLoginAt = '';
-    this.filterCreatedAt = '';
-    this.filterUpdatedAt = '';
-    this.filterRoleName = '';
+    this.filterContextData = '';
     this.filterSortBy = '';
     this.filterSortDirection = 'asc';
     this.forceFullRefresh();
   }
 
+  /**
+   * Navigates to a specific page.
+   * @param page The page number to navigate to.
+   */
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
       this.currentPage = page;
@@ -231,6 +293,10 @@ export class BusinessLogsComponent extends BaseDataComponent<ItemType> implement
     }
   }
 
+  /**
+   * Handles the change in items per page selection.
+   * @param event The change event.
+   */
   onItemsPerPageChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const newItemsPerPage = Number(selectElement.value);
@@ -240,6 +306,12 @@ export class BusinessLogsComponent extends BaseDataComponent<ItemType> implement
     }
   }
 
+  /**
+   * Generates an array for pagination controls.
+   * @param currentPage The current active page.
+   * @param totalPages The total number of pages.
+   * @returns An array of page numbers to display.
+   */
   private getPaginationArray(currentPage: number, totalPages: number): number[] {
     const maxPagesToShow = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
@@ -260,14 +332,23 @@ export class BusinessLogsComponent extends BaseDataComponent<ItemType> implement
     return this.getPaginationArray(this.currentPage, this.totalPages);
   }
 
+  /**
+   * Handles item restoration event. Not used in this component, but required by BaseDataComponent.
+   */
   handleItemRestored(): void {
     this.forceFullRefresh();
   }
 
+  /**
+   * Handles item deletion event, refreshing the data.
+   */
   handleItemDeleted(): void {
     this.forceFullRefresh();
   }
 
+  /**
+   * Forces a complete refresh of the data, clearing the cache.
+   */
   public forceFullRefresh(): void {
     this.activeRequestsCache.clear();
     this.currentPage = 1;
@@ -282,11 +363,18 @@ export class BusinessLogsComponent extends BaseDataComponent<ItemType> implement
     ).subscribe();
   }
 
+  /**
+   * Handles the opening of the create form.
+   */
   handleCreateFormOpened(): void {
     this.selectedItemForEdit = null;
     this.showCreateForm = !this.showCreateForm;
   }
 
+  /**
+   * Handles the opening of the edit form.
+   * @param item The item to be edited.
+   */
   handleEditFormOpened(item: ItemType): void {
     const itemToEdit = { ...item };
 
@@ -298,6 +386,10 @@ export class BusinessLogsComponent extends BaseDataComponent<ItemType> implement
     this.showCreateForm = true;
   }
 
+  /**
+   * Handles the form submission for creating or updating an item.
+   * @param formData The form data.
+   */
   handleFormSubmitted(formData: ItemType): void {
     this.showCreateForm = false;
     this.isLoading = true;
@@ -324,30 +416,52 @@ export class BusinessLogsComponent extends BaseDataComponent<ItemType> implement
     });
   }
 
+  /**
+   * Handles form cancellation.
+   */
   onCancelForm() {
     this.showCreateForm = false;
     this.selectedItemForEdit = null;
   }
 
+  /**
+   * Track function for ngFor to improve rendering performance.
+   * @param index The index of the item.
+   * @param item The item itself.
+   * @returns The item's ID.
+   */
   trackById(index: number, item: ItemType): number {
     return item.id!;
   }
 
+  /**
+   * Handles the click event to view item details.
+   * This method fetches the full details for the selected item and shows the details component.
+   * @param item The item selected from the table.
+   */
   handleViewDetails(item: ItemType): void {
-    if (item.id === undefined || item.id === null) {
+    // Kontrolujeme, zda item.business_log_id existuje a má platnou hodnotu.
+    if (item.business_log_id === undefined || item.business_log_id === null) {
+      console.warn('Položka nemá business_log_id. Zobrazování detailů zrušeno.');
       return;
     }
     this.errorMessage = null;
 
     this.isLoading = true;
-    this.getItemDetails(item.id).subscribe({
+    this.cd.markForCheck(); // Aktualizace stavu načítání ihned
+
+    // Používáme business_log_id pro načtení detailů
+    this.getItemDetails(item.business_log_id).subscribe({
       next: (details) => {
+        console.log('Detaily úspěšně načteny:', details);
         this.selectedItemForDetails = details;
         this.showDetails = true;
         this.isLoading = false;
+        console.log('Stav showDetails nastaven na:', this.showDetails);
         this.cd.markForCheck();
       },
       error: (err) => {
+        console.error('Chyba při načítání detailů:', err);
         this.isLoading = false;
         this.errorMessage = 'Nepodařilo se načíst detaily položky.';
         this.cd.markForCheck();
@@ -355,8 +469,12 @@ export class BusinessLogsComponent extends BaseDataComponent<ItemType> implement
     });
   }
 
+  /**
+   * Closes the details view by resetting the state variables.
+   */
   handleCloseDetails(): void {
     this.selectedItemForDetails = null;
     this.showDetails = false;
+    console.log('Zobrazení detailů uzavřeno. Stav showDetails:', this.showDetails);
   }
 }

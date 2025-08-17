@@ -95,8 +95,9 @@ export const FILTER_COLUMNS: FilterColumns[] = [
   {
     key: 'event_type',
     header: 'Událost',
-    type: 'text',
-    placeholder: 'Hledat podle události',
+    type: 'select',
+    options: ["create", "update", "soft_delete", "hard_delete", "restore"],
+    placeholder: '-- Vybrat prioritu --',
     canSort: true,
   },
   {
@@ -193,7 +194,7 @@ export const DETAILS_COLUMNS: ItemDetailsColumns[] = [
     type: 'text'
   },
   {
-    key: 'user_login_id',
+    key: 'user.user_login_id',
     displayName: 'ID uživatele',
     type: 'text'
   },

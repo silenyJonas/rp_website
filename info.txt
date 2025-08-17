@@ -10,7 +10,9 @@ admin:
 dodelat:
 sprava uzivatelu:
     -admin/sysadmin + prava
--dodelat reset hesla nejak a zmena osobnich informaci
--udelat /my-acc treba a tam budou informace o mne
+-dodelat reset hesla nejak
 -udelat logovani a logovani vseho v /logs rpozdeleni na systemlogs a bussines logs a treba takhle jak je podle db
 
+--
+vytvoren
+uzivatel

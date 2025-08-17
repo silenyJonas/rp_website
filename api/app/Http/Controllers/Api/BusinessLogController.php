@@ -23,61 +23,89 @@ class BusinessLogController extends Controller
         $page = $request->input('page', 1);
         $noPagination = filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN);
 
-        $search = $request->input('search');
+        $businessLogId = $request->input('business_log_id');
+        $createdAt = $request->input('created_at');
+        $origin = $request->input('origin');
         $eventType = $request->input('event_type');
         $module = $request->input('module');
-        $origin = $request->input('origin');
+        $description = $request->input('description');
+        $affectedEntityType = $request->input('affected_entity_type');
+        $affectedEntityId = $request->input('affected_entity_id');
         $userLoginId = $request->input('user_login_id');
-        $id = $request->input('id');
-        $createdAt = $request->input('created_at');
+        $userEmail = $request->input('user_email');
+        $contextData = $request->input('context_data');
         
         $sortBy = $request->input('sort_by');
         $sortDirection = $request->input('sort_direction', 'asc');
 
         $query = BusinessLog::query();
 
-        // Filtrování podle klíčového slova ve více polích
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('origin', 'like', '%' . $search . '%')
-                    ->orWhere('event_type', 'like', '%' . $search . '%')
-                    ->orWhere('module', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%');
-            });
-        }
-        
         // Samostatné filtrování pro každé pole
-        if ($id) {
-            $query->where('business_log_id', $id);
+        if ($businessLogId) {
+            $query->where('business_log_id', $businessLogId);
         }
 
+        // Oprava: Filtrování podle data vytvoření. Pokud je vstupní hodnota pouze den, filtrujeme podle dne.
+        if ($createdAt) {
+            // Zkontrolujeme, zda se jedná o datum nebo jen den
+            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $createdAt)) {
+                $query->whereDate('created_at', '=', $createdAt);
+            } else {
+                $query->whereDay('created_at', '=', $createdAt);
+            }
+        }
+        
+        if ($origin) {
+            $query->where('origin', 'like', '%' . $origin . '%');
+        }
+        
         if ($eventType) {
             $query->where('event_type', $eventType);
         }
 
         if ($module) {
-            $query->where('module', $module);
+            $query->where('module', 'like', '%' . $module . '%');
         }
 
-        if ($origin) {
-            $query->where('origin', 'like', '%' . $origin . '%');
+        if ($description) {
+            $query->where('description', 'like', '%' . $description . '%');
+        }
+        
+        if ($affectedEntityType) {
+            $query->where('affected_entity_type', 'like', '%' . $affectedEntityType . '%');
         }
 
+        if ($affectedEntityId) {
+            $query->where('affected_entity_id', $affectedEntityId);
+        }
+
+        // Vylepšení filtrování uživatele
         if ($userLoginId) {
             $query->where('user_login_id', $userLoginId);
         }
         
-        // Filtrování podle dne vytvoření
-        if ($createdAt) {
-            $query->whereDate('created_at', '=', $createdAt);
+        if ($userEmail) {
+            $query->whereHas('user', function ($q) use ($userEmail) {
+                $q->where('user_email', 'like', '%' . $userEmail . '%');
+            });
         }
-
+        
+        if ($contextData) {
+            $query->where('context_data', 'like', '%' . $contextData . '%');
+        }
+        
         // Kód pro řazení
         if ($sortBy) {
             $sortDirection = in_array(strtolower($sortDirection), ['asc', 'desc']) ? $sortDirection : 'asc';
-            // Pamatujte, že `id` v tomto modelu je 'business_log_id'
-            $sortBy = ($sortBy === 'id') ? 'business_log_id' : $sortBy;
-            $query->orderBy($sortBy, $sortDirection);
+            
+            // Speciální ošetření pro řazení podle user.user_email
+            if ($sortBy === 'user.user_email') {
+                $query->leftJoin('user_logins', 'business_logs.user_login_id', '=', 'user_logins.user_login_id')
+                      ->orderBy('user_logins.user_email', $sortDirection)
+                      ->select('business_logs.*'); // Zajištění, že vybíráme sloupce z původní tabulky
+            } else {
+                $query->orderBy($sortBy, $sortDirection);
+            }
         } else {
             $query->latest('business_log_id');
         }
@@ -92,6 +120,38 @@ class BusinessLogController extends Controller
         }
 
         return response()->json($logs);
+    }
+
+    /**
+     * Zobrazení detailů konkrétního logu s navázanými daty.
+     *
+     * @param BusinessLog $businessLog
+     * @return JsonResponse
+     */
+    public function showDetails(BusinessLog $businessLog): JsonResponse
+    {
+        // Načtení relace 'user'
+        $businessLog->load('user');
+
+        // Vytvoření pole s požadovanými sloupci
+        $selectedData = [
+            'business_log_id' => $businessLog->business_log_id,
+            'origin' => $businessLog->origin,
+            'event_type' => $businessLog->event_type,
+            'module' => $businessLog->module,
+            'description' => $businessLog->description,
+            'affected_entity_type' => $businessLog->affected_entity_type,
+            'affected_entity_id' => $businessLog->affected_entity_id,
+            'user' => [
+                'user_login_id' => $businessLog->user_login_id,
+                'user_email' => $businessLog->user ? $businessLog->user->user_email : 'Neznámý uživatel'
+            ],
+            'context_data' => $businessLog->context_data,
+            'created_at' => $businessLog->created_at,
+            'updated_at' => $businessLog->updated_at,
+        ];
+
+        return response()->json($selectedData);
     }
 
     /**

@@ -18,12 +18,17 @@
       <app-generic-filter-form
         [filterColumns]="filterColumns"
         [initialFilters]="{ 
-          user_login_id: filterUserLoginId, 
-          user_email: filterUserEmail, 
-          last_login_at: filterLastLoginAt,
+          business_log_id: filterBusinessLogId,
           created_at: filterCreatedAt,
-          updated_at: filterUpdatedAt,
-          role_name: filterRoleName,
+          origin: filterOrigin,
+          event_type: filterEventType,
+          module: filterModule,
+          description: filterDescription,
+          affected_entity_type: filterAffectedEntityType,
+          affected_entity_id: filterAffectedEntityId,
+          user_login_id: filterUserLoginId, 
+          'user.user_email': filterUserEmail, 
+          context_data: filterContextData
         }"
         [initialSortBy]="filterSortBy"
         [initialSortDirection]="filterSortDirection"
@@ -37,10 +42,10 @@
           [buttons]="buttons"
           [data]="data"
           [columns]="tableColumns"
-          [tableCaption]="'Seznam požadavků na provize'"
+          [tableCaption]="'Seznam událostí systému'"
           [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
-          [uploadsBaseUrl]="'https://your-upload-domain.com/uploads/'"
+          [uploadsBaseUrl]="'[https://your-upload-domain.com/uploads/](https://your-upload-domain.com/uploads/)'"
           [isLogsTable]="true"
           (itemDeleted)="handleItemDeleted()"
           (createFormOpened)="handleCreateFormOpened()"
@@ -67,7 +72,7 @@
             <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1"
                     class="pagination-button first-page-btn">
               <span class="sr-only">Předchozí</span>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
               </svg>
             </button>
@@ -81,7 +86,7 @@
             <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages"
                     class="pagination-button last-page-btn">
               <span class="sr-only">Další</span>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
               </svg>
             </button>
