@@ -9,6 +9,8 @@ use App\Http\Requests\StoreUserLoginRequest;
 use App\Http\Requests\UpdateUserLoginRequest;
 use App\Http\Resources\UserLoginResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserLoginController extends Controller
 {
@@ -36,6 +38,7 @@ class UserLoginController extends Controller
         $sortDirection = $request->input('sort_direction', 'asc');
 
         $query = UserLogin::query();
+        $query->with('roles');
 
         // Pokud je `onlyTrashed` true, načti pouze smazané záznamy.
         if ($onlyTrashed) {
@@ -74,16 +77,20 @@ class UserLoginController extends Controller
             $query->latest();
         }
 
-        // Načtení relací (rolí)
-        $query->with('roles');
-
         if ($noPagination) {
-            $users = $query->get();
+            // Použijeme resource pro formatování dat, ale bez paginace
+            $users = UserLoginResource::collection($query->get());
         } else {
+            // Klíčová změna: Použijeme Paginator, který už má formát s `data`
+            // Aplikujeme UserLoginResource na každý prvek v paginované kolekci
             $users = $query->paginate($perPage, ['*'], 'page', $page);
+            $users->getCollection()->transform(function ($user) {
+                return new UserLoginResource($user);
+            });
         }
 
-        return response()->json(UserLoginResource::collection($users));
+        // Vrátíme paginovaný výsledek, který je již správně naformátován
+        return response()->json($users);
     }
 
     /**
@@ -95,12 +102,16 @@ class UserLoginController extends Controller
     public function store(StoreUserLoginRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
-        $validatedData['user_password_hash'] = \Hash::make($validatedData['user_password']);
-        $user = UserLogin::create($validatedData);
+        
+        // Hashování hesla na straně serveru.
+        $user = UserLogin::create([
+            'user_email' => $validatedData['user_email'],
+            'user_password_hash' => Hash::make($validatedData['user_password_hash']),
+        ]);
         
         // Případně přiřazení role
-        if ($request->has('roles')) {
-            $user->roles()->sync($request->input('roles'));
+        if ($request->has('role_id')) {
+            $user->roles()->attach($validatedData['role_id']);
         }
 
         return response()->json(new UserLoginResource($user), 201);
@@ -128,14 +139,19 @@ class UserLoginController extends Controller
     public function update(UpdateUserLoginRequest $request, UserLogin $userLogin): JsonResponse
     {
         $validatedData = $request->validated();
-        if (isset($validatedData['user_password'])) {
-            $validatedData['user_password_hash'] = \Hash::make($validatedData['user_password']);
-            unset($validatedData['user_password']);
+        
+        $updateData = [];
+        if (isset($validatedData['user_password_hash'])) {
+            $updateData['user_password_hash'] = Hash::make($validatedData['user_password_hash']);
         }
-        $userLogin->update($validatedData);
+        if (isset($validatedData['user_email'])) {
+            $updateData['user_email'] = $validatedData['user_email'];
+        }
 
-        if ($request->has('roles')) {
-            $userLogin->roles()->sync($request->input('roles'));
+        $userLogin->update($updateData);
+
+        if ($request->has('role_id')) {
+            $userLogin->roles()->sync([$validatedData['role_id']]);
         }
 
         $userLogin->load('roles');
@@ -191,7 +207,7 @@ class UserLoginController extends Controller
             UserLogin::onlyTrashed()->forceDelete();
             return response()->json(null, 204);
         } catch (\Exception $e) {
-            \Log::error('Chyba při hromadném trvalém mazání: ' . $e->getMessage());
+            Log::error('Chyba při hromadném trvalém mazání: ' . $e->getMessage());
             return response()->json(['message' => 'Něco se pokazilo.', 'error' => $e->getMessage()], 500);
         }
     }

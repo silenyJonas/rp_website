@@ -23,7 +23,10 @@ class StoreUserLoginRequest extends FormRequest
     {
         return [
             'user_email' => ['required', 'string', 'email', 'max:255', 'unique:user_login,user_email'],
-            'user_password' => ['required', 'string', 'min:8'],
+            // Validace pro user_password_hash, jak je posíláno z frontendu
+            'user_password_hash' => ['required', 'string', 'min:8'],
+            // Validace pro role_id, s kontrolou existence v tabulce roles
+            'role_id' => ['required', 'numeric', 'exists:roles,role_id'],
         ];
     }
 }
