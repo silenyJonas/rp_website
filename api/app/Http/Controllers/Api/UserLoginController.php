@@ -59,7 +59,8 @@ class UserLoginController extends Controller
                     $query->orderBy($sortBy, $sortDirection);
                 }
             } else {
-                $query->latest();
+                // ZMĚNA: Řazení podle user_login_id sestupně
+                $query->orderBy('user_login.user_login_id', 'desc');
             }
 
             // Aplikujeme filtry po joinu s explicitním názvem tabulky, abychom předešli ambiguitě
@@ -202,5 +203,30 @@ class UserLoginController extends Controller
             Log::error('Chyba při hromadném trvalém mazání: ' . $e->getMessage());
             return response()->json(['message' => 'Něco se pokazilo.', 'error' => $e->getMessage()], 500);
         }
+    }
+    public function showDetails(UserLogin $userLogin): JsonResponse
+    {
+        // Načtení přiřazených rolí k uživateli
+        $userLogin->load('roles');
+
+        // Vytvoření pole s požadovanými daty
+        $selectedData = [
+            'id' => $userLogin->user_login_id,
+            'user_email' => $userLogin->user_email,
+            'last_login_at' => $userLogin->last_login_at,
+            'created_at' => $userLogin->created_at,
+            'updated_at' => $userLogin->updated_at,
+            'deleted_at' => $userLogin->deleted_at,
+            // Načtení názvů rolí
+            'roles' => $userLogin->roles->map(function ($role) {
+                return [
+                    'role_id' => $role->role_id,
+                    'role_name' => $role->role_name,
+                    'description' => $role->description,
+                ];
+            }),
+        ];
+
+        return response()->json($selectedData);
     }
 }

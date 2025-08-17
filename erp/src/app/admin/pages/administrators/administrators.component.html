@@ -1,7 +1,18 @@
 
 <div class="user-request-container container mx-auto p-4">
   <div *ngIf="isLoading" class="text-center text-blue-500">Načítání dat...</div>
+  <div *ngIf="isLoading" class="text-center text-blue-500">
+    <button class="neutral_button" style="margin-top: 15px;" (click)="refreshData()">
+      Znovu načíst data
+    </button>
+  </div>
+  
   <div *ngIf="errorMessage" class="text-center text-red-500">{{ errorMessage }}</div>
+  <div *ngIf="errorMessage" class="text-center text-red-500">
+    <button class="neutral_button" style="margin-top: 15px;" (click)="refreshData()">
+      Znovu načíst data
+    </button>
+  </div>
   <div *ngIf="!isLoading && !errorMessage">
     <div class="main-content-layout">
 

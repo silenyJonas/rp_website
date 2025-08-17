@@ -1,4 +1,4 @@
-<div class="popup-overlay" (mousedown)="onOverlayClick($event)">
+<!-- <div class="popup-overlay" (mousedown)="onOverlayClick($event)">
   <div class="form-container" (click)="$event.stopPropagation()">
     <div class="form-header">
       <h2>Detaily Vybraného Záznamu</h2>
@@ -10,6 +10,24 @@
       <div *ngIf="itemData" class="details-list">
         <div *ngFor="let column of itemDetailColumns" class="details-item">
           <strong>{{ column.display_name }}:</strong> {{ itemData[column.key] }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="popup-overlay" (mousedown)="onOverlayClick($event)">
+  <div class="form-container" (click)="$event.stopPropagation()">
+    <div class="form-header">
+      <h2>Detaily Vybraného Záznamu</h2>
+      <button class="close-button" (click)="onClose()">
+        &times;
+      </button>
+    </div>
+    <div class="details-content">
+      <div *ngIf="itemData" class="details-list">
+        <div *ngFor="let column of itemDetailColumns" class="details-item">
+          <strong>{{ column.display_name }}:</strong> 
+          {{ getValueByPath(itemData, column.key) }}
         </div>
       </div>
     </div>

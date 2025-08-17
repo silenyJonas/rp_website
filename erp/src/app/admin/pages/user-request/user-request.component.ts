@@ -113,7 +113,9 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       }
     });
   }
-
+    public refreshData(): void {
+    this.forceFullRefresh();
+  }
   private getBaseFilters(): FilterParams {
     return {
       search: this.filterSearch,
