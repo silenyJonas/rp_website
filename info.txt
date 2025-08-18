@@ -2,7 +2,6 @@
 905
 480
 
-
 public:
 upravit texty + preklady
 
@@ -10,9 +9,7 @@ admin:
 dodelat:
 sprava uzivatelu:
     -admin/sysadmin + prava
--dodelat reset hesla nejak
--udelat logovani a logovani vseho v /logs rpozdeleni na systemlogs a bussines logs a treba takhle jak je podle db
+-dodelat reset hesla nejak asi pres mail
 
---
-vytvoren
-uzivatel
+-aby uzivatel nevidel edit svoji role 
+

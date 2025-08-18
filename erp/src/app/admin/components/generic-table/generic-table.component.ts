@@ -41,7 +41,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   @Input() uploadsBaseUrl: string = '';
   @Input() buttons: Buttons[] = [];
   @Input() isLogsTable: boolean = false;
-
+  
   // Nové události pro komunikaci s nadřazenou komponentou
   @Output() itemDeleted = new EventEmitter<any>();
   @Output() createFormOpened = new EventEmitter<void>();

@@ -23,6 +23,7 @@ registerLocaleData(localeCs);
 })
 export class AdminLayoutComponent implements OnInit, OnDestroy {
   userEmail: string | null = null;
+  userRole: string | null = null;
   isLoggedIn: boolean = false;
   currentDate: Date = new Date();
   
@@ -37,8 +38,10 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
       this.isLoggedIn = loggedIn;
       if (loggedIn) {
         this.userEmail = this.authService.getUserEmail();
+        this.userRole = this.authService.getUserRole();
       } else {
         this.userEmail = null;
+        this.userRole = null;
       }
     });
 
@@ -46,8 +49,10 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
       this.isLoggedIn = loggedIn;
       if (loggedIn) {
         this.userEmail = this.authService.getUserEmail();
+        this.userRole = this.authService.getUserRole();
       } else {
         this.userEmail = null;
+        this.userRole = null;
       }
     });
 

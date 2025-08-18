@@ -44,7 +44,7 @@ export class GenericFormComponent implements OnInit {
 
   // Input pro předání dat pro editaci
   @Input() formDataToEdit: any = null;
-
+  
   // Proměnná pro uložení definicí polí, která se mají zobrazit
   visibleInputDefinitions: InputDefinition[] = [];
 
