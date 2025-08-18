@@ -1,5 +1,3 @@
-// src/app/admin/admin-routing.module.ts
-
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
@@ -10,12 +8,10 @@ import { AdministratorsComponent } from './pages/administrators/administrators.c
 import { BusinessLogsComponent } from './pages/business-logs/business-logs.component';
 import { PersonalInfoComponent } from './pages/personal-info/personal-info.component';
 
-
 const routes: Routes = [
   {
     path: '',
     component: AdminLayoutComponent,
-    canActivate: [AuthGuard], // Apply the guard here!
     children: [
       {
         path: '',
@@ -24,23 +20,33 @@ const routes: Routes = [
       },
       {
         path: 'dashboard',
-        component: DashboardComponent
+        component: DashboardComponent,
+        canActivate: [AuthGuard], // Přidáváme guard pro ověření oprávnění
+        data: { permission: 'view-dashboard' }
       },
       {
         path: 'user-request',
-        component: UserRequestComponent
+        component: UserRequestComponent,
+        canActivate: [AuthGuard], // Přidáváme guard pro ověření oprávnění
+        data: { permission: 'view-user-requests' }
       },
       {
-        path: 'administratos',
-        component: AdministratorsComponent
+        path: 'administrators',
+        component: AdministratorsComponent,
+        canActivate: [AuthGuard], // Přidáváme guard pro ověření oprávnění
+        data: { permission: 'manage-administrators' }
       },
       {
         path: 'business-logs',
-        component: BusinessLogsComponent
+        component: BusinessLogsComponent,
+        canActivate: [AuthGuard], // Přidáváme guard pro ověření oprávnění
+        data: { permission: 'view-business-logs' }
       },
       {
         path: 'personal-info',
-        component: PersonalInfoComponent
+        component: PersonalInfoComponent,
+        canActivate: [AuthGuard], // Přidáváme guard pro ověření oprávnění
+        data: { permission: 'view-personal-info' }
       }
     ]
   }

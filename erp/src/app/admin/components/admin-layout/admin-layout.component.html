@@ -1,16 +1,16 @@
 <header>
   <div class="header-item">
-    <!-- Zobrazíme e-mail uživatele, pokud je přihlášen -->
     <ng-container *ngIf="isLoggedIn && userEmail">
       {{ userEmail }} |
     </ng-container>
-    <!-- Můžete přidat i fallback, pokud by e-mail nebyl dostupný -->
     <ng-container *ngIf="!isLoggedIn && !userEmail">
       Nepřihlášený uživatel |
     </ng-container>
   </div>
   <div class="header-item">
-    {{userRole}} | <!-- Toto je statický text, můžete ho nechat nebo dynamicky měnit -->
+    <ng-container *ngIf="isLoggedIn && userRole">
+      {{ userRole }} |
+    </ng-container>
   </div>
   <div class="header-item">
   {{ currentDate | date:'HH:mm:ss d. MMMM yyyy' }}
@@ -20,12 +20,12 @@
   <aside class="admin-sidebar">
     <nav class="admin-nav">
       <ul>
-        <li><a routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a></li>
-        <li><a routerLink="/admin/user-request" routerLinkActive="active">User Requests</a></li>
-        <li><a routerLink="/admin/administratos" routerLinkActive="active">Administrátoři</a></li>
-        <li><a routerLink="/admin/business-logs" routerLinkActive="active">Business Logs</a></li>
+        <li *ngIf="hasPermission('view-dashboard')"><a routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a></li>
+        <li *ngIf="hasPermission('view-user-requests')"><a routerLink="/admin/user-request" routerLinkActive="active">User Requests</a></li>
+        <li *ngIf="hasPermission('manage-administrators')"><a routerLink="/admin/administrators" routerLinkActive="active">Administrátoři</a></li>
+        <li *ngIf="hasPermission('view-business-logs')"><a routerLink="/admin/business-logs" routerLinkActive="active">Business Logs</a></li>
 
-        <li><a routerLink="/admin/personal-info" routerLinkActive="active">Osobní Informace</a></li>
+        <li *ngIf="hasPermission('view-personal-info')"><a routerLink="/admin/personal-info" routerLinkActive="active">Osobní Informace</a></li>
       </ul>
     </nav>
     <div class="sidebar-footer">

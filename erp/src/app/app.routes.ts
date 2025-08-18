@@ -1,8 +1,8 @@
+
 import { Routes } from '@angular/router';
-import { LoginComponent } from './admin/auth/login/login.component'; // Import LoginComponent
+import { LoginComponent } from './admin/auth/login/login.component';
 
 export const routes: Routes = [
-  // 1. Veřejná část - routy pro návštěvníky, používají PublicHeader/Footer
   {
     path: '',
     children: [
@@ -41,19 +41,12 @@ export const routes: Routes = [
       },
     ]
   },
-  // 2. Login stránka - samostatná, bez public/admin layoutu
   {
-    path: 'auth/login', // Cesta pro login stránku
-    component: LoginComponent, // Login komponenta je zde samostatně načtena
+    path: 'auth/login',
+    component: LoginComponent,
   },
-  // 3. Administrační část - použije AdminLayoutComponent jako rodičovskou komponentu
-  // Tato část se načítá, JAKMILE JSME NA CESTĚ /admin/*
   {
     path: 'admin',
-    loadChildren: () => import('./admin/admin-routing.module').then(m => m.AdminRoutingModule)
-    // Tady už není component: AdminLayoutComponent přímo, ale je to řešeno přes lazy loading modulu.
-    // AdminLayoutComponent se načte, protože je v admin-routing.module.ts jako rodičovská komponenta pro prázdnou cestu ''.
-  },
-  // Catch-all route pro 404 stránku
-  // { path: '**', loadComponent: () => import('./public/pages/not-found/not-found.component').then(m => m.NotFoundComponent) }
+    loadChildren: () => import('./admin/admin-routing.module').then(m => m.AdminRoutingModule),
+  }
 ];
