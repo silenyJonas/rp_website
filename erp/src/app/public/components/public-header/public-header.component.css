@@ -255,7 +255,7 @@ header.scrolled .active-indicator {
      position: fixed; /* Zůstane na místě při scrollu */
     right: 10px; /* Odsazení od pravého okraje */
     top: 50px; /* Odsazení od horního okraje */
-    z-index: 1001; /* Zajistí, že bude nad ostatním obsahem */
+    z-index: 99999; /* Zajistí, že bude nad ostatním obsahem */
     display: flex;
     justify-content: flex-end; /* Zarovnání obsahu doprava */
     align-items: center; /* Vertikálně zarovná položky ve středu */

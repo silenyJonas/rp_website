@@ -1,3 +1,4 @@
+
 // import { Injectable } from '@angular/core';
 // import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 // import { Observable, BehaviorSubject, of, throwError, timer } from 'rxjs';
@@ -42,7 +43,8 @@
 
 //           // Zde zpracujeme a uložíme název role
 //           if (response.user_roles && response.user_roles.length > 0) {
-//             localStorage.setItem('userRole', response.user_roles[0].role_name);
+//             // Změna: Ukládáme přímo název role, protože server vrací pole řetězců
+//             localStorage.setItem('userRole', response.user_roles[0]); 
 //           } else {
 //             localStorage.removeItem('userRole');
 //           }
@@ -149,10 +151,10 @@
 //     return localStorage.getItem('userEmail');
 //   }
 
-//   /**
-//    * Nová metoda pro získání role uživatele z Local Storage.
-//    * @returns Název role nebo null, pokud neexistuje.
-//    */
+//   public setUserEmail(user_email: string): void{
+//     localStorage.setItem('userEmail', user_email);
+//   }
+
 //   public getUserRole(): string | null {
 //     return localStorage.getItem('userRole');
 //   }
@@ -204,6 +206,10 @@ export class AuthService {
 
   private _isLoggedIn = new BehaviorSubject<boolean>(this.hasAccessToken());
   isLoggedIn$ = this._isLoggedIn.asObservable();
+  
+  // Nový BehaviorSubject pro e-mail uživatele
+  private _userEmailSubject = new BehaviorSubject<string | null>(this.getUserEmail());
+  userEmail$ = this._userEmailSubject.asObservable();
 
   // Předmět pro zrušení časovače obnovení tokenu
   private stopTokenRefresh$ = new Subject<void>();
@@ -231,6 +237,7 @@ export class AuthService {
           localStorage.setItem('refreshToken', response.refreshToken);
           localStorage.setItem('userEmail', response.user.user_email);
           localStorage.setItem('userId', response.user.user_login_id);
+          this._userEmailSubject.next(response.user.user_email); // Aktualizujeme subjekt e-mailu
 
           // Zde zpracujeme a uložíme název role
           if (response.user_roles && response.user_roles.length > 0) {
@@ -324,6 +331,7 @@ export class AuthService {
     localStorage.removeItem('userId');
     localStorage.removeItem('userRole'); // Nově také odstraníme roli
     this._isLoggedIn.next(false);
+    this._userEmailSubject.next(null); // Při odhlášení vyčistíme e-mail
   }
 
   public getAccessToken(): string | null {
@@ -334,7 +342,7 @@ export class AuthService {
     return localStorage.getItem('refreshToken');
   }
 
-  public getuserId(): string | null {
+  public getUserId(): string | null {
     return localStorage.getItem('userId');
   }
 
@@ -342,10 +350,11 @@ export class AuthService {
     return localStorage.getItem('userEmail');
   }
 
-  /**
-     * Nová metoda pro získání role uživatele z Local Storage.
-     * @returns Název role nebo null, pokud neexistuje.
-     */
+  public setUserEmail(user_email: string): void {
+    localStorage.setItem('userEmail', user_email);
+    this._userEmailSubject.next(user_email); // Aktualizujeme subjekt e-mailu
+  }
+  
   public getUserRole(): string | null {
     return localStorage.getItem('userRole');
   }

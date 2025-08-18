@@ -12,4 +12,3 @@ sprava uzivatelu:
 -dodelat reset hesla nejak asi pres mail
 
 -aby uzivatel nevidel edit svoji role 
-

@@ -296,3 +296,24 @@ input[type="checkbox"][disabled] + label {
   background: #888;
   border-radius: 10px;
 }
+/* .locked-role {
+  border-color: red !important;
+  color: red !important;
+} */
+
+.locked-role-message {
+  color: #444;
+  font-size: 0.875rem;
+  margin-top: 5px;
+  padding-left: 2px;
+}
+
+/* Zajištění správné responzivity */
+@media (max-width: 600px) {
+  .form-columns {
+    flex-direction: column;
+  }
+  .form-group {
+    width: 100%;
+  }
+}
