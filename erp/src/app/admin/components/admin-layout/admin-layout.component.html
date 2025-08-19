@@ -24,7 +24,6 @@
         <li *ngIf="hasPermission('view-user-requests')"><a routerLink="/admin/user-request" routerLinkActive="active">User Requests</a></li>
         <li *ngIf="hasPermission('manage-administrators')"><a routerLink="/admin/administrators" routerLinkActive="active">Administrátoři</a></li>
         <li *ngIf="hasPermission('view-business-logs')"><a routerLink="/admin/business-logs" routerLinkActive="active">Business Logs</a></li>
-
         <li *ngIf="hasPermission('view-personal-info')"><a routerLink="/admin/personal-info" routerLinkActive="active">Osobní Informace</a></li>
       </ul>
     </nav>

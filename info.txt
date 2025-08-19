@@ -9,6 +9,7 @@ admin:
 dodelat:
 sprava uzivatelu:
     -admin/sysadmin + prava
--dodelat reset hesla nejak asi pres mail
+    
 
--aby uzivatel nevidel edit svoji role 
+    -udelat reset heslo u prihlasovani
+    -udelat potvrzeni alert dialogem pri uspesne zmene hesla aby se ukazal

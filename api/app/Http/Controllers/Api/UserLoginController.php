@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\UserLogin;
@@ -13,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Models\Role;
 use App\Models\BusinessLog; // Důležitý import pro logování
+use App\Http\Requests\PasswordChangeRequest; // NOVÝ IMPORT
 
 class UserLoginController extends Controller
 {
@@ -183,52 +183,6 @@ class UserLoginController extends Controller
         return response()->json(new UserLoginResource($userLogin));
     }
     
-    /**
-     * Aktualizace uživatelského účtu.
-     *
-     * @param UpdateUserLoginRequest $request
-     * @param UserLogin $userLogin
-     * @return JsonResponse
-     */
-
-// public function update(UpdateUserLoginRequest $request, UserLogin $userLogin): JsonResponse
-// {
-//     $validatedData = $request->validated();
-//     $authenticatedUser = $request->user();
-
-//     // Kontrola, zda se přihlášený uživatel pokouší upravit svůj vlastní účet.
-//     if ($authenticatedUser && (int)$authenticatedUser->user_login_id === (int)$userLogin->user_login_id) {
-//         // Pokud je v požadavku pole 'role_id', odstraníme ho,
-//         // aby uživatel nemohl upravit svou vlastní roli.
-//         if (isset($validatedData['role_id'])) {
-//             unset($validatedData['role_id']);
-//         }
-//     }
-
-//     $updateData = [];
-//     if (isset($validatedData['user_password_hash'])) {
-//         $updateData['user_password_hash'] = Hash::make($validatedData['user_password_hash']);
-//     }
-//     if (isset($validatedData['user_email'])) {
-//         $updateData['user_email'] = $validatedData['user_email'];
-//     }
-
-//     // Aktualizace uživatele pouze s povolenými daty.
-//     $userLogin->update($updateData);
-
-//     // Synchronizace rolí pouze tehdy, pokud je v datech 'role_id'
-//     // a nejedná se o pokus o úpravu vlastní role (to je ošetřeno výše).
-//     if (isset($validatedData['role_id'])) {
-//         $userLogin->roles()->sync([$validatedData['role_id']]);
-//     }
-
-//     // Logování aktualizace uživatele
-//     $this->logAction($request, 'update', 'UserLogin', 'Aktualizace údajů uživatele', $userLogin->user_login_id);
-
-//     $userLogin->load('roles');
-//     return response()->json(new UserLoginResource($userLogin));
-// }
-
     public function update(UpdateUserLoginRequest $request, UserLogin $userLogin): JsonResponse
     {
         $validatedData = $request->validated();
@@ -270,6 +224,43 @@ class UserLoginController extends Controller
         
         $userLogin->load('roles');
         return response()->json(new UserLoginResource($userLogin));
+    }
+
+    /**
+     * Změna hesla pro konkrétního uživatele.
+     *
+     * @param PasswordChangeRequest $request
+     * @param UserLogin $userLogin
+     * @return JsonResponse
+     */
+    public function changePassword(PasswordChangeRequest $request, UserLogin $userLogin): JsonResponse
+    {
+        $validatedData = $request->validated();
+        
+        // Hashování nového hesla pro účely logování před kontrolou
+        $newPasswordHash = Hash::make($validatedData['new_password']);
+
+        // Kontrola, zda se původní heslo shoduje s tím v databázi.
+        // Hash::check porovnává nehashované heslo s hashovaným.
+        if (!Hash::check($validatedData['old_password'], $userLogin->user_password_hash)) {
+            // Logování neúspěšného pokusu včetně hashe nového hesla
+            Log::info('Neúspěšná změna hesla. Uživatel ID: ' . $userLogin->user_login_id . '. Důvod: Špatné původní heslo. Původní hash: ' . $userLogin->user_password_hash . ' | Nový hash (neuložen): ' . $newPasswordHash);
+
+            return response()->json([
+                'message' => 'Původní heslo je nesprávné.',
+                'error_code' => 'WRONG_OLD_PASSWORD'
+            ], 403);
+        }
+
+        // Aktualizace hesla.
+        $userLogin->update([
+            'user_password_hash' => $newPasswordHash,
+        ]);
+
+        // Logování úspěšné změny hesla.
+        Log::info('Heslo bylo úspěšně změněno pro uživatele ID: ' . $userLogin->user_login_id . '. Původní hash: ' . $userLogin->user_password_hash . ' | Nový hash: ' . $newPasswordHash);
+
+        return response()->json(['message' => 'Heslo bylo úspěšně změněno.'], 200);
     }
 
     public function destroy(Request $request, $id): JsonResponse
@@ -401,4 +392,3 @@ class UserLoginController extends Controller
         }
     }
 }
-

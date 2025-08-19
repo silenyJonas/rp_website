@@ -1,6 +1,57 @@
-<ul>
-    <li>moznsot zmenit heslo</li>
-    <li>moznsot zmenit cislo</li>
-    <li>moznost zmenit bydliste</li>
-    <li>atd</li>
-</ul>
+<div class="personal-info-container">
+  <div class="password-card">
+    <div class="card-header">
+      <h2 class="card-title">Změna hesla</h2>
+    </div>
+    <div class="card-content">
+      <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()">
+        <p *ngIf="errorMessage" class="error-message">
+          <span>&#9888;</span>
+          {{ errorMessage }}
+        </p>
+
+        <div class="form-field">
+          <label for="old_password">Staré heslo</label>
+          <input id="old_password" type="password" formControlName="old_password" class="form-control" required
+            [ngClass]="{ 'ng-invalid ng-touched': passwordForm.get('old_password')?.invalid && passwordForm.get('old_password')?.touched }">
+          <div *ngIf="passwordForm.get('old_password')?.hasError('required') && passwordForm.get('old_password')?.touched" class="error-text">
+            Staré heslo je povinné.
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="new_password">Nové heslo</label>
+          <input id="new_password" type="password" formControlName="new_password" class="form-control" required
+            [ngClass]="{ 'ng-invalid ng-touched': passwordForm.get('new_password')?.invalid && passwordForm.get('new_password')?.touched }">
+          <div *ngIf="passwordForm.get('new_password')?.hasError('required') && passwordForm.get('new_password')?.touched" class="error-text">
+            Nové heslo je povinné.
+          </div>
+          <div *ngIf="passwordForm.get('new_password')?.hasError('minlength') && passwordForm.get('new_password')?.touched" class="error-text">
+            Heslo musí mít alespoň 8 znaků.
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="new_password_confirmation">Potvrzení nového hesla</label>
+          <input id="new_password_confirmation" type="password" formControlName="new_password_confirmation" class="form-control" required
+            [ngClass]="{ 'ng-invalid ng-touched': passwordForm.get('new_password_confirmation')?.invalid && passwordForm.get('new_password_confirmation')?.touched }">
+          <div *ngIf="passwordForm.get('new_password_confirmation')?.hasError('required') && passwordForm.get('new_password_confirmation')?.touched" class="error-text">
+            Potvrzení nového hesla je povinné.
+          </div>
+          <div *ngIf="passwordForm.hasError('passwordsNotMatching') && passwordForm.get('new_password_confirmation')?.touched" class="error-text">
+            Hesla se neshodují.
+          </div>
+        </div>
+
+        <div class="button-container">
+          <button class="confirm_button" type="submit" [disabled]="passwordForm.invalid || isLoading">
+            <span *ngIf="!isLoading">Uložit heslo</span>
+            <span *ngIf="isLoading">Ukládání...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
