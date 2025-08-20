@@ -7,9 +7,10 @@ upravit texty + preklady
 
 admin:
 dodelat:
-sprava uzivatelu:
-    -admin/sysadmin + prava
+
     
 
-    -udelat reset heslo u prihlasovani
-    -udelat potvrzeni alert dialogem pri uspesne zmene hesla aby se ukazal
+    -udelat ze sys admin muze resetnou hesla ostatnim
+
+primeadmin@primeadmin.cz
+123456Ab

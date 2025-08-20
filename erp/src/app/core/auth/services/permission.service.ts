@@ -7,6 +7,7 @@ export class PermissionService {
   // Mapa, která přiřazuje každé roli pole oprávnění.
   private rolePermissions = new Map<string, string[]>([
     ['sysadmin', ['manage-administrators', 'view-business-logs', 'view-personal-info', 'view-user-requests', 'view-dashboard']],
+    ['primeadmin', ['manage-administrators', 'view-dashboard', 'view-business-logs']],
     ['admin', ['view-user-requests', 'view-dashboard', 'view-personal-info']]
   ]);
 

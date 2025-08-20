@@ -1,3 +1,4 @@
+
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -8,6 +9,8 @@ import { Router } from '@angular/router';
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
 import { UserLogin } from '../../../shared/interfaces/user';
 import { AuthService } from '../../../core/auth/auth.service';
+import { AlertDialogService } from '../../../core/services/alert-dialog.service'; // Import AlertDialogService
+
 @Component({
   selector: 'app-personal-info',
   standalone: true,
@@ -23,7 +26,6 @@ export class PersonalInfoComponent extends BaseDataComponent<UserLogin> implemen
   passwordForm: FormGroup;
   // TODO: This value should be obtained from an authenticated user, for example from an Auth service.
   // For now, it's hardcoded as a placeholder.
-  userId: number = 1;
 
   apiEndpoint = 'user_login';
 
@@ -32,7 +34,8 @@ export class PersonalInfoComponent extends BaseDataComponent<UserLogin> implemen
     protected override cd: ChangeDetectorRef,
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private alertDialogService: AlertDialogService // Inject AlertDialogService
   ) {
     super(dataHandler, cd);
     this.passwordForm = this.fb.group({
@@ -104,6 +107,11 @@ export class PersonalInfoComponent extends BaseDataComponent<UserLogin> implemen
           this.passwordForm.reset();
           console.log('Password successfully changed.');
           // TODO: Add logic to display a success notification to the user
+          this.alertDialogService.open(
+            'Změna hesla',
+            'Heslo bylo úspěšně změněno.',
+            'success'
+          );
           this.errorMessage = null; // Clear any previous error messages
           this.cd.markForCheck();
         },
