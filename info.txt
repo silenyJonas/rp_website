@@ -13,7 +13,8 @@ dodelat:
     -udelat ze sys admin muze resetnou hesla ostatnim
 
     -zablokovat scrolovani pri popupech 
-
+    -udelat aby pri create user bylo heslo 2x
+    - a pri reset hesla chci videt email komu to menim
 primeadmin@primeadmin.cz
 123456Ab
 

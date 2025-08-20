@@ -28,6 +28,7 @@ class PasswordChangeRequest extends FormRequest
         return [
             'old_password' => ['required', 'string'],
             'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+            'target_user_id' => ['sometimes', 'integer', 'exists:user_login,user_login_id'],
         ];
     }
 }

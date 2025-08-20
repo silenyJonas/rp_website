@@ -235,34 +235,282 @@ class UserLoginController extends Controller
     }
 
     
-    public function changePassword(PasswordChangeRequest $request, UserLogin $userLogin): JsonResponse
+    // public function changePassword(PasswordChangeRequest $request, UserLogin $userLogin): JsonResponse
+    // {
+    //     $userLogin->load('roles');
+
+    //     if ($userLogin->roles->contains('role_name', 'primeadmin')) {
+    //         return response()->json([
+    //             'message' => 'Heslo uživatele Prime Admin nelze změnit.',
+    //             'error_code' => 'CANNOT_CHANGE_PRIMEADMIN_PASSWORD'
+    //         ], 403);
+    //     }
+
+    //     $validatedData = $request->validated();
+    //     $newPasswordHash = Hash::make($validatedData['new_password']);
+
+    //     if (!Hash::check($validatedData['old_password'], $userLogin->user_password_hash)) {
+    //         Log::info('Neúspěšná změna hesla. Uživatel ID: ' . $userLogin->user_login_id);
+    //         return response()->json([
+    //             'message' => 'Původní heslo je nesprávné.',
+    //             'error_code' => 'WRONG_OLD_PASSWORD'
+    //         ], 403);
+    //     }
+
+    //     $userLogin->update([
+    //         'user_password_hash' => $newPasswordHash,
+    //     ]);
+
+    //     Log::info('Heslo bylo úspěšně změněno pro uživatele ID: ' . $userLogin->user_login_id);
+
+    //     return response()->json(['message' => 'Heslo bylo úspěšně změněno.'], 200);
+    // }
+
+
+    //     public function changePassword(PasswordChangeRequest $request, UserLogin $userLogin): JsonResponse
+    // {
+    //     $userLogin->load('roles');
+
+    //     if ($userLogin->roles->contains('role_name', 'primeadmin')) {
+    //         return response()->json([
+    //             'message' => 'Heslo uživatele Prime Admin nelze změnit.',
+    //             'error_code' => 'CANNOT_CHANGE_PRIMEADMIN_PASSWORD'
+    //         ], 403);
+    //     }
+
+    //     $validatedData = $request->validated();
+    //     $newPasswordHash = Hash::make($validatedData['new_password']);
+
+    //     if (!Hash::check($validatedData['old_password'], $userLogin->user_password_hash)) {
+    //         Log::info('Neúspěšná změna hesla. Uživatel ID: ' . $userLogin->user_login_id);
+    //         return response()->json([
+    //             'message' => 'Původní heslo je nesprávné.',
+    //             'error_code' => 'WRONG_OLD_PASSWORD'
+    //         ], 403);
+    //     }
+
+    //     $userLogin->update([
+    //         'user_password_hash' => $newPasswordHash,
+    //     ]);
+
+    //     Log::info('Heslo bylo úspěšně změněno pro uživatele ID: ' . $userLogin->user_login_id);
+
+    //     return response()->json(['message' => 'Heslo bylo úspěšně změněno.'], 200);
+    // }
+
+// public function changePassword(PasswordChangeRequest $request): JsonResponse
+//     {
+//         $validatedData = $request->validated();
+//         Log::info('Požadavek na změnu hesla - ověřená data:', $validatedData);
+    
+//         $authenticatedUser = $request->user();
+
+//         if (!$authenticatedUser) {
+//             Log::error('Chyba: Uživatel není přihlášen.');
+//             return response()->json(['message' => 'Uživatel není přihlášen.', 'error_code' => 'UNAUTHENTICATED'], 401);
+//         }
+        
+//         $targetUserId = $validatedData['target_user_id'] ?? null;
+//         Log::info('tager_user_id: '. $targetUserId);
+//         // Scénář: Administrátor mění heslo jinému uživateli
+
+//         if ($targetUserId && (int)$targetUserId !== (int)$authenticatedUser->user_login_id) {
+//             Log::info('Scénář: Administrátor mění heslo jinému uživateli.');
+            
+//             $targetUser = UserLogin::find($targetUserId);
+    
+//             if (!$targetUser) {
+//                 Log::error("Chyba: Cílový uživatel s ID {$targetUserId} nenalezen.");
+//                 return response()->json(['message' => 'Cílový uživatel nenalezen.', 'error_code' => 'USER_NOT_FOUND'], 404);
+//             }
+            
+//             Log::info("Nalezen aktuální uživatel (admin) ID: {$authenticatedUser->user_login_id} a cílový uživatel ID: {$targetUser->user_login_id}.");
+    
+//             // Zkontroluje, zda má aktuální uživatel práva admina
+//             $authenticatedUser->load('roles');
+//             $hasAdminRole = $authenticatedUser->roles->contains('role_name', 'admin') || $authenticatedUser->roles->contains('role_name', 'sysadmin');
+//             Log::info("Kontrola oprávnění pro admina ID {$authenticatedUser->user_login_id}. Má oprávnění: " . ($hasAdminRole ? 'Ano' : 'Ne'));
+//             if (!$hasAdminRole) {
+//                 $this->logAction($request, 'PasswordChangeFailed', 'UserLogin', 'Pokus o změnu hesla uživateli bez dostatečných oprávnění', $targetUser->user_login_id);
+//                 return response()->json(['message' => 'Nemáte dostatečná oprávnění.', 'error_code' => 'INSUFFICIENT_PERMISSIONS'], 403);
+//             }
+    
+//             // Kontrola hesla admina (přihlášeného uživatele)
+//             $isOldPasswordCorrect = Hash::check($validatedData['old_password'], $authenticatedUser->user_password_hash);
+//             Log::info("Výsledek ověření hesla admina (ID: {$authenticatedUser->user_login_id}): " . ($isOldPasswordCorrect ? 'Úspěšné' : 'Neúspěšné'));
+//             if (!$isOldPasswordCorrect) {
+//                 $this->logAction($request, 'PasswordChangeFailed', 'UserLogin', 'Nesprávné heslo administrátora při pokusu o změnu hesla uživateli ID: ' . $targetUser->user_login_id, $targetUser->user_login_id);
+//                 return response()->json([
+//                     'message' => 'Heslo administrátora je nesprávné.',
+//                     'error_code' => 'WRONG_ADMIN_PASSWORD'
+//                 ], 403);
+//             }
+    
+//             // Kontrola, jestli cílový uživatel není primeadmin
+//             $targetUser->load('roles');
+//             $isTargetPrimeAdmin = $targetUser->roles->contains('role_name', 'primeadmin');
+//             Log::info("Kontrola role cílového uživatele ID {$targetUser->user_login_id}. Je primeadmin: " . ($isTargetPrimeAdmin ? 'Ano' : 'Ne'));
+//             if ($isTargetPrimeAdmin) {
+//                 $this->logAction($request, 'PasswordChangeFailed', 'UserLogin', 'Pokus o změnu hesla primeadmina', $targetUser->user_login_id);
+//                 return response()->json([
+//                     'message' => 'Heslo uživatele Prime Admin nelze změnit.',
+//                     'error_code' => 'CANNOT_CHANGE_PRIMEADMIN_PASSWORD'
+//                 ], 403);
+//             }
+    
+//             // Změna hesla cílovému uživateli
+//             $newPasswordHash = Hash::make($validatedData['new_password']);
+//             $updateResult = $targetUser->update(['user_password_hash' => $newPasswordHash]);
+//             Log::info('Výsledek DB operace update: ' . ($updateResult ? 'Úspěšné' : 'Neúspěšné'));
+            
+//             $this->logAction($request, 'PasswordChanged', 'UserLogin', 'Heslo bylo úspěšně změněno administrátorem ' . $authenticatedUser->user_login_id, $targetUser->user_login_id);
+    
+//         } else { // Scénář: Uživatel mění své vlastní heslo
+//             Log::info('Scénář: Uživatel mění své vlastní heslo.');
+            
+//             // Kontrola, jestli uživatel není primeadmin
+//             $authenticatedUser->load('roles');
+//             $isAuthPrimeAdmin = $authenticatedUser->roles->contains('role_name', 'primeadmin');
+//             Log::info("Kontrola role přihlášeného uživatele ID {$authenticatedUser->user_login_id}. Je primeadmin: " . ($isAuthPrimeAdmin ? 'Ano' : 'Ne'));
+//             if ($isAuthPrimeAdmin) {
+//                  $this->logAction($request, 'PasswordChangeFailed', 'UserLogin', 'Pokus o změnu vlastního hesla primeadmina', $authenticatedUser->user_login_id);
+//                 return response()->json([
+//                     'message' => 'Heslo uživatele Prime Admin nelze změnit.',
+//                     'error_code' => 'CANNOT_CHANGE_PRIMEADMIN_PASSWORD'
+//                 ], 403);
+//             }
+    
+//             // Ověření starého hesla
+//             $isOldPasswordCorrect = Hash::check($validatedData['old_password'], $authenticatedUser->user_password_hash);
+//             Log::info("Výsledek ověření původního hesla (ID: {$authenticatedUser->user_login_id}): " . ($isOldPasswordCorrect ? 'Úspěšné' : 'Neúspěšné'));
+//             if (!$isOldPasswordCorrect) {
+//                 $this->logAction($request, 'PasswordChangeFailed', 'UserLogin', 'Nesprávné původní heslo při pokusu o změnu vlastního hesla', $authenticatedUser->user_login_id);
+//                 return response()->json([
+//                     'message' => 'Původní heslo je nesprávné.',
+//                     'error_code' => 'WRONG_OLD_PASSWORD'
+//                 ], 403);
+//             }
+    
+//             // Změna hesla
+//             $newPasswordHash = Hash::make($validatedData['new_password']);
+//             $updateResult = $authenticatedUser->update(['user_password_hash' => $newPasswordHash]);
+//             Log::info('Výsledek DB operace update: ' . ($updateResult ? 'Úspěšné' : 'Neúspěšné'));
+    
+//             $this->logAction($request, 'PasswordChanged', 'UserLogin', 'Heslo bylo úspěšně změněno.', $authenticatedUser->user_login_id);
+//         }
+    
+//         return response()->json(['message' => 'Heslo bylo úspěšně změněno.'], 200);
+//     }
+
+     public function changePassword(PasswordChangeRequest $request): JsonResponse
     {
-        $userLogin->load('roles');
-
-        if ($userLogin->roles->contains('role_name', 'primeadmin')) {
-            return response()->json([
-                'message' => 'Heslo uživatele Prime Admin nelze změnit.',
-                'error_code' => 'CANNOT_CHANGE_PRIMEADMIN_PASSWORD'
-            ], 403);
-        }
-
+        // Získáme validovaná data z požadavku
         $validatedData = $request->validated();
-        $newPasswordHash = Hash::make($validatedData['new_password']);
+    
+        // Vytvoříme kopii dat pro logování a odstraníme z ní citlivé údaje
+        $loggableData = $validatedData;
+        unset($loggableData['old_password']);
+        unset($loggableData['new_password']);
+        unset($loggableData['new_password_confirmation']);
+        
+        Log::info('Požadavek na změnu hesla - ověřená data (sanitizovaná):', $loggableData);
+    
+        $authenticatedUser = $request->user();
 
-        if (!Hash::check($validatedData['old_password'], $userLogin->user_password_hash)) {
-            Log::info('Neúspěšná změna hesla. Uživatel ID: ' . $userLogin->user_login_id);
-            return response()->json([
-                'message' => 'Původní heslo je nesprávné.',
-                'error_code' => 'WRONG_OLD_PASSWORD'
-            ], 403);
+        if (!$authenticatedUser) {
+            Log::error('Chyba: Uživatel není přihlášen.');
+            return response()->json(['message' => 'Uživatel není přihlášen.', 'error_code' => 'UNAUTHENTICATED'], 401);
         }
-
-        $userLogin->update([
-            'user_password_hash' => $newPasswordHash,
-        ]);
-
-        Log::info('Heslo bylo úspěšně změněno pro uživatele ID: ' . $userLogin->user_login_id);
-
+        
+        $targetUserId = $validatedData['target_user_id'] ?? null;
+        Log::info('target_user_id: '. $targetUserId);
+    
+        // Scénář: Administrátor mění heslo jinému uživateli
+        if ($targetUserId && (int)$targetUserId !== (int)$authenticatedUser->user_login_id) {
+            Log::info('Scénář: Administrátor mění heslo jinému uživateli.');
+            
+            $targetUser = UserLogin::find($targetUserId);
+    
+            if (!$targetUser) {
+                Log::error("Chyba: Cílový uživatel s ID {$targetUserId} nenalezen.");
+                return response()->json(['message' => 'Cílový uživatel nenalezen.', 'error_code' => 'USER_NOT_FOUND'], 404);
+            }
+            
+            Log::info("Nalezen aktuální uživatel (admin) ID: {$authenticatedUser->user_login_id} a cílový uživatel ID: {$targetUser->user_login_id}.");
+    
+            // Zkontroluje, zda má aktuální uživatel práva admina
+            $authenticatedUser->load('roles');
+            $hasAdminRole = $authenticatedUser->roles->contains('role_name', 'admin') || $authenticatedUser->roles->contains('role_name', 'sysadmin');
+            Log::info("Kontrola oprávnění pro admina ID {$authenticatedUser->user_login_id}. Má oprávnění: " . ($hasAdminRole ? 'Ano' : 'Ne'));
+            if (!$hasAdminRole) {
+                $this->logAction($request, 'PasswordChangeFailed', 'UserLogin', 'Pokus o změnu hesla uživateli bez dostatečných oprávnění', $targetUser->user_login_id);
+                return response()->json(['message' => 'Nemáte dostatečná oprávnění.', 'error_code' => 'INSUFFICIENT_PERMISSIONS'], 403);
+            }
+    
+            // Kontrola hesla admina (přihlášeného uživatele)
+            $isOldPasswordCorrect = Hash::check($validatedData['old_password'], $authenticatedUser->user_password_hash);
+            Log::info("Výsledek ověření hesla admina (ID: {$authenticatedUser->user_login_id}): " . ($isOldPasswordCorrect ? 'Úspěšné' : 'Neúspěšné'));
+            if (!$isOldPasswordCorrect) {
+                $this->logAction($request, 'PasswordChangeFailed', 'UserLogin', 'Nesprávné heslo administrátora při pokusu o změnu hesla uživateli ID: ' . $targetUser->user_login_id, $targetUser->user_login_id);
+                return response()->json([
+                    'message' => 'Heslo administrátora je nesprávné.',
+                    'error_code' => 'WRONG_ADMIN_PASSWORD'
+                ], 403);
+            }
+    
+            // Kontrola, jestli cílový uživatel není primeadmin
+            $targetUser->load('roles');
+            $isTargetPrimeAdmin = $targetUser->roles->contains('role_name', 'primeadmin');
+            Log::info("Kontrola role cílového uživatele ID {$targetUser->user_login_id}. Je primeadmin: " . ($isTargetPrimeAdmin ? 'Ano' : 'Ne'));
+            if ($isTargetPrimeAdmin) {
+                $this->logAction($request, 'PasswordChangeFailed', 'UserLogin', 'Pokus o změnu hesla primeadmina', $targetUser->user_login_id);
+                return response()->json([
+                    'message' => 'Heslo uživatele Prime Admin nelze změnit.',
+                    'error_code' => 'CANNOT_CHANGE_PRIMEADMIN_PASSWORD'
+                ], 403);
+            }
+    
+            // Změna hesla cílovému uživateli
+            $newPasswordHash = Hash::make($validatedData['new_password']);
+            $updateResult = $targetUser->update(['user_password_hash' => $newPasswordHash]);
+            Log::info('Výsledek DB operace update: ' . ($updateResult ? 'Úspěšné' : 'Neúspěšné'));
+            
+            $this->logAction($request, 'PasswordChanged', 'UserLogin', 'Heslo bylo úspěšně změněno administrátorem ' . $authenticatedUser->user_login_id, $targetUser->user_login_id, false);
+    
+        } else { // Scénář: Uživatel mění své vlastní heslo
+            Log::info('Scénář: Uživatel mění své vlastní heslo.');
+            
+            // Kontrola, jestli uživatel není primeadmin
+            $authenticatedUser->load('roles');
+            $isAuthPrimeAdmin = $authenticatedUser->roles->contains('role_name', 'primeadmin');
+            Log::info("Kontrola role přihlášeného uživatele ID {$authenticatedUser->user_login_id}. Je primeadmin: " . ($isAuthPrimeAdmin ? 'Ano' : 'Ne'));
+            if ($isAuthPrimeAdmin) {
+                 $this->logAction($request, 'PasswordChangeFailed', 'UserLogin', 'Pokus o změnu vlastního hesla primeadmina', $authenticatedUser->user_login_id);
+                return response()->json([
+                    'message' => 'Heslo uživatele Prime Admin nelze změnit.',
+                    'error_code' => 'CANNOT_CHANGE_PRIMEADMIN_PASSWORD'
+                ], 403);
+            }
+    
+            // Ověření starého hesla
+            $isOldPasswordCorrect = Hash::check($validatedData['old_password'], $authenticatedUser->user_password_hash);
+            Log::info("Výsledek ověření původního hesla (ID: {$authenticatedUser->user_login_id}): " . ($isOldPasswordCorrect ? 'Úspěšné' : 'Neúspěšné'));
+            if (!$isOldPasswordCorrect) {
+                $this->logAction($request, 'PasswordChangeFailed', 'UserLogin', 'Nesprávné původní heslo při pokusu o změnu vlastního hesla', $authenticatedUser->user_login_id);
+                return response()->json([
+                    'message' => 'Původní heslo je nesprávné.',
+                    'error_code' => 'WRONG_OLD_PASSWORD'
+                ], 403);
+            }
+    
+            // Změna hesla
+            $newPasswordHash = Hash::make($validatedData['new_password']);
+            $updateResult = $authenticatedUser->update(['user_password_hash' => $newPasswordHash]);
+            Log::info('Výsledek DB operace update: ' . ($updateResult ? 'Úspěšné' : 'Neúspěšné'));
+    
+            $this->logAction($request, 'PasswordChanged', 'UserLogin', 'Heslo bylo úspěšně změněno.', $authenticatedUser->user_login_id, false);
+        }
+    
         return response()->json(['message' => 'Heslo bylo úspěšně změněno.'], 200);
     }
 
@@ -367,10 +615,16 @@ class UserLoginController extends Controller
         return response()->json($selectedData);
     }
 
-    protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedEntityId = null)
+    protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedEntityId = null, $create_context_data = true)
     {
         try {
             $user = $request->user();
+            if($create_context_data){
+                $context_data = json_encode($request->all());
+            }
+            else{
+                $context_data = "Context data obsahují citrivá data a nejsou zobracována";     
+            }
 
             BusinessLog::create([
                 'origin' => $request->ip(),
@@ -380,7 +634,7 @@ class UserLoginController extends Controller
                 'affected_entity_type' => 'UserLogin',
                 'affected_entity_id' => $affectedEntityId,
                 'user_login_id' => $user ? $user->user_login_id : null,
-                'context_data' => json_encode($request->all()),
+                'context_data' => $context_data,
             ]);
         } catch (\Exception $e) {
             Log::error('Chyba při logování akce v UserLoginController: ' . $e->getMessage());
