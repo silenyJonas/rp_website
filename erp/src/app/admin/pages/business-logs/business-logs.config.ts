@@ -5,10 +5,10 @@ import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 
 export const BUTTONS: Buttons[] = [
-  { display_name: 'Detaily', isActive: true, type: 'info_button' },
-  { display_name: 'Editovat', isActive: false, type: 'neutral_button' },
-  { display_name: 'Nove button', isActive: false, type: 'neutral_button' },
-  { display_name: 'Smazat', isActive: false, type: 'delete_button' },
+  { display_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
+  { display_name: 'Editovat', isActive: false, type: 'neutral_button', action: '' },
+  { display_name: 'Nove button', isActive: false, type: 'neutral_button', action: '' },
+  { display_name: 'Smazat', isActive: false, type: 'delete_button', action: '' },
 ];
 
 export const FORM_FIELDS: InputDefinition[] = [

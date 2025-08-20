@@ -45,7 +45,9 @@
           (itemDeleted)="handleItemDeleted()"
           (createFormOpened)="handleCreateFormOpened()"
           (editFormOpened)="handleEditFormOpened($event)"
-          (viewDetailsOpened)="handleViewDetails($event)">
+          (viewDetailsOpened)="handleViewDetails($event)"
+          (resetPasswordFormOpened)="handleResetPasswordFormOpened($event)"
+          >
         </app-generic-table>
 
         <app-generic-trash-table *ngIf="showTrashTable"
@@ -153,6 +155,18 @@
   (formSubmitted)="handleFormSubmitted($event)"
   (formCanceled)="onCancelForm()">
 </app-generic-form>
+
+
+<app-generic-form
+  *ngIf="showResetPasswordForm"
+  [inputDefinitions]="resetPasswordFormFields"
+  [formDataToEdit]="selectedItemForEdit"
+  [passwordReset]="true"
+  (formSubmitted)="handleResetPasswordFormSubmitted($event)"
+  (formCanceled)="handleResetPasswordFormClosed()"
+></app-generic-form>
+
+
 
 <app-generic-details 
   *ngIf="showDetails" 

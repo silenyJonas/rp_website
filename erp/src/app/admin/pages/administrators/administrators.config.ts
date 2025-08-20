@@ -3,12 +3,150 @@ import { InputDefinition } from '../../components/generic-form/generic-form.comp
 import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
 import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
+import { Input } from '@angular/core';
 
 export const BUTTONS: Buttons[] = [
-  { display_name: 'Detaily', isActive: true, type: 'info_button' },
-  { display_name: 'Editovat', isActive: true, type: 'neutral_button' },
-  { display_name: 'Nove button', isActive: false, type: 'neutral_button' },
-  { display_name: 'Smazat', isActive: true, type: 'delete_button' },
+  { display_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
+  { display_name: 'Editovat', isActive: true, type: 'neutral_button', action: 'edit' },
+  { display_name: 'Nove button', isActive: false, type: 'neutral_button', action: '' },
+  { display_name: 'Reset Hesla', isActive: true, type: 'neutral_button', action: 'password_reset' },
+  { display_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
+];
+
+// export const RESET_PASSWORD_FORM_FIELDS: InputDefinition[] = [
+// {
+//     column_name: 'current_user_id',
+//     label: '',
+//     placeholder: '',
+//     type: 'text',
+//     required: false,
+//     pattern: '',
+//     errorMessage: '',
+//     editable: true,
+//     show_in_edit: true,
+//     show_in_create: false,
+//     hide_in_edit: false
+//   },
+//     {
+//     column_name: 'target_user_id',
+//     label: '',
+//     placeholder: '',
+//     type: 'text',
+//     required: false,
+//     pattern: '',
+//     errorMessage: '',
+//     editable: true,
+//     show_in_edit: true,
+//     show_in_create: false,
+//     hide_in_edit: false
+//   },
+//     {
+//     column_name: 'old_password',
+//     label: 'Heslo aktuálně přihlášeného uživatele',
+//     placeholder: 'Zadejte Heslo aktuálně přihlášeného uživate',
+//     type: 'password',
+//     required: true,
+//     pattern: '',
+//     errorMessage: 'spatny format',
+//     editable: true,
+//     show_in_edit: true,
+//     show_in_create: true,
+//     hide_in_edit: true
+//       },
+//     {
+//     column_name: 'new_password',
+//     label: 'Nové heslo vybraného uživatele',
+//     placeholder: 'Zadejte nové heslo uživatele',
+//     type: 'password',
+//     required: true,
+//     pattern: '',
+//     errorMessage: 'spatny format',
+//     editable: true,
+//     show_in_edit: true,
+//     show_in_create: true,
+//     hide_in_edit: true
+//       },
+//     {
+//     column_name: 'new_password_confirmation',
+//     label: 'Potvrzení nového hesla vybraného uživatele',
+//     placeholder: 'Zadejte potvrzení nového hesla vybraného uživatele',
+//     type: 'password',
+//     required: true,
+//     pattern: '',
+//     errorMessage: 'spatny format',
+//     editable: true,
+//     show_in_edit: true,
+//     show_in_create: true,
+//     hide_in_edit: true
+//       },
+//     ]
+
+export const RESET_PASSWORD_FORM_FIELDS: InputDefinition[] = [
+  {
+    column_name: 'current_user_id',
+    label: '',
+    placeholder: '',
+    type: 'hidden',
+    required: false,
+    pattern: '',
+    errorMessage: '',
+    editable: false,
+    show_in_edit: true,
+    show_in_create: false,
+    hide_in_edit: false
+  },
+  {
+    column_name: 'target_user_id',
+    label: '',
+    placeholder: '',
+    type: 'hidden',
+    required: false,
+    pattern: '',
+    errorMessage: '',
+    editable: false,
+    show_in_edit: true,
+    show_in_create: false,
+    hide_in_edit: false
+  },
+  {
+    column_name: 'old_password',
+    label: 'Heslo aktuálně přihlášeného uživatele',
+    placeholder: 'Zadejte Heslo aktuálně přihlášeného uživate',
+    type: 'password',
+    required: true,
+    pattern: '',
+    errorMessage: 'spatny format',
+    editable: true,
+    show_in_edit: true,
+    show_in_create: true,
+    hide_in_edit: true
+  },
+  {
+    column_name: 'new_password',
+    label: 'Nové heslo vybraného uživatele',
+    placeholder: 'Zadejte nové heslo uživatele',
+    type: 'password',
+    required: true,
+    pattern: '',
+    errorMessage: 'spatny format',
+    editable: true,
+    show_in_edit: true,
+    show_in_create: true,
+    hide_in_edit: true
+  },
+  {
+    column_name: 'new_password_confirmation',
+    label: 'Potvrzení nového hesla vybraného uživatele',
+    placeholder: 'Zadejte potvrzení nového hesla vybraného uživatele',
+    type: 'password',
+    required: true,
+    pattern: '',
+    errorMessage: 'spatny format',
+    editable: true,
+    show_in_edit: true,
+    show_in_create: true,
+    hide_in_edit: true
+  },
 ];
 
 export const FORM_FIELDS: InputDefinition[] = [

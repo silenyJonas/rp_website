@@ -307,7 +307,9 @@ input[type="checkbox"][disabled] + label {
   margin-top: 5px;
   padding-left: 2px;
 }
-
+.hidden-field {
+  display: none;
+}
 /* Zajištění správné responzivity */
 @media (max-width: 600px) {
   .form-columns {

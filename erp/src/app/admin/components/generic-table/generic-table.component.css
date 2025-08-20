@@ -53,7 +53,7 @@ th, td {
 /* Styly pro hlavičky sloupců s tlačítky */
 th.button-header {
   text-align: center;
-  width: 78px; /* Pevná šířka sloupce s tlačítky */
+  width: 100px; /* Pevná šířka sloupce s tlačítky */
   overflow: visible; /* Aby se nápisy v hlavičce nezkracovaly */
   white-space: normal;
   text-overflow: clip;

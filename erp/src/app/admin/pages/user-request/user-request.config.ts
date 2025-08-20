@@ -7,10 +7,10 @@ import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 
 export const USER_REQUEST_BUTTONS: Buttons[] = [
-  { display_name: 'Detaily', isActive: true, type: 'info_button' },
-  { display_name: 'Editovat', isActive: true, type: 'neutral_button' },
-  { display_name: 'Nove button', isActive: false, type: 'neutral_button' },
-  { display_name: 'Smazat', isActive: true, type: 'delete_button' },
+  { display_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
+  { display_name: 'Editovat', isActive: true, type: 'neutral_button', action: 'edit' },
+  { display_name: 'Nove button', isActive: false, type: 'neutral_button' , action: ''},
+  { display_name: 'Smazat', isActive: true, type: 'delete_button' , action: 'delete'},
 ];
 
 export const USER_REQUEST_FORM_FIELDS: InputDefinition[] = [
