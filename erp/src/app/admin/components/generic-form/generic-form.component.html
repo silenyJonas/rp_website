@@ -1,117 +1,12 @@
-<!-- 
-<div class="popup-overlay" (mousedown)="onOverlayClick($event)">
-  <div class="form-container" (click)="$event.stopPropagation()">
-    <div class="form-header">
-      <h2>{{ headerText }}</h2>
-      <button class="close-button" (click)="onCancel()">
-        &times;
-      </button>
-    </div>
-
-    <form #genericForm="ngForm" (ngSubmit)="onSubmit(genericForm, $event)" novalidate>
-      <div class="form-columns">
-        <div *ngFor="let input of visibleInputDefinitions" class="form-group">
-          <label [for]="input.column_name">
-            {{ input.label }}
-            <span *ngIf="input.required" class="required-star">*</span>
-          </label>
-
-          <ng-container [ngSwitch]="input.type">
-            <input *ngSwitchCase="'text'" [type]="input.type" [id]="input.column_name" [placeholder]="input.placeholder"
-              [required]="!!input.required" [pattern]="input.pattern || ''" [name]="input.column_name"
-              [(ngModel)]="formData[input.column_name]" class="form-control" [disabled]="input.editable === false" />
-
-            <input *ngSwitchCase="'email'" [type]="input.type" [id]="input.column_name" [placeholder]="input.placeholder"
-              [required]="!!input.required" [pattern]="input.pattern || ''" [name]="input.column_name"
-              [(ngModel)]="formData[input.column_name]" class="form-control" [disabled]="input.editable === false" />
-
-            <input *ngSwitchCase="'tel'" [type]="input.type" [id]="input.column_name" [placeholder]="input.placeholder"
-              [required]="!!input.required" [pattern]="input.pattern || ''" [name]="input.column_name"
-              [(ngModel)]="formData[input.column_name]" class="form-control" [disabled]="input.editable === false" />
-
-            <input *ngSwitchCase="'password'" [type]="input.type" [id]="input.column_name" [placeholder]="input.placeholder"
-              [required]="!!input.required" [pattern]="input.pattern || ''" [name]="input.column_name"
-              [(ngModel)]="formData[input.column_name]" class="form-control" [disabled]="input.editable === false" />
-
-            <input *ngSwitchCase="'color'" [type]="input.type" [id]="input.column_name" [required]="!!input.required"
-              [name]="input.column_name" [(ngModel)]="formData[input.column_name]" class="form-control" [disabled]="input.editable === false" />
-
-            <input *ngSwitchCase="'number'" type="number" [id]="input.column_name" [placeholder]="input.placeholder"
-              [required]="!!input.required" [min]="input.min || null" [max]="input.max || null"
-              [name]="input.column_name" [(ngModel)]="formData[input.column_name]" class="form-control" [disabled]="input.editable === false" />
-
-            <select *ngSwitchCase="'select'" [id]="input.column_name" [required]="!!input.required" [name]="input.column_name"
-              [(ngModel)]="formData[input.column_name]" class="form-control"
-              [disabled]="(input.editable === false) || (input.column_name === 'role_id' && isUserRoleLocked)"
-              [class.locked-role]="input.column_name === 'role_id' && isUserRoleLocked">
-              <option value="" disabled selected>-- Vyberte --</option>
-              <option *ngFor="let option of input.options" [value]="option.value">
-                {{ option.label }}
-              </option>
-            </select>
-            
-            <div *ngIf="input.column_name === 'role_id' && isUserRoleLocked" class="locked-role-message">
-              Vlastní roli nelze editovat.
-            </div>
-
-            <input *ngSwitchCase="'date'" type="date" [id]="input.column_name" [required]="!!input.required"
-              [name]="input.column_name" [(ngModel)]="formData[input.column_name]" class="form-control" [disabled]="input.editable === false" />
-
-            <input *ngSwitchCase="'datetime'" type="datetime-local" [id]="input.column_name" [required]="!!input.required"
-              [name]="input.column_name" [(ngModel)]="formData[input.column_name]" class="form-control" [disabled]="input.editable === false" />
-
-            <div *ngSwitchCase="'radio'" class="radio-group">
-              <label *ngFor="let option of input.options" class="radio-option">
-                <input type="radio" [name]="input.column_name" [value]="option.value" [required]="!!input.required"
-                  [(ngModel)]="formData[input.column_name]" [disabled]="input.editable === false" />
-                {{ option.label }}
-              </label>
-            </div>
-
-            <textarea *ngSwitchCase="'textarea'" [id]="input.column_name" [placeholder]="input.placeholder"
-              [required]="!!input.required" [pattern]="input.pattern || ''" [name]="input.column_name"
-              [(ngModel)]="formData[input.column_name]" class="form-control" [disabled]="input.editable === false"></textarea>
-
-            <div *ngSwitchCase="'checkbox'" class="checkbox-container">
-              <input type="checkbox" [id]="input.column_name" [required]="!!input.required" [name]="input.column_name"
-                [(ngModel)]="formData[input.column_name]" class="form-control" [disabled]="input.editable === false" />
-            </div>
-
-            <div *ngSwitchCase="'range'" class="slider-container">
-              <input type="range" [id]="input.column_name" [min]="input.min" [max]="input.max" [step]="input.step || 1"
-                [(ngModel)]="formData[input.column_name]" (input)="onSliderChange(input)" [name]="input.column_name"
-                class="form-control slider-control" [disabled]="input.editable === false" />
-              <span class="slider-value">
-                {{ formData[input.column_name] || 50 }} %
-              </span>
-            </div>
-          </ng-container>
-
-          <div *ngIf="getControl(input.column_name)?.invalid && (getControl(input.column_name)?.dirty || getControl(input.column_name)?.touched)"
-            class="validation-message">
-            {{ getValidationErrorMessage(getControl(input.column_name), input) }}
-          </div>
-        </div>
-      </div>
-
-      <div class="required-note">
-        <span class="required-star">*</span> Povinná pole
-      </div>
-
-      <div class="form-actions">
-        <button type="button" class="neutral_button" (click)="onCancel()">Zrušit</button>
-        <button type="submit" class="submit-button" [disabled]="isSubmitting || genericForm.invalid">
-          {{ isSubmitting ? 'Odesílání...' : 'Potvrdit' }}
-        </button>
-      </div>
-    </form>
-  </div>
-</div>  -->
 
 <div class="popup-overlay" (mousedown)="onOverlayClick($event)">
   <div class="form-container" (click)="$event.stopPropagation()">
     <div class="form-header">
-      <h2>{{ headerText }}</h2>
+     
+      <h2 *ngIf="passwordReset == false">{{ headerText }}</h2>
+       <h2 *ngIf="passwordReset == true">
+        Resetovat heslo: {{formDataToEdit.user_email}}
+      </h2>
       <button class="close-button" (click)="onCancel()">
         &times;
       </button>

@@ -86,3 +86,8 @@
   background-color: #28a745; /* Zelená */
   color: white;
 }
+
+/* Nové pravidlo pro zablokování scrollu */
+.no-scroll {
+  overflow: hidden;
+}

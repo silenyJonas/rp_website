@@ -190,6 +190,7 @@ export const FORM_FIELDS: InputDefinition[] = [
     show_in_create: true
   }
 ];
+
 export const STATUS_OPTIONS: string[] = ['Nově zadané', 'Zpracovává se', 'Dokončeno', 'Zrušeno'];
 export const PRIORITY_OPTIONS: string[] = ['Nízká', 'Neutrální', 'Vysoká'];
 

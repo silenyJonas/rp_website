@@ -3,7 +3,7 @@
   overflow-x: auto; /* Zajistí horizontální scroll, pokud je tabulka širší než obrazovka */
   border: 1px solid #dee2e6;
   border-radius: 6px;
-  width: calc(100vw - 355.55px);
+  /* width: calc(100vw - 355.55px); */
 }
 .toolbar{
   margin-bottom: 1rem;
