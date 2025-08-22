@@ -143,18 +143,21 @@
     "validation_min_suffix": ".",
     "validation_max_prefix": "Maximálna hodnota je",
     "validation_max_suffix": ".",
-    "validation_invalid_value": "Neplatná hodnota."
+    "validation_invalid_value": "Neplatná hodnota.",
+    "consent": "Súhlasím so spracovaním osobných údajov",
+    "privacy_policy_link": "Zásady ochrany osobných údajov"
   },
    "academy": {
     "form_closed_title": "Kapacita je naplnená",
     "form_closed_message": "Ďakujeme za váš záujem o naše IT krúžky. Momentálne máme plno a nové prihlášky dočasne neprijímame.",
     "header": "Naša Akadémia",
+    "second_header": "Krúžky pre mládež od 9 rokov",
     "intro_text": "Objavte naše kurzy programovania a posuňte svoje zručnosti na novú úroveň.",
     "common": {
       "duration_header": "Doba trvania",
       "themes_header": "Hlavné témy",
       "new_things_header": "Čo sa naučíte",
-      "time_duration": "8 mesiacov",
+      "time_duration": "8 mesiacov (1x týždenne)",
       "tuesday_time": "Utorok: 16:00 - 17:30",
       "thursday_time": "Štvrtok: 16:00 - 17:30",
       "tuesday_time_desktop": "Utorok: 18:00 - 19:30",
