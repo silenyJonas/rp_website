@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
   mail_icon: string = 'assets/images/icons/mail.png';
   send_icon: string = 'assets/images/icons/send.png';
 
-  eshop_default: string = 'assets/images/product_images/eshop_default.png';
+  eshop_default: string = 'assets/images/product_images/admin_panel.png';
   survey_engine: string = 'assets/images/product_images/survey_engine.png';
   survey_solver: string = 'assets/images/product_images/survey_solver.png';
   

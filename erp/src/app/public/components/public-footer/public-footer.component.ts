@@ -25,7 +25,7 @@ interface FooterNavLink {
 export class PublicFooterComponent implements OnInit, OnDestroy {
   currentYear: number;
 
-  in_link: string = 'assets/images/icons/in.png';
+  tt_link: string = 'assets/images/icons/tik-tok.png';
   ig_link: string = 'assets/images/icons/ig.png';
   fb_link: string = 'assets/images/icons/fb.png';
 

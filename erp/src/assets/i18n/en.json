@@ -143,7 +143,9 @@
     "validation_min_suffix": ".",
     "validation_max_prefix": "Maximum value is",
     "validation_max_suffix": ".",
-    "validation_invalid_value": "Invalid value."
+    "validation_invalid_value": "Invalid value.",
+    "consent": "I agree to the processing of personal data",
+    "privacy_policy_link": "Privacy Policy"
   },
     "academy": {
       "form_closed_title": "Capacity Full",

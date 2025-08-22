@@ -1,6 +1,6 @@
+
 <div class="product-card-list-container">
   <div *ngFor="let product of products" class="product-card" (click)="openPopup(product)">
-
     <div class="product-info">
       <h3 class="product-name">{{ product.name }}</h3>
       <p class="product-short-description">{{ product.shortDescription }}</p>
@@ -26,63 +26,54 @@
         <div class="popup-product-price">{{ selectedProduct?.price }}</div>
       </div>
     </div>
+
     <div class="popup-scrollable-body">
-      <div *ngIf="selectedProduct?.popupType === 'eshop-app'" class="popup-details-section popup-type-eshop">
-        <h3>Podrobnosti o E-shop aplikaci</h3>
-        <p>{{ selectedProduct?.details?.longDescription }}</p>
+      
+      <div *ngIf="selectedProduct?.popupType === 'survey-software'" class="popup-details-section popup-type-survey-software">
+        <h3>Podrobnosti</h3>
+        <p [innerHTML]="selectedProduct?.details?.longDescription"></p>
         <h4>Klíčové vlastnosti:</h4>
         <ul>
           <li *ngFor="let feature of selectedProduct?.details?.features">{{ feature }}</li>
         </ul>
         <p>Technologie: <strong>{{ selectedProduct?.details?.technologyStack }}</strong></p>
-        <img [src]="selectedProduct?.details?.screenshotUrl" alt="Screenshot E-shopu" class="popup-detail-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/333333/FFFFFF?text=Obrázek+není+dostupný';" />
+        <img [src]="selectedProduct?.details?.screenshotUrl" alt="Snímek dotazníkového softwaru" class="popup-detail-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/333333/FFFFFF?text=Obrázek+není+dostupný';" />
         <p>Podpora: {{ selectedProduct?.details?.supportInfo }}</p>
       </div>
 
-      <div *ngIf="selectedProduct?.popupType === 'task-manager'" class="popup-details-section popup-type-task-manager">
-        <h3>Specifikace Správce úkolů</h3>
-        <p>Kategorie: <strong>{{ selectedProduct?.details?.category }}</strong></p>
-        <p>Aktuální verze: <strong>{{ selectedProduct?.details?.version }}</strong></p>
-        <p>Platformy: <strong>{{ selectedProduct?.details?.platforms }}</strong></p>
-        <p>{{ selectedProduct?.details?.notes }}</p>
-        <h4>Funkce:</h4>
+      <div *ngIf="selectedProduct?.popupType === 'user-management-system'" class="popup-details-section popup-type-user-management">
+        <h3>Podrobnosti</h3>
+        <p [innerHTML]="selectedProduct?.details?.longDescription"></p>
+        <h4>Hlavní funkce:</h4>
         <ul>
-          <li *ngFor="let func of selectedProduct?.details?.functions">{{ func }}</li>
+          <li *ngFor="let feature of selectedProduct?.details?.features">{{ feature }}</li>
         </ul>
+        <p>Technologie: <strong>{{ selectedProduct?.details?.technologyStack }}</strong></p>
+        <img [src]="selectedProduct?.details?.screenshotUrl" alt="Snímek systému správy" class="popup-detail-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/333333/FFFFFF?text=Obrázek+není+dostupný';" />
+        <p>Podpora: {{ selectedProduct?.details?.supportInfo }}</p>
       </div>
-
-      <div *ngIf="selectedProduct?.popupType === 'space-game'" class="popup-details-section popup-type-space-game">
-        <h3>O hře Space Invaders</h3>
-        <p>{{ selectedProduct?.details?.gameStory }}</p>
-        <p>Žánr: <strong>{{ selectedProduct?.details?.genre }}</strong></p>
-        <p>Dostupné na: <strong>{{ selectedProduct?.details?.availableOn }}</strong></p>
-        <h4>Recenze:</h4>
-        <div *ngFor="let review of selectedProduct?.details?.reviews" class="review-item">
-          <strong>{{ review.author }}</strong> (Hodnocení: {{ review.rating }}/5)
-          <p>{{ review.comment }}</p>
-        </div>
-        <p>Průměrné hodnocení: {{ selectedProduct?.details?.averageRating }}</p>
-      </div>
-
-      <div *ngIf="selectedProduct?.popupType === 'ai-assistant'" class="popup-details-section popup-type-ai-assistant">
-        <h3>Podrobnosti o AI asistentovi</h3>
-        <p>{{ selectedProduct?.details?.aiCapabilities }}</p>
-        <h4>Využití:</h4>
+      
+      <div *ngIf="selectedProduct?.popupType === 'analytics-tool'" class="popup-details-section popup-type-analytics-tool">
+        <h3>Podrobnosti</h3>
+        <p [innerHTML]="selectedProduct?.details?.longDescription"></p>
+        <h4>Klíčové vlastnosti:</h4>
         <ul>
-          <li *ngFor="let useCase of selectedProduct?.details?.useCases">{{ useCase }}</li>
+          <li *ngFor="let feature of selectedProduct?.details?.features">{{ feature }}</li>
         </ul>
-        <p>Přizpůsobení: <strong>{{ selectedProduct?.details?.customization }}</strong></p>
+        <p>Technologie: <strong>{{ selectedProduct?.details?.technologyStack }}</strong></p>
+        <img [src]="selectedProduct?.details?.screenshotUrl" alt="Snímek analytického nástroje" class="popup-detail-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/333333/FFFFFF?text=Obrázek+není+dostupný';" />
+        <p>Podpora: {{ selectedProduct?.details?.supportInfo }}</p>
       </div>
 
-      <div *ngIf="!selectedProduct?.popupType || (selectedProduct?.popupType !== 'eshop-app' && selectedProduct?.popupType !== 'task-manager' && selectedProduct?.popupType !== 'space-game' && selectedProduct?.popupType !== 'ai-assistant')" class="popup-details-section popup-type-default">
+      <div *ngIf="!selectedProduct?.popupType || (selectedProduct?.popupType !== 'survey-software' && selectedProduct?.popupType !== 'user-management-system' && selectedProduct?.popupType !== 'analytics-tool')" class="popup-details-section popup-type-default">
         <h3>Obecné detaily</h3>
-        <p>{{ selectedProduct?.details?.defaultLongDescription || selectedProduct?.shortDescription }}</p>
+        <p>{{ selectedProduct?.details?.longDescription || selectedProduct?.shortDescription }}</p>
         <p>Pro více informací o tomto produktu nás prosím kontaktujte přímo.</p>
       </div>
 
       <div class="popup-footer">
         <button class="popup-action-button" (click)="closePopup()">Zavřít</button>
-        </div>
+      </div>
     </div>
-    </div>
+  </div>
 </div>

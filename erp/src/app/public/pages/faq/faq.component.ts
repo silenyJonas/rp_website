@@ -69,11 +69,6 @@ export class FaqComponent implements OnInit, OnDestroy {
 
   // Metoda pro přepínání FAQ položek (zůstává stejná)
   toggleFaq(item: FaqItem): void {
-    this.faqItems.forEach(faqItem => {
-      if (faqItem !== item && faqItem.isActive) {
-        faqItem.isActive = false;
-      }
-    });
     item.isActive = !item.isActive;
   }
 

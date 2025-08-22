@@ -143,7 +143,9 @@
     "validation_min_suffix": ".",
     "validation_max_prefix": "Maximálna hodnota je",
     "validation_max_suffix": ".",
-    "validation_invalid_value": "Neplatná hodnota."
+    "validation_invalid_value": "Neplatná hodnota.",
+    "consent": "Súhlasím so spracovaním osobných údajov",
+    "privacy_policy_link": "Zásady ochrany osobných údajov"
   },
    "academy": {
     "form_closed_title": "Kapacita je naplnená",

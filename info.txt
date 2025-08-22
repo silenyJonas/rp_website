@@ -3,15 +3,15 @@
 480
 
 public:
-faq -
-reference -
-domu -
-sluzby -
-obchod -
-akademie -
+faq - HOTOVO
+reference - HOTOVO
+domu - HOTOVO
+sluzby - HOTOVO
+obchod - HOTOVO
+akademie - HOTOVO
 ochrana osobnich udaju -
 obchodni podminky -
-
+footer - HOTOVO
 
 
 

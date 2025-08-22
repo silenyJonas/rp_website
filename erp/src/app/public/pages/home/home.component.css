@@ -9,7 +9,9 @@ body {
     margin-top: -75px;
 }
 /* UVODNI HEADER */
-
+.m-b-25{
+    margin-bottom: 25px;
+}
 .header-0{
 width: 100vw;
 display: flex;

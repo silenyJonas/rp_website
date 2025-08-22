@@ -128,7 +128,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
         { name: 'Java', path: 'assets/images/services-img/java.png' },
         { name: 'Python', path: 'assets/images/services-img/py.png' },
         { name: 'SQLite', path: 'assets/images/services-img/sqlite.png' },
-        { name: 'PostgreSQL', path: 'assets/images/services/postgresql.png' },
+        { name: 'PostgreSQL', path: 'assets/images/services-img/postgresql.png' },
     ];
     mobileTechImages: any[] = [
         { name: 'C#', path: 'assets/images/services-img/csharp.png' },
