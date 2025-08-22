@@ -1,35 +1,38 @@
 
-// import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+// import {
+//   Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy,
+//   ChangeDetectorRef, OnChanges, SimpleChanges
+// } from '@angular/core';
 // import { CommonModule } from '@angular/common';
 // import { FormsModule, NgForm } from '@angular/forms';
-// import { FormFieldConfig, FormFieldOption } from '../../../shared/interfaces/form-field-config'; // Upravené rozhraní
-// import { LocalizationService } from '../../services/localization.service'; // Import LocalizationService
+// import { FormFieldConfig, FormFieldOption } from '../../../shared/interfaces/form-field-config';
+// import { LocalizationService } from '../../services/localization.service';
 // import { Subject } from 'rxjs';
 // import { takeUntil } from 'rxjs/operators';
-
+// import { RouterModule } from '@angular/router';
 // @Component({
 //   selector: 'app-generic-form',
 //   standalone: true,
 //   imports: [
 //     CommonModule,
-//     FormsModule
+//     FormsModule,
+//     RouterModule
 //   ],
 //   templateUrl: './generic-form.component.html',
 //   styleUrl: './generic-form.component.css',
 //   changeDetection: ChangeDetectionStrategy.OnPush
 // })
-// export class GenericFormComponent implements OnInit, OnDestroy {
-
-//   // Texty předávané z rodičovské komponenty (předpokládáme, že rodič je přeloží)
+// export class GenericFormComponent implements OnInit, OnDestroy, OnChanges {
 //   @Input() form_header: string = '';
 //   @Input() form_description: string = '';
 //   @Input() form_button: string = '';
-
-//   // Konfigurace formuláře s potenciálními klíči pro překlad
 //   @Input() formConfig: FormFieldConfig[] = [];
-
 //   @Output() formSubmitted = new EventEmitter<any>();
 //   @Output() formReset = new EventEmitter<void>();
+
+//   @Input() isOpen: boolean = true;
+//   @Input() closedMessage: string = '';
+//   @Input() closedTitle: string = '';
 
 //   formData: { [key: string]: any } = {};
 //   @ViewChild('dynamicForm') dynamicForm!: NgForm;
@@ -38,17 +41,18 @@
 //   errorMessage: string | null = null;
 //   successMessage: string | null = null;
 
-//   // --- Proměnné pro interní přeložené texty ---
 //   private destroy$ = new Subject<void>();
 //   internal_success_title: string = '';
 //   internal_success_message: string = '';
 //   internal_reset_button_text: string = '';
-//   internal_sending_text: string = ''; // Text "Odesílám..."
+//   internal_sending_text: string = '';
 //   internal_error_submit_generic: string = '';
 //   internal_error_validation_generic: string = '';
-//   internal_select_default_option: string = ''; // Text "Vyberte..."
+//   internal_select_default_option: string = '';
+//   internal_closed_title: string = '';
 
-//   // Chybové zprávy pro validaci
+//   closed_form_icon_link: string = 'assets/images/icons/closed-form-icon.png';
+
 //   validation_required: string = '';
 //   validation_email: string = '';
 //   validation_pattern: string = '';
@@ -62,21 +66,25 @@
 //   validation_max_suffix: string = '';
 //   validation_invalid_value: string = '';
 
-//   // Přeložená konfigurace formuláře pro použití v HTML
 //   translatedFormConfig: FormFieldConfig[] = [];
 
 //   constructor(private cd: ChangeDetectorRef, private localizationService: LocalizationService) {}
 
 //   ngOnInit(): void {
-//     // Přihlásíme se k odběru změn překladů
 //     this.localizationService.currentTranslations$
 //       .pipe(takeUntil(this.destroy$))
 //       .subscribe(() => {
 //         this.loadTranslatedTexts();
-//         this.translateFormConfig(); // Přeložíme konfiguraci formuláře
-//         this.initializeFormData(); // Znovu inicializujeme data formuláře po překladu
-//         this.cd.detectChanges(); // Vynutit detekci změn po aktualizaci textů
+//         this.translateFormConfig();
+//         this.initializeFormData();
+//         this.cd.detectChanges();
 //       });
+//   }
+
+//   ngOnChanges(changes: SimpleChanges): void {
+//       if (changes['isOpen'] || changes['closedMessage']) {
+//           this.cd.detectChanges();
+//       }
 //   }
 
 //   ngOnDestroy(): void {
@@ -92,6 +100,7 @@
 //     this.internal_error_submit_generic = this.localizationService.getText('form.error_submit_generic');
 //     this.internal_error_validation_generic = this.localizationService.getText('form.error_validation_generic');
 //     this.internal_select_default_option = this.localizationService.getText('form.select_default_option');
+//     this.internal_closed_title = this.localizationService.getText('form.closed_title');
 
 //     this.validation_required = this.localizationService.getText('form.validation_required');
 //     this.validation_email = this.localizationService.getText('form.validation_email');
@@ -107,11 +116,9 @@
 //     this.validation_invalid_value = this.localizationService.getText('form.validation_invalid_value');
 //   }
 
-//   // Pomocná metoda pro překlad formConfig
 //   private translateFormConfig(): void {
 //     this.translatedFormConfig = this.formConfig.map(field => {
 //       const translatedField: FormFieldConfig = { ...field };
-
 //       if (field.isLocalizedLabel) {
 //         translatedField.label = this.localizationService.getText(field.label);
 //       }
@@ -133,16 +140,19 @@
 
 //   private initializeFormData(): void {
 //     this.formData = {};
-//     // Použijeme translatedFormConfig pro inicializaci
 //     this.translatedFormConfig.forEach(field => {
 //       this.formData[field.name] = field.value ?? null;
 //       if (field.type === 'checkbox' && field.value === undefined) {
 //         this.formData[field.name] = false;
 //       }
 //     });
+//     // Initialize the new checkbox to false
+//     this.formData['dataProcessingAgreement'] = false;
 //   }
 
 //   onSubmit(): void {
+//     if (!this.isOpen) return;
+
 //     if (this.dynamicForm.valid) {
 //       this.isLoading = true;
 //       this.errorMessage = null;
@@ -152,19 +162,19 @@
 
 //       setTimeout(() => {
 //         this.isLoading = false;
-//         const success = Math.random() > 0.2; // Simulace úspěchu/chyby
+//         const success = Math.random() > 0.2;
 
 //         if (success) {
-//           this.successMessage = this.internal_success_message; // Použít přeložený text
+//           this.successMessage = this.internal_success_message;
 //           this.formSubmitted.emit(this.formData);
-//           this.initializeFormData(); // Vyčistí data pro příští zobrazení formuláře
+//           this.initializeFormData();
 //         } else {
-//           this.errorMessage = this.internal_error_submit_generic; // Použít přeložený text
+//           this.errorMessage = this.internal_error_submit_generic;
 //         }
 //         this.cd.detectChanges();
 //       }, 1500);
 //     } else {
-//       this.errorMessage = this.internal_error_validation_generic; // Použít přeložený text
+//       this.errorMessage = this.internal_error_validation_generic;
 //       this.cd.detectChanges();
 //     }
 //   }
@@ -209,7 +219,6 @@
 //     }
 //     return null;
 //   }
-// }
 import {
   Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy,
   ChangeDetectorRef, OnChanges, SimpleChanges
@@ -220,13 +229,15 @@ import { FormFieldConfig, FormFieldOption } from '../../../shared/interfaces/for
 import { LocalizationService } from '../../services/localization.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { RouterModule } from '@angular/router'; // Důležité: Přidán import RouterModule
 
 @Component({
   selector: 'app-generic-form',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    RouterModule // Důležité: Přidán RouterModule do imports
   ],
   templateUrl: './generic-form.component.html',
   styleUrl: './generic-form.component.css',
@@ -250,7 +261,7 @@ export class GenericFormComponent implements OnInit, OnDestroy, OnChanges {
   isLoading: boolean = false;
   errorMessage: string | null = null;
   successMessage: string | null = null;
-  
+
   private destroy$ = new Subject<void>();
   internal_success_title: string = '';
   internal_success_message: string = '';
@@ -260,9 +271,9 @@ export class GenericFormComponent implements OnInit, OnDestroy, OnChanges {
   internal_error_validation_generic: string = '';
   internal_select_default_option: string = '';
   internal_closed_title: string = '';
-  
+
   closed_form_icon_link: string = 'assets/images/icons/closed-form-icon.png';
-  
+
   validation_required: string = '';
   validation_email: string = '';
   validation_pattern: string = '';
@@ -275,7 +286,7 @@ export class GenericFormComponent implements OnInit, OnDestroy, OnChanges {
   validation_max_prefix: string = '';
   validation_max_suffix: string = '';
   validation_invalid_value: string = '';
-  
+
   translatedFormConfig: FormFieldConfig[] = [];
 
   constructor(private cd: ChangeDetectorRef, private localizationService: LocalizationService) {}
@@ -356,6 +367,7 @@ export class GenericFormComponent implements OnInit, OnDestroy, OnChanges {
         this.formData[field.name] = false;
       }
     });
+    this.formData['dataProcessingAgreement'] = false;
   }
 
   onSubmit(): void {
@@ -428,3 +440,4 @@ export class GenericFormComponent implements OnInit, OnDestroy, OnChanges {
     return null;
   }
 }
+// }

@@ -3,13 +3,17 @@
 480
 
 public:
-upravit texty + preklady
+faq -
+reference -
+domu -
+sluzby -
+obchod -
+akademie -
+ochrana osobnich udaju -
+obchodni podminky -
 
-admin:
-dodelat:
+
 
 
 primeadmin@primeadmin.cz
 123456Ab
-
-musi to porovnavat heslo uzivatele s primo prihlasenym uzivatelem a pak to da nove heslo k id jinemu uzivateli

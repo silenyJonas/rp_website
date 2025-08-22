@@ -157,17 +157,21 @@
 }
 .radio-group, .checkbox-group {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
     margin-top: 10px;
 }
 .radio-option, .checkbox-group label {
     display: flex;
     align-items: center;
     color: #d0d0d0;
+    display: inline;       /* nechá text a odkaz v jednom řádku */
+  white-space: normal;   /* dovolí zalamování do nového řádku */
+  word-break: break-word; /* zalomí dlouhý odkaz, pokud by přesahoval */
 }
+.checkbox-group a{}
+
 .radio-option input[type="radio"], .checkbox-group input[type="checkbox"] {
     margin-right: 10px;
+    margin-bottom: 10px;
 }
 .validation-error {
     color: #ff4d4d;
