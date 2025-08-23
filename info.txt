@@ -2,18 +2,8 @@
 905
 480
 
-public:
-faq - HOTOVO
-reference - HOTOVO
-domu - HOTOVO
-sluzby - HOTOVO
-obchod - HOTOVO
-akademie - HOTOVO
-ochrana osobnich udaju -
-obchodni podminky -
-footer - HOTOVO
-
-
+UPRAVIT LOGO V ZALOZCE A POJMENOVANI STRANEK
+POPUP PRODUKTU DETAIL UDELAT SIRSY V MOBILNIM ZOBRAZENI
 
 primeadmin@primeadmin.cz
 123456Ab

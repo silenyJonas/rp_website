@@ -772,7 +772,29 @@
     "form_phone_placeholder": "např. +420 123 456 789",
 
     "form_description_label": "Stručný popis zadání",
-    "form_description_placeholder": "Popište prosím váš projekt nebo dotaz..."
+    "form_description_placeholder": "Popište prosím váš projekt nebo dotaz...",
+
+    "select_us_header": "Proč si vybrat zrovna nás",
+    "select_us": {
+  "item_1": {
+    "header": "Individuální přístup",
+    "bullet_1": "Každý projekt stavíme od základů podle skutečných potřeb klienta, ne podle šablon.",
+    "bullet_2": "Propojujeme technické know-how s porozuměním byznysu vašeho odvětví.",
+    "bullet_3": "Nejsme dodavatel, ale partner – hledáme řešení, která dávají smysl i dlouhodobě."
+  },
+  "item_2": {
+    "header": "Moderní technologie",
+    "bullet_1": "Používáme moderní frameworky a nástroje, ale vždy jen tam, kde mají skutečný přínos.",
+    "bullet_2": "Umíme kombinovat web, desktop, mobil i AI do jednoho funkčního ekosystému.",
+    "bullet_3": "Výsledkem není jen software, ale platforma připravená růst s vaším byznysem."
+  },
+  "item_3": {
+    "header": "Komplexní řešení",
+    "bullet_1": "Od prvního nápadu po nasazení a dlouhodobou údržbu – vše zvládneme pod jednou střechou.",
+    "bullet_2": "Každý projekt stavíme tak, aby byl okamžitě použitelný a přinášel výsledky.",
+    "bullet_3": "Naše řešení fungují v praxi – a dokazují to klienti, kteří s námi spolupracují roky."
+  }
+}
 
   }
 }

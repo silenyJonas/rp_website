@@ -41,6 +41,8 @@ export class HomeComponent implements OnInit {
   survey_engine: string = 'assets/images/product_images/survey_engine.png';
   survey_solver: string = 'assets/images/product_images/survey_solver.png';
   
+  check_mark: string = 'assets/images/icons/check.png';
+
   py: string = 'assets/images/icons/curses/py.png';
   scratch: string = 'assets/images/icons/curses/scratch.png';
   csharp: string = 'assets/images/icons/curses/csharp.png';
@@ -122,6 +124,23 @@ export class HomeComponent implements OnInit {
   academyButtonText: string = '';
 
 
+  selectUsHeader: string = '';
+  selectUsItem1Header: string = '';
+  selectUsItem1Bullet1: string = '';
+  selectUsItem1Bullet2: string = '';
+  selectUsItem1Bullet3: string = '';
+
+  selectUsItem2Header: string = '';
+  selectUsItem2Bullet1: string = '';
+  selectUsItem2Bullet2: string = '';
+  selectUsItem2Bullet3: string = '';
+
+  selectUsItem3Header: string = '';
+  selectUsItem3Bullet1: string = '';
+  selectUsItem3Bullet2: string = '';
+  selectUsItem3Bullet3: string = '';
+
+
   contactFormConfig: FormFieldConfig[] = [];
 
   private destroy$ = new Subject<void>(); // Pro správné odhlášení z odběrů
@@ -133,6 +152,25 @@ ngOnInit(): void {
     .pipe(takeUntil(this.destroy$))
     .subscribe(translations => {
       if (translations) {
+
+        this.selectUsHeader = this.localizationService.getText('home.select_us_header');
+        
+        this.selectUsItem1Header = this.localizationService.getText('home.select_us.item_1.header');
+        this.selectUsItem1Bullet1 = this.localizationService.getText('home.select_us.item_1.bullet_1');
+        this.selectUsItem1Bullet2 = this.localizationService.getText('home.select_us.item_1.bullet_2');
+        this.selectUsItem1Bullet3 = this.localizationService.getText('home.select_us.item_1.bullet_3');
+        
+        this.selectUsItem2Header = this.localizationService.getText('home.select_us.item_2.header');
+        this.selectUsItem2Bullet1 = this.localizationService.getText('home.select_us.item_2.bullet_1');
+        this.selectUsItem2Bullet2 = this.localizationService.getText('home.select_us.item_2.bullet_2');
+        this.selectUsItem2Bullet3 = this.localizationService.getText('home.select_us.item_2.bullet_3');
+        
+        this.selectUsItem3Header = this.localizationService.getText('home.select_us.item_3.header');
+        this.selectUsItem3Bullet1 = this.localizationService.getText('home.select_us.item_3.bullet_1');
+        this.selectUsItem3Bullet2 = this.localizationService.getText('home.select_us.item_3.bullet_2');
+        this.selectUsItem3Bullet3 = this.localizationService.getText('home.select_us.item_3.bullet_3');
+
+
         this.form_header = this.localizationService.getText('home.consultation_form.header');
         this.form_description = this.localizationService.getText('home.consultation_form.description');
         this.form_button = this.localizationService.getText('home.consultation_form.button');

@@ -318,7 +318,7 @@
 @media (max-width: 905px){
     .product-popup-content{
         margin-top: 80px;
-        width: 80vw;
+        width: 90vw;
     }
     /* .popup-product-name{ margin-top: 20px; } - Toto už není potřeba kvůli flexboxu */
     .popup-fixed-header {

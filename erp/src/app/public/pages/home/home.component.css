@@ -2125,3 +2125,146 @@ button[type="submit"]:active {
         font-size: 4rem;
     }
 }
+
+
+
+
+/* proc si vybrat zrovna nas css */
+
+.benefits-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    padding: 0 50px;
+    margin-top: 50px;
+    margin-bottom: 25px;
+}
+
+.benefit-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 450px;
+    background-color: #1a1a2e;
+    border: 3px solid #302d2e;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(107, 46, 145, 0.4);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.benefit-item:hover {
+    transform: translateY(-5px);
+}
+
+.benefit-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.benefit-icon-wrapper img{
+    height: 100%;
+    width: auto;
+}
+.benefit-icon-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.benefit-icon-svg path {
+    stroke: #e0b4ff; /* Jasnější fialová */
+    transition: stroke 0.3s ease-in-out;
+}
+
+.benefit-item:hover .benefit-icon-svg path {
+    stroke: #fff; /* Bílá při hoveru */
+}
+
+.benefit-header {
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+
+
+    text-align: center;
+    color: #a67dff;
+    text-shadow: 0 0 10px rgba(158, 158, 158, 0.3);
+
+}
+
+.benefit-points {
+    text-align: left;
+    width: 100%;
+}
+
+.benefit-points ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.benefit-points li {
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 1rem;
+    color: #a0a0a0;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.benefit-points li .bullet-highlight {
+    color: #800080; /* Fialová odrážka */
+    font-size: 1.2rem;
+    margin-right: 10px;
+    line-height: 1;
+}
+.benefit-points li .bullet-highlight img{
+    height: 25px;
+    width: 25px;
+}
+/* -------------------- MEDIA QUERIES -------------------- */
+
+/* Pro menší tablety a větší telefony (až do 768px) */
+@media (max-width: 905px) {
+    .benefits-wrapper {
+        flex-direction: column; /* Položky pod sebou */
+        align-items: center; /* Vše zarovnáme na střed */
+        padding: 0 20px;
+        gap: 30px;
+    }
+
+    .benefit-item {
+        width: 100%; /* Vyplní celou šířku */
+        max-width: 450px; /* Omezení šířky, aby to na tabletech nevypadalo moc široké */
+        padding: 20px;
+    }
+}
+
+/* Pro telefony (až do 480px) */
+@media (max-width: 480px) {
+    .benefits-wrapper {
+        gap: 20px;
+    }
+    
+    .benefit-item {
+        padding: 15px;
+    }
+    
+    .benefit-header {
+        font-size: 1.3rem;
+    }
+    
+    .benefit-points li {
+        font-size: 0.9rem;
+    }
+    
+    .benefit-points li .bullet-highlight {
+        font-size: 1.1rem;
+    }
+}
