@@ -47,12 +47,7 @@ export class ReferencesComponent implements OnInit, OnDestroy {
     { id: 2, nameKey: 'projects.project_2.name', durationKey: 'projects.project_2.duration', clientKey: 'projects.project_2.client', descriptionKey: 'projects.project_2.description' },
     { id: 3, nameKey: 'projects.project_3.name', durationKey: 'projects.project_3.duration', clientKey: 'projects.project_3.client', descriptionKey: 'projects.project_3.description' },
     { id: 4, nameKey: 'projects.project_4.name', durationKey: 'projects.project_4.duration', clientKey: 'projects.project_4.client', descriptionKey: 'projects.project_4.description' },
-    { id: 5, nameKey: 'projects.project_5.name', durationKey: 'projects.project_5.duration', clientKey: 'projects.project_5.client', descriptionKey: 'projects.project_5.description' },
-    { id: 6, nameKey: 'projects.project_6.name', durationKey: 'projects.project_6.duration', clientKey: 'projects.project_6.client', descriptionKey: 'projects.project_6.description' },
-    { id: 7, nameKey: 'projects.project_7.name', durationKey: 'projects.project_7.duration', clientKey: 'projects.project_7.client', descriptionKey: 'projects.project_7.description' },
-    { id: 8, nameKey: 'projects.project_8.name', durationKey: 'projects.project_8.duration', clientKey: 'projects.project_8.client', descriptionKey: 'projects.project_8.description' },
-    { id: 9, nameKey: 'projects.project_9.name', durationKey: 'projects.project_9.duration', clientKey: 'projects.project_9.client', descriptionKey: 'projects.project_9.description' },
-    { id: 10, nameKey: 'projects.project_10.name', durationKey: 'projects.project_10.duration', clientKey: 'projects.project_10.client', descriptionKey: 'projects.project_10.description' }
+    { id: 5, nameKey: 'projects.project_5.name', durationKey: 'projects.project_5.duration', clientKey: 'projects.project_5.client', descriptionKey: 'projects.project_5.description' }
   ];
 
   // Pole projektů s přeloženými texty, které se zobrazí v HTML

@@ -29,9 +29,9 @@
             <span class="lang-label" data-lang="cz" (click)="selectLanguage('cz')" [ngClass]="{'active': (currentLanguage$ | async) === 'cz'}">
                 <img [src]="cz_flag_link" [alt]="localizationService.getText('common.language_cz')">
             </span>
-            <span class="lang-label" data-lang="sk" (click)="selectLanguage('sk')" [ngClass]="{'active': (currentLanguage$ | async) === 'sk'}">
+            <!-- <span class="lang-label" data-lang="sk" (click)="selectLanguage('sk')" [ngClass]="{'active': (currentLanguage$ | async) === 'sk'}">
                 <img [src]="sk_flag_link" [alt]="localizationService.getText('common.language_sk')">
-            </span>
+            </span> -->
             <span class="lang-label" data-lang="en" (click)="selectLanguage('en')" [ngClass]="{'active': (currentLanguage$ | async) === 'en'}">
                 <img [src]="en_flag_link" [alt]="localizationService.getText('common.language_en')">
             </span>

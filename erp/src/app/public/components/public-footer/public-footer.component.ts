@@ -28,6 +28,7 @@ export class PublicFooterComponent implements OnInit, OnDestroy {
   tt_link: string = 'assets/images/icons/tik-tok.png';
   ig_link: string = 'assets/images/icons/ig.png';
   fb_link: string = 'assets/images/icons/fb.png';
+  x_link: string = 'assets/images/icons/x.png';
 
   // --- Proměnné pro všechny přeložené texty ---
   company_name_text: string = '';
@@ -102,7 +103,8 @@ export class PublicFooterComponent implements OnInit, OnDestroy {
       { route: '/shop', key: 'navigation.shop' },
       { route: '/academy', key: 'navigation.academy' },
       { route: '/references', key: 'navigation.references_full' },
-      { route: '/faq', key: 'navigation.faq_full' }
+      { route: '/faq', key: 'navigation.faq_full' },
+      { route: '/about-us', key: 'navigation.about-us' },
     ];
 
     this.footerNavLinks = navLinkKeys.map(link => ({

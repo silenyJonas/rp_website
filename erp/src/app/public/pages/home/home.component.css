@@ -765,11 +765,11 @@ width: 45%;
     box-shadow: 0 4px 15px rgba(107, 46, 145, 0.4);
 }
 .s-1-h, .s-2-h, .s-3-h {
-    font-size: 6rem;
-    margin-top: 20px;
+    font-size: 5rem;
+    margin-top: 35px;
 }
 .s-1-t, .s-2-t, .s-3-t {
-    font-size: 1.2rem;
+    font-size: 1.6rem;
     text-align: center;
 }
 .stat-1, .stat-2, .stat-3 {
@@ -1283,7 +1283,7 @@ button[type="submit"]:active {
         border-radius: 27px;
     }
     .s-1-h, .s-2-h, .s-3-h{
-        font-size: 3.5rem;
+        font-size: 3.0rem;
     }
       .mobile-hero{
         display: block;

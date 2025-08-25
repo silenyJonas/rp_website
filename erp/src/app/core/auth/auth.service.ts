@@ -101,7 +101,7 @@ export class AuthService {
   refreshAccessToken(): Observable<any> {
     const refreshToken = this.getRefreshToken();
     if (!refreshToken) {
-      console.warn('Refresh token není v Local Storage, nelze obnovit.');
+      // console.warn('Refresh token není v Local Storage, nelze obnovit.');
       this.clearAuthData();
       this.stopTokenRefreshTimer();
       return throwError(() => new Error('Refresh token chybí.'));
@@ -195,7 +195,7 @@ export class AuthService {
   }
 
   private stopTokenRefreshTimer(): void {
-    console.log('Zastavuji proaktivní časovač pro obnovu tokenu.');
+    // console.log('Zastavuji proaktivní časovač pro obnovu tokenu.');
     this.stopTokenRefresh$.next();
   }
 }

@@ -2,8 +2,7 @@
 905
 480
 
-UPRAVIT LOGO V ZALOZCE A POJMENOVANI STRANEK
-POPUP PRODUKTU DETAIL UDELAT SIRSY V MOBILNIM ZOBRAZENI
+na githubpages select us se zobrazuji KEYS z jsonu
 
 primeadmin@primeadmin.cz
 123456Ab

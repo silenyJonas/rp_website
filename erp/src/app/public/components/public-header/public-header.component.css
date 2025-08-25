@@ -236,7 +236,7 @@ header.scrolled .active-indicator {
 
 /* Stávající styly pro formulář a jazykový přepínač (bez změn) */
 .lang-form {
-    width: 150px;
+    width: auto;
     height: 40px;
     background-color: rgba(26, 26, 46, 0.5);
     -webkit-backdrop-filter: blur(8px);
@@ -572,8 +572,8 @@ html.no-scroll {
   }
   .lang-form{
     transform: rotate(90deg);
-    right: -55px;
-    top: 51px;
+    right: -27px;
+    top: 23px;
     transition: none;
   }
   .lang-label{

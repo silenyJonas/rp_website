@@ -29,6 +29,7 @@ export class FaqComponent implements OnInit, OnDestroy {
   // Ikonky (tyto se nemusí překládat, jen se načte cesta k nim)
   ig_icon: string = 'assets/images/icons/ig.png';
   in_icon: string = 'assets/images/icons/fb.png';
+  email_icon: string = 'assets/images/icons/email.png';
 
   private destroy$ = new Subject<void>(); // Pro správné odhlášení z odběrů
 

@@ -45,11 +45,12 @@
     "references": "Projekty",
     "references_full": "Realizované projekty",
     "faq": "FAQ",
-    "faq_full": "Často kladené otázky"
+    "faq_full": "Často kladené otázky",
+    "about-us": "Dopňující informace"
   },
   
   "projects": {
-    "header_1": "Top 10 dokončených projektů",
+    "header_1": "Posledních 5 dokončených projektů",
     "table_header_title": "Název projektu",
     "table_header_duration": "Doba plnění",
     "table_header_client": "Zadavatel",
@@ -57,61 +58,31 @@
     "more_button_link_text": "Celý seznam zde",
     "project_1": {
       "name": "E-shop se zdravými produkty",
-      "duration": "2 měsíce",
+      "duration": "2025",
       "client": "First Prague Company, s. r. o.",
       "description": "Navrhli jsme a vyvinuli kompletní, moderní e-shop na míru, který se zaměřuje na zdravé produkty. E-shop disponuje pokročilými funkcemi pro správu objednávek, rychlou a zabezpečenou platební bránou, přesným sledováním skladových zásob a responzivním designem, který zajišťuje perfektní zobrazení na všech typech zařízení. Výsledkem je intuitivní a bezproblémové nakupování pro zákazníky a efektivní správa pro majitele."
     },
     "project_2": {
       "name": "Školní webové stránky",
-      "duration": "1 měsíc",
+      "duration": "2025",
       "client": "NAUCSETO, s. r. o.",
       "description": "Vytvořili jsme přehledné a moderní webové stránky pro vzdělávací instituci, které slouží jako hlavní komunikační portál pro studenty, rodiče a učitele. Web obsahuje interaktivní rozvrhy, kalendář akcí, blog s novinkami a zabezpečenou sekci pro vkládání studijních materiálů. Zjednodušili jsme komunikaci a zpřístupnili klíčové informace na jednom místě."
     },
     "project_3": {
-      "name": "Implementace databázové API",
-      "duration": "2 měsíců",
-      "client": "",
-      "description": "Navrhli jsme a implementovali robustní databázové API, které umožňuje bezproblémové propojení stávajícího systému klienta s novými aplikacemi a službami. Zajišťuje bezpečný a rychlý přístup k datům, automatizaci procesů a možnost budoucího škálování. Výsledkem je flexibilnější a výkonnější infrastruktura, která ušetří čas a sníží manuální práci."
-    },
-    "project_4": {
       "name": "ERP Systém na míru",
-      "duration": "3 měsíce",
+      "duration": "2024/2025",
       "client": "",
       "description": "Vyvinuli jsme ERP (Enterprise Resource Planning) systém šitý na míru, který centralizuje a automatizuje klíčové firemní procesy – od správy financí, přes řízení lidských zdrojů až po logistiku. Systém poskytuje komplexní přehled o chodu podniku v reálném čase, což umožňuje lepší rozhodování a zvyšuje celkovou efektivitu a transparentnost."
     },
-    "project_5": {
-      "name": "Inclusive Entrepreneurship Country Policy Assessment 2020",
-      "duration": "4 měsíce",
-      "client": "OECD",
-      "description": "The objective of the country policy assessment notes is to provide country-level analysis to the European Commission and OECD on key outstanding challenges for inclusive entrepreneurship policy within each EU Member State and potential Member State actions that could be developed to address these challenges by presenting a) problems faced by disadvantaged entrepreneurs; b) existing policies addressing the problem; and c) the gaps and weaknesses in the policies. The notes will, in a structured manner, present data on entrepreneurship activity and self-employment rates and the barriers experienced by people in key social target groups (the unemployed, youth, women, seniors, and immigrants), assess the appropriateness and quality of existing policy actions in this field relative to the scale and nature of needs, review the appropriateness of future policy plans and develop country-specific policy advice for addressing policy gaps and improving policy design."
-    },
-    "project_6": {
-      "name": "Inclusive Entrepreneurship Country Policy Assessment",
-      "duration": "3 měsíce",
-      "client": "OECD",
-      "description": "The aim of the project was to prepare an assessment grid and a country policy assessment report. The assessment report has four sections: - a description of the country’s targets and objectives related to business creation and self-employment by the unemployed and social target groups, together with its commitments and new policy actions, linking to Europe 2020 targets  - a breakdown of business creation, entrepreneurship and self-employment rates and trends in the country by employment status and social group together with data on the barriers faced to entrepreneurship - an assessment of current policy actions, recent changes to policies or significant programmes and plans for future policy actions in comparison with policy needs and international good practices and - policy advice for improving policy implementation and design and addressing policy gaps"
-    },
-    "project_7": {
-      "name": "Key competences in VET",
-      "duration": "12 měsíců",
-      "client": " Cedefop",
-      "description": "The overall purpose of this study is to investigate the implementation of VET policy priorities, as defined in the 2010 Bruges communiqué and the 2015 Riga conclusions in the EU-28, Iceland and Norway and to contribute to continuous learning in VET policy development."
-    },
-    "project_8": {
+    "project_4": {
       "name": "CRM systém na míru",
-      "duration": "3 měsíců",
+      "duration": "2024",
       "client": "",
       "description": "Vyvinuli jsme sofistikovaný CRM (Customer Relationship Management) systém, který je navržen na míru specifickým potřebám klienta. Systém zahrnuje komplexní správu zákazníků a prodejních cyklů, automatizaci komunikace a detailní analytiku. Pomáhá firmám budovat silnější vztahy s klienty, optimalizovat prodejní procesy a zvyšovat loajalitu zákazníků."
     },
-    "project_9": {
-      "name": "Automatizace reportingu",
-      "duration": "2 měsíců",
-      "client": "",
-      "description": "Navrhli jsme a vytvořili software pro plnou automatizaci sběru dat z různých firemních zdrojů. Náš systém automaticky generuje dynamické a přehledné reporty a dashboardy v reálném čase. Tím výrazně zkracuje čas, který by se jinak strávil manuální analýzou dat, a poskytuje managementu přesné a aktuální informace pro lepší strategické rozhodování."
-    },
-    "project_10": {
+    "project_5": {
       "name": "AI automatizace",
-      "duration": "1 měsíce",
+      "duration": "2024",
       "client": "",
       "description": "Implementovali jsme AI řešení, které automatizuje opakující se a časově náročné úkoly. Tato umělá inteligence je schopna analyzovat data, generovat odpovědi a provádět operace, které dříve vyžadovaly lidský zásah. Výsledkem je výrazné zvýšení efektivity, snížení chybovosti a uvolnění kapacity zaměstnanců pro kreativnější a složitější úkoly."
     }
@@ -362,12 +333,12 @@
   "imageUrl": "assets/images/product_images/survey_engine.png",
   "popupType": "survey-software",
   "details": {
-    "longDescription": "Náš intuitivní dotazníkový software je kompletní platforma navržená pro marketingové týmy, personalisty i akademiky. Umožní vám jednoduše vytvářet, distribuovat a spravovat ankety. Nabízí širokou škálu přizpůsobitelných šablon a typů otázek – od jednoduchých voleb až po komplexní matrice a hodnocení. Pokročilá funkce podmíněné logiky zajišťuje, že se respondentům zobrazují jen relevantní otázky. Data můžete sledovat v reálném čase a následně je analyzovat pomocí automaticky generovaných grafů a reportů. Platforma podporuje týmovou spolupráci a nabízí zabezpečené sdílení dat.",
+     "longDescription": "Náš intuitivní dotazníkový software je kompletní platforma pro vytváření, distribuci a analýzu anket, průzkumů a dotazníků, ideální pro marketingové týmy, personalisty i akademiky. S intuitivním drag-and-drop editorem vytvoříte dotazník raz dva. Díky pokročilé podmíněné logice se respondentům zobrazí jen otázky, které jsou pro ně relevantní, což zvyšuje kvalitu a přesnost získaných dat.\n\nKlíčovou výhodou naší platformy je automatizované vyhodnocování a analýza dat. Jakmile začnou přicházet odpovědi, software je shromažďuje a v reálném čase zpracovává. Nemusíte se starat o složité počítání – platforma automaticky generuje přehledné vizuální reporty a dashboardy. Ty vám na první pohled ukážou klíčové poznatky, ať už jde o průměrné hodnocení, nejčastější odpovědi, nebo rozložení preferencí.\n\nDíky tomu ušetříte čas, získáte okamžitý a srozumitelný výstup a můžete se soustředit na to nejdůležitější – na strategická rozhodnutí.",
     "features": [
       "Drag-and-drop editor pro intuitivní tvorbu dotazníků.",
       "Podmíněná logika (branching) pro dynamické dotazníky.",
       "Automatizovaná distribuce přes e-mailové kampaně a QR kódy.",
-      "Analýza dat v reálném čase s vizuálními reporty a dashboardy.",
+      "Automatické vyhodnocování a analýza dat v reálném čase s vizuálními reporty a dashboardy.",
       "Export dat do formátů XLSX, CSV, JSON a PDF.",
       "Multi-jazyková podpora pro globální průzkumy.",
       "Zabezpečené úložiště dat a ochrana soukromí respondentů."
@@ -452,7 +423,7 @@
     "form_button": "Rezervovat konzultaci",
     "form_header": "Máte nápad? My máme řešení",
 
-    "show_projects_header": "Nahlédněte do desítek dokončených projektů.",
+    "show_projects_header": "Nahlédněte do dokončených projektů.",
     "projects_button_text": "Realizované projekty",
 
     "colab": {
@@ -688,7 +659,7 @@
   }
   },
   "home": {
-    "header_1": "RegioPartner",
+    "header_1": "RPsoftware",
     "header_2": "víc než IT, stavíme digitální budoucnost",
     "web_header": "Webový Vývoj",
     "desktop_header": "Desktopový Vývoj",
@@ -696,10 +667,10 @@
     "ai_header": "AI Vývoj",
     "our_services": "Naše služby",
     "our_services_m": "RegioPartner v číslech",
-    "stats_projects_text": "Projektů",
-    "stats_projects_count": "110+",
-    "stats_years_text": "Let na trhu",
-    "stats_years_count": "28",
+    "stats_projects_text": "Tým",
+    "stats_projects_count": "1",
+    "stats_years_text": "Kvalita",
+    "stats_years_count": "100%",
     "stats_solutions_text": "Řešení",
     "stats_solutions_count": "∞",
     "consultation_form": {
@@ -755,7 +726,7 @@
     },
     "academy_header": "Učíme děti programovat",
     "price_start": "Cena od",
-    "price_number": "350 Kč",
+    "price_number": "300 Kč",
     "price_end": "/lekce",
     "button_academy_text": "Navštivte akademii zde",
     "form_topic_label": "Téma",
@@ -796,5 +767,12 @@
   }
 }
 
+  },
+  "about-us": {
+    "header": "Dopňující informace",
+    "paragraph_1": "Společnost Regiopartner s.r.o. působí řadu let v oblasti evaluací a regionálního rozvoje, kde se zaměřuje na analýzy, hodnocení a podporu rozvojových projektů. Díky těmto zkušenostem jsme si vybudovali stabilní zázemí a odborné know-how, na kterém postupně stavíme i nové aktivity.",
+    "paragraph_2": "V roce 2023 jsme proto založili novou divizi RPsoftware, která rozšiřuje činnost společnosti směrem k moderním technologiím. RPsoftware se zaměřuje na vývoj softwaru a poskytování digitálních řešení, a to zejména pro menší a střední podniky a také pro jednotlivce, kteří potřebují spolehlivého partnera pro své IT projekty.",
+    "paragraph_3": "Naším cílem je přinášet software, který je nejen technicky kvalitní, ale také přizpůsobený konkrétním potřebám uživatelů. Zajišťujeme kompletní služby – od analýzy a návrhu řešení přes samotný vývoj až po testování, implementaci a dlouhodobou podporu.",
+    "paragraph_4": "RPsoftware funguje pod hlavičkou Regiopartner s.r.o., což znamená, že vychází ze stejného profesionálního zázemí a hodnot, ale zároveň představuje specializovanou divizi soustředěnou výhradně na IT oblast. Spojení obou částí společnosti nám umožňuje kombinovat zkušenosti z regionálního rozvoje s technologickými možnostmi a nabízet tak služby, které mají širší kontext a přidanou hodnotu."
   }
 }

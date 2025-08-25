@@ -1,0 +1,1 @@
+import{a}from"./chunk-EF4CDGEV.js";import"./chunk-BCWN2KD7.js";import"./chunk-KCTVJKTI.js";import"./chunk-4F7SMVZK.js";import"./chunk-AYEDX2M7.js";import"./chunk-ZGXC4ISU.js";export{a as AdminRoutingModule};

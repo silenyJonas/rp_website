@@ -1,0 +1,127 @@
+.main-content {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    /* Změna: min-height na auto, aby se obsah mohl roztáhnout */
+    min-height: auto; /* Původní hodnota byla 800px, nyní dynamická */
+    box-sizing: border-box;
+    padding-bottom: 50px; /* Zajistí mezeru nad footerem */
+
+    /* Background styly - beze změny */
+    background: radial-gradient(ellipse at center, rgba(128, 0, 128, 0.05) 15%, rgba(128, 0, 128, 0.02) 30%, rgba(17, 17, 31, 0) 50%),
+                repeating-linear-gradient(to bottom, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px),
+                repeating-linear-gradient(to right, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.main-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(17, 17, 31, 0.98) 80%);
+    z-index: 1;
+}
+.header-1 {
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+    color: #9e9e9e;
+    padding-top: 125px;
+    padding-bottom: 50px; /* Přidán padding-bottom pro mezeru pod nadpisem */
+    font-size: 4rem;
+    font-weight: 700;
+    z-index: 10;
+    text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+    /* Animace pro header-1 (ponecháno z vašeho kódu) */
+    opacity: 0; /* Začíná neviditelně */
+    transform: translateY(-20px); /* Začíná mírně nad pozicí */
+    animation: fadeInSlideDownHeader 0.8s ease-out 0.2s forwards; /* Pozor, přejmenováno na fadeInSlideDownHeader! */
+}
+
+/* --- Keyframe animace pro header-1 (přejmenováno) --- */
+@keyframes fadeInSlideDownHeader {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.content-display {
+    width: 1200px;
+    background-color: rgba(26, 26, 46, 0.2);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 3px solid #2f2f2f;
+    border-radius: 20px;
+    padding: 30px;
+    color: #f0f0f0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden; /* Kept for visual effects, content will push height */
+    z-index: 2;
+    height: auto; /* Allow content to dictate height */
+    min-height: 500px; /* Ensures it doesn't collapse too much */
+
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlideUp 0.8s ease-out 0.2s forwards;
+}
+.paragraph-node{
+    line-height: 1.7;
+    font-size: 1.2em;
+    color: #c0c0c0;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    margin-bottom: 15px;
+    font-family: "Source Sans Pro", sans-serif;
+}
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 1375px){
+    .content-display {
+        max-width: 95%;
+        padding: 25px;
+    }
+    .header-1 {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 905px){
+    .header-1 {
+        font-size: 3rem;
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+}
+@media (max-width: 480px){
+    .content-display {
+        padding: 15px;
+    }
+     .header-1 {
+        font-size: 2.2rem;
+        padding-top: 40px;
+        padding-bottom: 25px;
+    }
+    .paragraph-node{
+        font-size: 1rem;
+    }
+}
