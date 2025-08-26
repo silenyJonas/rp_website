@@ -36,7 +36,6 @@ type ItemType = any;
     CommonModule,
     FormsModule,
     GenericTableComponent,
-    GenericFormComponent,
     GenericFilterFormComponent,
     GenericDetailsComponent
   ],

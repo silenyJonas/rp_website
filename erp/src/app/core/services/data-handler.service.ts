@@ -3,13 +3,14 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AlertDialogService } from './alert-dialog.service'; // Přidání importu pro AlertDialogService
-
+import {environment} from '../../../environments/environment'
+// import {environment} from '../../../environments/environment.prod'
 @Injectable({
   providedIn: 'root'
 })
 export class DataHandler {
   // Nová vlastnost pro základní URL API
-  private baseUrl = 'api/';
+  private baseUrl = environment.base_api_url;
 
   constructor(
     private http: HttpClient,

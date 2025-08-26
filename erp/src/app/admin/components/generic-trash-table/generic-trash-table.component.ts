@@ -21,9 +21,6 @@ export interface Buttons {
   imports: [
     CommonModule,
     FormsModule,
-    CurrencyPipe,
-    KeyValuePipe,
-    DatePipe
 ],
   templateUrl: './generic-trash-table.component.html',
   styleUrls: ['./generic-trash-table.component.css'],

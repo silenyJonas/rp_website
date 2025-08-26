@@ -24,10 +24,7 @@ export interface Buttons {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    CurrencyPipe,
-    KeyValuePipe,
-    DatePipe
+    FormsModule
   ],
   templateUrl: './generic-table.component.html',
   styleUrls: ['./generic-table.component.css'],

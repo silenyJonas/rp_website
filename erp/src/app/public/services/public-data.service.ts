@@ -3,13 +3,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root' // Zajistí, že servis je dostupný v celé aplikaci
 })
+
 export class PublicDataService {
 
-  private apiUrl = '/api'; // Změňte na URL vašeho backendu
+  private apiUrl = environment.base_api_url; // Změňte na URL vašeho backendu
 
   constructor(private http: HttpClient) { }
 

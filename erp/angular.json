@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "rp_website": { 
+    "rp_website": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -43,11 +43,12 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "30kB",
-                  "maximumError": "40kB"
+                  "maximumWarning": "40kB",
+                  "maximumError": "50kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "/"
             },
             "development": {
               "optimization": false,
@@ -61,8 +62,8 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "ssl": true,
-            "sslKey": "ssl/laragon.key",  
-            "sslCert": "ssl/laragon.crt", 
+            "sslKey": "ssl/laragon.key",
+            "sslCert": "ssl/laragon.crt",
             "proxyConfig": "proxy.conf.json"
           },
           "configurations": {

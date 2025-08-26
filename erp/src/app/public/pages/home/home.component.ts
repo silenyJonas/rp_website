@@ -243,12 +243,12 @@ ngOnInit(): void {
             name: 'thema',
             type: 'select',
             required: true,
-            value: 'web-development',
+            value: 'Webový vývoj',
             options: [
-              { value: 'web-development', label: this.localizationService.getText('home.form_topic_option_web') },
-              { value: 'desktop-development', label: this.localizationService.getText('home.form_topic_option_desktop') },
-              { value: 'mobile-development', label: this.localizationService.getText('home.form_topic_option_mobile') },
-              { value: 'ai-development', label: this.localizationService.getText('home.form_topic_option_ai') },
+              { value: 'Webový vývoj', label: this.localizationService.getText('home.form_topic_option_web') },
+              { value: 'Desktopový vývoj', label: this.localizationService.getText('home.form_topic_option_desktop') },
+              { value: 'Mobilní vývoj', label: this.localizationService.getText('home.form_topic_option_mobile') },
+              { value: 'AI vývoj', label: this.localizationService.getText('home.form_topic_option_ai') },
               { value: 'other', label: this.localizationService.getText('home.form_topic_option_other') }
             ]
           },
@@ -283,20 +283,20 @@ ngOnInit(): void {
 
 
   handleFormSubmission(formData: any): void {
-    console.log('Data přijata z generického formuláře k odeslání do PublicDataService:', formData);
+    // console.log('Data přijata z generického formuláře k odeslání do PublicDataService:', formData);
 
     this.publicDataService.submitContactForm(formData).subscribe({
       next: (response) => {
-        console.log('Formulář odeslán úspěšně přes PublicDataService!', response);
+        // console.log('Formulář odeslán úspěšně přes PublicDataService!', response);
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Chyba při odesílání formuláře přes PublicDataService:', error);
+        // console.error('Chyba při odesílání formuláře přes PublicDataService:', error);
       }
     });
   }
 
   handleFormReset(): void {
-    console.log('Generický formulář byl resetován.');
+    // console.log('Generický formulář byl resetován.');
   }
 
   getHeroBackground(): string {

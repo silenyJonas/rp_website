@@ -164,7 +164,7 @@ export class GenericFormComponent implements OnInit, OnDestroy, OnChanges {
       this.errorMessage = null;
       this.successMessage = null;
 
-      console.log('Odesílám data formuláře:', this.formData);
+      // console.log('Odesílám data formuláře:', this.formData);
 
       setTimeout(() => {
         this.isLoading = false;

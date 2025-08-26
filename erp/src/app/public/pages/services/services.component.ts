@@ -249,10 +249,10 @@ export class ServicesComponent implements OnInit, OnDestroy {
                             required: true,
                             value: 'web-development', // Default value
                             options: [
-                                { value: 'web-development', label: this.localizationService.getText('services.contact_form.web_development_label') },
-                                { value: 'desktop-development', label: this.localizationService.getText('services.contact_form.desktop_development_label') },
-                                { value: 'mobile-development', label: this.localizationService.getText('services.contact_form.mobile_development_label') },
-                                { value: 'ai-development', label: this.localizationService.getText('services.contact_form.ai_development_label') },
+                                { value: 'Webový vývoj', label: this.localizationService.getText('services.contact_form.web_development_label') },
+                                { value: 'Desktopový vývoj', label: this.localizationService.getText('services.contact_form.desktop_development_label') },
+                                { value: 'Mobilní vývoj', label: this.localizationService.getText('services.contact_form.mobile_development_label') },
+                                { value: 'AI vývoj', label: this.localizationService.getText('services.contact_form.ai_development_label') },
                                 { value: 'other', label: this.localizationService.getText('services.contact_form.other_label') }
                             ]
                         },
@@ -368,19 +368,19 @@ export class ServicesComponent implements OnInit, OnDestroy {
     }
 
     handleFormSubmission(formData: any): void {
-        console.log('Data přijata z generického formuláře k odeslání do PublicDataService:', formData);
+        // console.log('Data přijata z generického formuláře k odeslání do PublicDataService:', formData);
         this.publicDataService.submitContactForm(formData).subscribe({
             next: (response) => {
-                console.log('Formulář odeslán úspěšně přes PublicDataService!', response);
+                // console.log('Formulář odeslán úspěšně přes PublicDataService!', response);
             },
             error: (error: HttpErrorResponse) => {
-                console.error('Chyba při odesílání formuláře přes PublicDataService:', error);
+                // console.error('Chyba při odesílání formuláře přes PublicDataService:', error);
             }
         });
     }
 
     handleFormReset(): void {
-        console.log('Generický formulář byl resetován.');
+        // console.log('Generický formulář byl resetován.');
     }
 
     private mapTechIdToFormValue(techId: string): string | undefined {

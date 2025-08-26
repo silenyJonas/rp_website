@@ -742,10 +742,9 @@ width: 45%;
     display: flex;
 }
 .stats {
-       margin-top: -30px;
-    margin-bottom: 70px;
-    display: flex
-;
+    margin-top: -30px;
+    margin-bottom: 55px;
+    display: flex;
     justify-content: center;
     align-items: center;
     font-family: "Source Sans Pro", sans-serif;

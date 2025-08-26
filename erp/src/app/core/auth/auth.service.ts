@@ -5,12 +5,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, BehaviorSubject, of, throwError, timer } from 'rxjs';
 import { tap, catchError, switchMap, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-
+import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = '/api';
+  private baseUrl = environment.base_api_url;
 
   private _isLoggedIn = new BehaviorSubject<boolean>(this.hasAccessToken());
   isLoggedIn$ = this._isLoggedIn.asObservable();
