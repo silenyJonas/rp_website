@@ -35,6 +35,10 @@ class BusinessLogController extends Controller
         $userEmail = $request->input('user_email');
         $contextData = $request->input('context_data');
         
+        // Nové sloupce
+        $userLoginIdPlain = $request->input('user_login_id_plain');
+        $userLoginEmailPlain = $request->input('user_login_email_plain');
+        
         $sortBy = $request->input('sort_by');
         $sortDirection = $request->input('sort_direction', 'asc');
 
@@ -93,6 +97,15 @@ class BusinessLogController extends Controller
         if ($contextData) {
             $query->where('context_data', 'like', '%' . $contextData . '%');
         }
+
+        // Filtrování pro nové sloupce
+        if ($userLoginIdPlain) {
+            $query->where('user_login_id_plain', 'like', '%' . $userLoginIdPlain . '%');
+        }
+
+        if ($userLoginEmailPlain) {
+            $query->where('user_login_email_plain', 'like', '%' . $userLoginEmailPlain . '%');
+        }
         
         // Kód pro řazení
         if ($sortBy) {
@@ -149,6 +162,9 @@ class BusinessLogController extends Controller
             'context_data' => $businessLog->context_data,
             'created_at' => $businessLog->created_at,
             'updated_at' => $businessLog->updated_at,
+            // Nové sloupce pro zobrazení detailů
+            'user_login_id_plain' => $businessLog->user_login_id_plain,
+            'user_login_email_plain' => $businessLog->user_login_email_plain,
         ];
 
         return response()->json($selectedData);
@@ -162,7 +178,7 @@ class BusinessLogController extends Controller
      */
     public function store(Request $request)
     {
-        // Validace vstupních dat
+        // Validace vstupních dat včetně nových sloupců
         $validatedData = $request->validate([
             'origin' => 'required|string|max:255',
             'event_type' => 'required|string|max:50',
@@ -171,6 +187,9 @@ class BusinessLogController extends Controller
             'affected_entity_type' => 'nullable|string|max:50',
             'affected_entity_id' => 'nullable|integer',
             'context_data' => 'nullable|string',
+            // Nové sloupce
+            'user_login_id_plain' => 'nullable|string|max:255',
+            'user_login_email_plain' => 'nullable|string|max:255',
         ]);
 
         // Získání user_login_id z ověřeného požadavku.
@@ -189,6 +208,9 @@ class BusinessLogController extends Controller
                 'affected_entity_id' => $validatedData['affected_entity_id'],
                 'user_login_id' => $userId,
                 'context_data' => $validatedData['context_data'],
+                // Uložení nových sloupců
+                'user_login_id_plain' => $validatedData['user_login_id_plain'] ?? null,
+                'user_login_email_plain' => $validatedData['user_login_email_plain'] ?? null,
             ]);
 
             return response()->json(['message' => 'Logovací záznam úspěšně vytvořen.'], 201);

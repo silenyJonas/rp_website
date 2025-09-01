@@ -48,7 +48,7 @@
             <td *ngIf="button.isActive" class="action-button-cell">
               <button
                 [class]="button.type"
-                [disabled]="button.type === 'delete_button' && item.id == authService.getUserId()"
+                [disabled]="button.type === 'delete_button' && item.id == authService.getUserId() && isAdminTable == true"
                 (click)="handleAction(item, button.action)">
                 {{ button.display_name }}
               </button>

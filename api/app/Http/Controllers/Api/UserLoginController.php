@@ -168,7 +168,7 @@ class UserLoginController extends Controller
             $user->roles()->attach($validatedData['role_id']);
         }
 
-        $this->logAction($request, 'create', 'UserLogin', 'Vytvoření nového uživatele', $user->user_login_id);
+        $this->logAction($request, 'create', 'UserLogin', 'Vytvoření nového uživatele', $user->user_login_id, false);
 
         return response()->json(new UserLoginResource($user), 201);
     }
@@ -455,9 +455,15 @@ class UserLoginController extends Controller
                 $context_data = json_encode($request->all());
             }
             else{
-                $context_data = "Context data obsahují citrivá data a nejsou zobrazována";     
+                $context_data = "Context data obsahují citlivá data a nejsou zobrazována";     
             }
-
+            
+            if($request->password_hash){
+                $context_data = "Context data obsahují citlivá data a nejsou zobrazována";
+            }
+            
+            $userLoginId = $request->user()?->user_login_id;
+            $userLoginEmail = $request->user()?->user_email;
             BusinessLog::create([
                 'origin' => $request->ip(),
                 'event_type' => $eventType,
@@ -465,11 +471,15 @@ class UserLoginController extends Controller
                 'description' => $description,
                 'affected_entity_type' => 'UserLogin',
                 'affected_entity_id' => $affectedEntityId,
-                'user_login_id' => $user ? $user->user_login_id : null,
+                'user_login_id' => $userLoginId,
                 'context_data' => $context_data,
+                'user_login_id_plain' => (string)$userLoginId,
+                'user_login_email_plain' => $userLoginEmail
             ]);
         } catch (\Exception $e) {
             Log::error('Chyba při logování akce v UserLoginController: ' . $e->getMessage());
         }
+        
+        
     }
 }

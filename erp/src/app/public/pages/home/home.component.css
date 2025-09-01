@@ -1267,6 +1267,10 @@ button[type="submit"]:active {
     .learn-more-text{
         right: 100px;
     }
+    .s-1-h, .s-2-h, .s-3-h {
+    font-size: 5rem;
+    margin-top: 15px;
+}
     .cables-and-bubbles, .server-img-wrp{
         display: none;
     }

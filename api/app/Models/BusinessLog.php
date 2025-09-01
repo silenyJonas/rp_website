@@ -25,6 +25,8 @@ class BusinessLog extends Model
         'affected_entity_id',
         'user_login_id',
         'context_data',
+        'user_login_id_plain',
+        'user_login_email_plain'
     ];
 
     /**

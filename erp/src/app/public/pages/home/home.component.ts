@@ -249,7 +249,7 @@ ngOnInit(): void {
               { value: 'Desktopový vývoj', label: this.localizationService.getText('home.form_topic_option_desktop') },
               { value: 'Mobilní vývoj', label: this.localizationService.getText('home.form_topic_option_mobile') },
               { value: 'AI vývoj', label: this.localizationService.getText('home.form_topic_option_ai') },
-              { value: 'other', label: this.localizationService.getText('home.form_topic_option_other') }
+              { value: 'Jiné', label: this.localizationService.getText('home.form_topic_option_other') }
             ]
           },
           {

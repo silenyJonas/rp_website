@@ -99,57 +99,57 @@ export class DataHandler {
   }
 
   getPaginatedCollection<T>(apiUrl: string): Observable<T> {
-    console.log('dotaz na:', this.baseUrl + apiUrl)
-    return this.http.get<T>(`${this.baseUrl}${apiUrl}`, { headers: this.getHeaders() }).pipe(
+    console.log('dotaz na:', this.baseUrl + "/" + apiUrl)
+    return this.http.get<T>(`${this.baseUrl}/${apiUrl}`, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
   get<T>(apiUrl: string): Observable<T> {
-    console.log('DataHandler: GET request na:', `${this.baseUrl}${apiUrl}`);
-    return this.http.get<T>(`${this.baseUrl}${apiUrl}`, { headers: this.getHeaders() }).pipe(
+    console.log('DataHandler: GET request na:', `${this.baseUrl}/${apiUrl}`);
+    return this.http.get<T>(`${this.baseUrl}/${apiUrl}`, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
   getOne<T>(apiUrl: string): Observable<T> {
     console.log('--------', apiUrl)
-    return this.http.get<{ data: T }>(`${this.baseUrl}${apiUrl}`, { headers: this.getHeaders() }).pipe(
+    return this.http.get<{ data: T }>(`${this.baseUrl}/${apiUrl}`, { headers: this.getHeaders() }).pipe(
       map(response => response.data),
       catchError(this.handleError)
     );
   }
 
   post<T>(apiUrl: string, data: T): Observable<T> {
-    return this.http.post<{ data: T }>(`${this.baseUrl}${apiUrl}`, data, { headers: this.getHeaders() }).pipe(
+    return this.http.post<{ data: T }>(`${this.baseUrl}/${apiUrl}`, data, { headers: this.getHeaders() }).pipe(
       map(response => response.data),
       catchError(this.handleError)
     );
   }
 
   put<T>(apiUrl: string, data: T): Observable<T> {
-    return this.http.put<{ data: T }>(`${this.baseUrl}${apiUrl}`, data, { headers: this.getHeaders() }).pipe(
+    return this.http.put<{ data: T }>(`${this.baseUrl}/${apiUrl}`, data, { headers: this.getHeaders() }).pipe(
       map(response => response.data),
       catchError(this.handleError)
     );
   }
 
   patch<T>(apiUrl: string, data: Partial<T>): Observable<T> {
-    return this.http.patch<{ data: T }>(`${this.baseUrl}${apiUrl}`, data, { headers: this.getHeaders() }).pipe(
+    return this.http.patch<{ data: T }>(`${this.baseUrl}/${apiUrl}`, data, { headers: this.getHeaders() }).pipe(
       map(response => response.data),
       catchError(this.handleError)
     );
   }
 
   delete(apiUrl: string): Observable<void> {
-    console.log(`DataService: Mažu data z ${this.baseUrl}${apiUrl}`);
-    return this.http.delete<void>(`${this.baseUrl}${apiUrl}`, { headers: this.getHeaders() }).pipe(
+    console.log(`DataService: Mažu data z ${this.baseUrl}/${apiUrl}`);
+    return this.http.delete<void>(`${this.baseUrl}/${apiUrl}`, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
   upload<T>(apiUrl: string, formData: FormData): Observable<T> {
-    console.log('DataService: Odesílám FormData na', `${this.baseUrl}${apiUrl}`);
+    console.log('DataService: Odesílám FormData na', `${this.baseUrl}/${apiUrl}`);
     const dataToSend: { [key: string]: any } = {};
     formData.forEach((value, key) => {
       try {
@@ -160,7 +160,7 @@ export class DataHandler {
     });
     console.log('Data formuláře k odeslání (bez souborů):', JSON.stringify(dataToSend, null, 2));
 
-    return this.http.post<T>(`${this.baseUrl}${apiUrl}`, formData, { headers: this.getHeaders('multipart/form-data') }).pipe(
+    return this.http.post<T>(`${this.baseUrl}/${apiUrl}`, formData, { headers: this.getHeaders('multipart/form-data') }).pipe(
       catchError(this.handleError)
     );
   }

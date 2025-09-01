@@ -272,7 +272,8 @@ class RawRequestCommissionController extends Controller
             // Pokud je $request->user() null (nepřihlášený uživatel), celý výraz vyhodnotí na null.
             // Tím se zabrání chybě a zároveň se správně zaznamená, že akci provedl neautentizovaný uživatel.
             $userLoginId = $request->user()?->user_login_id;
-
+            $userLoginEmail = $request->user()?->user_email;
+            Log:info($userLoginId);
             BusinessLog::create([
                 'origin' => $request->ip(),
                 'event_type' => $eventType,
@@ -282,6 +283,8 @@ class RawRequestCommissionController extends Controller
                 'affected_entity_id' => $affectedEntityId,
                 'user_login_id' => $userLoginId,
                 'context_data' => json_encode($request->all()),
+                'user_login_id_plain' => (string)$userLoginId,
+                'user_login_email_plain' => $userLoginEmail
             ]);
         } catch (\Exception $e) {
             Log::error('Chyba při logování akce: ' . $e->getMessage());

@@ -247,13 +247,13 @@ export class ServicesComponent implements OnInit, OnDestroy {
                             name: 'thema',
                             type: 'select',
                             required: true,
-                            value: 'web-development', // Default value
+                            value: 'Webový vývoj', // Default value
                             options: [
                                 { value: 'Webový vývoj', label: this.localizationService.getText('services.contact_form.web_development_label') },
                                 { value: 'Desktopový vývoj', label: this.localizationService.getText('services.contact_form.desktop_development_label') },
                                 { value: 'Mobilní vývoj', label: this.localizationService.getText('services.contact_form.mobile_development_label') },
                                 { value: 'AI vývoj', label: this.localizationService.getText('services.contact_form.ai_development_label') },
-                                { value: 'other', label: this.localizationService.getText('services.contact_form.other_label') }
+                                { value: 'Joné', label: this.localizationService.getText('services.contact_form.other_label') }
                             ]
                         },
                         {

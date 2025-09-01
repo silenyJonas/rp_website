@@ -65,8 +65,10 @@ export const TABLE_COLUMNS: ColumnDefinition[] = [
   { key: 'description', header: 'Popis', type: 'text' },
   { key: 'affected_entity_type', header: 'Ovlivněná Entita', type: 'text' },
   { key: 'affected_entity_id', header: 'ID Ovlivněná Entita', type: 'text' },
-  { key: 'user_login_id', header: 'ID uživatele', type: 'text' },
-  { key: 'user.user_email', header: 'Uživatel', type: 'text' },
+  { key: 'user_login_id_plain', header: 'ID uživatele', type: 'text' },
+  { key: 'user_login_email_plain', header: 'Uživatel', type: 'text' },
+  { key: 'user_login_id', header: 'ID uživatele (Reference)', type: 'text' },
+  { key: 'user.user_email', header: 'Uživatel (Reference)', type: 'text' },
   { key: 'context_data', header: 'Doplňující data', type: 'text' },
 ];
 

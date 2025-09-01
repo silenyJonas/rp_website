@@ -105,6 +105,7 @@ export class PublicFooterComponent implements OnInit, OnDestroy {
       { route: '/references', key: 'navigation.references_full' },
       { route: '/faq', key: 'navigation.faq_full' },
       { route: '/about-us', key: 'navigation.about-us' },
+      // { route: '/auth/login', key: 'navigation.login' },
     ];
 
     this.footerNavLinks = navLinkKeys.map(link => ({

@@ -92,9 +92,7 @@
                 <span class="mobile-lang-label" (click)="selectLanguage('cz')" [ngClass]="{'active': (currentLanguage$ | async) === 'cz'}">
                     {{ localizationService.getText('common.language_cz_short') || 'CZ' }}
                 </span>
-                <span class="mobile-lang-label" (click)="selectLanguage('sk')" [ngClass]="{'active': (currentLanguage$ | async) === 'sk'}">
-                    {{ localizationService.getText('common.language_sk_short') || 'SK' }}
-                </span>
+                
                 <span class="mobile-lang-label" (click)="selectLanguage('en')" [ngClass]="{'active': (currentLanguage$ | async) === 'en'}">
                     {{ localizationService.getText('common.language_en_short') || 'EN' }}
                 </span>

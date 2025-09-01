@@ -17,6 +17,7 @@ import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { GenericFilterFormComponent } from '../../components/generic-filter-form/generic-filter-form.component';
 import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
+import { AlertDialogService } from '../../../core/services/alert-dialog.service';
 import {
   BUTTONS,
   FORM_FIELDS,
@@ -54,7 +55,7 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
   override isLoading: boolean = false;
   isTrashTableLoading: boolean = false;
   override errorMessage: string | null = null; // Přidáno pro zobrazení chybové zprávy v HTML
-
+  isAdminTable: boolean = true;
   showResetPasswordForm: boolean = false;
 
   buttons: Buttons[] = BUTTONS;
@@ -101,6 +102,7 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
     private genericTableService: GenericTableService,
+    private alertDialogService: AlertDialogService,
     private authService: AuthService,
     private router: Router
   ) {
@@ -484,11 +486,13 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
       .subscribe({
         next: (response) => {
           console.log('Heslo bylo úspěšně změněno.', response);
+           this.alertDialogService.open('Úspěch', 'Heslo bylo úspěšně změněno.', 'success');
           this.forceFullRefresh();
         },
         error: (err) => {
           console.error('Chyba při změně hesla:', err);
           this.errorMessage = err.message || 'Chyba při změně hesla. Zkuste to prosím znovu.';
+           this.alertDialogService.open('Úspěch', 'Chyba při změně hesla. Zkuste to prosím znovu.', 'success');
           this.cd.markForCheck();
         }
       });
