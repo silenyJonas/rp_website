@@ -6,3 +6,6 @@ na githubpages select us se zobrazuji KEYS z jsonu
 
 primeadmin@primeadmin.cz
 123456Ab
+
+jonasbucina@rpsw.cz
+1Tulipan
