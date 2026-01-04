@@ -1,10 +1,9 @@
-
-import { Component, OnInit, OnDestroy, LOCALE_ID } from '@angular/core';
+import { Component, OnInit, OnDestroy, LOCALE_ID, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../core/auth/auth.service';
-import { PermissionService } from '../../../core/auth/services/permission.service'; // Importujeme PermissionService
+import { PermissionService } from '../../../core/auth/services/permission.service';
 
 import localeCs from '@angular/common/locales/cs';
 
@@ -37,10 +36,12 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router, 
     private authService: AuthService,
-    private permissionService: PermissionService // Injektujeme PermissionService
+    private permissionService: PermissionService,
+    private cdr: ChangeDetectorRef // Přidáno pro ruční aktualizaci zobrazení
   ) { }
 
   ngOnInit(): void {
+    // Sledování stavu přihlášení
     this.authSubscription = this.authService.isLoggedIn$.subscribe(loggedIn => {
       this.isLoggedIn = loggedIn;
       if (loggedIn) {
@@ -49,21 +50,29 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
         this.userEmail = null;
         this.userRole = null;
       }
+      this.cdr.detectChanges(); // Aktualizovat UI při změně stavu
     });
 
+    // Sledování emailu uživatele
     this.userEmailSubscription = this.authService.userEmail$.subscribe(email => {
       this.userEmail = email;
+      this.cdr.detectChanges();
     });
 
+    // Počáteční kontrola autorizace
     this.authService.checkAuth().subscribe(loggedIn => {
       this.isLoggedIn = loggedIn;
       if (loggedIn) {
         this.userRole = this.authService.getUserRole();
       }
+      this.cdr.detectChanges();
     });
 
+    // INTERVAL PRO AKTUALIZACI ČASU
     this.intervalId = setInterval(() => {
       this.currentDate = new Date();
+      // Vynutit překreslení šablony, protože setInterval běží mimo základní detekci v některých verzích
+      this.cdr.detectChanges(); 
     }, 1000);
   }
 
@@ -80,20 +89,24 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Nová metoda pro kontrolu oprávnění
+  // Metoda pro kontrolu oprávnění s ochranou proti null
   hasPermission(permission: string): boolean {
-    return this.permissionService.hasPermission(this.userRole!, permission);
+    if (!this.userRole) {
+      return false;
+    }
+    return this.permissionService.hasPermission(this.userRole, permission);
   }
 
   ngOnDestroy(): void {
+    // Úklid po zničení komponenty
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
     if (this.userEmailSubscription) {
       this.userEmailSubscription.unsubscribe();
+    }
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
     }
   }
 }
