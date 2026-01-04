@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Počítač: 127.0.0.1
--- Vytvořeno: Pát 11. čec 2025, 00:12
--- Verze serveru: 10.4.32-MariaDB
--- Verze PHP: 8.2.12
+-- Host: localhost
+-- Generation Time: Dec 22, 2025 at 10:14 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,64 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Databáze: `joncl_stranky`
+-- Database: `rp_website`
 --
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `addresses`
---
-
-CREATE TABLE `addresses` (
-  `address_id` bigint(20) UNSIGNED NOT NULL,
-  `customer_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `address_line_1` varchar(255) NOT NULL,
-  `address_line_2` varchar(255) DEFAULT NULL,
-  `city` varchar(100) NOT NULL,
-  `state_province` varchar(100) DEFAULT NULL,
-  `postal_code` varchar(20) NOT NULL,
-  `country` varchar(100) NOT NULL,
-  `address_type` varchar(50) DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `affiliate_statistics`
---
-
-CREATE TABLE `affiliate_statistics` (
-  `statistics_id` int(10) UNSIGNED NOT NULL,
-  `coupon_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `employee_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `event_date` date NOT NULL,
-  `click_count` int(11) NOT NULL DEFAULT 0,
-  `order_count` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `revenue_generated` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `attribute_values`
---
-
-CREATE TABLE `attribute_values` (
-  `attribute_value_id` int(10) UNSIGNED NOT NULL,
-  `attribute_id` int(10) UNSIGNED NOT NULL,
-  `value_name` varchar(255) NOT NULL,
-  `display_order` int(11) NOT NULL DEFAULT 0,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `business_logs`
+-- Table structure for table `business_logs`
 --
 
 CREATE TABLE `business_logs` (
@@ -88,201 +37,15 @@ CREATE TABLE `business_logs` (
   `affected_entity_type` varchar(50) DEFAULT NULL,
   `affected_entity_id` bigint(20) UNSIGNED DEFAULT NULL,
   `user_login_id` int(10) UNSIGNED DEFAULT NULL,
-  `context_data` text DEFAULT NULL
+  `context_data` text DEFAULT NULL,
+  `user_login_id_plain` varchar(255) DEFAULT NULL,
+  `user_login_email_plain` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `cache`
---
-
-CREATE TABLE `cache` (
-  `key` varchar(255) NOT NULL,
-  `value` mediumtext NOT NULL,
-  `expiration` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `cache_locks`
---
-
-CREATE TABLE `cache_locks` (
-  `key` varchar(255) NOT NULL,
-  `owner` varchar(255) NOT NULL,
-  `expiration` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `categories`
---
-
-CREATE TABLE `categories` (
-  `category_id` bigint(20) UNSIGNED NOT NULL,
-  `category_name` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
-  `parent_category_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `deleted_at` datetime DEFAULT NULL,
-  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `coupons`
---
-
-CREATE TABLE `coupons` (
-  `coupon_id` bigint(20) UNSIGNED NOT NULL,
-  `coupon_code` varchar(50) NOT NULL,
-  `percent_sale` decimal(5,2) NOT NULL,
-  `minimum_order_amount` decimal(10,2) DEFAULT NULL,
-  `max_discount_amount` decimal(10,2) DEFAULT NULL,
-  `valid_from` date NOT NULL,
-  `valid_to` date NOT NULL,
-  `used_count` int(11) NOT NULL DEFAULT 0,
-  `max_uses` int(11) NOT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `deleted_at` datetime DEFAULT NULL,
-  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `customers`
---
-
-CREATE TABLE `customers` (
-  `customer_id` bigint(20) UNSIGNED NOT NULL,
-  `user_login_id` int(10) UNSIGNED DEFAULT NULL,
-  `company_name` varchar(255) DEFAULT NULL,
-  `first_name` varchar(255) DEFAULT NULL,
-  `last_name` varchar(255) NOT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `phone_number` varchar(50) DEFAULT NULL,
-  `billing_address_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `shipping_address_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `deleted_at` datetime DEFAULT NULL,
-  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `employees`
---
-
-CREATE TABLE `employees` (
-  `employee_id` bigint(20) UNSIGNED NOT NULL,
-  `user_login_id` int(10) UNSIGNED NOT NULL,
-  `function_id` int(10) UNSIGNED NOT NULL,
-  `first_name` varchar(255) NOT NULL,
-  `last_name` varchar(255) NOT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `telephone` varchar(50) DEFAULT NULL,
-  `birthday_date` date DEFAULT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `employee_functions`
---
-
-CREATE TABLE `employee_functions` (
-  `function_id` int(10) UNSIGNED NOT NULL,
-  `function_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `entity_audit_logs`
---
-
-CREATE TABLE `entity_audit_logs` (
-  `audit_log_id` int(10) UNSIGNED NOT NULL,
-  `entity_type` varchar(100) NOT NULL,
-  `entity_id` varchar(255) NOT NULL,
-  `action_type` varchar(50) NOT NULL,
-  `user_login_id` int(10) UNSIGNED DEFAULT NULL,
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `ip_address` varchar(45) DEFAULT NULL,
-  `old_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`old_data`)),
-  `new_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`new_data`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `failed_jobs`
---
-
-CREATE TABLE `failed_jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `connection` text NOT NULL,
-  `queue` text NOT NULL,
-  `payload` longtext NOT NULL,
-  `exception` longtext NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `jobs`
---
-
-CREATE TABLE `jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `queue` varchar(255) NOT NULL,
-  `payload` longtext NOT NULL,
-  `attempts` tinyint(3) UNSIGNED NOT NULL,
-  `reserved_at` int(10) UNSIGNED DEFAULT NULL,
-  `available_at` int(10) UNSIGNED NOT NULL,
-  `created_at` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `job_batches`
---
-
-CREATE TABLE `job_batches` (
-  `id` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `total_jobs` int(11) NOT NULL,
-  `pending_jobs` int(11) NOT NULL,
-  `failed_jobs` int(11) NOT NULL,
-  `failed_job_ids` longtext NOT NULL,
-  `options` mediumtext DEFAULT NULL,
-  `cancelled_at` int(11) DEFAULT NULL,
-  `created_at` int(11) NOT NULL,
-  `finished_at` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `migrations`
+-- Table structure for table `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -292,80 +55,21 @@ CREATE TABLE `migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Vypisuji data pro tabulku `migrations`
+-- Dumping data for table `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (1, '0001_01_01_000000_create_users_table', 1),
 (2, '0001_01_01_000001_create_cache_table', 1),
 (3, '0001_01_01_000002_create_jobs_table', 1),
-(4, '2025_07_10_075603_create_raw_request_commissions_table', 1),
-(5, '2025_07_10_155210_create_personal_access_tokens_table', 2);
+(10, '2025_07_10_155210_create_personal_access_tokens_table', 3),
+(11, '2025_07_15_101409_create_refresh_tokens_table', 3),
+(12, '2025_07_10_075603_create_raw_request_commissions_table', 4);
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `orders`
---
-
-CREATE TABLE `orders` (
-  `order_id` int(10) UNSIGNED NOT NULL,
-  `customer_id` bigint(20) UNSIGNED NOT NULL,
-  `coupon_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `employee_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `order_identification_number` varchar(255) NOT NULL,
-  `order_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `status` varchar(50) NOT NULL DEFAULT 'Pending',
-  `total_amount` decimal(10,2) NOT NULL,
-  `shipping_cost` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `tax_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `discount_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `deleted_at` datetime DEFAULT NULL,
-  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `order_items`
---
-
-CREATE TABLE `order_items` (
-  `order_item_id` int(10) UNSIGNED NOT NULL,
-  `order_id` int(10) UNSIGNED NOT NULL,
-  `product_variant_id` int(10) UNSIGNED NOT NULL,
-  `quantity` int(10) UNSIGNED NOT NULL DEFAULT 1,
-  `unit_price_at_purchase` decimal(10,2) NOT NULL,
-  `dph_rate_at_purchase` decimal(5,4) NOT NULL,
-  `subtotal` decimal(10,2) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `order_shipping_details`
---
-
-CREATE TABLE `order_shipping_details` (
-  `order_shipping_id` int(10) UNSIGNED NOT NULL,
-  `order_id` int(10) UNSIGNED NOT NULL,
-  `shipping_method_id` int(10) UNSIGNED DEFAULT NULL,
-  `shipping_address_id` bigint(20) UNSIGNED NOT NULL,
-  `tracking_number` varchar(255) DEFAULT NULL,
-  `shipped_date` datetime DEFAULT NULL,
-  `delivered_date` datetime DEFAULT NULL,
-  `shipping_status` varchar(50) NOT NULL DEFAULT 'Pending',
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `password_reset_tokens`
+-- Table structure for table `password_reset_tokens`
 --
 
 CREATE TABLE `password_reset_tokens` (
@@ -377,32 +81,7 @@ CREATE TABLE `password_reset_tokens` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `payment_methods`
---
-
-CREATE TABLE `payment_methods` (
-  `payment_method_id` int(10) UNSIGNED NOT NULL,
-  `method_name` varchar(100) NOT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `permissions`
---
-
-CREATE TABLE `permissions` (
-  `permission_id` int(10) UNSIGNED NOT NULL,
-  `permission_name` varchar(100) NOT NULL,
-  `description` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `personal_access_tokens`
+-- Table structure for table `personal_access_tokens`
 --
 
 CREATE TABLE `personal_access_tokens` (
@@ -418,232 +97,91 @@ CREATE TABLE `personal_access_tokens` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
-
 --
--- Struktura tabulky `products`
+-- Dumping data for table `personal_access_tokens`
 --
 
-CREATE TABLE `products` (
-  `product_id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `base_price` decimal(10,2) NOT NULL,
-  `dph_rate` decimal(5,4) NOT NULL,
-  `sku` varchar(50) DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `deleted_at` datetime DEFAULT NULL,
-  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `name`, `token`, `abilities`, `last_used_at`, `expires_at`, `created_at`, `updated_at`) VALUES
+(911, 'App\\Models\\User', 15, 'access-token', '86256cc89fb15d7cf939deff0ebbcb92a232e1cc622a1d2c9bee7283abd2aa6a', '[\"*\"]', '2025-08-19 15:08:44', '2025-08-19 15:27:52', '2025-08-19 14:57:52', '2025-08-19 15:08:44'),
+(970, 'App\\Models\\User', 16, 'access-token', '17a1a1f63703e3db6386b3dab127fbdf54989e01fc83730ddd141b3af0b4fab0', '[\"*\"]', '2025-12-22 09:12:21', '2025-12-22 09:42:18', '2025-12-22 09:12:18', '2025-12-22 09:12:21');
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `products_categories`
---
-
-CREATE TABLE `products_categories` (
-  `product_id` int(10) UNSIGNED NOT NULL,
-  `category_id` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `product_attributes`
---
-
-CREATE TABLE `product_attributes` (
-  `attribute_id` int(10) UNSIGNED NOT NULL,
-  `attribute_name` varchar(100) NOT NULL,
-  `display_name` varchar(100) DEFAULT NULL,
-  `is_variant_attribute` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `product_reviews`
---
-
-CREATE TABLE `product_reviews` (
-  `review_id` int(10) UNSIGNED NOT NULL,
-  `product_id` int(10) UNSIGNED NOT NULL,
-  `customer_id` bigint(20) UNSIGNED NOT NULL,
-  `rating` tinyint(3) UNSIGNED NOT NULL,
-  `comment` text DEFAULT NULL,
-  `review_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `is_approved` tinyint(1) NOT NULL DEFAULT 0,
-  `approved_by_employee_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `product_variant_attribute_values`
---
-
-CREATE TABLE `product_variant_attribute_values` (
-  `product_variant_id` int(10) UNSIGNED NOT NULL,
-  `attribute_value_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `product_variant_combinations`
---
-
-CREATE TABLE `product_variant_combinations` (
-  `product_variant_id` int(10) UNSIGNED NOT NULL,
-  `product_id` int(10) UNSIGNED NOT NULL,
-  `sku` varchar(100) NOT NULL,
-  `price_adjustment` decimal(10,2) DEFAULT 0.00,
-  `stock_quantity` int(11) NOT NULL DEFAULT 0,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `image_url` varchar(255) DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `product_variant_custom_attributes`
---
-
-CREATE TABLE `product_variant_custom_attributes` (
-  `custom_attribute_id` int(10) UNSIGNED NOT NULL,
-  `product_variant_id` int(10) UNSIGNED NOT NULL,
-  `attribute_key` varchar(255) NOT NULL,
-  `attribute_value` text DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `raw_request_commissions`
+-- Table structure for table `raw_request_commissions`
 --
 
 CREATE TABLE `raw_request_commissions` (
-  `id` int(11) NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
   `thema` varchar(255) NOT NULL,
   `contact_email` varchar(255) NOT NULL,
   `contact_phone` varchar(255) DEFAULT NULL,
   `order_description` text NOT NULL,
   `status` varchar(255) NOT NULL DEFAULT 'Nově zadané',
   `priority` varchar(255) NOT NULL DEFAULT 'Neutrální',
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `deleted_at` datetime DEFAULT NULL,
-  `is_deleted` tinyint(4) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `note` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Vypisuji data pro tabulku `raw_request_commissions`
+-- Dumping data for table `raw_request_commissions`
 --
 
-INSERT INTO `raw_request_commissions` (`id`, `thema`, `contact_email`, `contact_phone`, `order_description`, `status`, `priority`, `created_at`, `updated_at`, `deleted_at`, `is_deleted`) VALUES
-(2, 'Testovací téma.', 'test@test.cz', '123 456 789', 'Testovací popis.', 'Nově zadané', 'Neutrální', '2025-07-10 09:51:04', '2025-07-10 09:51:04', NULL, 0),
-(3, 'web-development', 'jonko.testovaci@gmail.czad', '45564', 'adasdasd', 'Nově zadané', 'Neutrální', '2025-07-10 15:13:43', '2025-07-10 15:13:43', NULL, 0),
-(4, 'Enim saepe impedit.', 'kavon13@example.net', NULL, 'Omnis exercitationem animi accusamus sed fuga maxime sint. Ut vel assumenda qui.\n\nQui atque repudiandae fugit reiciendis tempore vel ea. Consequatur aut qui eaque dolorem. Ducimus veniam sed iste et soluta dolor commodi. Sint facilis iste temporibus qui corporis.', 'Zpracovává se', 'Neutrální', '2025-07-10 17:14:48', '2025-07-10 17:14:48', NULL, 0),
-(5, 'Blanditiis praesentium placeat.', 'kulas.justus@example.org', NULL, 'Quo nobis laudantium deserunt qui explicabo. Molestiae qui consequuntur sit debitis repudiandae. Reprehenderit nihil ut harum ut.\n\nDignissimos eius et architecto vitae sequi voluptatibus. Cumque ut nemo beatae unde facere.\n\nIpsum numquam est officia suscipit. Itaque fugiat possimus esse praesentium. Nesciunt officiis aut alias iste. Molestiae pariatur hic modi dolorem enim cupiditate officia.', 'Zrušeno', 'Vysoká', '2025-07-10 17:14:48', '2025-07-10 17:14:48', NULL, 0),
-(6, 'Quisquam eos id.', 'laury05@example.com', '1-828-605-0643', 'Aliquam odio animi ex. Est nam ad totam sit officia voluptas. Sunt ut omnis nisi vel. Aut debitis sapiente quo id minus.\n\nOmnis reprehenderit ducimus reiciendis quae placeat voluptatibus. Non quia et ut voluptas. Mollitia sed quae ut autem. Placeat et ipsam qui qui similique doloribus repellendus.\n\nFuga itaque dolores natus quae ab animi. Dolorem molestiae quasi sint molestias magni accusantium et. Laudantium quia aliquam quo omnis. Aut est et occaecati exercitationem ut et illum.\n\nConsequatur velit eum error eaque ipsa dolor praesentium deleniti. Qui animi laudantium sed nihil quo id. Porro saepe aspernatur atque quia eum temporibus.', 'Zrušeno', 'Neutrální', '2025-07-10 17:14:48', '2025-07-10 17:14:48', NULL, 0),
-(7, 'Quia magnam modi sapiente adipisci.', 'shany79@example.net', NULL, 'Libero cum non quos. Dicta qui molestiae quia vitae molestias. Quibusdam quod hic hic quo. Eveniet nostrum vel vel commodi architecto nemo.\n\nEst et et quasi repellendus mollitia asperiores sed voluptatem. Corporis non ullam magnam sint soluta maxime qui delectus. Aut et velit perspiciatis est ut.\n\nNon nulla consequuntur voluptatem earum. Sunt libero voluptatibus quis dolore nobis nostrum. Commodi et fugit blanditiis dolores.\n\nArchitecto animi nihil quo est. Blanditiis animi ipsam totam. Sed distinctio similique possimus saepe asperiores. Eos enim reprehenderit deleniti nemo.', 'Zrušeno', 'Vysoká', '2025-07-10 17:14:48', '2025-07-10 17:14:48', NULL, 0),
-(8, 'Ducimus illo quasi.', 'annie65@example.net', '218-623-8128', 'Vel iste ad quia assumenda voluptas aut sint. Corporis et pariatur dolorem temporibus culpa et reprehenderit. Voluptates voluptas mollitia ea nihil pariatur voluptatem. Fugit fugit quis doloremque illum vero. Consequuntur quam ut quos ut quisquam iure dolor minima.\n\nEt dolorem dolores quia atque. Aut omnis molestiae blanditiis et at iste quis excepturi. Qui nam ea sequi aut unde accusamus aut. Ad sequi voluptates dolore autem molestiae enim aspernatur. Repudiandae ad aut suscipit similique dolore quia.', 'Dokončeno', 'Nízká', '2025-07-10 17:14:48', '2025-07-10 17:14:48', NULL, 0),
-(9, 'Dolore dolor.', 'antwan.mccullough@example.net', '+1-785-980-4177', 'Nam vel suscipit doloribus qui illo aut quos aspernatur. Nulla quo soluta est consequuntur. Beatae reprehenderit cum animi laborum quis architecto. Beatae iste sit ad voluptas ab.\n\nExercitationem ea voluptatem quia libero. Et quod id et dignissimos.\n\nLaudantium ut porro officia molestias. Similique laborum quia accusamus. Saepe sint quo omnis. Illo explicabo ratione earum.', 'Zpracovává se', 'Neutrální', '2025-07-10 17:14:48', '2025-07-10 17:14:48', NULL, 0),
-(10, 'Dicta fugit vitae autem.', 'tristian61@example.net', NULL, 'Est nisi error suscipit ducimus. Ut error aut ut ut consequatur. Quis dolore ullam quo ullam a tempore fugit. Magni excepturi dolorum sequi suscipit facilis quibusdam.\n\nTenetur est qui aspernatur est voluptatibus non et. Quam officia eligendi magnam hic aliquam est. Beatae excepturi consequatur incidunt veritatis quo. Molestiae asperiores et et nulla cum ut.\n\nAccusantium labore ex velit occaecati qui. Qui voluptatem ratione natus officiis quod eligendi et. Fugit et nobis adipisci debitis ut magnam ea.\n\nSuscipit ullam assumenda ipsa natus esse aliquid quia. Libero ab explicabo recusandae et laudantium est voluptas.', 'Zrušeno', 'Vysoká', '2025-07-10 17:14:48', '2025-07-10 17:14:48', NULL, 0),
-(11, 'Eveniet temporibus asperiores.', 'eldred43@example.org', '+14352421041', 'Saepe ipsam consequatur eius nihil odio nostrum et. Consectetur voluptates minima ullam ab. Eligendi sed voluptatem eos voluptate nostrum fugiat nihil accusamus. Facere quo perspiciatis error laborum.\n\nLaborum est laboriosam facilis temporibus voluptatum officia minus unde. Eos nobis assumenda quasi dolor aut commodi et quo. Quos iste est dolores dolorem.\n\nOptio tempore aperiam vel facilis qui. Pariatur deleniti fugiat repellendus eos. Qui porro tempore non neque quidem. Quod at est ut est quidem beatae odio. Consequatur qui qui nulla impedit non.', 'Zrušeno', 'Nízká', '2025-07-10 17:14:48', '2025-07-10 17:14:48', NULL, 0),
-(12, 'Laboriosam repellendus ut.', 'dandre54@example.org', '+12608163603', 'Nobis optio optio voluptatem quod voluptate et fugiat. Consectetur qui rerum beatae doloremque similique. Expedita similique in soluta pariatur pariatur omnis. Molestiae eligendi nostrum et eligendi ipsum.\n\nHarum qui odit consequatur eligendi. Aspernatur magnam rem quae a. Aut est sit ut ipsum aspernatur exercitationem. Autem cum porro nihil quisquam amet reprehenderit.', 'Zpracovává se', 'Nízká', '2025-07-10 17:14:48', '2025-07-10 17:14:48', NULL, 0),
-(13, 'Maxime est error.', 'tobin.baumbach@example.com', NULL, 'Voluptatem quo consequatur porro ut. Quia eaque distinctio odio et. Quis voluptatem nihil ducimus id inventore error. Est fugiat et consequatur tempore autem facere.\n\nAdipisci magnam atque ut quia voluptas quis consequuntur. Et perspiciatis maiores sit porro ab molestias. Corrupti totam quisquam tempora neque deserunt.\n\nConsequatur dolore in fuga totam. Enim dolore cupiditate et officiis. Quibusdam rem et est maxime ducimus consequuntur quidem cum.\n\nFacere dignissimos et neque cumque earum. Inventore hic vel sint qui iste qui. Ut maxime vel aliquam nulla est debitis id. Cumque animi tempore vero beatae omnis.', 'Dokončeno', 'Nízká', '2025-07-10 17:14:48', '2025-07-10 17:14:48', NULL, 0);
+INSERT INTO `raw_request_commissions` (`id`, `thema`, `contact_email`, `contact_phone`, `order_description`, `status`, `priority`, `created_at`, `updated_at`, `deleted_at`, `note`) VALUES
+(1, 'Webový vývoj', 'resr.res@sf.cz', '123123123', 'sfsdfsfd', 'Nově zadané', 'Nízká', '2025-12-22 09:12:01', '2025-12-22 09:12:01', NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `refund_requests`
+-- Table structure for table `refresh_tokens`
 --
 
-CREATE TABLE `refund_requests` (
-  `refund_id` int(10) UNSIGNED NOT NULL,
-  `order_id` int(10) UNSIGNED NOT NULL,
-  `description` text NOT NULL,
-  `status` varchar(50) NOT NULL DEFAULT 'Pending',
-  `result` tinyint(1) DEFAULT NULL,
-  `refund_amount` decimal(10,2) DEFAULT NULL,
-  `processed_by_employee_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `internal_note` text DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `deleted_at` datetime DEFAULT NULL,
-  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `refresh_tokens` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_login_id` int(10) UNSIGNED NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `refresh_tokens`
+--
+
+INSERT INTO `refresh_tokens` (`id`, `user_login_id`, `token`, `expires_at`, `created_at`, `updated_at`) VALUES
+(969, 16, '5ee9a762422efdc6a0f92e54ff6a014b51de69b45a7627a687cff3228f646f1c', '2025-12-29 09:12:18', '2025-12-22 09:12:18', '2025-12-22 09:12:18');
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `requests`
---
-
-CREATE TABLE `requests` (
-  `request_id` int(10) UNSIGNED NOT NULL,
-  `request_type_id` bigint(20) UNSIGNED NOT NULL,
-  `customer_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `employee_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `contact_name` varchar(255) NOT NULL,
-  `contact_email` varchar(255) NOT NULL,
-  `contact_phone` varchar(50) DEFAULT NULL,
-  `description` text NOT NULL,
-  `status` varchar(50) NOT NULL DEFAULT 'New',
-  `priority` varchar(20) NOT NULL DEFAULT 'Normal',
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `deleted_at` datetime DEFAULT NULL,
-  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `request_types`
---
-
-CREATE TABLE `request_types` (
-  `request_type_id` bigint(20) UNSIGNED NOT NULL,
-  `request_type` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `roles`
+-- Table structure for table `roles`
 --
 
 CREATE TABLE `roles` (
   `role_id` int(10) UNSIGNED NOT NULL,
   `role_name` varchar(50) NOT NULL,
-  `description` varchar(255) DEFAULT NULL
+  `description` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`role_id`, `role_name`, `description`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'sysadmin', NULL, '2025-08-17 07:46:27', '2025-08-17 07:46:27', NULL),
+(2, 'admin', NULL, '2025-08-17 07:46:27', '2025-08-17 07:46:27', NULL),
+(3, 'primeadmin', NULL, '2025-08-20 09:02:24', '2025-08-20 09:02:24', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `role_permissions`
---
-
-CREATE TABLE `role_permissions` (
-  `role_id` int(10) UNSIGNED NOT NULL,
-  `permission_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `sessions`
+-- Table structure for table `sessions`
 --
 
 CREATE TABLE `sessions` (
@@ -656,62 +194,42 @@ CREATE TABLE `sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Vypisuji data pro tabulku `sessions`
+-- Dumping data for table `sessions`
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('0qcy6XQIdLdI74Jd6J4zupZ4fEEC3xuBbGZSm3cM', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiakdrNkxTeHhFQlAwT2xNQllwWjYwb3VrbmowY3M0VE43UWlMOXI0aCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180317),
-('48upuQLUzxBqSdjn374uzEbxBearraEENAdoFzhg', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiblBYajkwNWFpdUJCUzlidFVsQnBSdmtaVVFxZEVHZnpQZ1R3UWlrNCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180647),
-('7q3arQqF9zYNVFgPAg3m2Z3nzKnihC62RP3zziNa', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiVFR0dlc5aTFkbW5SdHgxSjFhVjUxbXZORHJwOGFLWkNlQnkxV3N3dCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752179871),
-('aloGJKTTbp0swwU5iAH4LeK2Nl0LdkYlqIPrJiIj', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiOXZRdU5JM0NQUGRGZlBLZElzcGhLdDJvQWcyRG92QVRyY2V2ZWNRQSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752181332),
-('AYqBpMw6qJ64fDhD9ChiznPvLw0oEFQQeTbbasfz', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiQmthT3NqWEZzRVdlTGFaRVI3aEZ0WVJ1WlA0YnhXdUo0WVIxYXpaeCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180657),
-('CqK6WaeZ997RNgB8zILXlbKFQs0p5g10krhGI18l', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZjV1UDVvNTZBN0hNRXUwZkh6TDJwaHAxQldHRHBuUHN5Q0dOYkFYNCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752179857),
-('eKzQRRwpoBYE6YsbNHhywiIlCzngTLBm6aE7kYbU', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiN0FETll5NnBVREI5bTY1VDNVM2VkWWRvSjhqRUFIMTR6R0VHOUg3MiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752181149),
-('exRPmH16bBT6c8QZilsRTIyZ7fNkRmO92MYAPhQi', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMjdmQXYyeHIwd09UUXVlaVZRMHlKRlJHZ2g4Mm5HYzVkQ0xjcUlNRSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752181217),
-('fUV7ou6jngvMSWWtdeD7xw0NpJc7R0OzpeFlCKiy', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiUWhHeDk1YndZVHI1ODVBVkVhZU9qT3NKMFNEQUhpNDBJeGNTNlhLNSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzA6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvdXNlciI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1752181331),
-('hKnmicXh6T3l8kx8Nuws85o42mRXCwrUdWV1kCFK', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiV3RpVll0dlUwbHdJcThTQXVqcDJWSjJhUHNhYWRrR3NaUzhEUThuSCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzA6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvdXNlciI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1752181216),
-('inA4sVYJrzJW1j42rJI5udWE3SkollKanFCzvDdQ', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoicENSSTBqRUFGZkI1bTJIMjhtVllrZmpvQ3k4ZGpZeFZWRXdxZGlTcyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180769),
-('jil1xI7hbvEEtbLLPObdvsYAHisSJAAK7HQ4tC9b', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieFZ5NXExMkNlb292RHhXSThSOXJ4TlpOTUE3bEFvcHliU0IxWXBmRSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180938),
-('kgI2A9l0a7KK5DFgS5IUay36ZI1FsqcjTC4Dfou7', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiNHdka25BaHhiSlpjTFp5YnpUSVNBbkVDRGZBdHdCT3VPZGZsWGZVZCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752181217),
-('KJKwUBo4uI0gb8YNJnmS24YPdvFrXf5InOLtktrh', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiaVJDTnA2WHFWUFRQWml4ZG84TjRaMk5Makx4dERiQlJXVVNVblgyQyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752181331),
-('LcuzbejbXpmdAhiNhyFchHKZc6a5rUYv6Ab7ldwp', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiaGxyd2ZWSFlsZzdnblRvU1h6RVJYbkhDVU1vOEFlUktrMlJ6d2FRSCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752181172),
-('OvdL5eewpI0q2o5bMSvoZdidjFBiaOZ5j8FQilFA', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoicjNuZFFSRFVYUUVEUlVMNmM0OTNYUHdaS3U5Y2xZZ0VwMTRHUkVSOCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752181149),
-('PGQu6Xtd9okvd5XzgwJE9sCBs3JbO5fXPgauFAUW', NULL, '127.0.0.1', 'PostmanRuntime/7.44.1', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiemhST0VvUEJpekhtSVltSXRJeWZubTNKck0zS3RZRzlORE13cW9QSyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1752171484),
-('pGWdjrgnClmm1rbSlRk1uFJTYWeJ8SDCC6pKtehS', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiWGlYSEhlSE8wZzZjb2xKOUVhTVFCbUJNWHJheklFV2U2eUxwSDlhMyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180649),
-('pl1Et4NQz8t2Dreazo2Yp30pg8tOHfMBP10FLp7S', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoia0ppRlFGRkxVN3hVZVNCTURSSlE4SXNzZ3Z3d2ZFbzJIQzhOUUxveiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzA6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvdXNlciI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1752180316),
-('ps337hYGmDXhe7U7il39eCT4KLGF9ifZOfDJJklw', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiQnc5Y1lQR092Zm9rME5GbUZzOGw4VWZ2SlBEWDBiQ1hNcW16WEZQUyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180937),
-('puIwLv5PTvhRuYW0baPwT8ROvEIdKY1cquyzp8q1', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiYW5VVGpBYVpDeWFKTW40eEQ4RHlzSER5N0gyMld1SkZEeXRGekEwbiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180647),
-('PzD2dOnwuaZ6pIk7UaeB0mTzlnuO0hqL8RN3biW8', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiNHBETU1mVDBNRTRNMExuOXJkRk41aENYNEY5cUpMVW1iMEhqMXk0NiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180769),
-('qW4vW1GUacBqkv5maSe2Ih5xcludHblu4vAG7MJA', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiTlJaZzhkME9xVTVzcVd0SmNHNnNqNXpveEcyUEdZYU1seWhpMGxSTiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180078),
-('RYFa433PPTVmBOzJQ1LESZCizbZZFGOis6KKmPCe', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiQkZWMG8zYUZNQkFNd2Y4bHY4ckYzbUJldzd3NFpEUHNFa0FHcml4eiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180317),
-('sTn0KnFGGOy6Rpb3K1ZH1729GIlphqMy4qccHZwq', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiaWxTbkhGSTRkb3BWZ1kwYnR0MVFNT0U5YmtvRTY3NndPQlh3SXdkOCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752179872),
-('ujoCobT9xV974UUhqcwfOC0HsFoxofIhXDmihRaq', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiWm1xV1EydnI3TU1tZUU2dVYxbERSYmlwd01XeE5PUVdKZ2N2SUVwOCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752181172),
-('vLdRW8aa5BqfJfzQh5qrRvwbjcqgi2o7yQpsVsyo', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiWWJpZVA5ak96eUVuQmpVRmd5ZU1hU25HaEVDV0k0VFllMGxEbHpnRiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752181165),
-('XFDdoPSYGxh87RbZcuI67IRLTA3MGfEyV5hZCYT1', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiV2RXaEowSkNXaXZwSWlvZkNLYnZTYzgxQjBVN211RFh1cWVNQjUxdiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180657),
-('Xs9kDRKb6c4mAJEFxCLEGCVjklPkZQqPJBRdbX2z', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiampSQkJQS0todkF0T2tLM3dadU5DOGNJeUNjdnZBY2h6NzFZTHBTSyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180078),
-('Z2015yTBX0nPlFxbzl9HfcYWGaAzmD4qW2rqN7ZB', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiVFBPWXdjWmNlT0RyalpVMmhpbW1KQmRhYkwwM2xka3I2QlNualA3WCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752181165),
-('z3VTcEKQRIm48JukeyioOVlrZdPnimiEESbxsdfY', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiTlRsaHVaR2NMUE5FanFzV205b2ZLMGdWVUI0S282MGxCNnZHdVFrWSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752180649),
-('ztblLEaSVuXgQhFtCg6O0SfQZUfwwGF7H726WUE2', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiUGJNWUp6R0x3QnBWNURjeEV3N2hLZGFpQURIdVdpUjRYejZ0bUM2dyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hcGkvcmF3X3JlcXVlc3RfY29tbWlzc2lvbnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752179856);
+('0inpi7uITsCIohrxS3HGNaWvZNGkwhR5Iqdg82wv', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 OPR/119.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiaTA4RE5FSkdRT1ROSHl3OGhRVVB0SHpYaEYyZXozSzZEYjRqNGJSVSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752592037),
+('1FE0WUrtJ2f43kGAdlhkKqD2TJ5OjYTIu7LETNad', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiSXBBRXhUM0hDbUI0Um1uV3RTM0NhQ2ZmVzI2VjR6aGY3TGdQT0w3MCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752590341),
+('1OEgb18qudcnz1nKfuwjQmlF46aVplHjST88bt2Q', NULL, '127.0.0.1', 'PostmanRuntime/7.45.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiUmtiSndFdm1PUVR4U1FlWDRGSkR1bHJ5dkxVNzVrYzI3dDlhZUVUeSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHBzOi8vYXBpLnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1755424735),
+('2bI71fuNtbIzwL52IRcFPCRcDEqzuSb3wGGvOMb2', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieE9NWWR6WUtwWmYxTVp2dkVSUDFlbml4bUVMZWZQNzRrM2E3a0VudyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHBzOi8vYXBpLnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752579037),
+('8blnDF9feocbjokaVZgS8kHXCyEttZdWVK2lIPDW', NULL, '127.0.0.1', 'PostmanRuntime/7.45.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoic1ZvYjNPZ2V2U0lrUWxUREJXdDljN1Z3dTk0cTlFTTZ4Zk40Nm5aQyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHBzOi8vYXBpLnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1754584531),
+('AKF0u3NmuBicKQJW15kVqxvP2nmYwKsp5biSI1eA', NULL, '127.0.0.1', 'PostmanRuntime/7.45.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiQmNOT25vbWlBYWwydEFNazB3YUpnZVdnSlNJWVB6SlVSbER0dTNGTCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHBzOi8vYXBpLnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1755383998),
+('bk8XdNnApgkyqprwj2L21EYBHNGo6cW87N0lWFQX', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZkdhZ3ZocU00eGJwS3hrSFdHQlY2QWQ1VW9zdGZOUkE4WkVSYjhqNSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHBzOi8vYXBpLnRlc3QvYXBpL3Jhd19yZXF1ZXN0X2NvbW1pc3Npb25zIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1752217213),
+('dBbGrqz9Spmw9jow2frCbphMNl7lncjG04atuZfE', NULL, '127.0.0.1', 'PostmanRuntime/7.45.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoidmU1bVhKNmFUbnl5WUJWRjJNUkplQ0hhdENHWUduQ0NzaTV0RjZFbiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHBzOi8vYXBpLnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1755453737),
+('dD2NZ6VsdhFrIQqEavFcXlmws4jjMdpyw41qYFPf', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZE91eE5YR3VZdGMwM242VXE4cmZuUHV6RjM3OTQweUI4OWNXSU5FeCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1753171826),
+('e0U8U0LakUj4cX6tGGVjojuC0SP6hmy3M2lGEm1T', NULL, '127.0.0.1', 'PostmanRuntime/7.45.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiaDNvSVNyNDBlTVdadFF6SGdmWXBpVWM4WnhPbVdRUDFzdnYzTXJpSCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHBzOi8vYXBpLnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1755452834),
+('GcoJnP2iIzNWXHNJ66mrs0ccVhlLZ0xoLsnzStCM', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoib1ZHVzZ4ak45aGFqVmk5T0hreVNpbERXQ09wR202N0NGcGxGcklYQSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1753171825),
+('jPTPRbCa86BSdWqEtigyIVO5AioI49Mj6NY4qzgO', NULL, '127.0.0.1', 'PostmanRuntime/7.44.1', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiS2VUTDRtcnBRSDJMMU9LakQ5cTJRT21pYnZOaHMyNnRTQUM0bVJwcSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHBzOi8vYXBpLnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752571636),
+('K8WS4TaqsplCPDJBbMu2NZ8wTK46mqYuiIFO7oZh', NULL, '127.0.0.1', 'PostmanRuntime/7.45.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiS29MTVR3R2hTTzYyVXZYamVXTWZJckZvVzdGV01jd1V6QURadmllVSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHBzOi8vYXBpLnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1755419132),
+('kmw2jxWGUNOKUo6qzmqNXD9lAaWuxYrh9lVnvPDT', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiQklZcUVxc3VlYUc5QTAxcUZZUlFOWTF1SXZ3aHZJTHl3RUFob0xlbSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHBzOi8vYXBpLnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752579008),
+('lELz7sIQimFV7ESf0salLbl3nTj7IWRsQ6nbfrco', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoicWZlSTNQRzlkSG1LZTZPY0cyVktXNGVxZ2ZOSHVXcTNDamZQTEI4eCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHBzOi8vYXBpLnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752225341),
+('LVuMntqgG8QYRuvKKgyHnki87shgJLgiy9yMz9PQ', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiV2tKb0xkSDNidnBBMmpQRzRFalRaVFNFejBUeG92OEo2Ynh2MnhCTCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752590343),
+('NDygBBymgyCe7rfRPNuVx5ltJG6jBQv4XPDwcLLi', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiRG84RW0wTG85WnFXQXRORXlCRFZZWVF0SVFNcVRaT1pVcEphVzJBWCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1753171821),
+('pFqnNoJkggQsYYhbXyHHJ9w4qVcptJ8Rv7gVfc9J', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiNXFObzREdk40ZFd3UDFWTk1VZUJ2dndKalIzdGg0VXhjOTZhRmNZaCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1752588909),
+('rcOt9sDPpTUWZzp9eg4zlOUu7vYyWI8sAKKnRD4j', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiV1c0YWoxa1M3RENvOG95MnBSRGgxWEFXakZTUTN3eU41M2ZyYnVncyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1753171827),
+('rjjHscUmxjdftxIYsca2mJgpxRd8RLLcignBdcXb', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiNHZkVHJBeEg2WGk2SWoxNDR2V05pTDd1cDVPdml5M1hJVzZNTW9uciI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHBzOi8vYXBpLnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752569522),
+('tTfDxexLSQfcO9FLskYkS3lRVEwL83IEMVDAEFE1', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiU0hQbG5ieGRPTVpqcGpLNU9kQ2FzU2JtMDNEcUVVdXFNeUNWU0tDQiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752218365),
+('U70cQJOwpWpu5UeAdD90lPpgIfvL71nRI56C0tTK', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 OPR/119.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZGNQU0VvSHRiTnVWdmZCV3hWTmdDT3p0V3FsMUtiQmVpd2Y4QVU3bCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752591719),
+('UqyKEPgdoAoVZYPXBxW2e8l4Rg5cv6Ov7QCy5KwL', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZUJXeGI3RGoyZnl0dmw3NWdwaVpDbUpUQmRtR0JYMkZUYzViMmpHeSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHBzOi8vYXBpLnRlc3QvYXBpL3Jhd19yZXF1ZXN0X2NvbW1pc3Npb25zIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1752226311),
+('vJAXXObJWbON69ZGiCDbTRSHQi2T3nZEHvG9KMbK', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 OPR/119.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiTlphcFozNmhwSDFUc2pwS2RYZUlLUXVZQ0F0b095dEFqV05nQTY1MCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752592036),
+('xpLZFN68K2KcH4gyP6R4IUgWHYB7zxZ1uNHH0xBo', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoibnBNcUZEeXhDeDY5NUlwOFNxeWVvY0JPQkNOMk95MnlYcnZ2UlFKayI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHBzOi8vYXBpLnRlc3QvYXBpL3Jhd19yZXF1ZXN0X2NvbW1pc3Npb25zIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1752225336),
+('yPtSVnu0OCmauER8WRVT2YJLKJiJrrh1a0QxiB50', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiN09DNGNZY0FSVjNLNkRzUUU1ZEtLQzB3Y1lJOWZTZjVCZzRoOGV0SyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752570709),
+('z5zug8Qb1JQCMAWJq3VBLghb6sZ2wxA65lRSNB3k', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiVzhIelVPTnpoa256azlqNGtyUlhSY2lLZmxxUHY0WUVDQ2dsU2lqdyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752590309);
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `shipping_methods`
---
-
-CREATE TABLE `shipping_methods` (
-  `shipping_method_id` int(10) UNSIGNED NOT NULL,
-  `method_name` varchar(100) NOT NULL,
-  `base_cost` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `estimated_delivery_days` int(11) DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `system_logs`
+-- Table structure for table `system_logs`
 --
 
 CREATE TABLE `system_logs` (
@@ -727,41 +245,7 @@ CREATE TABLE `system_logs` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `system_settings`
---
-
-CREATE TABLE `system_settings` (
-  `setting_id` int(10) UNSIGNED NOT NULL,
-  `setting_key` varchar(255) NOT NULL,
-  `setting_value` text DEFAULT NULL,
-  `description` varchar(500) DEFAULT NULL,
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_by_user_id` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `transactions`
---
-
-CREATE TABLE `transactions` (
-  `transaction_id` int(10) UNSIGNED NOT NULL,
-  `order_id` int(10) UNSIGNED NOT NULL,
-  `payment_method_id` int(10) UNSIGNED DEFAULT NULL,
-  `transaction_amount` decimal(10,2) NOT NULL,
-  `currency` varchar(5) NOT NULL DEFAULT 'CZK',
-  `transaction_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `status` varchar(50) NOT NULL,
-  `payment_gateway_id` varchar(255) DEFAULT NULL,
-  `payment_gateway_response` text DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -778,14 +262,14 @@ CREATE TABLE `users` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `user_login`
+-- Table structure for table `user_login`
 --
 
 CREATE TABLE `user_login` (
   `user_login_id` int(10) UNSIGNED NOT NULL,
   `user_email` varchar(255) NOT NULL,
   `user_password_hash` varchar(255) NOT NULL,
-  `user_password_salt` varchar(255) NOT NULL,
+  `user_password_salt` varchar(255) DEFAULT NULL,
   `last_login_at` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
@@ -794,16 +278,21 @@ CREATE TABLE `user_login` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Vypisuji data pro tabulku `user_login`
+-- Dumping data for table `user_login`
 --
 
 INSERT INTO `user_login` (`user_login_id`, `user_email`, `user_password_hash`, `user_password_salt`, `last_login_at`, `created_at`, `updated_at`, `deleted_at`, `is_deleted`) VALUES
-(1, 'admin@example.com', '$2y$12$v2Uh5xld7hxZIfLHDUw8IOvJiBgxPdBKthG8kvL4nT1xWwDrQRx02', '', NULL, '2025-07-10 17:10:32', '2025-07-10 17:10:32', NULL, 0);
+(1, 'admin@example.com', '$2y$12$v2Uh5xld7hxZIfLHDUw8IOvJiBgxPdBKthG8kvL4nT1xWwDrQRx02', '0', '2025-08-26 10:06:26', '2025-07-10 17:10:32', '2025-08-26 10:06:26', NULL, 0),
+(11, 'admin2@example.com', '$2y$12$kxPzYBFJng7gpeWz/jP5ae9EY5pa27GOuZqYD0KhPQ5jFhsgAmdDG', NULL, '2025-08-20 18:26:20', '2025-08-17 16:36:22', '2025-08-22 13:21:06', NULL, 0),
+(16, 'primeadmin@primeadmin.cz', '$2y$12$nkO/meLFwJWy0US8JxNEg.zO2Enb3qyOdsY6GdqI9gSNVALtlno52', NULL, '2025-12-22 10:12:18', '2025-08-20 11:01:19', '2025-12-22 10:12:18', NULL, 0),
+(18, 'admin3@example.com', '$2y$12$izfWlAVFHIxkj8bTAVMLw..Kd6q36xvdL6/8MaYK0Yo5YM5FekF8W', NULL, '2025-08-20 18:59:20', '2025-08-20 18:30:58', '2025-08-22 13:21:14', NULL, 0),
+(19, 'admin4@example.com', '$2y$12$i2aNPTOXj4SvgzYk1v1Or.lVnWHbe.zxH5eSjIJJd3q2UvnpiX7Ca', NULL, '2025-08-20 18:55:09', '2025-08-20 18:31:09', '2025-08-22 13:21:27', NULL, 0),
+(20, 'admin5@example.com', '$2y$12$W1R9lYFf/0ZzkVsj.sMHQuYmuhXMU1NSs0VpLjkzqWgb8AF4UHq9e', NULL, '2025-08-20 18:55:49', '2025-08-20 18:31:24', '2025-08-22 13:21:45', NULL, 0);
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `user_roles`
+-- Table structure for table `user_roles`
 --
 
 CREATE TABLE `user_roles` (
@@ -812,34 +301,23 @@ CREATE TABLE `user_roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Indexy pro exportované tabulky
+-- Dumping data for table `user_roles`
+--
+
+INSERT INTO `user_roles` (`user_login_id`, `role_id`) VALUES
+(1, 1),
+(11, 2),
+(16, 3),
+(18, 2),
+(19, 2),
+(20, 2);
+
+--
+-- Indexes for dumped tables
 --
 
 --
--- Indexy pro tabulku `addresses`
---
-ALTER TABLE `addresses`
-  ADD PRIMARY KEY (`address_id`),
-  ADD KEY `idx_addresses_customer_id` (`customer_id`);
-
---
--- Indexy pro tabulku `affiliate_statistics`
---
-ALTER TABLE `affiliate_statistics`
-  ADD PRIMARY KEY (`statistics_id`),
-  ADD KEY `idx_affiliate_statistics_coupon_id` (`coupon_id`),
-  ADD KEY `idx_affiliate_statistics_employee_id` (`employee_id`);
-
---
--- Indexy pro tabulku `attribute_values`
---
-ALTER TABLE `attribute_values`
-  ADD PRIMARY KEY (`attribute_value_id`),
-  ADD UNIQUE KEY `uq_attribute_value_name` (`attribute_id`,`value_name`),
-  ADD KEY `idx_attribute_values_attribute_id` (`attribute_id`);
-
---
--- Indexy pro tabulku `business_logs`
+-- Indexes for table `business_logs`
 --
 ALTER TABLE `business_logs`
   ADD PRIMARY KEY (`business_log_id`),
@@ -847,152 +325,19 @@ ALTER TABLE `business_logs`
   ADD KEY `idx_business_logs_user_login_id` (`user_login_id`);
 
 --
--- Indexy pro tabulku `cache`
---
-ALTER TABLE `cache`
-  ADD PRIMARY KEY (`key`);
-
---
--- Indexy pro tabulku `cache_locks`
---
-ALTER TABLE `cache_locks`
-  ADD PRIMARY KEY (`key`);
-
---
--- Indexy pro tabulku `categories`
---
-ALTER TABLE `categories`
-  ADD PRIMARY KEY (`category_id`),
-  ADD UNIQUE KEY `category_name` (`category_name`),
-  ADD UNIQUE KEY `uq_categories_name` (`category_name`),
-  ADD KEY `idx_categories_parent_category_id` (`parent_category_id`);
-
---
--- Indexy pro tabulku `coupons`
---
-ALTER TABLE `coupons`
-  ADD PRIMARY KEY (`coupon_id`),
-  ADD UNIQUE KEY `coupon_code` (`coupon_code`),
-  ADD UNIQUE KEY `uq_coupons_coupon_code` (`coupon_code`);
-
---
--- Indexy pro tabulku `customers`
---
-ALTER TABLE `customers`
-  ADD PRIMARY KEY (`customer_id`),
-  ADD UNIQUE KEY `user_login_id` (`user_login_id`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `uq_customers_email` (`email`),
-  ADD UNIQUE KEY `uq_customers_user_login_id` (`user_login_id`),
-  ADD KEY `idx_customers_billing_address_id` (`billing_address_id`),
-  ADD KEY `idx_customers_shipping_address_id` (`shipping_address_id`);
-
---
--- Indexy pro tabulku `employees`
---
-ALTER TABLE `employees`
-  ADD PRIMARY KEY (`employee_id`),
-  ADD UNIQUE KEY `user_login_id` (`user_login_id`),
-  ADD UNIQUE KEY `uq_employees_user_login_id` (`user_login_id`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `uq_employees_email` (`email`),
-  ADD KEY `idx_employees_function_id` (`function_id`);
-
---
--- Indexy pro tabulku `employee_functions`
---
-ALTER TABLE `employee_functions`
-  ADD PRIMARY KEY (`function_id`),
-  ADD UNIQUE KEY `function_name` (`function_name`),
-  ADD UNIQUE KEY `uq_employee_function_name` (`function_name`);
-
---
--- Indexy pro tabulku `entity_audit_logs`
---
-ALTER TABLE `entity_audit_logs`
-  ADD PRIMARY KEY (`audit_log_id`),
-  ADD KEY `idx_audit_entity` (`entity_type`,`entity_id`),
-  ADD KEY `idx_audit_user_login_id` (`user_login_id`);
-
---
--- Indexy pro tabulku `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
-
---
--- Indexy pro tabulku `jobs`
---
-ALTER TABLE `jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `jobs_queue_index` (`queue`);
-
---
--- Indexy pro tabulku `job_batches`
---
-ALTER TABLE `job_batches`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexy pro tabulku `migrations`
+-- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexy pro tabulku `orders`
---
-ALTER TABLE `orders`
-  ADD PRIMARY KEY (`order_id`),
-  ADD UNIQUE KEY `order_identification_number` (`order_identification_number`),
-  ADD UNIQUE KEY `uq_orders_identification_number` (`order_identification_number`),
-  ADD KEY `idx_orders_customer_id` (`customer_id`),
-  ADD KEY `idx_orders_coupon_id` (`coupon_id`),
-  ADD KEY `idx_orders_employee_id` (`employee_id`);
-
---
--- Indexy pro tabulku `order_items`
---
-ALTER TABLE `order_items`
-  ADD PRIMARY KEY (`order_item_id`),
-  ADD KEY `idx_order_items_order_id` (`order_id`),
-  ADD KEY `idx_order_items_product_variant_id` (`product_variant_id`);
-
---
--- Indexy pro tabulku `order_shipping_details`
---
-ALTER TABLE `order_shipping_details`
-  ADD PRIMARY KEY (`order_shipping_id`),
-  ADD UNIQUE KEY `order_id` (`order_id`),
-  ADD UNIQUE KEY `uq_order_shipping_order_id` (`order_id`),
-  ADD KEY `idx_osd_shipping_method_id` (`shipping_method_id`),
-  ADD KEY `idx_osd_shipping_address_id` (`shipping_address_id`);
-
---
--- Indexy pro tabulku `password_reset_tokens`
+-- Indexes for table `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
   ADD PRIMARY KEY (`email`);
 
 --
--- Indexy pro tabulku `payment_methods`
---
-ALTER TABLE `payment_methods`
-  ADD PRIMARY KEY (`payment_method_id`),
-  ADD UNIQUE KEY `method_name` (`method_name`),
-  ADD UNIQUE KEY `uq_payment_method_name` (`method_name`);
-
---
--- Indexy pro tabulku `permissions`
---
-ALTER TABLE `permissions`
-  ADD PRIMARY KEY (`permission_id`),
-  ADD UNIQUE KEY `permission_name` (`permission_name`),
-  ADD UNIQUE KEY `uq_permission_name` (`permission_name`);
-
---
--- Indexy pro tabulku `personal_access_tokens`
+-- Indexes for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   ADD PRIMARY KEY (`id`),
@@ -1000,96 +345,21 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
--- Indexy pro tabulku `products`
---
-ALTER TABLE `products`
-  ADD PRIMARY KEY (`product_id`),
-  ADD UNIQUE KEY `sku` (`sku`),
-  ADD UNIQUE KEY `uq_products_sku` (`sku`);
-
---
--- Indexy pro tabulku `products_categories`
---
-ALTER TABLE `products_categories`
-  ADD PRIMARY KEY (`product_id`,`category_id`),
-  ADD KEY `idx_products_categories_product_id` (`product_id`),
-  ADD KEY `idx_products_categories_category_id` (`category_id`);
-
---
--- Indexy pro tabulku `product_attributes`
---
-ALTER TABLE `product_attributes`
-  ADD PRIMARY KEY (`attribute_id`),
-  ADD UNIQUE KEY `attribute_name` (`attribute_name`),
-  ADD UNIQUE KEY `uq_product_attribute_name` (`attribute_name`);
-
---
--- Indexy pro tabulku `product_reviews`
---
-ALTER TABLE `product_reviews`
-  ADD PRIMARY KEY (`review_id`),
-  ADD UNIQUE KEY `uq_customer_product_review` (`product_id`,`customer_id`),
-  ADD KEY `idx_product_reviews_product_id` (`product_id`),
-  ADD KEY `idx_product_reviews_customer_id` (`customer_id`),
-  ADD KEY `idx_product_reviews_approved_by_employee_id` (`approved_by_employee_id`);
-
---
--- Indexy pro tabulku `product_variant_attribute_values`
---
-ALTER TABLE `product_variant_attribute_values`
-  ADD PRIMARY KEY (`product_variant_id`,`attribute_value_id`),
-  ADD KEY `idx_pvav_product_variant_id` (`product_variant_id`),
-  ADD KEY `idx_pvav_attribute_value_id` (`attribute_value_id`);
-
---
--- Indexy pro tabulku `product_variant_combinations`
---
-ALTER TABLE `product_variant_combinations`
-  ADD PRIMARY KEY (`product_variant_id`),
-  ADD UNIQUE KEY `sku` (`sku`),
-  ADD KEY `idx_pvc_product_id` (`product_id`);
-
---
--- Indexy pro tabulku `product_variant_custom_attributes`
---
-ALTER TABLE `product_variant_custom_attributes`
-  ADD PRIMARY KEY (`custom_attribute_id`),
-  ADD UNIQUE KEY `uq_variant_custom_attribute` (`product_variant_id`,`attribute_key`),
-  ADD KEY `idx_pvca_product_variant_id` (`product_variant_id`);
-
---
--- Indexy pro tabulku `raw_request_commissions`
+-- Indexes for table `raw_request_commissions`
 --
 ALTER TABLE `raw_request_commissions`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexy pro tabulku `refund_requests`
+-- Indexes for table `refresh_tokens`
 --
-ALTER TABLE `refund_requests`
-  ADD PRIMARY KEY (`refund_id`),
-  ADD KEY `idx_refund_requests_order_id` (`order_id`),
-  ADD KEY `idx_refund_requests_processed_by_employee_id` (`processed_by_employee_id`);
+ALTER TABLE `refresh_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `refresh_tokens_token_unique` (`token`),
+  ADD KEY `refresh_tokens_user_login_id_foreign` (`user_login_id`);
 
 --
--- Indexy pro tabulku `requests`
---
-ALTER TABLE `requests`
-  ADD PRIMARY KEY (`request_id`),
-  ADD KEY `idx_requests_request_type_id` (`request_type_id`),
-  ADD KEY `idx_requests_customer_id` (`customer_id`),
-  ADD KEY `idx_requests_employee_id` (`employee_id`);
-
---
--- Indexy pro tabulku `request_types`
---
-ALTER TABLE `request_types`
-  ADD PRIMARY KEY (`request_type_id`),
-  ADD UNIQUE KEY `request_type` (`request_type`),
-  ADD UNIQUE KEY `uq_request_type_name` (`request_type`);
-
---
--- Indexy pro tabulku `roles`
+-- Indexes for table `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`role_id`),
@@ -1097,15 +367,7 @@ ALTER TABLE `roles`
   ADD UNIQUE KEY `uq_role_name` (`role_name`);
 
 --
--- Indexy pro tabulku `role_permissions`
---
-ALTER TABLE `role_permissions`
-  ADD PRIMARY KEY (`role_id`,`permission_id`),
-  ADD KEY `idx_rp_role_id` (`role_id`),
-  ADD KEY `idx_rp_permission_id` (`permission_id`);
-
---
--- Indexy pro tabulku `sessions`
+-- Indexes for table `sessions`
 --
 ALTER TABLE `sessions`
   ADD PRIMARY KEY (`id`),
@@ -1113,52 +375,28 @@ ALTER TABLE `sessions`
   ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
--- Indexy pro tabulku `shipping_methods`
---
-ALTER TABLE `shipping_methods`
-  ADD PRIMARY KEY (`shipping_method_id`),
-  ADD UNIQUE KEY `method_name` (`method_name`),
-  ADD UNIQUE KEY `uq_shipping_method_name` (`method_name`);
-
---
--- Indexy pro tabulku `system_logs`
+-- Indexes for table `system_logs`
 --
 ALTER TABLE `system_logs`
   ADD PRIMARY KEY (`system_log_id`);
 
 --
--- Indexy pro tabulku `system_settings`
---
-ALTER TABLE `system_settings`
-  ADD PRIMARY KEY (`setting_id`),
-  ADD UNIQUE KEY `setting_key` (`setting_key`),
-  ADD KEY `idx_system_settings_updated_by` (`updated_by_user_id`);
-
---
--- Indexy pro tabulku `transactions`
---
-ALTER TABLE `transactions`
-  ADD PRIMARY KEY (`transaction_id`),
-  ADD KEY `idx_transactions_order_id` (`order_id`),
-  ADD KEY `idx_transactions_payment_method_id` (`payment_method_id`);
-
---
--- Indexy pro tabulku `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
--- Indexy pro tabulku `user_login`
+-- Indexes for table `user_login`
 --
 ALTER TABLE `user_login`
-  ADD PRIMARY KEY (`user_login_id`),
+  ADD PRIMARY KEY (`user_login_id`) USING BTREE,
   ADD UNIQUE KEY `user_email` (`user_email`),
   ADD UNIQUE KEY `uq_user_login_email` (`user_email`);
 
 --
--- Indexy pro tabulku `user_roles`
+-- Indexes for table `user_roles`
 --
 ALTER TABLE `user_roles`
   ADD PRIMARY KEY (`user_login_id`,`role_id`),
@@ -1166,369 +404,81 @@ ALTER TABLE `user_roles`
   ADD KEY `idx_ur_role_id` (`role_id`);
 
 --
--- AUTO_INCREMENT pro tabulky
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT pro tabulku `addresses`
---
-ALTER TABLE `addresses`
-  MODIFY `address_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `affiliate_statistics`
---
-ALTER TABLE `affiliate_statistics`
-  MODIFY `statistics_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `attribute_values`
---
-ALTER TABLE `attribute_values`
-  MODIFY `attribute_value_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `business_logs`
+-- AUTO_INCREMENT for table `business_logs`
 --
 ALTER TABLE `business_logs`
   MODIFY `business_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT pro tabulku `categories`
---
-ALTER TABLE `categories`
-  MODIFY `category_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `coupons`
---
-ALTER TABLE `coupons`
-  MODIFY `coupon_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `customers`
---
-ALTER TABLE `customers`
-  MODIFY `customer_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `employees`
---
-ALTER TABLE `employees`
-  MODIFY `employee_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `employee_functions`
---
-ALTER TABLE `employee_functions`
-  MODIFY `function_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `entity_audit_logs`
---
-ALTER TABLE `entity_audit_logs`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `jobs`
---
-ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `migrations`
+-- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT pro tabulku `orders`
---
-ALTER TABLE `orders`
-  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `order_items`
---
-ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `order_shipping_details`
---
-ALTER TABLE `order_shipping_details`
-  MODIFY `order_shipping_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `payment_methods`
---
-ALTER TABLE `payment_methods`
-  MODIFY `payment_method_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `permissions`
---
-ALTER TABLE `permissions`
-  MODIFY `permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `personal_access_tokens`
+-- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=971;
 
 --
--- AUTO_INCREMENT pro tabulku `products`
---
-ALTER TABLE `products`
-  MODIFY `product_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `product_attributes`
---
-ALTER TABLE `product_attributes`
-  MODIFY `attribute_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `product_reviews`
---
-ALTER TABLE `product_reviews`
-  MODIFY `review_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `product_variant_combinations`
---
-ALTER TABLE `product_variant_combinations`
-  MODIFY `product_variant_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `product_variant_custom_attributes`
---
-ALTER TABLE `product_variant_custom_attributes`
-  MODIFY `custom_attribute_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `raw_request_commissions`
+-- AUTO_INCREMENT for table `raw_request_commissions`
 --
 ALTER TABLE `raw_request_commissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT pro tabulku `refund_requests`
+-- AUTO_INCREMENT for table `refresh_tokens`
 --
-ALTER TABLE `refund_requests`
-  MODIFY `refund_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `refresh_tokens`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=970;
 
 --
--- AUTO_INCREMENT pro tabulku `requests`
---
-ALTER TABLE `requests`
-  MODIFY `request_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `request_types`
---
-ALTER TABLE `request_types`
-  MODIFY `request_type_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `roles`
+-- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT pro tabulku `shipping_methods`
---
-ALTER TABLE `shipping_methods`
-  MODIFY `shipping_method_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `system_logs`
+-- AUTO_INCREMENT for table `system_logs`
 --
 ALTER TABLE `system_logs`
   MODIFY `system_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT pro tabulku `system_settings`
---
-ALTER TABLE `system_settings`
-  MODIFY `setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `transactions`
---
-ALTER TABLE `transactions`
-  MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT pro tabulku `user_login`
+-- AUTO_INCREMENT for table `user_login`
 --
 ALTER TABLE `user_login`
-  MODIFY `user_login_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `user_login_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- Omezení pro exportované tabulky
+-- Constraints for dumped tables
 --
 
 --
--- Omezení pro tabulku `addresses`
---
-ALTER TABLE `addresses`
-  ADD CONSTRAINT `fk_addresses_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `affiliate_statistics`
---
-ALTER TABLE `affiliate_statistics`
-  ADD CONSTRAINT `fk_affiliate_statistics_coupon_id` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`coupon_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_affiliate_statistics_employee_id` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`employee_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `attribute_values`
---
-ALTER TABLE `attribute_values`
-  ADD CONSTRAINT `fk_attribute_values_attribute_id` FOREIGN KEY (`attribute_id`) REFERENCES `product_attributes` (`attribute_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `business_logs`
+-- Constraints for table `business_logs`
 --
 ALTER TABLE `business_logs`
   ADD CONSTRAINT `fk_business_logs_user_login_id` FOREIGN KEY (`user_login_id`) REFERENCES `user_login` (`user_login_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Omezení pro tabulku `categories`
+-- Constraints for table `refresh_tokens`
 --
-ALTER TABLE `categories`
-  ADD CONSTRAINT `fk_categories_parent_category_id` FOREIGN KEY (`parent_category_id`) REFERENCES `categories` (`category_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `refresh_tokens`
+  ADD CONSTRAINT `refresh_tokens_user_login_id_foreign` FOREIGN KEY (`user_login_id`) REFERENCES `user_login` (`user_login_id`) ON DELETE CASCADE;
 
 --
--- Omezení pro tabulku `customers`
---
-ALTER TABLE `customers`
-  ADD CONSTRAINT `fk_customers_billing_address_id` FOREIGN KEY (`billing_address_id`) REFERENCES `addresses` (`address_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_customers_shipping_address_id` FOREIGN KEY (`shipping_address_id`) REFERENCES `addresses` (`address_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_customers_user_login_id` FOREIGN KEY (`user_login_id`) REFERENCES `user_login` (`user_login_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `employees`
---
-ALTER TABLE `employees`
-  ADD CONSTRAINT `fk_employees_function_id` FOREIGN KEY (`function_id`) REFERENCES `employee_functions` (`function_id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_employees_user_login_id` FOREIGN KEY (`user_login_id`) REFERENCES `user_login` (`user_login_id`) ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `entity_audit_logs`
---
-ALTER TABLE `entity_audit_logs`
-  ADD CONSTRAINT `fk_audit_user_login_id` FOREIGN KEY (`user_login_id`) REFERENCES `user_login` (`user_login_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `orders`
---
-ALTER TABLE `orders`
-  ADD CONSTRAINT `fk_orders_coupon_id` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`coupon_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_orders_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_orders_employee_id` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`employee_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `order_items`
---
-ALTER TABLE `order_items`
-  ADD CONSTRAINT `fk_order_items_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_order_items_product_variant_id` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variant_combinations` (`product_variant_id`) ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `order_shipping_details`
---
-ALTER TABLE `order_shipping_details`
-  ADD CONSTRAINT `fk_osd_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_osd_shipping_address_id` FOREIGN KEY (`shipping_address_id`) REFERENCES `addresses` (`address_id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_osd_shipping_method_id` FOREIGN KEY (`shipping_method_id`) REFERENCES `shipping_methods` (`shipping_method_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `products_categories`
---
-ALTER TABLE `products_categories`
-  ADD CONSTRAINT `fk_products_categories_category_id` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_products_categories_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `product_reviews`
---
-ALTER TABLE `product_reviews`
-  ADD CONSTRAINT `fk_product_reviews_approved_by_employee_id` FOREIGN KEY (`approved_by_employee_id`) REFERENCES `employees` (`employee_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_product_reviews_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_product_reviews_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `product_variant_attribute_values`
---
-ALTER TABLE `product_variant_attribute_values`
-  ADD CONSTRAINT `fk_pvav_attribute_value_id` FOREIGN KEY (`attribute_value_id`) REFERENCES `attribute_values` (`attribute_value_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_pvav_product_variant_id` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variant_combinations` (`product_variant_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `product_variant_combinations`
---
-ALTER TABLE `product_variant_combinations`
-  ADD CONSTRAINT `fk_pvc_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `product_variant_custom_attributes`
---
-ALTER TABLE `product_variant_custom_attributes`
-  ADD CONSTRAINT `fk_pvca_product_variant_id` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variant_combinations` (`product_variant_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `refund_requests`
---
-ALTER TABLE `refund_requests`
-  ADD CONSTRAINT `fk_refund_requests_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_refund_requests_processed_by_employee_id` FOREIGN KEY (`processed_by_employee_id`) REFERENCES `employees` (`employee_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `requests`
---
-ALTER TABLE `requests`
-  ADD CONSTRAINT `fk_requests_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_requests_employee_id` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`employee_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_requests_request_type_id` FOREIGN KEY (`request_type_id`) REFERENCES `request_types` (`request_type_id`) ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `role_permissions`
---
-ALTER TABLE `role_permissions`
-  ADD CONSTRAINT `fk_rp_permission_id` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`permission_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_rp_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `system_settings`
---
-ALTER TABLE `system_settings`
-  ADD CONSTRAINT `fk_system_settings_updated_by_user_id` FOREIGN KEY (`updated_by_user_id`) REFERENCES `user_login` (`user_login_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `transactions`
---
-ALTER TABLE `transactions`
-  ADD CONSTRAINT `fk_transactions_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_transactions_payment_method_id` FOREIGN KEY (`payment_method_id`) REFERENCES `payment_methods` (`payment_method_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Omezení pro tabulku `user_roles`
+-- Constraints for table `user_roles`
 --
 ALTER TABLE `user_roles`
   ADD CONSTRAINT `fk_ur_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE,
