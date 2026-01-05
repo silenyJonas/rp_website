@@ -16,12 +16,13 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class DashboardComponent extends BaseDataComponent<any> implements OnInit, OnDestroy {
   
-  // ZDE DOPÍŠEŠ SVŮJ ENDPOINT
   apiEndpoint = 'save-translations'; 
 
   currentLang: string = 'cz';
   translations: any = {};
   flattenedKeys: { path: string, value: string }[] = [];
+  filteredKeys: { path: string, value: string }[] = [];
+  
   searchQuery: string = '';
   override isLoading: boolean = false;
 
@@ -49,6 +50,7 @@ export class DashboardComponent extends BaseDataComponent<any> implements OnInit
       next: (data) => {
         this.translations = data;
         this.refreshFlattenedList();
+        this.applyFilter();
         this.cd.markForCheck();
       }
     });
@@ -65,9 +67,31 @@ export class DashboardComponent extends BaseDataComponent<any> implements OnInit
       if (typeof obj[key] === 'object' && obj[key] !== null) {
         this.flattenObject(obj[key], newPath);
       } else {
-        this.flattenedKeys.push({ path: newPath, value: obj[key] });
+        // Ošetření null hodnoty pomocí ?? ''
+        this.flattenedKeys.push({ path: newPath, value: obj[key] ?? '' });
       }
     }
+  }
+
+  applyFilter(): void {
+    const query = this.searchQuery.toLowerCase().trim();
+    if (!query) {
+      this.filteredKeys = [...this.flattenedKeys];
+    } else {
+      this.filteredKeys = this.flattenedKeys.filter(k => {
+        const pathMatch = k.path.toLowerCase().includes(query);
+        // Bezpečný převod na string pro vyhledávání v hodnotách
+        const valueStr = String(k.value || '').toLowerCase();
+        const valueMatch = valueStr.includes(query);
+        return pathMatch || valueMatch;
+      });
+    }
+    this.cd.markForCheck();
+  }
+
+  resetFilter(): void {
+    this.searchQuery = '';
+    this.applyFilter();
   }
 
   updateValue(path: string, newValue: string): void {
@@ -77,11 +101,13 @@ export class DashboardComponent extends BaseDataComponent<any> implements OnInit
       temp = temp[keys[i]];
     }
     temp[keys[keys.length - 1]] = newValue;
+
+    const item = this.flattenedKeys.find(k => k.path === path);
+    if (item) {
+      item.value = newValue;
+    }
   }
 
-  /**
-   * Odeslání dat podobně jako v PersonalInfoComponent
-   */
   onSubmit(): void {
     this.isLoading = true;
     const payload = {
@@ -89,38 +115,24 @@ export class DashboardComponent extends BaseDataComponent<any> implements OnInit
       data: this.translations
     };
 
-    console.log('Odesílaná data překladů:', payload);
-
-    // Použijeme dataHandler pro odeslání (post/update záleží na tvém DataHandleru)
     this.dataHandler.post(this.apiEndpoint, payload)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (res: any) => {
+        next: () => {
           this.isLoading = false;
-          this.alertDialogService.open(
-            'Administrace',
-            `Soubor ${this.currentLang}.json byl úspěšně uložen.`,
-            'success'
-          );
+          this.alertDialogService.open('Administrace', `Soubor ${this.currentLang}.json byl uložen.`, 'success');
           this.cd.markForCheck();
         },
         error: (err) => {
           this.isLoading = false;
-          console.error('Chyba při ukládání:', err);
-          this.alertDialogService.open(
-            'Chyba',
-            'Nepodařilo se uložit změny na server.',
-            'danger'
-          );
+          console.error(err);
+          this.alertDialogService.open('Chyba', 'Nepodařilo se uložit změny.', 'danger');
           this.cd.markForCheck();
         }
       });
   }
 
-  get filteredKeys() {
-    return this.flattenedKeys.filter(k => 
-      k.path.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
-      k.value.toString().toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+  trackByPath(index: number, item: any): string {
+    return item.path;
   }
 }

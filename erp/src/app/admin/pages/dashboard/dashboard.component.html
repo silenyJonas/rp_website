@@ -8,7 +8,24 @@
   </div>
 
   <div class="editor-controls">
-    <input type="text" [(ngModel)]="searchQuery" placeholder="Vyhledat klíč nebo text..." class="search-input">
+    <div class="search-group">
+      <div class="input-container">
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery" 
+          (keyup.enter)="applyFilter()"
+          placeholder="Vyhledat klíč nebo text..." 
+          class="search-input">
+        <button *ngIf="searchQuery" class="reset-icon-btn" (click)="resetFilter()" type="button">
+          ✕
+        </button>
+      </div>
+      
+      <button class="search-btn" (click)="applyFilter()">
+        Vyhledat
+      </button>
+    </div>
+      
     <button class="save-btn" (click)="onSubmit()" [disabled]="isLoading">
       {{ isLoading ? 'Ukládám...' : 'Uložit do souborů' }}
     </button>
@@ -23,7 +40,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of filteredKeys">
+        <tr *ngFor="let item of filteredKeys; trackBy: trackByPath">
           <td class="key-cell">{{ item.path }}</td>
           <td>
             <textarea 
@@ -35,8 +52,8 @@
           </td>
         </tr>
         <tr *ngIf="filteredKeys.length === 0">
-          <td colspan="2" style="padding: 20px; text-align: center; color: #888;">
-            Žádné klíče neodpovídají hledání.
+          <td colspan="2" class="empty-results">
+            Žádné výsledky pro "{{ searchQuery }}"
           </td>
         </tr>
       </tbody>
