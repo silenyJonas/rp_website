@@ -1,21 +1,46 @@
-<div class="login-container">
-  <h2>Admin Login</h2>
+<div class="main-content">
+  <h1 class="header-1">Administrace</h1>
 
-  
-  <form (ngSubmit)="onLogin()">
-  <div>
-    <label for="email">E-mail:</label>
-    <input type="email" id="email" [(ngModel)]="email" name="email" required>
-  </div>
-  <div>
-    <label for="password">Heslo:</label>
-    <input type="password" id="password" [(ngModel)]="password" name="password" required>
-  </div>
-  <button type="submit">Přihlásit se</button>
-  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-</form>
+  <div class="form-wrp">
+    <div class="form">
+      <div class="contact-form">
+        <h2>Login</h2>
+        <form (ngSubmit)="onLogin()">
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input 
+              type="email" 
+              id="email" 
+              [(ngModel)]="email" 
+              name="email" 
+              placeholder="vas@email.cz" 
+              required>
+          </div>
 
-  <div class="back-to-home">
-    <a routerLink="/home" class="home-button">Zpět domů</a>
+          <div class="form-group">
+            <label for="password">Heslo</label>
+            <input 
+              type="password" 
+              id="password" 
+              [(ngModel)]="password" 
+              name="password" 
+              placeholder="••••••••" 
+              required>
+          </div>
+
+          <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </div>
+
+          <div class="submit-wrp">
+            <button type="submit">Přihlásit se</button>
+          </div>
+        </form>
+
+        <div class="back-to-home">
+          <a routerLink="/home" class="home-link">Zpět na hlavní stránku</a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

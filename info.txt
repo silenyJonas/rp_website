@@ -1,6 +1,5 @@
-1375
-905
-480
-
-na githubpages select us se zobrazuji KEYS z jsonu
-
+TODO:
+udelat hezkou not-found stranku
+translations u formu hamepage blbnou
+udelat administraci anglicky texty
+at admin layout nikde nevyjizdi atd

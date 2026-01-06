@@ -61,6 +61,7 @@ export class PublicFooterComponent implements OnInit, OnDestroy {
     this.currentYear = new Date().getFullYear();
   }
 
+
   ngOnInit(): void {
     // Přihlásíme se k odběru změn překladů
     this.localizationService.currentTranslations$
@@ -105,6 +106,7 @@ export class PublicFooterComponent implements OnInit, OnDestroy {
       { route: '/references', key: 'navigation.references_full' },
       { route: '/faq', key: 'navigation.faq_full' },
       { route: '/about-us', key: 'navigation.about-us' },
+      { route: '/auth/login', key: 'navigation.login_btn' },
       // { route: '/auth/login', key: 'navigation.login' },
     ];
 

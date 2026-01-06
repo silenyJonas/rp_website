@@ -35,7 +35,7 @@
     "faq": "FAQ",
     "faq_full": "Frequently Asked Questions",
     "about-us": "Additional Information",
-    "navigation": "Log in"
+    "login_btn": "Log in"
   },
   "projects": {
     "header_1": "Last 5 Completed Projects",

@@ -1,103 +1,182 @@
-.login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 150px); /* Odečteme výšku headeru a footeru */
-  padding: 20px;
-  background-color: #f0f2f5;
-  font-family: Arial, sans-serif;
+/* HLAVNÍ KONTEJNER S GRADIENTEM A MŘÍŽKOU */
+.main-content {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding-bottom: 50px;
+    background: radial-gradient(ellipse at center, rgba(128, 0, 128, 0.05) 15%, rgba(128, 0, 128, 0.02) 30%, rgba(17, 17, 31, 0) 50%),
+                repeating-linear-gradient(to bottom, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px),
+                repeating-linear-gradient(to right, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px);
+    background-size: cover;
+    background-position: center center;
+    background-color: #11111f; /* Základní tmavá barva */
 }
 
-h2 {
-  color: #333;
-  margin-bottom: 30px;
-  font-size: 2.2em;
-  text-align: center;
+.main-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(17, 17, 31, 0.98) 80%);
+    z-index: 1;
 }
 
-form {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-  box-sizing: border-box;
+/* NADPISY */
+.header-1 {
+    position: relative;
+    z-index: 2;
+    color: #979797;
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInSlideDown 0.8s ease-out forwards;
 }
 
-.form-group {
-  margin-bottom: 25px;
+
+/* FORMULÁŘ */
+.form-wrp {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlideUp 0.8s ease-out 0.4s forwards;
 }
 
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: #555;
+.form {
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
 }
 
-input[type="text"],
-input[type="password"] {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 1em;
-  box-sizing: border-box; /* Zahrne padding do šířky */
-  transition: border-color 0.3s ease;
+.contact-form {
+    background-color: rgba(26, 26, 46, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 3px solid rgba(116, 68, 128, 0.4);
+    border-radius: 20px;
+    padding: 0px 20px 40px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+.contact-form h2 {
+    color: #a67dff;
+    font-size: 2rem;
+    text-shadow: 0 0 10px rgba(166, 125, 255, 0.3);
+    margin-bottom: 10px;
 }
 
+.contact-form h4 {
+    color: #979797;
+    font-weight: 400;
+    margin-bottom: 30px;
+}
+
+/* INPUTY */
+.form-group label {
+    font-family: "Source Sans Pro", sans-serif;
+    color: #e0e0e0;
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid rgba(116, 68, 128, 0.4);
+    border-radius: 8px;
+    background-color: #131325;
+    color: #fff;
+    font-family: "Source Sans Pro", sans-serif;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #a67dff;
+    box-shadow: 0 0 15px rgba(166, 125, 255, 0.4);
+}
+
+/* TLAČÍTKO */
 button[type="submit"] {
-  width: 100%;
-  padding: 12px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.1em;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    padding: 15px;
+    margin-top: 10px;
+    background: linear-gradient(45deg, #a67dff, #6f42c1);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 button[type="submit"]:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(166, 125, 255, 0.5);
 }
 
+/* CHYBOVÁ HLÁŠKA */
 .error-message {
-  color: #e74c3c;
-  margin-top: 15px;
-  text-align: center;
-  font-size: 0.95em;
-  font-weight: bold;
+    color: #ff4d4d;
+    background: rgba(255, 77, 77, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 77, 77, 0.3);
 }
+
+/* ZPĚT DOMŮ */
 .back-to-home {
-  margin-top: 25px;
-  text-align: center;
+    margin-top: 25px;
+    text-align: center;
 }
 
-.home-button {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #6c757d; /* Šedá barva */
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  font-size: 1em;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.home-link {
+    color: #979797;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
 }
 
-.home-button:hover {
-  background-color: #5a6268;
-  transform: translateY(-2px);
+.home-link:hover {
+    color: #a67dff;
+}
+
+/* ANIMACE */
+@keyframes fadeInSlideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVITA */
+@media (max-width: 480px) {
+    .contact-form {
+        padding: 25px;
+    }
+    .header-1 {
+        font-size: 2.5rem;
+    }
 }

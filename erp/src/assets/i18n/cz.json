@@ -35,7 +35,8 @@
         "faq": "FAQ",
         "faq_full": "Často kladené otázky",
         "about-us": "Dopňující informace",
-        "login": "Přihlásit se"
+        "login": "Přihlásit se",
+        "login_btn": "Přihlásit"
     },
     "projects": {
         "header_1": "Posledních 5 dokončených projektů",
