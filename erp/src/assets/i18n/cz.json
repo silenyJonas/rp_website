@@ -1,6 +1,6 @@
 {
     "faq": {
-        "question_1": "Jaké typy softwaru dokážete vyvinout?",
+        "question_1": "Jaké typy softwaru dokážete vyvinout??",
         "answer_1": "Naším zaměřením je kompletní vývoj softwaru od návrhu až po nasazení. Realizujeme webové stránky a aplikace, e-shopy, mobilní aplikace pro iOS a Android, ale také desktopové programy pro firemní i individuální použití. Součástí našich služeb jsou i pokročilá řešení založená na umělé inteligenci a automatizaci procesů. Kromě toho se specializujeme na integrace různých systémů (např. platební brány, ERP, CRM nebo cloudové služby) a také na úpravy a vylepšení již existujících projektů. Vždy hledáme cestu, jak vytvořit nebo optimalizovat řešení na míru, které vám skutečně pomůže v podnikání.",
         "question_2": "Jak dlouho trvá vytvoření projektu?",
         "answer_2": "Doba vývoje se vždy odvíjí od rozsahu a složitosti projektu. Jednodušší řešení, jako je prezentační web nebo menší firemní stránky, mohou být hotové už během několika dnů až dvou týdnů. Náročnější projekty, například e-shopy, portály nebo komplexní webové a mobilní aplikace, mohou trvat několik týdnů až měsíců v závislosti na počtu funkcí, designových požadavcích či integracích s dalšími systémy. Po úvodní konzultaci vám připravíme realistický časový plán s milníky, abyste přesně věděli, jak bude vývoj postupovat a kdy můžete očekávat spuštění.",
@@ -648,8 +648,8 @@
         "our_services_m": "RegioPartner v číslech",
         "stats_projects_text": "Tým",
         "stats_projects_count": "1",
-        "stats_years_text": "Kvalita",
-        "stats_years_count": "100%",
+        "stats_years_text": "Let Praxe",
+        "stats_years_count": "6",
         "stats_solutions_text": "Řešení",
         "stats_solutions_count": "∞",
         "consultation_form": {
