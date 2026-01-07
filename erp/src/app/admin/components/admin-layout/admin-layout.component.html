@@ -30,6 +30,9 @@
         <li *ngIf="hasPermission('manage-administrators')">
           <a routerLink="/admin/administrators" routerLinkActive="active">Administrátoři</a>
         </li>
+        <li *ngIf="hasPermission('view-edit-website')">
+          <a routerLink="/admin/edit-website" routerLinkActive="active">Edit Website</a>
+        </li>
         <li *ngIf="hasPermission('view-business-logs')">
           <a routerLink="/admin/business-logs" routerLinkActive="active">Business Logs</a>
         </li>

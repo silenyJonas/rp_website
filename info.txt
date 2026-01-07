@@ -1,5 +1,7 @@
 TODO:
-udelat hezkou not-found stranku
+udelat aby not found bylo bez headeru a bez footeru
 translations u formu hamepage blbnou
 udelat administraci anglicky texty
-at admin layout nikde nevyjizdi atd
+pri update textu aby nebylo videt pozadi public header
+presunout update textu do vlastni stranecky
+vytvorit aby v permission.service.ts slo dynamicky menit opravneni asi pres db nove tabulky a vytvareni nizka priorita

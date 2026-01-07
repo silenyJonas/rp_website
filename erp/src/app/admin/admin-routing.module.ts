@@ -7,6 +7,7 @@ import { AuthGuard } from '../core/auth/guards/auth.guard';
 import { AdministratorsComponent } from './pages/administrators/administrators.component';
 import { BusinessLogsComponent } from './pages/business-logs/business-logs.component';
 import { PersonalInfoComponent } from './pages/personal-info/personal-info.component';
+import { EditWebsiteComponent } from './pages/edit-website/edit-website.component';
 
 const routes: Routes = [
   {
@@ -47,7 +48,13 @@ const routes: Routes = [
         component: PersonalInfoComponent,
         canActivate: [AuthGuard], // Přidáváme guard pro ověření oprávnění
         data: { permission: 'view-personal-info' }
-      }
+      },
+      {
+        path: 'edit-website',
+        component: EditWebsiteComponent,
+        canActivate: [AuthGuard], // Přidáváme guard pro ověření oprávnění
+        data: { permission: 'view-edit-website' }
+      },
     ]
   }
 ];

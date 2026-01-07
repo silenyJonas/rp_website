@@ -24,4 +24,5 @@ main {
 main.admin-main {
   padding: 0; /* Admin layout má vlastní padding */
   cursor: default;
+  margin-top: -44px;
 }
