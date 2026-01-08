@@ -1,0 +1,158 @@
+/* --- ZÁKLADNÍ KONTEJNER (Importováno z tvého stylu) --- */
+.main-content {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding-bottom: 50px;
+    background: radial-gradient(ellipse at center, rgba(128, 0, 128, 0.05) 15%, rgba(128, 0, 128, 0.02) 30%, rgba(17, 17, 31, 0) 50%),
+                repeating-linear-gradient(to bottom, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px),
+                repeating-linear-gradient(to right, transparent, transparent 49px, rgba(128, 0, 128, 0.4) 50px);
+    background-color: #11111f;
+}
+
+.main-content::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(17, 17, 31, 0.98) 80%);
+    z-index: 1;
+}
+
+.header-1 {
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+    color: #9e9e9e;
+    padding-top: 125px;
+    padding-bottom: 50px;
+    font-size: 4rem;
+    font-weight: 700;
+    z-index: 10;
+    text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
+    animation: fadeInSlideDown 0.8s ease-out forwards;
+}
+
+/* --- JOBS LIST STYLY --- */
+.jobs-section {
+    width: 100%;
+    max-width: 900px;
+    padding: 0 20px;
+    z-index: 10;
+}
+
+.jobs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.job-item {
+    background-color: rgba(26, 26, 46, 0.2);
+    border: 2px solid #2f2f2f;
+    border-radius: 12px;
+    padding: 20px 25px;
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+}
+
+.job-item:hover {
+    background-color: rgba(107, 46, 145, 0.2);
+    border-color: #a67dff;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 10px rgba(166, 125, 255, 0.3);
+}
+
+.job-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.job-text-content h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #e0e0e0;
+    font-weight: 600;
+}
+
+.job-short-desc {
+    margin: 8px 0 0 0;
+    color: #9e9e9e;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+/* --- Indikátor (Fialové kolečko) --- */
+.job-indicator {
+    width: 40px;
+    height: 40px;
+    background-color: #a67dff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    margin-left: 20px;
+    transition: transform 0.3s ease;
+}
+
+.job-item:hover .job-indicator {
+    background-color: #8a5acd;
+    transform: translateX(5px);
+}
+
+.job-arrow {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: white;
+}
+
+/* --- Animace načítání --- */
+.animated-job-item {
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInSlideDown 0.6s ease-out forwards;
+}
+
+@keyframes fadeInSlideDown {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- WRITE US (Kopie z FAQ) --- */
+.write-us-wrp {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-top: 60px;
+    z-index: 10;
+    opacity: 0;
+    animation: fadeInSlideDown 0.6s ease-out 0.8s forwards;
+}
+
+.write-us-text {
+    color: #9e9e9e;
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+}
+
+.write-us-icons { display: flex; gap: 20px; }
+.write-us-icons img { width: 40px; height: 40px; transition: 0.3s; }
+.icon-wrp:hover img { 
+    filter: brightness(1.2) drop-shadow(0 0 10px #a67dff);
+    transform: translateY(-3px); 
+}
+
+/* --- Responsivita --- */
+@media (max-width: 905px) {
+    .header-1 { font-size: 3rem; }
+    .job-text-content h3 { font-size: 1.2rem; }
+    .write-us-wrp { flex-direction: column; gap: 15px; }
+}

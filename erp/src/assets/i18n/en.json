@@ -35,6 +35,7 @@
     "faq": "FAQ",
     "faq_full": "Frequently Asked Questions",
     "about-us": "Additional Information",
+    "jobs": "Careers",
     "login_btn": "Log in"
   },
   "projects": {
@@ -747,5 +748,15 @@
     "paragraph_2": "In 2023, we therefore founded a new division, RPsoftware, which expands the company's activities towards modern technologies. RPsoftware builds on the previous IT support provided to the core company in the areas of survey research, statistical data processing, and other IT products. The new division focuses on software development and providing digital solutions, especially for small and medium-sized enterprises and also for individuals who need a reliable partner for their IT projects.",
     "paragraph_3": "Our goal is to deliver software that is not only technically high-quality but also adapted to the specific needs of users. We provide complete services—from analysis and solution design to development, testing, implementation, and long-term support.",
     "paragraph_4": "RPsoftware operates under the umbrella of Regiopartner s.r.o., which means it stems from the same professional background and values but also represents a specialized division focused exclusively on the IT sector. The connection of both parts of the company allows us to combine experience from evaluations and development planning in the public space with technological capabilities and thus offer services that have a broader context and added value."
+  },
+  "careers": {
+    "header_1": "Careers",
+    "write_us_prompt": "Have questions about the positions? Contact us:",
+    "job_1_id": "ui-designer",
+    "job_1_title": "UI Designer",
+    "job_1_short_desc": "Remote UI design with space for creativity. We are looking for reliable partners with a grasp of web philosophy.",
+    "job_2_id": "sales-rep",
+    "job_2_title": "Business Development",
+    "job_2_short_desc": "Negotiating offers with high autonomy. Ideal for communicative people with social media expertise."
   }
 }

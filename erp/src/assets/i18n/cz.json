@@ -36,6 +36,7 @@
         "faq_full": "Často kladené otázky",
         "about-us": "Dopňující informace",
         "login": "Přihlásit se",
+        "jobs": "Kariéra ",
         "login_btn": "Přihlásit"
     },
     "projects": {
@@ -60,19 +61,19 @@
         "project_3": {
             "name": "ERP Systém na míru",
             "duration": "2024\/2025",
-            "client": null,
+            "client": "",
             "description": "Vyvinuli jsme ERP (Enterprise Resource Planning) systém šitý na míru, který centralizuje a automatizuje klíčové firemní procesy – od správy financí, přes řízení lidských zdrojů až po logistiku. Systém poskytuje komplexní přehled o chodu podniku v reálném čase, což umožňuje lepší rozhodování a zvyšuje celkovou efektivitu a transparentnost."
         },
         "project_4": {
             "name": "CRM systém na míru",
             "duration": "2024",
-            "client": null,
+            "client": "",
             "description": "Vyvinuli jsme sofistikovaný CRM (Customer Relationship Management) systém, který je navržen na míru specifickým potřebám klienta. Systém zahrnuje komplexní správu zákazníků a prodejních cyklů, automatizaci komunikace a detailní analytiku. Pomáhá firmám budovat silnější vztahy s klienty, optimalizovat prodejní procesy a zvyšovat loajalitu zákazníků."
         },
         "project_5": {
             "name": "AI automatizace",
             "duration": "2024",
-            "client": null,
+            "client": "",
             "description": "Implementovali jsme AI řešení, které automatizuje opakující se a časově náročné úkoly. Tato umělá inteligence je schopna analyzovat data, generovat odpovědi a provádět operace, které dříve vyžadovaly lidský zásah. Výsledkem je výrazné zvýšení efektivity, snížení chybovosti a uvolnění kapacity zaměstnanců pro kreativnější a složitější úkoly."
         }
     },
@@ -748,5 +749,27 @@
         "paragraph_2": "V roce 2023 jsme proto založili novou divizi RPsoftware, která rozšiřuje činnost společnosti směrem k moderním technologiím. RPsoftware navazuje na předchozí IT podporu poskytovanou kmenové firmě v oblasti dotazníkových šetření, statistického zpracování dat a dalších IT produktů. Nově se zaměřuje na vývoj softwaru a poskytování digitálních řešení zejména pro menší a střední podniky a také pro jednotlivce, kteří potřebují spolehlivého partnera pro své IT projekty.",
         "paragraph_3": "Naším cílem je přinášet software, který je nejen technicky kvalitní, ale také přizpůsobený konkrétním potřebám uživatelů. Zajišťujeme kompletní služby – od analýzy a návrhy řešení přes samotný vývoj až po testování, implementaci a dlouhodobou podporu.",
         "paragraph_4": "RPsoftware funguje pod hlavičkou Regiopartner s.r.o., což znamená, že vychází ze stejného profesionálního zázemí a hodnot, ale zároveň představuje specializovanou divizi soustředěnou výhradně na IT oblast. Spojení obou částí společnosti nám umožňuje kombinovat zkušenosti z evaluací a plánování rozvoje ve veřejném prostoru s technologickými možnostmi a nabízet tak služby, které mají širší kontext a přidanou hodnotu."
-    }
+    },
+    "careers": {
+        "header_1": "Kariéra",
+        "write_us_prompt": "Máte otázky k pozicím? Napište nám:",
+        "job_1_id": "ui-designer",
+        "job_1_title": "UI Designer",
+        "job_1_short_desc": "Tvorba UI designu z domova s prostorem pro kreativitu. Hledáme spolehlivé parťáky se znalostí webové filozofie.",
+        "job_2_id": "sales-rep",
+        "job_2_title": "Obchodní zástupce",
+        "job_2_short_desc": "Sjednávání nabídek s vysokou mírou samostatnosti. Ideální pro komunikativní lidi se znalostí sociálních sítí."
+    },
+   "job_detail": {
+  "back_link": "← Zpět na seznam pozic",
+  "not_found": "Pozice nenalezena",
+  "ui-designer": {
+    "title": "UI Designer",
+    "content": "Hledáme kreativního kolegu se smyslem pro detail a moderní design. Tato pozice nabízí svobodu v tvorbě a možnost pracovat na zajímavých projektech plně z domova.<br><br><strong>Co bude vaší náplní?</strong><br>• Kompletní tvorba UI designu na základě projektové dokumentace.<br>• Kreativní přínos k uživatelskému zážitku (UX).<br><br><strong>Co od vás očekáváme?</strong><br>• Věk 18+ a technické vzdělání (min. SŠ).<br>• Znalost principů moderního UI a 'webové filozofie'.<br>• Adaptabilitu a schopnost pracovat v agilním prostředí.<br>• Spolehlivost a dodržování stanovených deadline.<br><br><strong>Nabízíme:</strong><br>• Práci na DPP (vhodné i při studiu).<br>• Volnou pracovní dobu – vy rozhodujete, kdy pracujete.<br>• Variabilní finanční ohodnocení podle náročnosti projektů."
+  },
+  "sales-rep": {
+    "title": "Obchodní zástupce",
+    "content": "Máte tah na bránu a baví vás komunikace s lidmi? Hledáme samostatného parťáka pro rozvoj našeho businessu.<br><br><strong>Co bude vaší náplní?</strong><br>• Aktivní vyhledávání nových obchodních příležitostí.<br>• Sjednávání schůzek a prezentace našich služeb.<br>• Budování dlouhodobých vztahů s klienty.<br><br><strong>Co od vás očekáváme?</strong><br>• Věk 18+ a reprezentativní vystupování.<br>• Vysokou míru vnitřní disciplíny a samostatnosti.<br>• Zkušenost se sociálními sítěmi výhodou.<br>• Schopnost srozumitelně prezentovat technická řešení.<br><br><strong>Nabízíme:</strong><br>• Spolupráci na DPP s flexibilním rozvrhem.<br>• Práci z domova.<br>• Motivující variabilní složku odměny podle úspěšnosti zakázek."
+  }
+}
 }

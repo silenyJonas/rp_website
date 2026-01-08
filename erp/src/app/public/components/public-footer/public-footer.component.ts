@@ -106,6 +106,7 @@ export class PublicFooterComponent implements OnInit, OnDestroy {
       { route: '/references', key: 'navigation.references_full' },
       { route: '/faq', key: 'navigation.faq_full' },
       { route: '/about-us', key: 'navigation.about-us' },
+      { route: '/jobs', key: 'navigation.jobs' },
       { route: '/auth/login', key: 'navigation.login_btn' },
       // { route: '/auth/login', key: 'navigation.login' },
     ];

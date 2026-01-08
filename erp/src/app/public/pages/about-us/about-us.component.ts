@@ -1,15 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LocalizationService } from '../../services/localization.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-references', // Selektor komponenty
+  selector: 'app-about-us', // Opraven selektor, aby odpovídal AboutUs
   standalone: true,
   imports: [CommonModule],
   templateUrl: './about-us.component.html',
-  styleUrl: './about-us.component.css'
+  styleUrl: './about-us.component.css',
+  // OnPush fix pro spolehlivé přepínání jazyků
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AboutUsComponent implements OnInit, OnDestroy {
 
@@ -20,16 +22,20 @@ export class AboutUsComponent implements OnInit, OnDestroy {
   p_3: string = '';
   p_4: string = '';
 
-  private destroy$ = new Subject<void>(); // Pro správné odhlášení z odběrů
+  private destroy$ = new Subject<void>();
 
-  constructor(private localizationService: LocalizationService) { }
+  constructor(
+    private localizationService: LocalizationService,
+    private cdr: ChangeDetectorRef // Přidáno pro manuální detekci změn
+  ) { }
 
   ngOnInit(): void {
-    // Přihlásíme se k odběru změn překladů
     this.localizationService.currentTranslations$
-      .pipe(takeUntil(this.destroy$)) // Automatické odhlášení při zničení komponenty
+      .pipe(takeUntil(this.destroy$))
       .subscribe(translations => {
-        if (translations) {
+        // Kontrola, zda máme reálná data v JSONu
+        if (translations && Object.keys(translations).length > 0) {
+          
           // Naplnění proměnných s přeloženými texty
           this.header_1_text = this.localizationService.getText('about-us.header');
           this.p_1 = this.localizationService.getText('about-us.paragraph_1');
@@ -37,7 +43,8 @@ export class AboutUsComponent implements OnInit, OnDestroy {
           this.p_3 = this.localizationService.getText('about-us.paragraph_3');
           this.p_4 = this.localizationService.getText('about-us.paragraph_4');
 
-          // Načtení a naplnění pole projektů s přeloženými texty
+          // Klíčový krok: Vynucení překreslení UI
+          this.cdr.detectChanges();
         }
       });
   }

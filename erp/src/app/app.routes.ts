@@ -42,6 +42,14 @@ export const routes: Routes = [
         path: 'about-us',
         loadComponent: () => import('./public/pages/about-us/about-us.component').then(m => m.AboutUsComponent)
       },
+      {
+        path: 'jobs',
+        loadComponent: () => import('./public/pages/jobs/jobs-list/jobs-list.component').then(m => m.JobsListComponent)
+      },
+      {
+        path: 'jobs/:id',
+        loadComponent: () => import('./public/pages/jobs/job-item/job-item.component').then(m => m.JobItemComponent)
+      }
     ]
   },
   {

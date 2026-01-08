@@ -1,0 +1,26 @@
+<div class="main-content">
+  <div class="container-width-fix">
+    <a routerLink="/jobs" class="back-link">{{ back_link_text }}</a>
+
+    <div class="header-1" *ngIf="job">{{ job.title }}</div>
+    <div class="header-1" *ngIf="!job">{{ not_found_text }}</div>
+
+    <div class="content-display" *ngIf="job">
+      <div class="paragraph-node" [innerHTML]="job.fullContent"></div>
+      
+      <div class="minimal-contact-box">
+        <p>Máte zájem? Ozvěte se nám:</p>
+        <div class="contact-row">
+          <a href="tel:+420733188328">733 188 328</a>
+          <span class="sep">•</span>
+          <a href="mailto:info@rpsw.cz">info@rpsw.cz</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-display" *ngIf="!job">
+        <div class="paragraph-node">Pozice nenalezena.</div>
+        <a routerLink="/jobs" class="back-link" style="padding-top: 20px;">Zpět na kariéru</a>
+    </div>
+  </div>
+</div>
