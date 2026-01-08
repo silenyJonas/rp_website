@@ -754,22 +754,22 @@
         "header_1": "Kariéra",
         "write_us_prompt": "Máte otázky k pozicím? Napište nám:",
         "job_1_id": "ui-designer",
-        "job_1_title": "UI Designer",
+        "job_1_title": "UI/UX Designer",
         "job_1_short_desc": "Tvorba UI designu z domova s prostorem pro kreativitu. Hledáme spolehlivé parťáky se znalostí webové filozofie.",
         "job_2_id": "sales-rep",
         "job_2_title": "Obchodní zástupce",
         "job_2_short_desc": "Sjednávání nabídek s vysokou mírou samostatnosti. Ideální pro komunikativní lidi se znalostí sociálních sítí."
     },
    "job_detail": {
-  "back_link": "← Zpět na seznam pozic",
+  "back_link": "Zpět na seznam pozic",
   "not_found": "Pozice nenalezena",
-  "ui-designer": {
-    "title": "UI Designer",
-    "content": "Hledáme kreativního kolegu se smyslem pro detail a moderní design. Tato pozice nabízí svobodu v tvorbě a možnost pracovat na zajímavých projektech plně z domova.<br><br><strong>Co bude vaší náplní?</strong><br>• Kompletní tvorba UI designu na základě projektové dokumentace.<br>• Kreativní přínos k uživatelskému zážitku (UX).<br><br><strong>Co od vás očekáváme?</strong><br>• Věk 18+ a technické vzdělání (min. SŠ).<br>• Znalost principů moderního UI a 'webové filozofie'.<br>• Adaptabilitu a schopnost pracovat v agilním prostředí.<br>• Spolehlivost a dodržování stanovených deadline.<br><br><strong>Nabízíme:</strong><br>• Práci na DPP (vhodné i při studiu).<br>• Volnou pracovní dobu – vy rozhodujete, kdy pracujete.<br>• Variabilní finanční ohodnocení podle náročnosti projektů."
-  },
+ "ui-designer": {
+  "title": "UI/UX Designer",
+  "content": "Aktuálně otevíráme prostor pro kreativního grafika se zaměřením na UI, který má vášeň pro čistou estetiku a moderní vizuální styl. Tato role je ideální pro studenty (VŠ i SŠ technického směru), kteří hledají maximální flexibilitu a chtějí realizovat své grafické nápady plně v režimu home-office.<br><br><strong>Klíčové odpovědnosti:</strong><br>• Kompletní vizuální návrh uživatelských rozhraní v nástrojích jako Figma, Adobe XD nebo Photoshop.<br>• Převádění projektové dokumentace a skic do čistých, moderních a přehledných grafických výstupů.<br>• Práce s barvami, typografií a kompozicí tak, aby byl web nejen krásný, ale i funkční.<br>• Příprava grafických podkladů pro následný vývoj.<br><br><strong>Co od vás vyžadujeme:</strong><br>• Věk 18+ a studium nebo absolvování technické SŠ/VŠ (se zájmem o IT a design).<br>• Pokročilou znalost práce ve Figmě nebo Photoshopu a cit pro detail.<br>• Základní povědomí o webové filozofii (jak se prvky na webu chovají).<br>• Spolehlivost a schopnost samostatně tvořit v domluvených termínech.<br><br><strong>Na co se můžete těšit:</strong><br>• Spolupráce formou DPP – ideální start kariéry při studiu střední nebo vysoké školy.<br>• Naprosto volná pracovní doba – pracujete tehdy, kdy máte největší kreativní flow.<br>• Odměna nastavená variabilně podle rozsahu a kvality odevzdaného grafického návrhu."
+},
   "sales-rep": {
     "title": "Obchodní zástupce",
-    "content": "Máte tah na bránu a baví vás komunikace s lidmi? Hledáme samostatného parťáka pro rozvoj našeho businessu.<br><br><strong>Co bude vaší náplní?</strong><br>• Aktivní vyhledávání nových obchodních příležitostí.<br>• Sjednávání schůzek a prezentace našich služeb.<br>• Budování dlouhodobých vztahů s klienty.<br><br><strong>Co od vás očekáváme?</strong><br>• Věk 18+ a reprezentativní vystupování.<br>• Vysokou míru vnitřní disciplíny a samostatnosti.<br>• Zkušenost se sociálními sítěmi výhodou.<br>• Schopnost srozumitelně prezentovat technická řešení.<br><br><strong>Nabízíme:</strong><br>• Spolupráci na DPP s flexibilním rozvrhem.<br>• Práci z domova.<br>• Motivující variabilní složku odměny podle úspěšnosti zakázek."
+    "content": "Hledáme energického a samostatného kolegu pro Business Development, který nám pomůže identifikovat nové obchodní příležitosti a rozšiřovat naše klientské portfolio. Pokud máte vynikající komunikační dovednosti a baví vás propojovat technická řešení s potřebami klientů, hledáme právě vás.<br><br><strong>Vaše hlavní úkoly:</strong><br>• Aktivní vyhledávání nových klientských segmentů a navazování prvotních obchodních kontaktů.<br>• Profesionální sjednávání nabídek a prezentace našich služeb jako moderního technologického partnera.<br>• Budování a dlouhodobé udržování vztahů s klíčovými klienty a partnery.<br><br><strong>Očekávaný profil kandidáta:</strong><br>• Věk 18+ a reprezentativní vystupování v online i osobní komunikaci.<br>• Vysoká míra vnitřní disciplíny, samostatnosti a schopnost efektivního self-managementu.<br>• Znalost prostředí sociálních sítí jako nástroje pro moderní obchod je velkou výhodou.<br>• Schopnost jasně a srozumitelně interpretovat i složitější technická řešení.<br><br><strong>Nabízené podmínky:</strong><br>• Flexibilní spolupráce na DPP s možností plné práce z domova (home-office).<br>• Volný pracovní rozvrh, který si plně přizpůsobíte svým časovým možnostem.<br>• Finanční ohodnocení s výraznou variabilní složkou založenou na úspěšně sjednaných zakázkách."
   }
 }
 }

@@ -753,10 +753,22 @@
     "header_1": "Careers",
     "write_us_prompt": "Have questions about the positions? Contact us:",
     "job_1_id": "ui-designer",
-    "job_1_title": "UI Designer",
+    "job_1_title": "UI/UX Designer",
     "job_1_short_desc": "Remote UI design with space for creativity. We are looking for reliable partners with a grasp of web philosophy.",
     "job_2_id": "sales-rep",
-    "job_2_title": "Business Development",
+    "job_2_title": "Business Development Representative",
     "job_2_short_desc": "Negotiating offers with high autonomy. Ideal for communicative people with social media expertise."
+  },
+  "job_detail": {
+  "back_link": "Back to job listings",
+  "not_found": "Position not found",
+  "ui-designer": {
+    "title": "UI/UX Designer",
+    "content": "We are currently opening a position for a creative graphic designer with a focus on UI, who has a passion for clean aesthetics and modern visual style. This role is ideal for students (University or Technical High School) looking for maximum flexibility and wanting to realize their graphic ideas fully in a home-office environment.<br><br><strong>Key Responsibilities:</strong><br>• Complete visual design of user interfaces in tools such as Figma, Adobe XD, or Photoshop.<br>• Translating project documentation and sketches into clean, modern, and well-organized graphic outputs.<br>• Working with colors, typography, and composition to ensure the web is not only beautiful but also functional.<br>• Preparing graphic assets for subsequent development.<br><br><strong>What We Require:</strong><br>• Age 18+ and current student or graduate of a technical High School/University (with an interest in IT and design).<br>• Advanced proficiency in Figma or Photoshop and a strong eye for detail.<br>• Basic understanding of 'web philosophy' (how elements behave on the web).<br>• Reliability and the ability to create independently within agreed deadlines.<br><br><strong>What You Can Look Forward To:</strong><br>• Cooperation via DPP (Contract for Work) – an ideal career start while studying high school or university.<br>• Completely flexible working hours – you work when your creative flow is strongest.<br>• Variable compensation based on the scope and quality of the submitted graphic design."
+  },
+  "sales-rep": {
+    "title": "Business Development Representative",
+    "content": "We are looking for an energetic and independent Business Development colleague to help us identify new business opportunities and expand our client portfolio. If you have excellent communication skills and enjoy connecting technical solutions with client needs, we are looking for you.<br><br><strong>Your Main Tasks:</strong><br>• Proactively searching for new client segments and establishing initial business contacts.<br>• Professionally negotiating offers and presenting our services as a modern technological partner.<br>• Building and maintaining long-term relationships with key clients and partners.<br><br><strong>Expected Candidate Profile:</strong><br>• Age 18+ and professional demeanor in both online and personal communication.<br>• High level of inner discipline, independence, and effective self-management skills.<br>• Knowledge of social media environments as a tool for modern business is a great advantage.<br>• Ability to clearly and understandably interpret complex technical solutions.<br><br><strong>Offered Conditions:</strong><br>• Flexible cooperation via DPP with the possibility of full home-office work.<br>• Flexible working schedule that you can fully adapt to your time possibilities.<br>• Financial compensation with a significant variable component based on successfully closed deals."
   }
+}
 }
