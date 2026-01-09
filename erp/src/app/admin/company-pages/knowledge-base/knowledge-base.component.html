@@ -1,1 +1,61 @@
-<p>knowledge-base works!</p>
+<div class="kb-fullscreen-wrapper">
+  <header class="kb-top-bar">
+    <div class="kb-brand">
+      <span class="logo-square">R</span>
+      <span class="brand-text">Wiki System</span>
+    </div>
+    <div class="kb-header-actions">
+      <a routerLink="/admin/dashboard" class="exit-link">Exit to Dashboard</a>
+    </div>
+  </header>
+
+  <div class="kb-container">
+    <aside class="kb-sidebar">
+      <nav class="kb-nav">
+        <div class="nav-group">
+          <span class="group-title">General</span>
+          <ul>
+            <li>
+              <a routerLink="introductions" routerLinkActive="active-kb">
+                <span class="num">01.</span> Introductions
+              </a>
+            </li>
+            <li>
+              <a routerLink="workflow" routerLinkActive="active-kb">
+                <span class="num">02.</span> Workflow
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="nav-group">
+          <span class="group-title">Roles</span>
+          <ul>
+            <li>
+              <a routerLink="sales-rep" routerLinkActive="active-kb">
+                <span class="num">03.</span> Sales Rep
+              </a>
+            </li>
+            <li>
+              <a routerLink="ui-designer" routerLinkActive="active-kb">
+                <span class="num">04.</span> UI Designer
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="kb-main-content">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+        
+        <div class="welcome-view" *ngIf="isRootPath()">
+          <span class="doc-code">SYSTEM_READY</span>
+          <h1>Documentation</h1>
+          <p>Please select a chapter from the left navigation to continue.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

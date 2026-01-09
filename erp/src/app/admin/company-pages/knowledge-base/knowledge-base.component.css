@@ -1,0 +1,245 @@
+/* --- ZÁKLADNÍ WRAPPER --- */
+.kb-fullscreen-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #0b0b0e;
+  color: #a1a1aa;
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+/* --- TOP NAVIGATION BAR --- */
+.kb-top-bar {
+  height: 48px; /* Kompaktní výška */
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1e1e20;
+  background: #0d0d0f;
+  flex-shrink: 0;
+}
+
+.kb-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-square {
+  background: #a67dff;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 800;
+  font-size: 12px;
+  border-radius: 3px;
+}
+
+.brand-text {
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+}
+
+.exit-link {
+  font-size: 0.75rem;
+  color: #52525b;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.exit-link:hover {
+  color: #a67dff;
+}
+
+/* --- HLAVNÍ KONTEJNER --- */
+.kb-container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  background: #0b0b0e;
+}
+
+/* --- SIDEBAR (LEVÝ PANEL) --- */
+.kb-sidebar {
+  width: 220px; /* Minimalistická šířka */
+  flex-shrink: 0;
+  border-right: 1px solid #1e1e20;
+  padding: 20px 0;
+  overflow-y: auto;
+  background: #0d0d0f;
+}
+
+.nav-group {
+  margin-bottom: 24px;
+}
+
+.group-title {
+  display: block;
+  padding: 0 20px;
+  margin-bottom: 8px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #3f3f46;
+}
+
+.kb-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.kb-nav a {
+  display: flex;
+  align-items: center;
+  padding: 6px 20px;
+  font-size: 0.85rem;
+  color: #71717a;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  border-left: 2px solid transparent;
+}
+
+.num {
+  font-family: 'JetBrains Mono', monospace;
+  margin-right: 10px;
+  font-size: 0.7rem;
+  color: #27272a;
+}
+
+.kb-nav a:hover {
+  color: #e4e4e7;
+  background: #161618;
+}
+
+.kb-nav a.active-kb {
+  color: #a67dff;
+  background: rgba(166, 125, 255, 0.03);
+  border-left: 2px solid #a67dff;
+}
+
+.kb-nav a.active-kb .num {
+  color: #a67dff;
+}
+
+/* --- HLAVNÍ OBSAH (VPRAVO) --- */
+.kb-main-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  justify-content: flex-start;
+  scroll-behavior: smooth;
+}
+
+.content-wrapper {
+  width: 100%;
+  max-width: 1100px; /* Optimální pro široké tabulky/kód */
+  padding: 20px 40px; /* Minimalizovaný padding pro hustotu dat */
+}
+
+/* --- WELCOME / EMPTY STATE --- */
+.welcome-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 600px;
+}
+
+.doc-code {
+  font-family: monospace;
+  font-size: 0.65rem;
+  color: #a67dff;
+  border: 1px solid rgba(166, 125, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-bottom: 12px;
+}
+
+.welcome-view h1 {
+  font-size: 2.2rem;
+  color: #fff;
+  margin: 0 0 12px 0;
+  font-weight: 700;
+}
+
+.welcome-view p {
+  color: #71717a;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* --- RESPONZIVITA --- */
+
+/* Tablet / Menší desktopy */
+@media (max-width: 1024px) {
+  .content-wrapper {
+    padding: 20px;
+  }
+}
+
+/* Mobilní zařízení */
+@media (max-width: 768px) {
+  .kb-container {
+    flex-direction: column;
+  }
+
+  .kb-sidebar {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #1e1e20;
+    padding: 10px 0;
+    max-height: 150px;
+  }
+
+  .nav-group {
+    margin-bottom: 10px;
+  }
+
+  .group-title {
+    padding: 0 15px;
+  }
+
+  .kb-nav ul {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 10px;
+    gap: 5px;
+  }
+
+  .kb-nav a {
+    white-space: nowrap;
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    padding: 8px 15px;
+  }
+
+  .kb-nav a.active-kb {
+    border-left: none;
+    border-bottom: 2px solid #a67dff;
+    background: transparent;
+  }
+
+  .content-wrapper {
+    padding: 20px 15px;
+  }
+
+  .welcome-view h1 {
+    font-size: 1.8rem;
+  }
+}

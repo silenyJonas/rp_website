@@ -1,5 +1,3 @@
 TODO:
-udelat administraci anglicky texty
 udelat 2 sekce:
-- upravit taret jobs css aby to vypadalo ok
 - pak na admin page bude odkaz na neco jako /knowledgebase coz bude za auth a tam se rozbrani stranka mimo admin layou ale bude tam odkaz zpet na admin layout a jinak v tom /knowledgebase budou popisky prace co jak delat atd atd proste pro zamestnance

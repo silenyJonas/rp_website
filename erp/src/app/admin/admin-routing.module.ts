@@ -8,53 +8,45 @@ import { AdministratorsComponent } from './pages/administrators/administrators.c
 import { BusinessLogsComponent } from './pages/business-logs/business-logs.component';
 import { PersonalInfoComponent } from './pages/personal-info/personal-info.component';
 import { EditWebsiteComponent } from './pages/edit-website/edit-website.component';
-
+import { KnowledgeBaseComponent } from './company-pages/knowledge-base/knowledge-base.component';
+import { KbArticleComponent } from './company-pages/knowledge-base/kb-article/kb-article.component';
+import { IntroductionsComponent } from './company-pages/knowledge-base/pages/introductions/introductions.component';
+import { WorkflowComponent } from './company-pages/knowledge-base/pages/workflow/workflow.component';
+import { SalesRepComponent } from './company-pages/knowledge-base/pages/sales-rep/sales-rep.component';
+import { UiDesignerComponent } from './company-pages/knowledge-base/pages/ui-designer/ui-designer.component';
 const routes: Routes = [
+  // SEKCE 1: Klasický Admin se sidebarem
   {
     path: '',
     component: AdminLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent, data: { permission: 'view-dashboard' } },
+      { path: 'user-request', component: UserRequestComponent, data: { permission: 'view-user-requests' } },
+      { path: 'administrators', component: AdministratorsComponent, data: { permission: 'manage-administrators' } },
+      { path: 'business-logs', component: BusinessLogsComponent, data: { permission: 'view-business-logs' } },
+      { path: 'personal-info', component: PersonalInfoComponent, data: { permission: 'view-personal-info' } },
+      { path: 'edit-website', component: EditWebsiteComponent, data: { permission: 'view-edit-website' } },
+    ]
+  },
+
+  // SEKCE 2: Knowledge Base - Samostatná úroveň (Full-screen)
+  {
+    path: 'company-pages',
+    canActivate: [AuthGuard],
     children: [
       {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
-      },
-      {
-        path: 'dashboard',
-        component: DashboardComponent,
-        canActivate: [AuthGuard], // Přidáváme guard pro ověření oprávnění
-        data: { permission: 'view-dashboard' }
-      },
-      {
-        path: 'user-request',
-        component: UserRequestComponent,
-        canActivate: [AuthGuard], // Přidáváme guard pro ověření oprávnění
-        data: { permission: 'view-user-requests' }
-      },
-      {
-        path: 'administrators',
-        component: AdministratorsComponent,
-        canActivate: [AuthGuard], // Přidáváme guard pro ověření oprávnění
-        data: { permission: 'manage-administrators' }
-      },
-      {
-        path: 'business-logs',
-        component: BusinessLogsComponent,
-        canActivate: [AuthGuard], // Přidáváme guard pro ověření oprávnění
-        data: { permission: 'view-business-logs' }
-      },
-      {
-        path: 'personal-info',
-        component: PersonalInfoComponent,
-        canActivate: [AuthGuard], // Přidáváme guard pro ověření oprávnění
-        data: { permission: 'view-personal-info' }
-      },
-      {
-        path: 'edit-website',
-        component: EditWebsiteComponent,
-        canActivate: [AuthGuard], // Přidáváme guard pro ověření oprávnění
-        data: { permission: 'view-edit-website' }
-      },
+        path: 'knowledge-base',
+        component: KnowledgeBaseComponent,
+        children: [
+          { path: 'introductions', component: IntroductionsComponent },
+          { path: 'workflow', component: WorkflowComponent },
+          { path: 'sales-rep', component: SalesRepComponent },
+          { path: 'ui-designer', component: UiDesignerComponent },
+          { path: '', redirectTo: 'introductions', pathMatch: 'full' }
+        ]
+      }
     ]
   }
 ];
