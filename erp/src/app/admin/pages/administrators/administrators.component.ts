@@ -17,6 +17,7 @@ import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { GenericFilterFormComponent } from '../../components/generic-filter-form/generic-filter-form.component';
 import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
+import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
 import {
   BUTTONS,
@@ -42,7 +43,8 @@ type ItemType = any; // You should replace 'any' with the specific interface if 
     GenericTrashTableComponent,
     GenericFormComponent,
     GenericFilterFormComponent,
-    GenericDetailsComponent
+    GenericDetailsComponent,
+    HasPermissionDirective
   ],
   templateUrl: './administrators.component.html',
   styleUrl: './administrators.component.css',

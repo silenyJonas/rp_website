@@ -1,3 +1,23 @@
 TODO:
-udelat 2 sekce:
-- pak na admin page bude odkaz na neco jako /knowledgebase coz bude za auth a tam se rozbrani stranka mimo admin layou ale bude tam odkaz zpet na admin layout a jinak v tom /knowledgebase budou popisky prace co jak delat atd atd proste pro zamestnance
+-dodelat vsechny sekce v knowledgebase
+-udelat tabulku kde budou salesmani evidovat co oslovili atd:
+tabulka bude mit:
+Datum: Kdy proběhl první kontakt.
+Salesman: Kdo záznam vytvořil (automaticky z přihlášení).
+Subjekt: Název firmy / Jméno osoby.
+Zdroj/Kanál: Kde k oslovení došlo (LinkedIn, Instagram, Telefon, Inzerát).
+url zdroje pokud je
+datum posledniho kontaktu
+Kontakt: E-mail nebo telefon (viz sekce o legalitě níže).
+Předmět/Popis: Krátká poznámka (např. "Zájem o e-shop, čekám na podklady").
+Status: nove/ probiha komunikace/ pozastaveni/potvrzeno/zpracovava se/vyrizeno/neoslovovat
+expirace: pri prodlouzeni oslovit admina na prodlouzeni
+dalsi krok: co bude dalsi krok (zavolat v pondeli/poslat portfolio)
+duvod zamitnuti: (pokud je)
+- tabulka bude spolecna 
+- sjednana v musi byt evidovana v systemu nebo nebude vyplacena
+- kontakty zapisovat jen pokud jsou VEREJNE DOHLEDATELNE
+- leady budou aktivni pouze dva mesice dostatecna doba na sjednani zajmu zakazky aby salesman neblokoval firmu donekonecna
+
+--------------------------
+- salesman podepise NDA 

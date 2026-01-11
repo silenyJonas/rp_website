@@ -1,29 +1,34 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PermissionService {
-  // Mapa, která přiřazuje každé roli pole oprávnění.
-  private rolePermissions = new Map<string, string[]>([
-    ['sysadmin', ['manage-administrators', 'view-business-logs', 'view-personal-info', 'view-user-requests', 'view-dashboard','view-edit-website']],
-    ['primeadmin', ['manage-administrators', 'view-dashboard', 'view-business-logs']],
-    ['admin', ['view-user-requests', 'view-dashboard', 'view-personal-info']]
-  ]);
+  private userPermissions$ = new BehaviorSubject<string[]>([]);
 
-  constructor() { }
-
-  /**
-   * Zjistí, zda má daná role konkrétní oprávnění.
-   * @param role Role uživatele.
-   * @param permission Oprávnění, které se má zkontrolovat.
-   * @returns `true`, pokud má uživatel oprávnění, jinak `false`.
-   */
-  hasPermission(role: string, permission: string): boolean {
-    const permissions = this.rolePermissions.get(role);
-    if (!permissions) {
-      return false;
+  constructor() {
+    // Načtení při F5
+    const savedPermissions = localStorage.getItem('userPermissions');
+    if (savedPermissions) {
+      try {
+        this.userPermissions$.next(JSON.parse(savedPermissions));
+      } catch (e) {
+        console.error('Chyba při parsování userPermissions', e);
+      }
     }
-    return permissions.includes(permission);
+  }
+
+  setPermissions(permissions: string[]): void {
+    this.userPermissions$.next(permissions || []);
+  }
+
+  hasPermission(permission: string): boolean {
+    const currentPermissions = this.userPermissions$.getValue();
+    return currentPermissions.includes(permission);
+  }
+
+  clearPermissions(): void {
+    this.userPermissions$.next([]);
   }
 }

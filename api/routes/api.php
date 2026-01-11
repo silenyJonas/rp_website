@@ -19,7 +19,7 @@ Route::post('/refresh', [AuthController::class, 'refresh']);
 Route::post('raw_request_commissions', [RawRequestCommissionController::class, 'store']);
 
 // Routy vyžadující autentizaci
-Route::middleware('auth:sanctum')->group(function () {
+// Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -60,4 +60,4 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/force-delete-all', [RoleController::class, 'forceDeleteAllTrashed']);
     });
     Route::apiResource('roles', RoleController::class)->except(['store', 'create', 'edit']);
-});
+// });

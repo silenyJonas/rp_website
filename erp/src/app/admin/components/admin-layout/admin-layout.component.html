@@ -1,25 +1,28 @@
 <header>
-  <div class="header-item">
-    <ng-container *ngIf="isLoggedIn && userEmail">
-      {{ userEmail }} |
-    </ng-container>
-    <ng-container *ngIf="!isLoggedIn && !userEmail">
-      Nepřihlášený uživatel |
-    </ng-container>
-  </div>
-  <div class="header-item">
-    <ng-container *ngIf="isLoggedIn && userRole">
+  <div class="header-info-group">
+    <div class="header-item">
+      <ng-container *ngIf="isLoggedIn; else notLoggedIn">
+        {{ userEmail }} |
+      </ng-container>
+      <ng-template #notLoggedIn>
+        Nepřihlášený uživatel |
+      </ng-template>
+    </div>
+
+    <div class="header-item" *ngIf="isLoggedIn && userRole">
       {{ userRole }} |
-    </ng-container>
+    </div>
+
+    <div class="header-item">
+      {{ currentDate | date:'HH:mm:ss d. MMMM yyyy' }}
+    </div>
   </div>
-  <div class="header-item">
-    {{ currentDate | date:'HH:mm:ss d. MMMM yyyy' }}
-  </div>
-  <div class="header-item">
-    <a routerLink="/admin/company-pages/knowledge-base" 
-       class="kb-header-icon" 
+
+  <div class="header-item header-right">
+    <a routerLink="/admin/intranet/knowledge-base" 
+       class="kb-link" 
        title="Knowledge Base">
-      <span class="icon-circle">?</span>
+      <span class="kb-icon-circle">?</span>
     </a>
   </div>
 </header>
@@ -28,22 +31,22 @@
   <aside class="admin-sidebar">
     <nav class="admin-nav">
       <ul>
-        <li *ngIf="hasPermission('view-dashboard')">
+        <li *appHasPermission="'view-dashboard'">
           <a routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a>
         </li>
-        <li *ngIf="hasPermission('view-user-requests')">
+        <li *appHasPermission="'view-user-requests'">
           <a routerLink="/admin/user-request" routerLinkActive="active">User Requests</a>
         </li>
-        <li *ngIf="hasPermission('manage-administrators')">
+        <li *appHasPermission="'manage-administrators'">
           <a routerLink="/admin/administrators" routerLinkActive="active">Administrátoři</a>
         </li>
-        <li *ngIf="hasPermission('view-edit-website')">
+        <li *appHasPermission="'view-edit-website'">
           <a routerLink="/admin/edit-website" routerLinkActive="active">Edit Website</a>
         </li>
-        <li *ngIf="hasPermission('view-business-logs')">
+        <li *appHasPermission="'view-business-logs'">
           <a routerLink="/admin/business-logs" routerLinkActive="active">Business Logs</a>
         </li>
-        <li *ngIf="hasPermission('view-personal-info')">
+        <li *appHasPermission="'view-personal-info'">
           <a routerLink="/admin/personal-info" routerLinkActive="active">Osobní Informace</a>
         </li>
       </ul>

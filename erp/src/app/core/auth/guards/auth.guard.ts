@@ -1,10 +1,10 @@
-
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, UrlTree } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 import { PermissionService } from '../services/permission.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private authService: AuthService, 
     private router: Router,
-    private permissionService: PermissionService // Injektujeme PermissionService
+    private permissionService: PermissionService
   ) {}
 
   canActivate(
@@ -23,26 +23,22 @@ export class AuthGuard implements CanActivate {
       take(1),
       map(isLoggedIn => {
         if (!isLoggedIn) {
-          console.warn('AuthGuard: Uživatel není přihlášen, přesměrování na login.');
           return this.router.createUrlTree(['/auth/login']);
         }
 
+        // Získáme požadované oprávnění z definice routy
         const requiredPermission = route.data['permission'] as string;
-        const userRole = this.authService.getUserRole();
         
-        // Zde kontrolujeme oprávnění namísto rolí
-        if (requiredPermission && userRole) {
-          if (this.permissionService.hasPermission(userRole, requiredPermission)) {
-            console.log(`AuthGuard: Uživatel s rolí '${userRole}' má oprávnění '${requiredPermission}'. Přístup povolen.`);
+        // Pokud routa vyžaduje oprávnění, zkontrolujeme ho v PermissionService
+        if (requiredPermission) {
+          if (this.permissionService.hasPermission(requiredPermission)) {
             return true;
           } else {
-            console.warn(`AuthGuard: Uživatel s rolí '${userRole}' nemá oprávnění '${requiredPermission}'. Přesměrování na dashboard.`);
+            console.warn(`AuthGuard: Chybí oprávnění '${requiredPermission}'. Přesměrování.`);
             return this.router.createUrlTree(['/admin/dashboard']);
           }
         }
         
-        // Pokud trasa nevyžaduje žádné oprávnění, je přístup povolen pro přihlášené uživatele
-        console.log('AuthGuard: Trasa nevyžaduje specifické oprávnění, přístup povolen.');
         return true;
       })
     );

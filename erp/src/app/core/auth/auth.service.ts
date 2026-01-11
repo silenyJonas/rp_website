@@ -1,135 +1,65 @@
-
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, BehaviorSubject, of, throwError, timer } from 'rxjs';
+import { Observable, BehaviorSubject, of, throwError, timer, Subject } from 'rxjs';
 import { tap, catchError, switchMap, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
-@Injectable({
-  providedIn: 'root'
-})
+import { PermissionService } from './services/permission.service';
+
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private baseUrl = environment.base_api_url;
 
-  private _isLoggedIn = new BehaviorSubject<boolean>(this.hasAccessToken());
+  private _isLoggedIn = new BehaviorSubject<boolean>(!!localStorage.getItem('accessToken'));
   isLoggedIn$ = this._isLoggedIn.asObservable();
   
-  // Nový BehaviorSubject pro e-mail uživatele
-  private _userEmailSubject = new BehaviorSubject<string | null>(this.getUserEmail());
+  private _userEmailSubject = new BehaviorSubject<string | null>(localStorage.getItem('userEmail'));
   userEmail$ = this._userEmailSubject.asObservable();
 
-  // Předmět pro zrušení časovače obnovení tokenu
   private stopTokenRefresh$ = new Subject<void>();
-  private tokenRefreshTimer: any;
-  private readonly REFRESH_INTERVAL = 20 * 60 * 1000; // 20 minut v milisekundách
+  private readonly REFRESH_INTERVAL = 20 * 60 * 1000;
 
-  constructor(private http: HttpClient) {
-    // Při inicializaci služby zkusíme získat přístupový token z Local Storage a zahájit proaktivní obnovu
-    this.checkAuth().subscribe(
-      isAuth => {
-        if (isAuth) {
-          this.startTokenRefreshTimer();
-        }
+  constructor(
+    private http: HttpClient,
+    private permissionService: PermissionService
+  ) {
+    this.checkAuth().subscribe(isAuth => {
+      if (isAuth) {
+        this.startTokenRefreshTimer();
+        this.syncPermissions();
       }
-    );
+    });
   }
 
   login(credentials: { email: string; password: string }): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/login`, credentials).pipe(
-      tap({
-        next: (response: any) => {
-          console.log('Přihlášení úspěšné:', response);
-          console.log(response.user.user_login_id);
-          localStorage.setItem('accessToken', response.token);
-          localStorage.setItem('refreshToken', response.refreshToken);
-          localStorage.setItem('userEmail', response.user.user_email);
-          localStorage.setItem('userId', response.user.user_login_id);
-          this._userEmailSubject.next(response.user.user_email); // Aktualizujeme subjekt e-mailu
+      tap((response: any) => {
+        localStorage.setItem('accessToken', response.token);
+        localStorage.setItem('refreshToken', response.refreshToken);
+        localStorage.setItem('userEmail', response.user.user_email);
+        localStorage.setItem('userId', response.user.user_login_id.toString());
+        
+        // Uložení ROLE
+        if (response.user_roles && response.user_roles.length > 0) {
+          localStorage.setItem('userRole', response.user_roles[0]); 
+        }
 
-          // Zde zpracujeme a uložíme název role
-          if (response.user_roles && response.user_roles.length > 0) {
-            // Změna: Ukládáme přímo název role, protože server vrací pole řetězců
-            localStorage.setItem('userRole', response.user_roles[0]); 
-          } else {
-            localStorage.removeItem('userRole');
-          }
-          
-          this._isLoggedIn.next(true);
-          this.startTokenRefreshTimer(); // Spustíme proaktivní obnovu po úspěšném přihlášení
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Chyba přihlášení:', error);
-          this.clearAuthData();
+        // Uložení PERMISSIONS a synchronizace do PermissionService
+        if (response.user_permissions) {
+          localStorage.setItem('userPermissions', JSON.stringify(response.user_permissions));
+          this.permissionService.setPermissions(response.user_permissions);
         }
+
+        this._userEmailSubject.next(response.user.user_email);
+        this._isLoggedIn.next(true);
+        this.startTokenRefreshTimer();
       }),
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = 'Neplatné uživatelské jméno nebo heslo.';
-        if (error.status === 401 && error.error && error.error.message) {
-          errorMessage = error.error.message;
-        } else if (error.status !== 401) {
-          errorMessage = 'Vyskytla se chyba při komunikaci se serverem.';
-        }
-        return throwError(() => new Error(errorMessage));
-      })
+      catchError(this.handleError)
     );
   }
 
-  logout(): Observable<any> {
-    const refreshToken = this.getRefreshToken();
-    const body = refreshToken ? { refreshToken: refreshToken } : {};
-
-    return this.http.post<any>(`${this.baseUrl}/logout`, body).pipe(
-      tap({
-        next: () => {
-          console.log('Odhlášení úspěšné.');
-          this.clearAuthData();
-          this.stopTokenRefreshTimer(); // Zastavíme časovač po odhlášení
-        },
-        error: (err) => {
-          console.error('Chyba při odhlášení:', err);
-          this.clearAuthData();
-          this.stopTokenRefreshTimer(); // Zastavíme časovač i při chybě odhlášení
-        }
-      }),
-      catchError(() => {
-        return throwError(() => new Error('Chyba při odhlášení.'));
-      })
-    );
-  }
-
-  refreshAccessToken(): Observable<any> {
-    const refreshToken = this.getRefreshToken();
-    if (!refreshToken) {
-      // console.warn('Refresh token není v Local Storage, nelze obnovit.');
-      this.clearAuthData();
-      this.stopTokenRefreshTimer();
-      return throwError(() => new Error('Refresh token chybí.'));
-    }
-
-    return this.http.post<any>(`${this.baseUrl}/refresh`, { refreshToken: refreshToken }).pipe(
-      tap({
-        next: (response: any) => {
-          console.log('Přístupový token obnoven:', response);
-          localStorage.setItem('accessToken', response.token);
-          localStorage.setItem('refreshToken', response.refreshToken);
-          this._isLoggedIn.next(true);
-          this.startTokenRefreshTimer(); // Po úspěšné obnově znovu spustíme časovač
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Chyba při obnovování tokenu:', error);
-          this.clearAuthData();
-          this.stopTokenRefreshTimer(); // Pokud obnova selže, zastavíme časovač
-        }
-      }),
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = 'Nepodařilo se obnovit token.';
-        if (error.status === 401 && error.error && error.error.message) {
-          errorMessage = error.error.message;
-        }
-        return throwError(() => new Error(errorMessage));
-      })
-    );
+  private syncPermissions(): void {
+    const perms = this.getUserPermissions();
+    this.permissionService.setPermissions(perms);
   }
 
   private clearAuthData(): void {
@@ -137,65 +67,83 @@ export class AuthService {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userId');
-    localStorage.removeItem('userRole'); // Nově také odstraníme roli
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userPermissions');
+    
+    this.permissionService.clearPermissions();
     this._isLoggedIn.next(false);
-    this._userEmailSubject.next(null); // Při odhlášení vyčistíme e-mail
+    this._userEmailSubject.next(null);
   }
 
-  public getAccessToken(): string | null {
-    return localStorage.getItem('accessToken');
+  // --- POMOCNÉ METODY PRO KOMPONENTY ---
+  public getUserId(): string | null { return localStorage.getItem('userId'); }
+  public getUserEmail(): string | null { return localStorage.getItem('userEmail'); }
+  public setUserEmail(email: string): void {
+    localStorage.setItem('userEmail', email);
+    this._userEmailSubject.next(email);
   }
-
-  public getRefreshToken(): string | null {
-    return localStorage.getItem('refreshToken');
-  }
-
-  public getUserId(): string | null {
-    return localStorage.getItem('userId');
-  }
-
-  public getUserEmail(): string | null {
-    return localStorage.getItem('userEmail');
-  }
-
-  public setUserEmail(user_email: string): void {
-    localStorage.setItem('userEmail', user_email);
-    this._userEmailSubject.next(user_email); // Aktualizujeme subjekt e-mailu
-  }
+  public getUserRole(): string | null { return localStorage.getItem('userRole'); }
+  public getAccessToken(): string | null { return localStorage.getItem('accessToken'); }
+  public getRefreshToken(): string | null { return localStorage.getItem('refreshToken'); }
   
-  public getUserRole(): string | null {
-    return localStorage.getItem('userRole');
+  public getUserPermissions(): string[] {
+    const perms = localStorage.getItem('userPermissions');
+    return perms ? JSON.parse(perms) : [];
   }
 
-  private hasAccessToken(): boolean {
-    return !!localStorage.getItem('accessToken');
-  }
-
-  checkAuth(): Observable<boolean> {
-    if (this.hasAccessToken()) {
-      return of(true);
-    }
-
-    return this.refreshAccessToken().pipe(
+  // --- LOGIKA TOKENŮ ---
+  logout(): Observable<any> {
+    const body = { refreshToken: this.getRefreshToken() };
+    return this.http.post<any>(`${this.baseUrl}/logout`, body).pipe(
+      tap(() => {
+        this.clearAuthData();
+        this.stopTokenRefreshTimer();
+      }),
       catchError(() => {
-        return of(false);
+        this.clearAuthData();
+        return of(null);
       })
     );
   }
 
-  private startTokenRefreshTimer(): void {
-    // Nejprve zrušíme předchozí časovač, aby se nespustil dvakrát
-    this.stopTokenRefreshTimer();
-    console.log('Spouštím proaktivní časovač pro obnovu tokenu.');
+  refreshAccessToken(): Observable<any> {
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      this.clearAuthData();
+      return throwError(() => new Error('Chybí refresh token'));
+    }
+    return this.http.post<any>(`${this.baseUrl}/refresh`, { refreshToken }).pipe(
+      tap(res => {
+        localStorage.setItem('accessToken', res.token);
+        localStorage.setItem('refreshToken', res.refreshToken);
+      }),
+      catchError(err => {
+        this.clearAuthData();
+        return throwError(() => err);
+      })
+    );
+  }
 
-    this.tokenRefreshTimer = timer(this.REFRESH_INTERVAL).pipe(
+  checkAuth(): Observable<boolean> {
+    return localStorage.getItem('accessToken') 
+      ? of(true) 
+      : this.refreshAccessToken().pipe(switchMap(() => of(true)), catchError(() => of(false)));
+  }
+
+  private startTokenRefreshTimer(): void {
+    this.stopTokenRefreshTimer();
+    this.intervalId = timer(this.REFRESH_INTERVAL, this.REFRESH_INTERVAL).pipe(
       switchMap(() => this.refreshAccessToken()),
       takeUntil(this.stopTokenRefresh$)
     ).subscribe();
   }
+  private intervalId: any;
 
-  private stopTokenRefreshTimer(): void {
-    // console.log('Zastavuji proaktivní časovač pro obnovu tokenu.');
-    this.stopTokenRefresh$.next();
+  private stopTokenRefreshTimer(): void { this.stopTokenRefresh$.next(); }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Nastala chyba při přihlášení.';
+    if (error.status === 401) errorMessage = 'Neplatné jméno nebo heslo.';
+    return throwError(() => new Error(errorMessage));
   }
 }

@@ -18,6 +18,8 @@ import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { GenericFilterFormComponent } from '../../components/generic-filter-form/generic-filter-form.component';
 import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
+import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
+
 import {
   USER_REQUEST_BUTTONS,
   USER_REQUEST_FORM_FIELDS,
@@ -39,7 +41,8 @@ import {
     GenericTrashTableComponent,
     GenericFormComponent,
     GenericFilterFormComponent,
-    GenericDetailsComponent
+    GenericDetailsComponent,
+    HasPermissionDirective // Přidáno do importů
   ],
   templateUrl: './user-request.component.html',
   styleUrl: './user-request.component.css',

@@ -8,12 +8,12 @@ import { AdministratorsComponent } from './pages/administrators/administrators.c
 import { BusinessLogsComponent } from './pages/business-logs/business-logs.component';
 import { PersonalInfoComponent } from './pages/personal-info/personal-info.component';
 import { EditWebsiteComponent } from './pages/edit-website/edit-website.component';
-import { KnowledgeBaseComponent } from './company-pages/knowledge-base/knowledge-base.component';
-import { KbArticleComponent } from './company-pages/knowledge-base/kb-article/kb-article.component';
-import { IntroductionsComponent } from './company-pages/knowledge-base/pages/introductions/introductions.component';
-import { WorkflowComponent } from './company-pages/knowledge-base/pages/workflow/workflow.component';
-import { SalesRepComponent } from './company-pages/knowledge-base/pages/sales-rep/sales-rep.component';
-import { UiDesignerComponent } from './company-pages/knowledge-base/pages/ui-designer/ui-designer.component';
+import { KnowledgeBaseComponent } from './intranet/knowledge-base/knowledge-base.component';
+import { KbArticleComponent } from './intranet/knowledge-base/kb-article/kb-article.component';
+import { IntroductionsComponent } from './intranet/knowledge-base/pages/introductions/introductions.component';
+import { WorkflowComponent } from './intranet/knowledge-base/pages/workflow/workflow.component';
+import { SalesRepComponent } from './intranet/knowledge-base/pages/sales-rep/sales-rep.component';
+import { UiDesignerComponent } from './intranet/knowledge-base/pages/ui-designer/ui-designer.component';
 const routes: Routes = [
   // SEKCE 1: Klasický Admin se sidebarem
   {
@@ -33,7 +33,7 @@ const routes: Routes = [
 
   // SEKCE 2: Knowledge Base - Samostatná úroveň (Full-screen)
   {
-    path: 'company-pages',
+    path: 'intranet',
     canActivate: [AuthGuard],
     children: [
       {

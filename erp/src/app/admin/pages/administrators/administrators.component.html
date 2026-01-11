@@ -61,7 +61,7 @@
           (itemRestored)="handleItemRestored()">
         </app-generic-trash-table>
 
-        <button (click)="toggleTable()" class="toggle-table-btn neutral_button m-b-10">
+        <button *appHasPermission="'view-deleted'" (click)="toggleTable()" class="toggle-table-btn neutral_button m-b-10">
           {{ showTrashTable ? 'Zobrazit Aktivní Požadavky' : 'Zobrazit Smazané Požadavky' }}
         </button>
 

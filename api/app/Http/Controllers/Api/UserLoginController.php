@@ -121,7 +121,8 @@ class UserLoginController extends Controller
                 });
             }
 
-            $query->with('roles');
+            // ÚPRAVA: Načítáme role i oprávnění pro Resource
+            $query->with(['roles.permissions']);
 
             if ($noPagination) {
                 $users = UserLoginResource::collection($query->get());
@@ -169,6 +170,9 @@ class UserLoginController extends Controller
         }
 
         $this->logAction($request, 'create', 'UserLogin', 'Vytvoření nového uživatele', $user->user_login_id, false);
+        
+        // ÚPRAVA: Načtení oprávnění i pro nově vytvořeného uživatele
+        $user->load('roles.permissions');
 
         return response()->json(new UserLoginResource($user), 201);
     }
@@ -178,7 +182,8 @@ class UserLoginController extends Controller
      */
     public function show(UserLogin $userLogin): JsonResponse
     {
-        $userLogin->load('roles');
+        // ÚPRAVA: Načtení rolí i s oprávněními
+        $userLogin->load('roles.permissions');
 
         if ($userLogin->roles->contains('role_name', 'primeadmin')) {
             return response()->json([
@@ -230,7 +235,8 @@ class UserLoginController extends Controller
 
         $this->logAction($request, 'update', 'UserLogin', 'Aktualizace údajů uživatele', $userLogin->user_login_id);
 
-        $userLogin->load('roles');
+        // ÚPRAVA: Načtení rolí i s oprávněními pro odpověď
+        $userLogin->load('roles.permissions');
         return response()->json(new UserLoginResource($userLogin));
     }
 
@@ -422,7 +428,8 @@ public function changePassword(PasswordChangeRequest $request): JsonResponse
 
     public function showDetails(UserLogin $userLogin): JsonResponse
     {
-        $userLogin->load('roles');
+        // ÚPRAVA: Načtení rolí i s oprávněními
+        $userLogin->load('roles.permissions');
 
         if ($userLogin->roles->contains('role_name', 'primeadmin')) {
             return response()->json([
@@ -445,6 +452,10 @@ public function changePassword(PasswordChangeRequest $request): JsonResponse
                     'description' => $role->description,
                 ];
             }),
+            // ÚPRAVA: Přidání oprávnění i do detailu
+            'user_permissions' => $userLogin->roles->flatMap(function ($role) {
+                return $role->permissions->pluck('permission_key');
+            })->unique()->values(),
         ];
 
         return response()->json($selectedData);
@@ -482,7 +493,5 @@ public function changePassword(PasswordChangeRequest $request): JsonResponse
         } catch (\Exception $e) {
             Log::error('Chyba při logování akce v UserLoginController: ' . $e->getMessage());
         }
-        
-        
     }
 }
