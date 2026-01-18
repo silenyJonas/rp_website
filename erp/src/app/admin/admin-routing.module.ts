@@ -14,6 +14,7 @@ import { IntroductionsComponent } from './intranet/knowledge-base/pages/introduc
 import { WorkflowComponent } from './intranet/knowledge-base/pages/workflow/workflow.component';
 import { SalesRepComponent } from './intranet/knowledge-base/pages/sales-rep/sales-rep.component';
 import { UiDesignerComponent } from './intranet/knowledge-base/pages/ui-designer/ui-designer.component';
+import { SalesLeadsComponent } from './pages/sales-leads/sales-leads.component';
 const routes: Routes = [
   // SEKCE 1: Klasický Admin se sidebarem
   {
@@ -28,6 +29,7 @@ const routes: Routes = [
       { path: 'business-logs', component: BusinessLogsComponent, data: { permission: 'view-business-logs' } },
       { path: 'personal-info', component: PersonalInfoComponent, data: { permission: 'view-personal-info' } },
       { path: 'edit-website', component: EditWebsiteComponent, data: { permission: 'view-edit-website' } },
+      { path: 'sales-leads', component: SalesLeadsComponent, data: { permission: 'view-sales-leads' } },
     ]
   },
 

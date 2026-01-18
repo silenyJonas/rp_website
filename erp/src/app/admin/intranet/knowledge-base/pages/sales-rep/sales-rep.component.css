@@ -1,5 +1,10 @@
 .kb-article-container {
-  animation: fadeIn 0.4s ease-out;
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 30px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #d4d4d8;
+  line-height: 1.6;
 }
 
 .breadcrumb {
@@ -7,21 +12,26 @@
   font-size: 0.7rem;
   color: #52525b;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 h1 {
   font-size: 2.4rem;
   color: #fff;
-  font-weight: 700;
-  margin-bottom: 16px;
+  font-weight: 800;
+  margin-bottom: 15px;
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin: 0;
 }
 
 .lead-text {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: #a1a1aa;
   max-width: 800px;
-  line-height: 1.6;
+  margin-bottom: 40px;
 }
 
 .section-divider {
@@ -31,54 +41,80 @@ h1 {
 }
 
 .kb-section {
-  margin-bottom: 48px;
+  margin-bottom: 45px;
 }
 
 h2 {
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   color: #a67dff;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  border-left: 2px solid #a67dff;
+  padding-left: 15px;
 }
 
-/* Process Flow Component */
+/* Workflow steps */
 .process-flow {
   display: flex;
-  gap: 20px;
-  margin-top: 24px;
+  gap: 15px;
+  margin-top: 20px;
 }
 
 .flow-item {
   flex: 1;
   background: #161618;
-  padding: 16px;
-  border-radius: 4px;
-  border: 1px solid #1e1e20;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #27272a;
 }
 
-.flow-item.active {
-  border-color: rgba(166, 125, 255, 0.3);
-  background: rgba(166, 125, 255, 0.02);
-}
+.flow-item.active { border-color: rgba(166, 125, 255, 0.4); }
 
 .step {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 800;
   color: #fff;
-  margin-bottom: 8px;
-  text-transform: uppercase;
+  margin-bottom: 5px;
 }
 
-.flow-item p {
-  font-size: 0.85rem;
-  color: #71717a;
-  margin: 0;
+.flow-item p { font-size: 0.8rem; color: #71717a; margin: 0; }
+
+/* Leads Grid - 2 sloupce */
+.leads-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
-/* Grid & Cards */
+.leads-block {
+  background: #111113;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.block-header {
+  background: #1a1a1c;
+  padding: 10px 15px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  border-bottom: 1px solid #27272a;
+}
+
+.form-guide { list-style: none; padding: 0; margin: 0; }
+.form-guide li {
+  padding: 12px 15px;
+  border-bottom: 1px solid #1a1a1c;
+}
+
+.label { display: block; font-size: 0.8rem; color: #a67dff; font-weight: 600; }
+.desc { font-size: 0.75rem; color: #71717a; }
+
+/* Cards */
 .grid-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -86,75 +122,101 @@ h2 {
 }
 
 .info-card {
-  background: #0d0d0f;
-  border: 1px solid #1e1e20;
-  padding: 24px;
-  border-radius: 4px;
-}
-
-.info-card.highlight {
-  border-color: #27272a;
   background: #111113;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #27272a;
 }
 
-.info-card h3 {
-  font-size: 1rem;
-  color: #fff;
-  margin-bottom: 16px;
+.info-card h3 { font-size: 0.9rem; color: #fff; margin-bottom: 10px; }
+.info-card.warning { border-color: #450a0a; }
+
+.list-small { padding-left: 20px; font-size: 0.85rem; color: #a1a1aa; }
+.list-small li { margin-bottom: 8px; }
+
+.method-card {
+  background: #0d0d0f;
+  padding: 12px;
+  border-left: 2px solid #3f3f46;
+  font-size: 0.85rem;
 }
 
-.info-card ul {
-  padding-left: 18px;
-  color: #a1a1aa;
-  font-size: 0.9rem;
-}
+.small-text { font-size: 0.8rem; margin-bottom: 10px; color: #a1a1aa; }
 
-.info-card li { margin-bottom: 10px; }
-
-/* Data Table */
+/* Tables - Obecné */
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 16px;
 }
 
 .data-table th {
   text-align: left;
   font-size: 0.7rem;
-  text-transform: uppercase;
   color: #52525b;
-  padding: 12px;
-  border-bottom: 1px solid #1e1e20;
+  padding: 10px;
+  border-bottom: 1px solid #27272a;
 }
 
 .data-table td {
-  padding: 16px 12px;
-  border-bottom: 1px solid #0d0d0f;
+  padding: 15px 10px;
+  border-bottom: 1px solid #161618;
   font-size: 0.9rem;
 }
 
-.accent { color: #a67dff; font-weight: 600; }
-
-.note-text { font-size: 0.8rem; color: #52525b; font-style: italic; }
-
-/* Checklist */
-.check-item {
-  padding: 12px 0;
-  border-bottom: 1px solid #1e1e20;
-  font-size: 0.95rem;
+/* Úprava specificky pro cenovou tabulku (Sekce 06) */
+.price-table {
+  table-layout: fixed; /* Zajišťuje, že sloupce mají stejnou šířku */
 }
 
-.check-item strong { color: #d4d4d8; margin-right: 8px; }
+.price-table th, 
+.price-table td {
+  text-align: center; /* Centrování textu na střed */
+  vertical-align: middle;
+  padding: 15px 5px;
+  width: 16.66%; /* Každý z 6 sloupců má přesně 1/6 šířky */
+}
 
-/* Responsivity */
+.price-table td { font-size: 0.8rem; }
+
+.accent { color: #a67dff; font-weight: 700; }
+
+/* Boxes */
+.alert-box {
+  background: rgba(166, 125, 255, 0.05);
+  border: 1px solid #a67dff;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  font-size: 0.85rem;
+}
+
+.alert-box.light { border-color: #3f3f46; background: transparent; color: #71717a; }
+
+.note-box {
+  background: #0c0c0e;
+  padding: 15px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin-top: 15px;
+  color: #a1a1aa;
+}
+
+.highlight-note { border-left: 2px solid #a67dff; }
+
+.article-footer {
+  margin-top: 50px;
+  padding-top: 20px;
+  border-top: 1px solid #1e1e20;
+  text-align: center;
+  color: #52525b;
+}
+
 @media (max-width: 768px) {
-  .process-flow, .grid-layout {
-    grid-template-columns: 1fr;
-    flex-direction: column;
+  .leads-grid, .grid-layout, .process-flow { grid-template-columns: 1fr; flex-direction: column; }
+  .price-table { 
+    display: block; 
+    overflow-x: auto; 
+    table-layout: auto; /* Na mobilu se vrátí k automatické šířce pro čitelnost */
   }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
 }

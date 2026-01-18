@@ -1,23 +1,498 @@
 TODO:
 -dodelat vsechny sekce v knowledgebase
--udelat tabulku kde budou salesmani evidovat co oslovili atd:
-tabulka bude mit:
-Datum: Kdy proběhl první kontakt.
-Salesman: Kdo záznam vytvořil (automaticky z přihlášení).
-Subjekt: Název firmy / Jméno osoby.
-Zdroj/Kanál: Kde k oslovení došlo (LinkedIn, Instagram, Telefon, Inzerát).
-url zdroje pokud je
-datum posledniho kontaktu
-Kontakt: E-mail nebo telefon (viz sekce o legalitě níže).
-Předmět/Popis: Krátká poznámka (např. "Zájem o e-shop, čekám na podklady").
-Status: nove/ probiha komunikace/ pozastaveni/potvrzeno/zpracovava se/vyrizeno/neoslovovat
-expirace: pri prodlouzeni oslovit admina na prodlouzeni
-dalsi krok: co bude dalsi krok (zavolat v pondeli/poslat portfolio)
-duvod zamitnuti: (pokud je)
+
+-LEADS TABLE
 - tabulka bude spolecna 
 - sjednana v musi byt evidovana v systemu nebo nebude vyplacena
 - kontakty zapisovat jen pokud jsou VEREJNE DOHLEDATELNE
-- leady budou aktivni pouze dva mesice dostatecna doba na sjednani zajmu zakazky aby salesman neblokoval firmu donekonecna
+
+----NESPECHA----
+-dynamicka sprava roli-vytvorit nazev role a priradit k ni permissions v komponente se to bude delat na adminu
+-udelat tlacitko diky kteremu vyjede filter at neni preplnena stranka
+-lip vyresit tlacitka at to vypada prehledne a paginaci UI
 
 --------------------------
 - salesman podepise NDA 
+_______________
+<div class="kb-article-container">
+
+  <header class="article-header">
+
+    <div class="breadcrumb">Role / Sales Representative</div>
+
+    <h1>Pracovní náplň a postup</h1>
+
+    <p class="lead-text">
+
+      Vítej v našem týmu! Tento dokument slouží jako kompletní přehled tvé role, naší filozofie a procesu zpracování zakázek.
+
+    </p>
+
+  </header>
+
+
+  <hr class="section-divider">
+
+
+  <section class="kb-section">
+
+    <h2>01. Naše filozofie a workflow</h2>
+
+    <p>Fungujeme jako propojený organismus. Tvým úkolem je obchodní start, na který navazuje zbytek expertního týmu:</p>
+
+    
+
+    <div class="process-flow">
+
+      <div class="flow-item active">
+
+        <span class="step">Sales (TY)</span>
+
+        <p>Oslovení klienta, vzbuzení zájmu a sjednání poptávky.</p>
+
+      </div>
+
+      <div class="flow-item">
+
+        <span class="step">Validace</span>
+
+        <p>Nadřízený dojedná finální detaily (cena, podmínky, termíny).</p>
+
+      </div>
+
+      <div class="flow-item">
+
+        <span class="step">Specifikace</span>
+
+        <p>Vytvoří se technická dokumentace webu nebo aplikace.</p>
+
+      </div>
+
+      <div class="flow-item">
+
+        <span class="step">Realizace</span>
+
+        <p>Design a vývoj produktu dle schválené dokumentace.</p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <section class="kb-section">
+
+    <h2>02. Náplň práce</h2>
+
+    <p>Tvým hlavním cílem je získávat klienty, kteří mají zájem o vývoj softwaru na míru (nejčastěji webové stránky a aplikace).</p>
+
+    
+
+    <div class="grid-layout">
+
+      <div class="info-card">
+
+        <h3>Metody hledání klientů</h3>
+
+        <ul>
+
+          <li><strong>Sociální sítě:</strong> LinkedIn, Instagram, Facebook.</li>
+
+          <li><strong>Modernizace:</strong> Oslovení firem s neaktuálním webem.</li>
+
+          <li><strong>Networking:</strong> Vlastní kontakty a oborová fóra.</li>
+
+          <li><strong>Inzerce:</strong> Působení na relevantních portálech.</li>
+
+        </ul>
+
+      </div>
+
+      
+
+      <div class="info-card highlight">
+
+        <h3>Důležité povinnosti</h3>
+
+        <ul>
+
+          <li><strong>Kapacitní management:</strong> Před potvrzením zájmu se vždy dotázat na volnou kapacitu týmu.</li>
+
+          <li><strong>Schvalování:</strong> Nadřízený má právo zakázku odmítnout (technické/rentabilní důvody).</li>
+
+        </ul>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <section class="kb-section">
+
+    <h2>03. Odměňování a růst</h2>
+
+    <table class="data-table">
+
+      <thead>
+
+        <tr>
+
+          <th>Úroveň</th>
+
+          <th>Odměna</th>
+
+          <th>Podmínka</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr>
+
+          <td>Startovací pozice</td>
+
+          <td><span class="accent">10 % z marže</span></td>
+
+          <td>Standardní realizovaná zakázka.</td>
+
+        </tr>
+
+        <tr>
+
+          <td>Kariérní růst</td>
+
+          <td><span class="accent">Až 20 % z marže</span></td>
+
+          <td>Stabilní výsledky a vysoká samostatnost.</td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <p class="note-text">* Provize se vyplácí ihned po řádném zaplacení faktury klientem.</p>
+
+  </section>
+
+
+  <section class="kb-section">
+
+    <h2>04. Co od tebe očekáváme?</h2>
+
+    <div class="checklist">
+
+      <div class="check-item"><strong>Samostatnost:</strong> Nečekáš na úkoly, aktivně vyhledáváš příležitosti.</div>
+
+      <div class="check-item"><strong>Reprezentativní vystupování:</strong> Profesionální projev jako první tvář firmy.</div>
+
+      <div class="check-item"><strong>Digitální gramotnost:</strong> Základní přehled o webových trendech.</div>
+
+      <div class="check-item"><strong>Spolehlivost:</strong> Co se dohodne, to platí.</div>
+
+    </div>
+
+  </section>
+
+</div>
+
+.kb-article-container {
+
+  animation: fadeIn 0.4s ease-out;
+
+}
+
+
+.breadcrumb {
+
+  font-family: monospace;
+
+  font-size: 0.7rem;
+
+  color: #52525b;
+
+  text-transform: uppercase;
+
+  margin-bottom: 12px;
+
+}
+
+
+h1 {
+
+  font-size: 2.4rem;
+
+  color: #fff;
+
+  font-weight: 700;
+
+  margin-bottom: 16px;
+
+}
+
+
+.lead-text {
+
+  font-size: 1.1rem;
+
+  color: #a1a1aa;
+
+  max-width: 800px;
+
+  line-height: 1.6;
+
+}
+
+
+.section-divider {
+
+  border: 0;
+
+  border-top: 1px solid #1e1e20;
+
+  margin: 40px 0;
+
+}
+
+
+.kb-section {
+
+  margin-bottom: 48px;
+
+}
+
+
+h2 {
+
+  font-size: 0.9rem;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.1em;
+
+  color: #a67dff;
+
+  margin-bottom: 24px;
+
+}
+
+
+/* Process Flow Component */
+
+.process-flow {
+
+  display: flex;
+
+  gap: 20px;
+
+  margin-top: 24px;
+
+}
+
+
+.flow-item {
+
+  flex: 1;
+
+  background: #161618;
+
+  padding: 16px;
+
+  border-radius: 4px;
+
+  border: 1px solid #1e1e20;
+
+}
+
+
+.flow-item.active {
+
+  border-color: rgba(166, 125, 255, 0.3);
+
+  background: rgba(166, 125, 255, 0.02);
+
+}
+
+
+.step {
+
+  display: block;
+
+  font-size: 0.75rem;
+
+  font-weight: 800;
+
+  color: #fff;
+
+  margin-bottom: 8px;
+
+  text-transform: uppercase;
+
+}
+
+
+.flow-item p {
+
+  font-size: 0.85rem;
+
+  color: #71717a;
+
+  margin: 0;
+
+}
+
+
+/* Grid & Cards */
+
+.grid-layout {
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 20px;
+
+}
+
+
+.info-card {
+
+  background: #0d0d0f;
+
+  border: 1px solid #1e1e20;
+
+  padding: 24px;
+
+  border-radius: 4px;
+
+}
+
+
+.info-card.highlight {
+
+  border-color: #27272a;
+
+  background: #111113;
+
+}
+
+
+.info-card h3 {
+
+  font-size: 1rem;
+
+  color: #fff;
+
+  margin-bottom: 16px;
+
+}
+
+
+.info-card ul {
+
+  padding-left: 18px;
+
+  color: #a1a1aa;
+
+  font-size: 0.9rem;
+
+}
+
+
+.info-card li { margin-bottom: 10px; }
+
+
+/* Data Table */
+
+.data-table {
+
+  width: 100%;
+
+  border-collapse: collapse;
+
+  margin-bottom: 16px;
+
+}
+
+
+.data-table th {
+
+  text-align: left;
+
+  font-size: 0.7rem;
+
+  text-transform: uppercase;
+
+  color: #52525b;
+
+  padding: 12px;
+
+  border-bottom: 1px solid #1e1e20;
+
+}
+
+
+.data-table td {
+
+  padding: 16px 12px;
+
+  border-bottom: 1px solid #0d0d0f;
+
+  font-size: 0.9rem;
+
+}
+
+
+.accent { color: #a67dff; font-weight: 600; }
+
+
+.note-text { font-size: 0.8rem; color: #52525b; font-style: italic; }
+
+
+/* Checklist */
+
+.check-item {
+
+  padding: 12px 0;
+
+  border-bottom: 1px solid #1e1e20;
+
+  font-size: 0.95rem;
+
+}
+
+
+.check-item strong { color: #d4d4d8; margin-right: 8px; }
+
+
+/* Responsivity */
+
+@media (max-width: 768px) {
+
+  .process-flow, .grid-layout {
+
+    grid-template-columns: 1fr;
+
+    flex-direction: column;
+
+  }
+
+}
+
+
+@keyframes fadeIn {
+
+  from { opacity: 0; transform: translateY(5px); }
+
+  to { opacity: 1; transform: translateY(0); }
+
+}
+
+pridej do toho informace takoveto ale chci stejny styl, toto je vlastne navod pro meho salesmana at ho nemusim zaskolovat rucne tak si to tady proste precte takze to pis srozumitelne a zahrn vse co ja nyni napisu ja to popisu a ty udelam ..html a css, vlastne ja jsem it firma a potrebuji nejak ziskavat zakazky a potrebuji lidi ktere mi je privedou mam takove salesmany a ty na vlastni pest oslovuji potencionalni klienty napriklad osobne linkedin instagram face book proste vsude mozne protoze potrebuji vyvolat zajem o nejakou it sluzbu nejcasteji v nasem pripade webstranka ale muzou byt i jine, a pokazde pokud dojde k osloveni jakemu koliv tak se to musi evidovat do naseho systemu do tabulky sales leads, klikne se na pridat zaznam, "Název subjektu" (povinne) je nazev budto firmy nebo konkretni osoby, pokud se bude jednat o hromadne osloveni treba inzerat do skupiny tak toto se evidovat nemusi jde pouze o komunikace s konkretni jednou osobou fyzicka nebo pravnicka nazev subjektu bude hlavni jmeno pokud je kontaktni osoba vyplni se "Kontaktní osoba" (nepovinne),  email a telefon (nepovinne)  VYPLNOVAT POUZE POKUD JE VEREJNE DOHLEDATELNY napr nekdo cizy dal inzerat ze neco potrebuje a uvedl tam svuj telefon pak je mozne ho evidovat stejne tak email, "Jiný kontakt" (nepovinne) tam se muze doplnit jaky kontatkt byl pouzit osobni pres whats up detail, "Lokalita" (nepovinne) tak pokud je znamo lokalita subjektu napr mesto kraj atd , zdroj oslobeni dropdown (povinné), "URL odkaz" (nepovinne) treba okaz na instagramovy profil nebo fb profil proste url, datum prvniho kontaktu datum oslovena (povinne), "Aktualni stav" (povinne) dropdown - tam se uvede v jakem stavu je momentalne Lead - pokud je aktualni stav "prebira si dev team" nebo "uzavreno"  uz lead needituji, "Priorita" (povinne) dropdown - pri vytvoreni leadu se nastavuje defautlne neutralni, dalsi krok, je poznamka pro salesmana co bude dalsi krok napr - zavolam v pondeli, poznamka k pripade je poznamka, jakmile bude lead evidovany, zahajuji komunikaci nebo muzu jit vytvaret dalsi leady - ABY BYLA VYPLACENA ODMENA LEAD MUSI BYT EVIDOVAN V SYSTEMU - cilem salesmana je vzbudit zajem o nabidku kdy subjekt je rozhodnuti ze chce nasi sluzbu takze to znamena komunikace se subjektem ne je jeden prvotni kontakt jakmile subjekt vyjadri zajem prepne se aktualni stav do "priprava nadíky" a lead si prebere dev team a uz dale do leadu nesaham je nutne aby to nebyl chybny call a subjekt OPRAVDU mel zajem jak to udelam informuji nadrizeneho o vytvoreni zajmu a ze si to muze prevzit ten pak nastavi stav na priprava nabidky, a tim prace pro salesmana konci, pak uz si to organizuje plne dev team a zpracuje zakazku a po zaplaceni faktury klientem se posle 10% z marze pri stabilnih vysledcich az 20% marze salesmanovi kterey vytvoril uspesny lead, nejake pravidla pro oslovovani je dulezite byt slusny reprezentativni a prezentovat se jako sales man, SALES MAN NEDOMLOUVA CENY, pouze orientacne s tim ze se to muze pri hlubsi konzultaci s dev teamem lisit, pouze vzbudi zajem najde nekoho kdo ma zajem o stranky nebo jiny prohekt, salesman nesmi davat ven zadne informace o fungovani firmy napr cena jednotlivych zakazek ke kterym ma pristup, pokud subjekt odmitne prepne se aktualni stav do uzavřeno - ztraceno je nutne evidovat veskre leady i neuspesne v realnem case napriklad zeptam se nekoho osobne a ten odmitne je nutne o tom vytvorit zaznam, pri stabilnych vysledcich bude pridelen email na rpsw.cz domene, z tabulky mazat pouze chybne leady napr, vytvoril jsem neco omylem, realne leady se NESMI mazat, tabulka je sdilena cili do ni vidi i ostatni salesmani aby s tim mohli fungovat napriklad aby se neoslovil dvakrat stejny subjekt, pri oslovovani se lze odkazovat na rpsw web co je i velice doporucovano, ale i tiktok nebo instagram rpsw, muze se nekdy stat ze ackoliv lead bude uspesny bude takzvane ve fronte kvuli kapacite dev teamu takovyto lead bude mit aktualni stav "pozastaveno" prepina nadrizeny a napise do poznamky popis co se deje jeste dopis nahoru ze pokud je lead ve stavu pozastaveno tak se na nej nesaha od salesmana a prebira si to dev taem kvuli male kapacite na vykonani zakazky, obecne pravidlo cim vic leadu tim lip ale pouzivat selsky rozum (nebudu nabizet stranky 80 seniorovi) - kde hledat, meze se nekladou dulezity je vysledek ale doporuceni je treba firmy se kamenym obchodem bez webu, znami , zacinajici podnikatele jednotlivci maji zajem o portfolia osvc hlavne pripada v uvah i modernizace webu zastaraly web chce okorenit dobre hledat na google mapach v fb skupinat projizdet instagram profily s davanim "plosnych inzeratu" pozor at neni zaspamovany cely facebook a ma to uroven, studenti muzou se zeptat i dalsich kamaradu jestli nemaji zname meze se opravdu nekladou dulezity je vysledek ziskani zajemne, vice info jonasbucina@rpsw.cz

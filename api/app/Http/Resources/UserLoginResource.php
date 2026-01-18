@@ -7,33 +7,24 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserLoginResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->user_login_id,
-            'user_email' => $this->user_email,
+            'user_email' => $this->user_email, // V UI se zobrazí jako Login
             'last_login_at' => $this->last_login_at,
-            'is_deleted' => (bool) $this->deleted_at, // Opraveno: is_deleted se většinou určuje podle přítomnosti deleted_at
+            'is_deleted' => (bool) $this->deleted_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
             
-            // Načtení rolí skrze RoleResource
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
 
-            /**
-             * NOVÉ: user_permissions
-             * Tato část projde všechny načtené role, vytáhne jejich oprávnění (permission_key),
-             * sjednotí je do jednoho pole a odstraní duplicity.
-             */
+            // user_permissions se vrátí jen pokud jsou role načteny (Eager Loading)
             'user_permissions' => $this->whenLoaded('roles', function() {
                 return $this->roles->flatMap(function ($role) {
-                    return $role->permissions->pluck('permission_key');
+                    // Kontrola, zda role má vztah permissions načtený
+                    return $role->permissions ? $role->permissions->pluck('permission_key') : collect();
                 })->unique()->values();
             }),
         ];

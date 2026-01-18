@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\UserLoginController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\BusinessLogController;
 use App\Http\Controllers\Api\TranslationController; // Import nového controlleru
+use App\Http\Controllers\Api\SalesLeadController;
 
 Route::get('/sanctum/csrf-cookie', function (Request $request) {
     return response()->json([], 204);
@@ -18,8 +19,12 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/refresh', [AuthController::class, 'refresh']);
 Route::post('raw_request_commissions', [RawRequestCommissionController::class, 'store']);
 
+
+
+//------------------------------------------------------
+
 // Routy vyžadující autentizaci
-// Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -60,4 +65,12 @@ Route::post('raw_request_commissions', [RawRequestCommissionController::class, '
         Route::delete('/force-delete-all', [RoleController::class, 'forceDeleteAllTrashed']);
     });
     Route::apiResource('roles', RoleController::class)->except(['store', 'create', 'edit']);
-// });
+
+    // Skupina rout pro SalesLeads-------------------------
+    Route::prefix('sales_leads')->group(function () {
+        Route::get('/{salesLead}/details', [SalesLeadController::class, 'showDetails']);
+        Route::post('/{salesLead}/restore', [SalesLeadController::class, 'restore']);
+        Route::delete('/force-delete-all', [SalesLeadController::class, 'forceDeleteAllTrashed']);
+    });
+    Route::apiResource('sales_leads', SalesLeadController::class);
+});

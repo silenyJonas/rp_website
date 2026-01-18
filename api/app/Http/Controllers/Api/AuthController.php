@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\UserLogin; // Opraveno na UserLogin
+use App\Models\UserLogin;
 use App\Models\RefreshToken;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
@@ -14,12 +14,14 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
+        // 1. ÚPRAVA: Změna validace - odstraněno 'email', povolujeme string (login)
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|string', // Ponecháváme klíč 'email' pokud ho posílá Angular, ale validujeme jako string
             'password' => 'required',
         ]);
 
-        // Používáme tvůj způsob přihlášení
+        // 2. ÚPRAVA: Auth::attempt mapuje tvůj vstup na databázový sloupec 'user_email'
+        // 'user_email' je název sloupce v DB, $request->email je hodnota z formuláře (tvůj login)
         if (Auth::attempt(['user_email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
             Log::info('Login attempt successful for: ' . $user->user_email);
@@ -33,7 +35,7 @@ class AuthController extends Controller
                 return $role->permissions->pluck('permission_key');
             })->unique()->values();
 
-            // TOKENY (Tvůj osvědčený systém)
+            // TOKENY
             $accessToken = $user->createToken('access-token', ['*'], now()->addMinutes(30))->plainTextToken;
             $refreshToken = Str::random(60);
             
@@ -48,7 +50,7 @@ class AuthController extends Controller
                 'message' => 'Přihlášení úspěšné!',
                 'user' => $user,
                 'user_roles' => $userRoles,
-                'user_permissions' => $userPermissions, // Tohle potřebuje Angular
+                'user_permissions' => $userPermissions, 
                 'token' => $accessToken,
                 'refreshToken' => $refreshToken,
             ], 200);
@@ -57,6 +59,7 @@ class AuthController extends Controller
         return response()->json(['message' => 'Neplatné přihlašovací údaje.'], 401);
     }
 
+    // Ostatní metody refresh, logout a user zůstávají stejné, protože už pracují s objektem $user
     public function refresh(Request $request)
     {
         $refreshToken = $request->input('refreshToken');
