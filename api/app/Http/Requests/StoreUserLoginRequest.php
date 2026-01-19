@@ -14,7 +14,6 @@ class StoreUserLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // ZMĚNA: Odstraněno 'email', nahrazeno obecným stringem/regexem
             'user_email' => [
                 'required', 
                 'string', 
@@ -23,8 +22,14 @@ class StoreUserLoginRequest extends FormRequest
                 'max:255', 
                 'unique:user_login,user_email'
             ],
+            'contact_email' => ['nullable', 'email', 'max:255'], // NOVÉ
+            'full_name' => ['required', 'string', 'max:255'],
+            'commission_rate' => ['integer', 'min:0', 'max:100'],
             'user_password_hash' => ['required', 'string', 'min:8'],
             'role_id' => ['required', 'numeric', 'exists:roles,role_id'],
+            
+            'birth_date' => ['nullable', 'date'],
+            'phone_number' => ['nullable', 'string'],
         ];
     }
 
@@ -32,6 +37,7 @@ class StoreUserLoginRequest extends FormRequest
     {
         return [
             'user_email.regex' => 'Login může obsahovat pouze písmena, čísla a znaky . _ -',
+            'contact_email.email' => 'Zadejte platnou e-mailovou adresu.',
         ];
     }
 }

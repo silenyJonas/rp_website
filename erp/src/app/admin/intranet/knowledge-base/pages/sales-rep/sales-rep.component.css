@@ -220,3 +220,51 @@ h2 {
     table-layout: auto; /* Na mobilu se vrátí k automatické šířce pro čitelnost */
   }
 }
+/* --- AKTUALIZOVANÁ PATIČKA --- */
+.article-footer {
+  margin-top: 60px;
+  padding: 30px 0;
+  border-top: 1px solid #1e1e20;
+  color: #52525b;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.footer-contact p {
+  font-size: 0.8rem;
+  margin-bottom: 5px;
+}
+
+.footer-contact strong {
+  color: #a1a1aa;
+}
+
+.discord-link-small {
+  color: #5865F2;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 8px 16px;
+  border: 1px solid rgba(88, 101, 242, 0.3);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.discord-link-small:hover {
+  background: rgba(88, 101, 242, 0.1);
+  border-color: #5865F2;
+}
+
+/* Responzivita pro footer */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}

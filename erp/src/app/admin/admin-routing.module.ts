@@ -15,6 +15,9 @@ import { WorkflowComponent } from './intranet/knowledge-base/pages/workflow/work
 import { SalesRepComponent } from './intranet/knowledge-base/pages/sales-rep/sales-rep.component';
 import { UiDesignerComponent } from './intranet/knowledge-base/pages/ui-designer/ui-designer.component';
 import { SalesLeadsComponent } from './pages/sales-leads/sales-leads.component';
+import { NewsComponent } from './intranet/knowledge-base/pages/news/news.component';
+import { SecurityComponent } from './intranet/knowledge-base/pages/security/security.component';
+import { ContactsComponent } from './intranet/knowledge-base/pages/contacts/contacts.component';
 const routes: Routes = [
   // SEKCE 1: Klasický Admin se sidebarem
   {
@@ -46,6 +49,9 @@ const routes: Routes = [
           { path: 'workflow', component: WorkflowComponent },
           { path: 'sales-rep', component: SalesRepComponent },
           { path: 'ui-designer', component: UiDesignerComponent },
+          { path: 'news', component: NewsComponent },
+          { path: 'security', component: SecurityComponent },
+          { path: 'contacts', component: ContactsComponent },
           { path: '', redirectTo: 'introductions', pathMatch: 'full' }
         ]
       }

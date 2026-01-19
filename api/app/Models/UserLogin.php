@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,17 +15,39 @@ class UserLogin extends Model
     protected $primaryKey = 'user_login_id';
     protected $table = 'user_login';
 
+    /**
+     * Pole, která lze hromadně přiřazovat.
+     */
     protected $fillable = [
         'user_email',
+        'contact_email',      // NOVÉ
         'user_password_hash',
+        'full_name',          // NOVÉ
+        'birth_date',         // NOVÉ
+        'personal_id_num',    // NOVÉ
+        'address',            // NOVÉ
+        'bank_account',       // NOVÉ
+        'health_insurance',   // NOVÉ
+        'commission_rate',    // NOVÉ
+        'dpp_hours_spent',    // NOVÉ
+        'has_tax_declaration',// NOVÉ
+        'phone_number',       // NOVÉ
+        'internal_note',      // NOVÉ
         'last_login_at',
     ];
 
+    /**
+     * Přetypování atributů.
+     */
     protected $casts = [
         'last_login_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'birth_date' => 'date',
+        'has_tax_declaration' => 'boolean',
+        'commission_rate' => 'integer',
+        'dpp_hours_spent' => 'integer',
     ];
 
     protected $hidden = [
@@ -44,13 +67,9 @@ class UserLogin extends Model
 
     /**
      * POMOCNÁ METODA: Získá unikátní seznam klíčů oprávnění pro tohoto uživatele.
-     * * Prochází všechny role uživatele, vytahuje jejich oprávnění, 
-     * sjednocuje je do jedné kolekce a vrací pouze unikátní 'permission_key'.
-     * * @return \Illuminate\Support\Collection
      */
     public function getPermissionsAttribute()
     {
-        // Načteme oprávnění ze všech rolí, které uživatel má
         return $this->roles()->with('permissions')->get()
             ->flatMap(function ($role) {
                 return $role->permissions;

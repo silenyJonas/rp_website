@@ -18,7 +18,6 @@ class UpdateUserLoginRequest extends FormRequest
         $user = $this->route('user_login');
 
         return [
-            // ZMĚNA: Odstraněno 'email', přidán regex pro login (písmena, čísla, tečka, podtržítko, pomlčka)
             'user_email' => [
                 'required',
                 'string',
@@ -27,35 +26,30 @@ class UpdateUserLoginRequest extends FormRequest
                 'max:255',
                 Rule::unique('user_login', 'user_email')->ignore($user->user_login_id, 'user_login_id'),
             ],
-            'user_password_hash' => [
-                'nullable',
-                'string',
-                'min:8',
-            ],
-            'user_password_salt' => [
-                'nullable',
-                'string',
-            ],
-            'last_login_at' => [
-                'nullable',
-                'date',
-            ],
-            'is_deleted' => [
-                'boolean',
-            ],
-            'role_id' => [
-                'required',
-                'integer',
-                'exists:roles,role_id',
-            ],
+            'contact_email' => ['nullable', 'email', 'max:255'], // NOVÉ
+            'full_name' => ['required', 'string', 'max:255'],
+            'birth_date' => ['nullable', 'date'],
+            'personal_id_num' => ['nullable', 'string', 'max:20'],
+            'address' => ['nullable', 'string'],
+            'bank_account' => ['nullable', 'string', 'max:50'],
+            'health_insurance' => ['nullable', 'string', 'max:10'],
+            'commission_rate' => ['integer', 'min:0', 'max:100'],
+            'dpp_hours_spent' => ['integer', 'min:0'],
+            'has_tax_declaration' => ['boolean'],
+            'phone_number' => ['nullable', 'string', 'max:20'],
+            'internal_note' => ['nullable', 'string'],
+            
+            'user_password_hash' => ['nullable', 'string', 'min:8'],
+            'is_deleted' => ['boolean'],
+            'role_id' => ['required', 'integer', 'exists:roles,role_id'],
         ];
     }
 
-    // Volitelné: Vlastní chybová hláška pro regex
     public function messages()
     {
         return [
             'user_email.regex' => 'Login může obsahovat pouze písmena, čísla a znaky . _ -',
+            'contact_email.email' => 'Zadejte platnou e-mailovou adresu.',
         ];
     }
 }
