@@ -1,0 +1,110 @@
+.dashboard-container {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* UVÍTÁNÍ */
+.welcome-section {
+  margin-bottom: 3rem;
+  border-left: 4px solid #1e88e5;
+  padding-left: 1.5rem;
+}
+
+.welcome-section h1 {
+  font-size: 2rem;
+  color: #333;
+  margin: 0;
+}
+
+.welcome-section p {
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+/* MŘÍŽKA KARET */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* KARTY (stejné jako v personal-info) */
+.info-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.card-header {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.card-title {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: #1e88e5;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* PRVKY UVNITŘ KARET */
+.display-item {
+  margin-bottom: 1rem;
+}
+
+.display-item label {
+  display: block;
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 0.25rem;
+}
+
+.static-value {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+/* TLAČÍTKA NAVIGACE */
+.action-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.nav-button {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.nav-button:hover {
+  background: #e3f2fd;
+  border-color: #1e88e5;
+  color: #1e88e5;
+}
+
+/* FOOTER */
+.footer-notice {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+  font-size: 0.85rem;
+  color: #999;
+}
+
+@media (max-width: 600px) {
+  .dashboard-container { padding: 1rem; }
+  .welcome-section h1 { font-size: 1.5rem; }
+}

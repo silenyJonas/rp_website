@@ -1,7 +1,7 @@
 /* --- Základní rozvržení --- */
 .admin-dashboard-wrapper {
   display: flex;
-  min-height: calc(100vh - 41px); /* Upraveno podle výšky headeru */
+  min-height: calc(100vh - 41px);
   background-color: #f0f2f5;
   font-family: 'Segoe UI', Roboto, sans-serif;
   font-size: 0.95rem;
@@ -30,14 +30,40 @@ header {
   color: #424242;
 }
 
-/* Odsunutí otazníku doprava */
 .header-right {
   margin-left: auto;
   display: flex;
   align-items: center;
+  gap: 10px; /* Přidána mezera mezi ikony */
+  padding-right: 15px;
 }
 
-/* Modré kolečko pro Knowledge Base */
+/* Styl pro vykřičník */
+.info-tooltip {
+  cursor: help; /* Změna kurzoru na nápovědu */
+}
+
+.info-icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background-color: #1e88e5; /* Shodná modrá */
+  color: #ffffff;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  opacity: 0.8; /* Mírně odlišen od hlavního otazníku */
+  transition: opacity 0.2s;
+}
+
+.info-icon-circle:hover {
+  opacity: 1;
+}
+
+/* Styl pro otazník (Knowledge Base) */
 .kb-link {
   text-decoration: none;
 }
@@ -48,7 +74,7 @@ header {
   justify-content: center;
   width: 26px;
   height: 26px;
-  background-color: #1e88e5; /* Modrá barva */
+  background-color: #1e88e5;
   color: #ffffff;
   border-radius: 50%;
   font-weight: bold;
@@ -57,6 +83,10 @@ header {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.kb-icon-circle:hover {
+  background-color: #1565c0;
+  transform: scale(1.05);
+}
 
 /* --- Admin Sidebar --- */
 .admin-sidebar {
@@ -103,8 +133,6 @@ header {
   border-top: 1px solid #eceff1;
 }
 
-
-
 /* --- Admin Content --- */
 .admin-content {
   flex-grow: 1;
@@ -115,53 +143,34 @@ header {
 }
 
 /* --- Responzivita --- */
-
-/* Mobilní zařízení (do 480px) */
 @media (max-width: 480px) {
   .admin-dashboard-wrapper {
     flex-direction: column;
   }
-
   .admin-sidebar {
     width: 100%;
     border-right: none;
     border-bottom: 1px solid rgb(121, 121, 121);
   }
-
   .admin-nav ul {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
     padding: 5px 0;
   }
-  
   .admin-nav li a {
     padding: 10px;
     font-size: 0.8rem;
     border-left: none;
     border-bottom: 3px solid transparent;
   }
-
   .admin-nav li a.active {
     border-bottom: 3px solid #1e88e5;
   }
-
-  .sidebar-footer {
-    display: none;
-  }
-
-  .header-right {
-    padding-right: 10px;
-  }
+  .sidebar-footer { display: none; }
 }
 
-/* Tablety (481px až 1024px) */
 @media (min-width: 481px) and (max-width: 1024px) {
-  .admin-sidebar {
-    width: 140px;
-  }
-
-  .admin-nav li a {
-    padding: 8px 12px;
-  }
+  .admin-sidebar { width: 140px; }
+  .admin-nav li a { padding: 8px 12px; }
 }

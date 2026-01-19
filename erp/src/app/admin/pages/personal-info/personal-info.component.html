@@ -6,52 +6,83 @@
     <div class="card-content">
       <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()">
         <p *ngIf="errorMessage" class="error-message">
-          <span>&#9888;</span>
-          {{ errorMessage }}
+          <span>&#9888;</span> {{ errorMessage }}
         </p>
-
         <div class="form-field">
           <label for="old_password">Staré heslo</label>
-          <input id="old_password" type="password" formControlName="old_password" class="form-control" required
-            [ngClass]="{ 'ng-invalid ng-touched': passwordForm.get('old_password')?.invalid && passwordForm.get('old_password')?.touched }">
-          <div *ngIf="passwordForm.get('old_password')?.hasError('required') && passwordForm.get('old_password')?.touched" class="error-text">
-            Staré heslo je povinné.
-          </div>
+          <input id="old_password" type="password" formControlName="old_password" class="form-control">
         </div>
-
         <div class="form-field">
           <label for="new_password">Nové heslo</label>
-          <input id="new_password" type="password" formControlName="new_password" class="form-control" required
-            [ngClass]="{ 'ng-invalid ng-touched': passwordForm.get('new_password')?.invalid && passwordForm.get('new_password')?.touched }">
-          <div *ngIf="passwordForm.get('new_password')?.hasError('required') && passwordForm.get('new_password')?.touched" class="error-text">
-            Nové heslo je povinné.
-          </div>
-          <div *ngIf="passwordForm.get('new_password')?.hasError('minlength') && passwordForm.get('new_password')?.touched" class="error-text">
-            Heslo musí mít alespoň 8 znaků.
-          </div>
+          <input id="new_password" type="password" formControlName="new_password" class="form-control">
         </div>
-
         <div class="form-field">
-          <label for="new_password_confirmation">Potvrzení nového hesla</label>
-          <input id="new_password_confirmation" type="password" formControlName="new_password_confirmation" class="form-control" required
-            [ngClass]="{ 'ng-invalid ng-touched': passwordForm.get('new_password_confirmation')?.invalid && passwordForm.get('new_password_confirmation')?.touched }">
-          <div *ngIf="passwordForm.get('new_password_confirmation')?.hasError('required') && passwordForm.get('new_password_confirmation')?.touched" class="error-text">
-            Potvrzení nového hesla je povinné.
-          </div>
-          <div *ngIf="passwordForm.hasError('passwordsNotMatching') && passwordForm.get('new_password_confirmation')?.touched" class="error-text">
-            Hesla se neshodují.
-          </div>
+          <label for="new_password_confirmation">Potvrzení hesla</label>
+          <input id="new_password_confirmation" type="password" formControlName="new_password_confirmation" class="form-control">
         </div>
-
         <div class="button-container">
           <button class="confirm_button" type="submit" [disabled]="passwordForm.invalid || isLoading">
-            <span *ngIf="!isLoading">Uložit heslo</span>
-            <span *ngIf="isLoading">Ukládání...</span>
+            {{ isLoading ? 'Ukládání...' : 'Uložit heslo' }}
           </button>
         </div>
       </form>
     </div>
   </div>
+
+  <div class="info-card" *ngIf="userData">
+    <div class="card-header">
+      <h2 class="card-title">Profil uživatele</h2>
+    </div>
+    
+    <div class="card-content">
+      <div class="info-section-header">Základní údaje</div>
+      <div class="display-grid">
+        <div class="display-item">
+          <label>Celé jméno</label>
+          <div class="static-value">{{ userData.full_name ?? '' }}</div>
+        </div>
+        <div class="display-item">
+          <label>Datum narození</label>
+          <div class="static-value">{{ userData.birth_date ? (userData.birth_date | date:'d. M. yyyy') : '' }}</div>
+        </div>
+        <div class="display-item">
+          <label>Rodné číslo</label>
+          <div class="static-value">{{ userData.personal_id_num ?? '' }}</div>
+        </div>
+        <div class="display-item">
+          <label>Pojišťovna</label>
+          <div class="static-value">{{ userData.health_insurance ?? '' }}</div>
+        </div>
+      </div>
+
+      <div class="info-section-header">Kontakt a adresa</div>
+      <div class="display-grid">
+        <div class="display-item">
+          <label>E-mail (přihlašovací)</label>
+          <div class="static-value text-muted">{{ userData.user_email ?? '' }}</div>
+        </div>
+        <div class="display-item">
+          <label>Kontaktní e-mail</label>
+          <div class="static-value">{{ userData.contact_email ?? '' }}</div>
+        </div>
+        <div class="display-item">
+          <label>Telefon</label>
+          <div class="static-value">{{ userData.phone_number ?? '' }}</div>
+        </div>
+        <div class="display-item full-width">
+          <label>Adresa trvalého bydliště</label>
+          <div class="static-value">{{ userData.address ?? '' }}</div>
+        </div>
+      </div>
+
+      <div class="info-section-header">Ostatní</div>
+      <div class="display-grid">
+        <div class="display-item">
+          <label>Bankovní účet</label>
+          <div class="static-value">{{ userData.bank_account ?? '' }}</div>
+        </div>
+      </div>
+    </div>c
+  </div>
 </div>
-
-
+<p>Pro změnu osobních informací kontaktuje administrátorský tým.</p>

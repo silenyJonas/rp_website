@@ -10,7 +10,7 @@ TODO:
 -dynamicka sprava roli-vytvorit nazev role a priradit k ni permissions v komponente se to bude delat na adminu
 -udelat tlacitko diky kteremu vyjede filter at neni preplnena stranka
 -lip vyresit tlacitka at to vypada prehledne a paginaci UI
-
+-na dashboardu budou vseobecne info a statistiky treba pocet zamestnancu nebo pocet novych veci atd
 --------------------------
 - salesman podepise NDA 
 _______________
