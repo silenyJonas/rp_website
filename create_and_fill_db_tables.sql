@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 22, 2025 at 10:14 AM
+-- Generation Time: Jan 20, 2026 at 07:11 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -81,6 +81,33 @@ CREATE TABLE `password_reset_tokens` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `permissions`
+--
+
+CREATE TABLE `permissions` (
+  `permission_id` int(10) UNSIGNED NOT NULL,
+  `permission_key` varchar(100) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `permissions`
+--
+
+INSERT INTO `permissions` (`permission_id`, `permission_key`, `description`, `created_at`) VALUES
+(1, 'manage-administrators', 'Správa administrátorských účtů', '2026-01-10 08:28:44'),
+(2, 'view-business-logs', 'Prohlížení business logů', '2026-01-10 08:28:44'),
+(3, 'view-personal-info', 'Zobrazení osobních údajů', '2026-01-10 08:28:44'),
+(4, 'view-user-requests', 'Zobrazení uživatelských požadavků', '2026-01-10 08:28:44'),
+(5, 'view-dashboard', 'Přístup k nástěnce', '2026-01-10 08:28:44'),
+(6, 'view-edit-website', 'Možnost editovat web', '2026-01-10 08:28:44'),
+(7, 'view-deleted', 'Zobrazit softdeleted záznamy.', '2026-01-11 18:27:23'),
+(8, 'view-sales-leads', 'Zobrazit Sales Leads', '2026-01-12 17:56:35');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `personal_access_tokens`
 --
 
@@ -103,7 +130,7 @@ CREATE TABLE `personal_access_tokens` (
 
 INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `name`, `token`, `abilities`, `last_used_at`, `expires_at`, `created_at`, `updated_at`) VALUES
 (911, 'App\\Models\\User', 15, 'access-token', '86256cc89fb15d7cf939deff0ebbcb92a232e1cc622a1d2c9bee7283abd2aa6a', '[\"*\"]', '2025-08-19 15:08:44', '2025-08-19 15:27:52', '2025-08-19 14:57:52', '2025-08-19 15:08:44'),
-(970, 'App\\Models\\User', 16, 'access-token', '17a1a1f63703e3db6386b3dab127fbdf54989e01fc83730ddd141b3af0b4fab0', '[\"*\"]', '2025-12-22 09:12:21', '2025-12-22 09:42:18', '2025-12-22 09:12:18', '2025-12-22 09:12:21');
+(1073, 'App\\Models\\User', 25, 'access-token', 'da2a7a60544a918ad9572e6ce1759bad32db2adaeb1bae33a62de35204e918f6', '[\"*\"]', '2026-01-20 18:10:46', '2026-01-20 18:40:43', '2026-01-20 18:10:43', '2026-01-20 18:10:46');
 
 -- --------------------------------------------------------
 
@@ -125,13 +152,6 @@ CREATE TABLE `raw_request_commissions` (
   `note` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `raw_request_commissions`
---
-
-INSERT INTO `raw_request_commissions` (`id`, `thema`, `contact_email`, `contact_phone`, `order_description`, `status`, `priority`, `created_at`, `updated_at`, `deleted_at`, `note`) VALUES
-(1, 'Webový vývoj', 'resr.res@sf.cz', '123123123', 'sfsdfsfd', 'Nově zadané', 'Nízká', '2025-12-22 09:12:01', '2025-12-22 09:12:01', NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -152,7 +172,7 @@ CREATE TABLE `refresh_tokens` (
 --
 
 INSERT INTO `refresh_tokens` (`id`, `user_login_id`, `token`, `expires_at`, `created_at`, `updated_at`) VALUES
-(969, 16, '5ee9a762422efdc6a0f92e54ff6a014b51de69b45a7627a687cff3228f646f1c', '2025-12-29 09:12:18', '2025-12-22 09:12:18', '2025-12-22 09:12:18');
+(1072, 25, '33e8ec6c2e65cbf14e648bd7ce953964c0e48bf99528a5698e65174700884abc', '2026-01-27 18:10:43', '2026-01-20 18:10:43', '2026-01-20 18:10:43');
 
 -- --------------------------------------------------------
 
@@ -176,7 +196,77 @@ CREATE TABLE `roles` (
 INSERT INTO `roles` (`role_id`, `role_name`, `description`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'sysadmin', NULL, '2025-08-17 07:46:27', '2025-08-17 07:46:27', NULL),
 (2, 'admin', NULL, '2025-08-17 07:46:27', '2025-08-17 07:46:27', NULL),
-(3, 'primeadmin', NULL, '2025-08-20 09:02:24', '2025-08-20 09:02:24', NULL);
+(3, 'primeadmin', NULL, '2025-08-20 09:02:24', '2025-08-20 09:02:24', NULL),
+(4, 'UI/UX Designer', 'Návrh UI/UX', '2026-01-15 21:17:27', '2026-01-15 21:17:27', NULL),
+(5, 'Salesman', 'Oslovuje potencionalni klienty.', '2026-01-15 21:17:27', '2026-01-15 21:17:27', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `role_permissions`
+--
+
+CREATE TABLE `role_permissions` (
+  `role_id` int(10) UNSIGNED NOT NULL,
+  `permission_id` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `role_permissions`
+--
+
+INSERT INTO `role_permissions` (`role_id`, `permission_id`) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(1, 8),
+(2, 3),
+(2, 4),
+(2, 5),
+(2, 7),
+(2, 8),
+(3, 1),
+(3, 2),
+(3, 5),
+(4, 3),
+(4, 5),
+(5, 3),
+(5, 5),
+(5, 8);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sales_leads`
+--
+
+CREATE TABLE `sales_leads` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_login_id` int(10) UNSIGNED NOT NULL COMMENT 'ID uživatele pro aktivní propojení',
+  `salesman_name` varchar(255) NOT NULL COMMENT 'Jméno obchodníka pro zpětné dohledání (stálá hodnota)',
+  `first_contact_date` date NOT NULL COMMENT 'Kdy proběhl první kontakt',
+  `subject_name` varchar(255) NOT NULL COMMENT 'Název firmy nebo jméno osoby',
+  `contact_person` varchar(255) DEFAULT NULL COMMENT 'Jméno konkrétní kontaktní osoby',
+  `location` varchar(100) DEFAULT NULL COMMENT 'Město nebo region',
+  `source_channel` varchar(255) NOT NULL COMMENT 'Kde k oslovení došlo',
+  `source_url` varchar(500) DEFAULT NULL COMMENT 'URL odkaz na profil nebo inzerát',
+  `description` text DEFAULT NULL COMMENT 'Krátká poznámka k případu',
+  `priority` varchar(255) DEFAULT 'Neutrální' COMMENT 'Priorita obchodního případu',
+  `status` varchar(255) DEFAULT 'nové' COMMENT 'Aktuální stav obchodního případu',
+  `last_contact_date` date DEFAULT NULL COMMENT 'Datum poslední komunikace',
+  `next_step` varchar(255) DEFAULT NULL COMMENT 'Co se má udělat dál',
+  `rejection_reason` text DEFAULT NULL COMMENT 'Důvod zamítnutí nebo nerealizace',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `contact_email` varchar(255) DEFAULT NULL,
+  `contact_phone` varchar(255) DEFAULT NULL,
+  `contact_other` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -215,6 +305,7 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 ('lELz7sIQimFV7ESf0salLbl3nTj7IWRsQ6nbfrco', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoicWZlSTNQRzlkSG1LZTZPY0cyVktXNGVxZ2ZOSHVXcTNDamZQTEI4eCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHBzOi8vYXBpLnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752225341),
 ('LVuMntqgG8QYRuvKKgyHnki87shgJLgiy9yMz9PQ', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiV2tKb0xkSDNidnBBMmpQRzRFalRaVFNFejBUeG92OEo2Ynh2MnhCTCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752590343),
 ('NDygBBymgyCe7rfRPNuVx5ltJG6jBQv4XPDwcLLi', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiRG84RW0wTG85WnFXQXRORXlCRFZZWVF0SVFNcVRaT1pVcEphVzJBWCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1753171821),
+('P5S5Av5rH4Tubu87a9z0n4o0TvRHF1pD78vn83xa', NULL, '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64; rv:145.0) Gecko/20100101 Firefox/145.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoibXk4VllLZXJtMnlKTGs0ZWM1MEFDMXN6UTl3UXlwQURuSmNVV2NWbSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1768036066),
 ('pFqnNoJkggQsYYhbXyHHJ9w4qVcptJ8Rv7gVfc9J', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiNXFObzREdk40ZFd3UDFWTk1VZUJ2dndKalIzdGg0VXhjOTZhRmNZaCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1752588909),
 ('rcOt9sDPpTUWZzp9eg4zlOUu7vYyWI8sAKKnRD4j', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiV1c0YWoxa1M3RENvOG95MnBSRGgxWEFXakZTUTN3eU41M2ZyYnVncyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTY6Imh0dHBzOi8vYXBpLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1753171827),
 ('rjjHscUmxjdftxIYsca2mJgpxRd8RLLcignBdcXb', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiNHZkVHJBeEg2WGk2SWoxNDR2V05pTDd1cDVPdml5M1hJVzZNTW9uciI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjI6Imh0dHBzOi8vYXBpLnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1752569522),
@@ -268,6 +359,18 @@ CREATE TABLE `users` (
 CREATE TABLE `user_login` (
   `user_login_id` int(10) UNSIGNED NOT NULL,
   `user_email` varchar(255) NOT NULL,
+  `contact_email` varchar(255) DEFAULT NULL,
+  `full_name` varchar(255) NOT NULL,
+  `birth_date` date DEFAULT NULL,
+  `personal_id_num` varchar(20) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `bank_account` varchar(50) DEFAULT NULL,
+  `health_insurance` varchar(10) DEFAULT NULL,
+  `commission_rate` int(3) NOT NULL DEFAULT 10,
+  `dpp_hours_spent` int(5) NOT NULL DEFAULT 0,
+  `has_tax_declaration` tinyint(1) NOT NULL DEFAULT 0,
+  `phone_number` varchar(20) DEFAULT NULL,
+  `internal_note` text DEFAULT NULL,
   `user_password_hash` varchar(255) NOT NULL,
   `user_password_salt` varchar(255) DEFAULT NULL,
   `last_login_at` datetime DEFAULT NULL,
@@ -281,13 +384,9 @@ CREATE TABLE `user_login` (
 -- Dumping data for table `user_login`
 --
 
-INSERT INTO `user_login` (`user_login_id`, `user_email`, `user_password_hash`, `user_password_salt`, `last_login_at`, `created_at`, `updated_at`, `deleted_at`, `is_deleted`) VALUES
-(1, 'admin@example.com', '$2y$12$v2Uh5xld7hxZIfLHDUw8IOvJiBgxPdBKthG8kvL4nT1xWwDrQRx02', '0', '2025-08-26 10:06:26', '2025-07-10 17:10:32', '2025-08-26 10:06:26', NULL, 0),
-(11, 'admin2@example.com', '$2y$12$kxPzYBFJng7gpeWz/jP5ae9EY5pa27GOuZqYD0KhPQ5jFhsgAmdDG', NULL, '2025-08-20 18:26:20', '2025-08-17 16:36:22', '2025-08-22 13:21:06', NULL, 0),
-(16, 'primeadmin@primeadmin.cz', '$2y$12$nkO/meLFwJWy0US8JxNEg.zO2Enb3qyOdsY6GdqI9gSNVALtlno52', NULL, '2025-12-22 10:12:18', '2025-08-20 11:01:19', '2025-12-22 10:12:18', NULL, 0),
-(18, 'admin3@example.com', '$2y$12$izfWlAVFHIxkj8bTAVMLw..Kd6q36xvdL6/8MaYK0Yo5YM5FekF8W', NULL, '2025-08-20 18:59:20', '2025-08-20 18:30:58', '2025-08-22 13:21:14', NULL, 0),
-(19, 'admin4@example.com', '$2y$12$i2aNPTOXj4SvgzYk1v1Or.lVnWHbe.zxH5eSjIJJd3q2UvnpiX7Ca', NULL, '2025-08-20 18:55:09', '2025-08-20 18:31:09', '2025-08-22 13:21:27', NULL, 0),
-(20, 'admin5@example.com', '$2y$12$W1R9lYFf/0ZzkVsj.sMHQuYmuhXMU1NSs0VpLjkzqWgb8AF4UHq9e', NULL, '2025-08-20 18:55:49', '2025-08-20 18:31:24', '2025-08-22 13:21:45', NULL, 0);
+INSERT INTO `user_login` (`user_login_id`, `user_email`, `contact_email`, `full_name`, `birth_date`, `personal_id_num`, `address`, `bank_account`, `health_insurance`, `commission_rate`, `dpp_hours_spent`, `has_tax_declaration`, `phone_number`, `internal_note`, `user_password_hash`, `user_password_salt`, `last_login_at`, `created_at`, `updated_at`, `deleted_at`, `is_deleted`) VALUES
+(25, 'joncl', 'jonasbucina@rpsw.cz', 'Jonáš Bučina', '2003-12-04', '031204/0597', 'Kytlická 862/6', '296456145/0300', '211', 0, 0, 0, '733 188 328', 'proste joncl', '$2y$12$rV1ILe7YeW1L1XfWb5DrfuiCYTC.1FZsIU4wtNmA95GaUNwXAtYoa', NULL, '2026-01-20 19:10:43', '2026-01-15 22:31:12', '2026-01-20 19:10:43', NULL, 0),
+(30, 'prime_admin', NULL, 'Prime Admin', '1950-01-01', NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, '$2y$12$NEiDrqVCChulf9S/EUPIpeOHScIM0zwswPTxIFamRDrY4XajgHQOe', NULL, '2026-01-20 19:09:59', '2026-01-20 19:04:18', '2026-01-20 19:09:59', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -305,12 +404,8 @@ CREATE TABLE `user_roles` (
 --
 
 INSERT INTO `user_roles` (`user_login_id`, `role_id`) VALUES
-(1, 1),
-(11, 2),
-(16, 3),
-(18, 2),
-(19, 2),
-(20, 2);
+(25, 1),
+(30, 3);
 
 --
 -- Indexes for dumped tables
@@ -335,6 +430,13 @@ ALTER TABLE `migrations`
 --
 ALTER TABLE `password_reset_tokens`
   ADD PRIMARY KEY (`email`);
+
+--
+-- Indexes for table `permissions`
+--
+ALTER TABLE `permissions`
+  ADD PRIMARY KEY (`permission_id`),
+  ADD UNIQUE KEY `uq_permission_key` (`permission_key`);
 
 --
 -- Indexes for table `personal_access_tokens`
@@ -365,6 +467,20 @@ ALTER TABLE `roles`
   ADD PRIMARY KEY (`role_id`),
   ADD UNIQUE KEY `role_name` (`role_name`),
   ADD UNIQUE KEY `uq_role_name` (`role_name`);
+
+--
+-- Indexes for table `role_permissions`
+--
+ALTER TABLE `role_permissions`
+  ADD PRIMARY KEY (`role_id`,`permission_id`),
+  ADD KEY `fk_rp_permission_id` (`permission_id`);
+
+--
+-- Indexes for table `sales_leads`
+--
+ALTER TABLE `sales_leads`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_sales_leads_user` (`user_login_id`);
 
 --
 -- Indexes for table `sessions`
@@ -420,28 +536,40 @@ ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
+-- AUTO_INCREMENT for table `permissions`
+--
+ALTER TABLE `permissions`
+  MODIFY `permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=971;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1074;
 
 --
 -- AUTO_INCREMENT for table `raw_request_commissions`
 --
 ALTER TABLE `raw_request_commissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=970;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1073;
 
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `sales_leads`
+--
+ALTER TABLE `sales_leads`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `system_logs`
@@ -459,7 +587,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_login`
 --
 ALTER TABLE `user_login`
-  MODIFY `user_login_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `user_login_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Constraints for dumped tables
@@ -476,6 +604,19 @@ ALTER TABLE `business_logs`
 --
 ALTER TABLE `refresh_tokens`
   ADD CONSTRAINT `refresh_tokens_user_login_id_foreign` FOREIGN KEY (`user_login_id`) REFERENCES `user_login` (`user_login_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `role_permissions`
+--
+ALTER TABLE `role_permissions`
+  ADD CONSTRAINT `fk_rp_permission_id` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`permission_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_rp_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `sales_leads`
+--
+ALTER TABLE `sales_leads`
+  ADD CONSTRAINT `fk_sales_leads_user` FOREIGN KEY (`user_login_id`) REFERENCES `user_login` (`user_login_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user_roles`
