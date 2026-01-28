@@ -7,30 +7,36 @@ use App\Http\Controllers\Api\RawRequestCommissionController;
 use App\Http\Controllers\Api\UserLoginController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\BusinessLogController;
-use App\Http\Controllers\Api\TranslationController; // Import nového controlleru
+use App\Http\Controllers\Api\TranslationController;
 use App\Http\Controllers\Api\SalesLeadController;
+use App\Http\Controllers\Api\NewsController;
 
 Route::get('/sanctum/csrf-cookie', function (Request $request) {
     return response()->json([], 204);
 });
 
-// Veřejné routy
+// --- VEŘEJNÉ ROUTY ---
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/refresh', [AuthController::class, 'refresh']);
 Route::post('raw_request_commissions', [RawRequestCommissionController::class, 'store']);
 
 
+    Route::prefix('news')->group(function () {
+        Route::get('/{news}/details', [NewsController::class, 'showDetails']);
+        Route::post('/{news}/restore', [NewsController::class, 'restore']);
+        Route::delete('/force-delete-all', [NewsController::class, 'forceDeleteAllTrashed']);
+    });
+    // Zahrnuje index, show, store, update, destroy
+    Route::apiResource('news', NewsController::class);
+// ------------------------------------------------------
 
-//------------------------------------------------------
-
-// Routy vyžadující autentizaci
+// --- ROUTY VYŽADUJÍCÍ AUTENTIZACI ---
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
 
-    // Nová routa pro ukládání překladů (Dashboard)
     Route::post('/save-translations', [TranslationController::class, 'save']);
 
     // Skupina rout pro BusinessLogs
@@ -47,6 +53,15 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::apiResource('raw_request_commissions', RawRequestCommissionController::class)->except(['store', 'create', 'edit']);
 
+    // --- NEWS - KOMPLETNĚ ZA AUTHENTIZACÍ ---
+    // Route::prefix('news')->group(function () {
+    //     Route::get('/{news}/details', [NewsController::class, 'showDetails']);
+    //     Route::post('/{news}/restore', [NewsController::class, 'restore']);
+    //     Route::delete('/force-delete-all', [NewsController::class, 'forceDeleteAllTrashed']);
+    // });
+    // // Zahrnuje index, show, store, update, destroy
+    // Route::apiResource('news', NewsController::class);
+
     // Skupina rout pro UserLogin
     Route::prefix('user_login')->group(function () {
         Route::post('/', [UserLoginController::class, 'store']);
@@ -57,7 +72,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::apiResource('user_login', UserLoginController::class)->except(['store', 'create', 'edit']);
 
-
     // Skupina rout pro Roles
     Route::prefix('roles')->group(function () {
         Route::post('/', [RoleController::class, 'store']);
@@ -66,7 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::apiResource('roles', RoleController::class)->except(['store', 'create', 'edit']);
 
-    // Skupina rout pro SalesLeads-------------------------
+    // Skupina rout pro SalesLeads
     Route::prefix('sales_leads')->group(function () {
         Route::get('/{salesLead}/details', [SalesLeadController::class, 'showDetails']);
         Route::post('/{salesLead}/restore', [SalesLeadController::class, 'restore']);

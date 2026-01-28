@@ -51,6 +51,9 @@
         <li *appHasPermission="'view-edit-website'">
           <a routerLink="/admin/edit-website" routerLinkActive="active">Edit Website</a>
         </li>
+        <li *appHasPermission="'view-news'">
+          <a routerLink="/admin/edit-news" routerLinkActive="active">Edit News</a>
+        </li>
         <li *appHasPermission="'view-business-logs'">
           <a routerLink="/admin/business-logs" routerLinkActive="active">Business Logs</a>
         </li>
