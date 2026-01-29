@@ -21,13 +21,7 @@ Route::post('/refresh', [AuthController::class, 'refresh']);
 Route::post('raw_request_commissions', [RawRequestCommissionController::class, 'store']);
 
 
-    Route::prefix('news')->group(function () {
-        Route::get('/{news}/details', [NewsController::class, 'showDetails']);
-        Route::post('/{news}/restore', [NewsController::class, 'restore']);
-        Route::delete('/force-delete-all', [NewsController::class, 'forceDeleteAllTrashed']);
-    });
-    // Zahrnuje index, show, store, update, destroy
-    Route::apiResource('news', NewsController::class);
+
 // ------------------------------------------------------
 
 // --- ROUTY VYŽADUJÍCÍ AUTENTIZACI ---
@@ -54,13 +48,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('raw_request_commissions', RawRequestCommissionController::class)->except(['store', 'create', 'edit']);
 
     // --- NEWS - KOMPLETNĚ ZA AUTHENTIZACÍ ---
-    // Route::prefix('news')->group(function () {
-    //     Route::get('/{news}/details', [NewsController::class, 'showDetails']);
-    //     Route::post('/{news}/restore', [NewsController::class, 'restore']);
-    //     Route::delete('/force-delete-all', [NewsController::class, 'forceDeleteAllTrashed']);
-    // });
-    // // Zahrnuje index, show, store, update, destroy
-    // Route::apiResource('news', NewsController::class);
+    Route::prefix('news')->group(function () {
+        Route::get('/{news}/details', [NewsController::class, 'showDetails']);
+        Route::post('/{news}/restore', [NewsController::class, 'restore']);
+        Route::delete('/force-delete-all', [NewsController::class, 'forceDeleteAllTrashed']);
+    });
+    // Zahrnuje index, show, store, update, destroy
+    Route::apiResource('news', NewsController::class);
 
     // Skupina rout pro UserLogin
     Route::prefix('user_login')->group(function () {

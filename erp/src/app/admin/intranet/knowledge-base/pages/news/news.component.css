@@ -1,4 +1,26 @@
-/* --- ZÁKLADNÍ KONTEJNER --- */
+/* --- PŘIDANÉ CSS PRO AUTORA --- */
+.node-author {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #1e1e20;
+}
+
+.author-label {
+  font-size: 0.65rem;
+  color: #52525b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.author-name {
+  font-size: 0.75rem;
+  color: #a1a1aa;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* Zbytek tvého CSS zůstává stejný */
 .kb-article-container {
   max-width: 950px;
   margin: 0 auto;
@@ -8,7 +30,6 @@
   line-height: 1.6;
 }
 
-/* --- TYPOGRAFIE --- */
 .breadcrumb {
   font-family: monospace;
   font-size: 0.7rem;
@@ -32,18 +53,6 @@ h1 {
   margin-bottom: 40px;
 }
 
-h2 {
-  font-size: 0.85rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #a67dff;
-  margin-bottom: 25px;
-  border-left: 2px solid #a67dff;
-  padding-left: 15px;
-}
-
-/* --- STRUKTURA --- */
 .section-divider {
   border: 0;
   border-top: 1px solid #1e1e20;
@@ -54,7 +63,6 @@ h2 {
   margin-bottom: 45px;
 }
 
-/* --- NEWS NODE SYSTÉM --- */
 .news-node {
   display: flex;
   gap: 30px;
@@ -65,7 +73,6 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* Zvýraznění milníku (např. spuštění webu) */
 .news-node.highlighted {
   border-color: rgba(166, 125, 255, 0.4);
   background: rgba(166, 125, 255, 0.02);
@@ -96,7 +103,6 @@ h2 {
   font-weight: 800;
 }
 
-/* Barevné rozlišení tagů */
 .node-tag.milestone { background: rgba(166, 125, 255, 0.2); color: #a67dff; }
 .node-tag.update { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
 .node-tag.fix { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
@@ -134,38 +140,6 @@ h2 {
   margin-right: 5px;
 }
 
-/* --- FOOTER --- */
-.article-footer {
-  margin-top: 50px;
-  padding-top: 20px;
-  border-top: 1px solid #1e1e20;
-  text-align: center;
-  color: #52525b;
-}
-
-
-/* --- RESPONSIVE --- */
-@media (max-width: 768px) {
-  .news-node {
-    flex-direction: column;
-    gap: 15px;
-  }
-  .node-sidebar {
-    border-right: none;
-    border-bottom: 1px solid #1e1e20;
-    padding-right: 0;
-    padding-bottom: 10px;
-    flex: none;
-  }
-  .node-details {
-    grid-template-columns: 1fr;
-  }
-  h1 { font-size: 1.8rem; }
-}
-p{
-    margin: 0;
-}
-/* --- AKTUALIZOVANÁ PATIČKA --- */
 .article-footer {
   margin-top: 60px;
   padding: 30px 0;
@@ -206,10 +180,56 @@ p{
   border-color: #5865F2;
 }
 
-/* Responzivita pro footer */
 @media (max-width: 768px) {
+  .news-node {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .node-sidebar {
+    border-right: none;
+    border-bottom: 1px solid #1e1e20;
+    padding-right: 0;
+    padding-bottom: 10px;
+    flex: none;
+  }
+  .node-details {
+    grid-template-columns: 1fr;
+  }
+  h1 { font-size: 1.8rem; }
   .footer-content {
     flex-direction: column;
     text-align: center;
   }
+}
+
+p {
+  margin: 0;
+}
+
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.load-more-btn {
+  background: transparent;
+  color: #a67dff;
+  border: 1px solid rgba(166, 125, 255, 0.4);
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.load-more-btn:hover:not(:disabled) {
+  background: rgba(166, 125, 255, 0.1);
+  border-color: #a67dff;
+}
+
+.load-more-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: #71717a;
 }
