@@ -45,7 +45,7 @@ import {
     HasPermissionDirective // Přidáno do importů
   ],
   templateUrl: './user-request.component.html',
-  styleUrl: './user-request.component.css',
+  styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserRequestComponent extends BaseDataComponent<RawRequestCommission> implements OnInit {
@@ -250,7 +250,12 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     this.showTrashTable = !this.showTrashTable;
     this.forceFullRefresh();
   }
+  // V user-request.component.ts
+  isFilterVisible: boolean = false;
 
+  toggleFilters() {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
   applyFilters(filters: any): void {
     this.filterSearch = filters.search || '';
     this.filterStatus = filters.status || '';

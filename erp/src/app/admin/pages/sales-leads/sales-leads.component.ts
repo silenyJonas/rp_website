@@ -43,7 +43,7 @@ import {
     HasPermissionDirective
   ],
   templateUrl: './sales-leads.component.html',
-  styleUrl: './sales-leads.component.css',
+  styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SalesLeadsComponent extends BaseDataComponent<any> implements OnInit {
@@ -136,7 +136,11 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
       sort_direction: this.filterSortDirection
     };
   }
+  isFilterVisible: boolean = false;
 
+  toggleFilters() {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
   private fetchPaginatedData(
     isTrash: boolean,
     page: number,

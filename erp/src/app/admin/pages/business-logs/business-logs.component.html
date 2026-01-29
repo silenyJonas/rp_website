@@ -13,7 +13,9 @@
     </button>
   </div>
   <div *ngIf="!isLoading && !errorMessage">
-    <div class="main-content-layout">
+
+   <div class="main-content-layout">
+  <div class="filter-side-panel" [class.active]="isFilterVisible">
 
       <app-generic-filter-form
         [filterColumns]="filterColumns"
@@ -35,9 +37,11 @@
         (filtersApplied)="applyFilters($event)"
         (filtersCleared)="clearFilters()">
       </app-generic-filter-form>
-      
+  </div>
       <div class="table-and-pagination-container">
-
+        <button (click)="toggleFilters()" class="neutral_button m-b-10">
+  {{ isFilterVisible ? '✕ Skrýt filtry' : 'Zobrazit filtry' }}
+</button>
         <app-generic-table
           [buttons]="buttons"
           [data]="data"

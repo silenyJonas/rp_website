@@ -5,5 +5,3 @@
 --------------------------
 
 SPECHA
--udelat tlacitko diky kteremu vyjede filter at neni preplnena stranka
--log tabulka nefunguje useri

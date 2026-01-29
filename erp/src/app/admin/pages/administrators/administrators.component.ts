@@ -47,7 +47,7 @@ type ItemType = any; // You should replace 'any' with the specific interface if 
     HasPermissionDirective
   ],
   templateUrl: './administrators.component.html',
-  styleUrl: './administrators.component.css',
+  styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdministratorsComponent extends BaseDataComponent<ItemType> implements OnInit {
@@ -216,7 +216,11 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
       })
     );
   }
+  isFilterVisible: boolean = false;
 
+  toggleFilters() {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
   private preloadPage(
     isTrash: boolean,
     page: number,

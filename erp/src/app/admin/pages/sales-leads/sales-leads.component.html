@@ -9,7 +9,9 @@
   <div *ngIf="errorMessage" class="text-center text-red-500">{{ errorMessage }}</div>
   
   <div *ngIf="!isLoading && !errorMessage">
-    <div class="main-content-layout">
+
+   <div class="main-content-layout">
+  <div class="filter-side-panel" [class.active]="isFilterVisible">
 
       <app-generic-filter-form
         [filterColumns]="filterColumns"
@@ -29,9 +31,14 @@
         (filtersApplied)="applyFilters($event)"
         (filtersCleared)="clearFilters()">
       </app-generic-filter-form>
-      
+  </div>
       <div class="table-and-pagination-container">
-
+        <button (click)="toggleFilters()" class="neutral_button m-b-10">
+  {{ isFilterVisible ? '✕ Skrýt filtry' : 'Zobrazit filtry' }}
+</button>
+<button *appHasPermission="'view-deleted'" (click)="toggleTable()" class="toggle-table-btn neutral_button m-b-10 p-l-10">
+          {{ showTrashTable ? 'Zobrazit Aktivní Leady' : 'Zobrazit Smazané Leady' }}
+        </button>
         <app-generic-table *ngIf="!showTrashTable"
           [buttons]="buttons"
           [data]="data"
@@ -54,9 +61,7 @@
           (itemRestored)="handleItemRestored()">
         </app-generic-trash-table>
 
-        <button *appHasPermission="'view-deleted'" (click)="toggleTable()" class="toggle-table-btn neutral_button m-b-10">
-          {{ showTrashTable ? 'Zobrazit Aktivní Leady' : 'Zobrazit Smazané Leady' }}
-        </button>
+        
         
         <div class="pagination-controls-wrapper" *ngIf="!showTrashTable">
           <div class="text-sm text-gray-700 p-b-10">

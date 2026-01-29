@@ -40,7 +40,7 @@ type ItemType = any;
     GenericDetailsComponent
   ],
   templateUrl: './business-logs.component.html',
-  styleUrl: './business-logs.component.css',
+  styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BusinessLogsComponent extends BaseDataComponent<ItemType> implements OnInit {
@@ -117,7 +117,11 @@ export class BusinessLogsComponent extends BaseDataComponent<ItemType> implement
   public refreshData(): void {
     this.forceFullRefresh();
   }
+  isFilterVisible: boolean = false;
 
+  toggleFilters() {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
   /**
    * Gathers all current filter values into a single object.
    * @returns An object containing all active filters.

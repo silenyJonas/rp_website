@@ -41,7 +41,7 @@ import {
     HasPermissionDirective
   ],
   templateUrl: './edit-news.component.html',
-  styleUrl: './edit-news.component.css',
+  styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditNewsComponent extends BaseDataComponent<any> implements OnInit {
@@ -200,7 +200,12 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
     this.filterSortBy = 'created_at'; this.filterSortDirection = 'desc';
     this.forceFullRefresh();
   }
+// V user-request.component.ts
+isFilterVisible: boolean = false;
 
+toggleFilters() {
+  this.isFilterVisible = !this.isFilterVisible;
+}
   toggleTable(): void { this.showTrashTable = !this.showTrashTable; this.forceFullRefresh(); }
   goToPage(page: number): void { if (page >= 1 && page <= this.totalPages) { this.currentPage = page; this.loadActiveNews().subscribe(); } }
   goToTrashPage(page: number): void { if (page >= 1 && page <= this.trashTotalPages) { this.trashCurrentPage = page; this.loadTrashNews().subscribe(); } }
