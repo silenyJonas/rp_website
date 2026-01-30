@@ -87,7 +87,7 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   filterCreatedAt: string = '';
   filterUpdatedAt: string = '';
   filterId: string = '';
-  filterSortDirection: 'asc' | 'desc' = 'asc';
+  filterSortDirection: 'asc' | 'desc' = 'desc';
 
   private activeRequestsCache: Map<number, RawRequestCommission[]> = new Map();
   private trashRequestsCache: Map<number, RawRequestCommission[]> = new Map();
@@ -284,7 +284,7 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     this.filterUpdatedAt = '';
     this.filterDescription = '';
     this.filterSortBy = '';
-    this.filterSortDirection = 'asc';
+    this.filterSortDirection = 'desc';
     this.forceFullRefresh();
   }
 

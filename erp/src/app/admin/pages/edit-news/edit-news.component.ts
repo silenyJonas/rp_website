@@ -49,6 +49,7 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
   override apiEndpoint: string = 'news';
   override trashData: any[] = [];
   override isLoading: boolean = false;
+  isTrashTableLoading: boolean = false;
 
   buttons: Buttons[] = NEWS_BUTTONS;
   formFields: InputDefinition[] = NEWS_FORM_FIELDS;
@@ -60,6 +61,7 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
   showTrashTable: boolean = false;
   showCreateForm: boolean = false;
   showDetails: boolean = false;
+  isFilterVisible: boolean = false;
   
   currentPage: number = 1;
   itemsPerPage: number = 15;
@@ -132,7 +134,7 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
   ): Observable<PaginatedResponse<any>> {
     const newFilters = this.getBaseFilters();
     if (isTrash) {
-        newFilters['only_trashed'] = 'true';
+      newFilters['only_trashed'] = 'true';
     }
 
     if (JSON.stringify(newFilters) !== JSON.stringify(currentFilters)) {
@@ -150,8 +152,15 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
       const cachedData = cache.get(page)!;
       if (isTrash) this.trashData = cachedData;
       else this.data = cachedData;
+      
       this.cd.detectChanges();
-      return of({ data: cachedData, current_page: page, total: isTrash ? this.trashTotalItems : this.totalItems } as any);
+      this.preloadPage(isTrash, page + 1, itemsPerPage, cache);
+      return of({
+        data: cachedData,
+        current_page: page,
+        last_page: isTrash ? this.trashTotalPages : this.totalPages,
+        total: isTrash ? this.trashTotalItems : this.totalItems
+      } as PaginatedResponse<any>);
     }
 
     return this.genericTableService.getPaginatedData<any>(this.apiEndpoint, page, itemsPerPage, newFilters).pipe(
@@ -161,27 +170,51 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
           this.trashData = response.data;
           this.trashTotalItems = response.total;
           this.trashTotalPages = response.last_page;
+          this.trashCurrentPage = response.current_page;
         } else {
           this.data = response.data;
           this.totalItems = response.total;
           this.totalPages = response.last_page;
+          this.currentPage = response.current_page;
         }
         cache.set(page, response.data);
         this.cd.detectChanges();
+        this.preloadPage(isTrash, page + 1, itemsPerPage, cache);
       })
     );
+  }
+
+  private preloadPage(isTrash: boolean, page: number, itemsPerPage: number, cache: Map<number, any[]>): void {
+    const totalPages = isTrash ? this.trashTotalPages : this.totalPages;
+    if (page > totalPages || cache.has(page)) return;
+
+    const filters = this.getBaseFilters();
+    if (isTrash) filters['only_trashed'] = 'true';
+
+    this.genericTableService.getPaginatedData<any>(this.apiEndpoint, page, itemsPerPage, filters).subscribe({
+      next: (response) => cache.set(page, response.data),
+      error: () => {} // Silent preload error
+    });
   }
 
   loadActiveNews() { return this.fetchPaginatedData(false, this.currentPage, this.itemsPerPage, this.activeNewsCache, this.currentActiveFilters); }
   loadTrashNews() { return this.fetchPaginatedData(true, this.trashCurrentPage, this.trashItemsPerPage, this.trashNewsCache, this.currentTrashFilters); }
 
-  forceFullRefresh(): void {
+  private forceFullRefresh(): void {
     this.activeNewsCache.clear();
     this.trashNewsCache.clear();
+    this.currentPage = 1;
+    this.trashCurrentPage = 1;
     this.isLoading = true;
+    this.isTrashTableLoading = true;
     this.cd.detectChanges();
+
     forkJoin([this.loadActiveNews(), this.loadTrashNews()]).pipe(
-      finalize(() => { this.isLoading = false; this.cd.detectChanges(); })
+      finalize(() => {
+        this.isLoading = false;
+        this.isTrashTableLoading = false;
+        this.cd.detectChanges();
+      })
     ).subscribe();
   }
 
@@ -200,15 +233,46 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
     this.filterSortBy = 'created_at'; this.filterSortDirection = 'desc';
     this.forceFullRefresh();
   }
-// V user-request.component.ts
-isFilterVisible: boolean = false;
 
-toggleFilters() {
-  this.isFilterVisible = !this.isFilterVisible;
-}
+  toggleFilters() { this.isFilterVisible = !this.isFilterVisible; }
   toggleTable(): void { this.showTrashTable = !this.showTrashTable; this.forceFullRefresh(); }
-  goToPage(page: number): void { if (page >= 1 && page <= this.totalPages) { this.currentPage = page; this.loadActiveNews().subscribe(); } }
-  goToTrashPage(page: number): void { if (page >= 1 && page <= this.trashTotalPages) { this.trashCurrentPage = page; this.loadTrashNews().subscribe(); } }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+      this.currentPage = page;
+      this.loadActiveNews().subscribe();
+    }
+  }
+
+  goToTrashPage(page: number): void {
+    if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
+      this.trashCurrentPage = page;
+      this.loadTrashNews().subscribe();
+    }
+  }
+
+  onItemsPerPageChange(event: Event): void {
+    const val = Number((event.target as HTMLSelectElement).value);
+    if (val !== this.itemsPerPage) { this.itemsPerPage = val; this.forceFullRefresh(); }
+  }
+
+  onTrashItemsPerPageChange(event: Event): void {
+    const val = Number((event.target as HTMLSelectElement).value);
+    if (val !== this.trashItemsPerPage) { this.trashItemsPerPage = val; this.forceFullRefresh(); }
+  }
+
+  private getPaginationArray(currentPage: number, totalPages: number): number[] {
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+    if (endPage - startPage + 1 < maxPagesToShow) startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    const pages = [];
+    for (let i = startPage; i <= endPage; i++) pages.push(i);
+    return pages;
+  }
+
+  get pagesArray(): number[] { return this.getPaginationArray(this.currentPage, this.totalPages); }
+  get trashPagesArray(): number[] { return this.getPaginationArray(this.trashCurrentPage, this.trashTotalPages); }
 
   handleItemRestored(): void { this.forceFullRefresh(); }
   handleItemDeleted(): void { this.forceFullRefresh(); }
@@ -232,7 +296,5 @@ toggleFilters() {
   }
 
   handleCloseDetails(): void { this.selectedItemForDetails = null; this.showDetails = false; }
-
-  get pagesArray(): number[] { return Array.from({length: this.totalPages}, (_, i) => i + 1); }
-  get trashPagesArray(): number[] { return Array.from({length: this.trashTotalPages}, (_, i) => i + 1); }
+  trackById(index: number, item: any): number { return item.id; }
 }

@@ -42,13 +42,30 @@ class SalesLeadController extends Controller
         if ($request->filled('created_at')) $query->whereDate('created_at', $request->created_at);
         if ($request->filled('updated_at')) $query->whereDate('updated_at', $request->updated_at);
 
-        $query->orderBy($request->input('sort_by', 'created_at'), $request->input('sort_direction', 'desc'));
+        // --- ŘAZENÍ: Defaultně nejnovější ID nahoře ---
+        $sortBy = $request->filled('sort_by') ? $request->input('sort_by') : 'id';
+        $sortDirection = $request->filled('sort_direction') ? $request->input('sort_direction') : 'desc';
+        $query->orderBy($sortBy, $sortDirection);
 
         $data = filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN) 
             ? $query->get() 
             : $query->paginate($perPage);
 
-        return SalesLeadResource::collection($data);
+        // Pokud není paginace, vrátíme prostou kolekci přes Resource
+        if (filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN)) {
+            return SalesLeadResource::collection($data);
+        }
+
+        // --- RUČNÍ FORMÁTOVÁNÍ PRO KOMPATIBILITU S ANGULAR PAGINACÍ ---
+        return response()->json([
+            'data'         => SalesLeadResource::collection($data->items()),
+            'total'        => $data->total(),
+            'per_page'     => $data->perPage(),
+            'current_page' => $data->currentPage(),
+            'last_page'    => $data->lastPage(),
+            'from'         => $data->firstItem(),
+            'to'           => $data->lastItem(),
+        ]);
     }
 
     public function store(StoreSalesLeadRequest $request): JsonResponse

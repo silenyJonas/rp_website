@@ -1,7 +1,7 @@
 ----NESPECHA----
 -dynamicka sprava roli-vytvorit nazev role a priradit k ni permissions v komponente se to bude delat na adminu
--lip vyresit tlacitka at to vypada prehledne a paginaci UI
 -na dashboardu budou vseobecne info a statistiky treba pocet zamestnancu nebo pocet novych veci atd
+-dat paginaci tlacitka do komponentu at to neni na kazde page zvlast + lepsi UI
 --------------------------
 
 SPECHA

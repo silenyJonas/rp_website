@@ -30,7 +30,7 @@ class RawRequestCommissionController extends Controller
                 ->orWhere('contact_phone', 'like', "%$s%"));
         }
 
-        // Individuální filtry
+        // Filtry
         foreach (['id', 'status', 'priority'] as $f) {
             if ($request->filled($f)) $query->where($f, $request->input($f));
         }
@@ -40,13 +40,30 @@ class RawRequestCommissionController extends Controller
         if ($request->filled('created_at')) $query->whereDate('created_at', $request->created_at);
         if ($request->filled('updated_at')) $query->whereDate('updated_at', $request->updated_at);
 
-        $query->orderBy($request->input('sort_by', 'created_at'), $request->input('sort_direction', 'desc'));
+        // --- ŘAZENÍ: Defaultně nejnovější ID nahoře ---
+        $sortBy = $request->filled('sort_by') ? $request->input('sort_by') : 'id';
+        $sortDirection = $request->filled('sort_direction') ? $request->input('sort_direction') : 'desc';
+        $query->orderBy($sortBy, $sortDirection);
 
         $data = filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN) 
             ? $query->get() 
             : $query->paginate($perPage);
 
-        return RawRequestCommissionResource::collection($data);
+        // Pokud není paginace, vrátíme prostou kolekci
+        if (filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN)) {
+            return RawRequestCommissionResource::collection($data);
+        }
+
+        // --- RUČNÍ FORMÁTOVÁNÍ PRO ANGULAR (Eliminace NaN) ---
+        return response()->json([
+            'data'         => RawRequestCommissionResource::collection($data->items()),
+            'total'        => $data->total(),
+            'per_page'     => $data->perPage(),
+            'current_page' => $data->currentPage(),
+            'last_page'    => $data->lastPage(),
+            'from'         => $data->firstItem(),
+            'to'           => $data->lastItem(),
+        ]);
     }
 
     public function store(StoreRawRequestCommissionRequest $request): JsonResponse
@@ -64,7 +81,6 @@ class RawRequestCommissionController extends Controller
 
     public function showDetails(RawRequestCommission $rawRequestCommission): JsonResponse
     {
-        // Využijeme resource pro konzistenci, vrací přesně to co show, ale splňuje název metody
         return $this->show($rawRequestCommission);
     }
 
@@ -105,18 +121,19 @@ class RawRequestCommissionController extends Controller
     protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null)
     {
         try {
-            $user = $request->user();
+            $user = $request->user('sanctum') ?? $request->user();
+
             BusinessLog::create([
-                'origin' => $request->ip(),
-                'event_type' => $eventType,
-                'module' => $module,
-                'description' => $description,
-                'affected_entity_type' => 'RawRequestCommission',
-                'affected_entity_id' => $affectedId,
-                'user_login_id' => $user?->user_login_id,
-                'context_data' => json_encode($request->all(), JSON_UNESCAPED_UNICODE),
-                'user_login_id_plain' => (string)($user?->user_login_id ?? '0'),
-                'user_login_email_plain' => $user?->user_email ?? 'system'
+                'origin'                 => $request->ip(),
+                'event_type'             => $eventType,
+                'module'                 => $module,
+                'description'            => $description,
+                'affected_entity_type'   => $module,
+                'affected_entity_id'     => $affectedId,
+                'user_login_id'          => $user?->user_login_id,
+                'context_data'           => json_encode($request->all(), JSON_UNESCAPED_UNICODE),
+                'user_login_id_plain'    => (string)($user?->user_login_id ?? '0'),
+                'user_login_email_plain' => $user ? $user->user_email : 'Veřejný web (Anonym)'
             ]);
         } catch (\Exception $e) {
             Log::error("Log error: " . $e->getMessage());

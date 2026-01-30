@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 
 class NewsController extends Controller
 {
+
     public function index(Request $request)
     {
         // Default na 5 pro tvůj frontend, s možností přepsání z requestu
@@ -29,11 +30,24 @@ class NewsController extends Controller
         }
         if ($request->filled('thema')) $query->where('thema', $request->thema);
 
-        $query->orderBy($request->input('sort_by', 'created_at'), $request->input('sort_direction', 'desc'));
+        // --- ŘAZENÍ: Defaultně nejnovější nahoře ---
+        $sortBy = $request->filled('sort_by') ? $request->input('sort_by') : 'created_at';
+        $sortDirection = $request->filled('sort_direction') ? $request->input('sort_direction') : 'desc';
+        $query->orderBy($sortBy, $sortDirection);
 
-        return NewsResource::collection($query->paginate($perPage));
+        $data = $query->paginate($perPage);
+
+        // --- RUČNÍ FORMÁTOVÁNÍ PRO KOMPATIBILITU (Oprava NaN) ---
+        return response()->json([
+            'data'         => NewsResource::collection($data->items()),
+            'total'        => $data->total(),
+            'per_page'     => $data->perPage(),
+            'current_page' => $data->currentPage(),
+            'last_page'    => $data->lastPage(),
+            'from'         => $data->firstItem(),
+            'to'           => $data->lastItem(),
+        ]);
     }
-
     public function store(StoreNewsRequest $request): JsonResponse
     {
         $news = News::create($request->validated());

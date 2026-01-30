@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\{Hash, Log};
 
 class UserLoginController extends Controller
 {
+
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page', 15);
@@ -28,7 +29,7 @@ class UserLoginController extends Controller
         }
         if ($request->filled('user_login_id')) $query->where('user_login.user_login_id', $request->user_login_id);
 
-        // Datumové filtry (speciální logika pro den/měsíc vs celé datum)
+        // Datumové filtry
         foreach (['created_at', 'updated_at', 'last_login_at'] as $col) {
             if ($val = $request->input($col)) {
                 if (is_numeric($val) && strlen($val) <= 2) {
@@ -43,7 +44,7 @@ class UserLoginController extends Controller
             $query->whereHas('roles', fn($q) => $q->where('role_name', 'like', "%{$request->role_name}%"));
         }
 
-        // Řazení
+        // --- ŘAZENÍ ---
         $sortBy = $request->input('sort_by', 'user_login_id');
         $dir = in_array(strtolower($request->input('sort_direction')), ['asc', 'desc']) ? $request->sort_direction : 'desc';
         
@@ -59,9 +60,22 @@ class UserLoginController extends Controller
             ? $query->with('roles.permissions')->get() 
             : $query->with('roles.permissions')->paginate($perPage);
 
-        return response()->json(UserLoginResource::collection($users)->response()->getData(true));
-    }
+        // Pokud není paginace, vrátíme jen kolekci
+        if (filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN)) {
+            return response()->json(UserLoginResource::collection($users));
+        }
 
+        // --- PLOCHÁ STRUKTURA PRO ANGULAR (Oprava NaN) ---
+        return response()->json([
+            'data'         => UserLoginResource::collection($users->items()),
+            'total'        => $users->total(),
+            'per_page'     => $users->perPage(),
+            'current_page' => $users->currentPage(),
+            'last_page'    => $users->lastPage(),
+            'from'         => $users->firstItem(),
+            'to'           => $users->lastItem(),
+        ]);
+    }
     public function store(StoreUserLoginRequest $request): JsonResponse
     {
         $validated = $request->validated();
