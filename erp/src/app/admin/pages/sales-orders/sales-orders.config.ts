@@ -21,15 +21,6 @@ export const SALES_ORDER_FORM_FIELDS: InputDefinition[] = [
     editable: true, show_in_edit: true, show_in_create: true,
   },
   {
-    column_name: 'salesman_name',
-    label: 'Obchodník',
-    placeholder: 'Jméno obchodníka',
-    type: 'text',
-    required: true,
-    errorMessage: 'Jméno obchodníka je povinné.',
-    editable: true, show_in_edit: true, show_in_create: true,
-  },
-  {
     column_name: 'ico',
     label: 'IČO',
     placeholder: 'Zadejte IČO',

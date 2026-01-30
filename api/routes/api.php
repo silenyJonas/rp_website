@@ -24,9 +24,6 @@ Route::post('/refresh', [AuthController::class, 'refresh']);
 Route::post('raw_request_commissions', [RawRequestCommissionController::class, 'store']);
 Route::post('sales_orders', [SalesOrderController::class, 'store']);
 
-
-// ------------------------------------------------------
-
 // --- ROUTY VYŽADUJÍCÍ AUTENTIZACI (Protected) ---
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -36,13 +33,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/save-translations', [TranslationController::class, 'save']);
 
-    // Skupina rout pro BusinessLogs
+    // BusinessLogs
     Route::prefix('business_logs')->group(function () {
         Route::get('/', [BusinessLogController::class, 'index']);
         Route::get('/{businessLog}/details', [BusinessLogController::class, 'showDetails']);
     });
     
-    // Skupina rout pro RawRequestCommission
+    // RawRequestCommission
     Route::prefix('raw_request_commissions')->group(function () {
         Route::get('/{rawRequestCommission}/details', [RawRequestCommissionController::class, 'showDetails']);
         Route::post('/{rawRequestCommission}/restore', [RawRequestCommissionController::class, 'restore']);
@@ -50,12 +47,13 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::apiResource('raw_request_commissions', RawRequestCommissionController::class)->except(['store', 'create', 'edit']);
 
-    // Skupina rout pro SalesOrder (Administrace)
+    // SalesOrder (Administrace)
     Route::prefix('sales_orders')->group(function () {
+        // Přidána chybějící routa pro detaily, kterou volá tvůj Angular
+        Route::get('/{salesOrder}/details', [SalesOrderController::class, 'show']); 
         Route::post('/{id}/restore', [SalesOrderController::class, 'restore']);
         Route::delete('/force-delete-all', [SalesOrderController::class, 'forceDeleteAllTrashed']);
     });
-    // Zahrnuje index, show, update, destroy (store je veřejný výše)
     Route::apiResource('sales_orders', SalesOrderController::class)->except(['store', 'create', 'edit']);
 
     // News

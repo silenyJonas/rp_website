@@ -15,13 +15,13 @@ class SalesOrder extends Model
 
     protected $fillable = [
         'lead_id',
-        'salesman_name',
-        'ico',
         'client_name',
+        'ico',
         'client_address',
         'client_phone',
         'client_email',
-        'order_description'
+        'order_description',
+        'salesman_name' // <--- Nezapomeň na tohle!
     ];
 
     /**

@@ -16,6 +16,7 @@ export const SALES_LEAD_STATUS_OPTIONS: string[] = [
   'probíhá komunikace', 
   'příprava nabídky', 
   'nabídka odeslána', 
+  'popt. form. odeslán', 
   'vyjednávání', 
   'pozastaveno', 
   'Přebírá si dev team',

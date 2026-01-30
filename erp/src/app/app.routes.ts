@@ -49,7 +49,11 @@ export const routes: Routes = [
       {
         path: 'jobs/:id',
         loadComponent: () => import('./public/pages/jobs/job-item/job-item.component').then(m => m.JobItemComponent)
-      }
+      },
+      {
+        path: 'order_form/:leadParam',
+        loadComponent: () => import('./public/pages/order-form/order-form.component').then(m => m.OrderFormComponent)
+      },    
     ]
   },
   {
