@@ -92,11 +92,31 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     return typeof value === 'object' && value !== null && !Array.isArray(value);
   }
 
-  /**
-   * Nová funkce pro logování stisknutí tlačítka generate_form
+/**
+   * Sestaví odkaz s parametrem sales_lead_id a zkopíruje jej do schránky
    */
   getFormLink(item: any): void {
-    console.log('Tlačítko generate_form bylo stisknuto pro položku:', item);
+    // Získáme základní URL (např. https://localhost:4200/ nebo https://vasedomena.cz/)
+    const baseUrl = window.location.origin;
+    
+    // Sestavení finálního odkazu dle tvého zadání
+    const url = `${baseUrl}/order_form/sales_lead_id=${item.id}`;
+
+    navigator.clipboard.writeText(url).then(() => {
+      console.log('Odkaz zkopírován:', url);
+      this.alertDialogService.open(
+        'Odkaz zkopírován', 
+        `Odkaz pro sales_lead_id=${item.id} byl uložen do schránky.`, 
+        'success'
+      );
+    }).catch(err => {
+      console.error('Chyba při kopírování:', err);
+      this.alertDialogService.open(
+        'Chyba', 
+        'Nepodařilo se zkopírovat odkaz.', 
+        'danger'
+      );
+    });
   }
   
   handleAction(item: any, buttonType: string): void {
