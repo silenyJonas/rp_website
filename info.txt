@@ -5,3 +5,4 @@
 --------------------------
 
 SPECHA
+salesman vygeneruje link a ten link bude mittreba na konci /123 a to se vlozi do neviditelneho pole ve formu a ten form se  odesle na muj backend a bude to prolinkovane takto 
