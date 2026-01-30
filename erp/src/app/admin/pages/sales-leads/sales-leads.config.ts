@@ -7,6 +7,7 @@ import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-colu
 export const SALES_LEAD_BUTTONS: Buttons[] = [
   { display_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: 'Editovat', isActive: true, type: 'neutral_button', action: 'edit' },
+  { display_name: 'Formulář', isActive: true, type: 'neutral_button', action: 'generate_form' },
   { display_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
 ];
 

@@ -19,6 +19,7 @@ import { NewsComponent } from './intranet/knowledge-base/pages/news/news.compone
 import { SecurityComponent } from './intranet/knowledge-base/pages/security/security.component';
 import { ContactsComponent } from './intranet/knowledge-base/pages/contacts/contacts.component';
 import { EditNewsComponent } from './pages/edit-news/edit-news.component';
+import { SalesOrdersComponent } from './pages/sales-orders/sales-orders.component';
 const routes: Routes = [
   // SEKCE 1: Klasický Admin se sidebarem
   {
@@ -35,6 +36,7 @@ const routes: Routes = [
       { path: 'edit-website', component: EditWebsiteComponent, data: { permission: 'view-edit-website' } },
       { path: 'sales-leads', component: SalesLeadsComponent, data: { permission: 'view-sales-leads' } },
       { path: 'edit-news', component: EditNewsComponent, data: { permission: 'view-news' } },
+      { path: 'sales-orders', component: SalesOrdersComponent, data: { permission: 'view-sales-orders' } },
     ]
   },
 

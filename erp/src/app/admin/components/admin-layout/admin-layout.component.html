@@ -45,6 +45,9 @@
         <li *appHasPermission="'view-sales-leads'">
           <a routerLink="/admin/sales-leads" routerLinkActive="active">Sales Leads</a>
         </li>
+        <li *appHasPermission="'view-sales-orders'">
+          <a routerLink="/admin/sales-orders" routerLinkActive="active">Sales Orders</a>
+        </li>
         <li *appHasPermission="'manage-administrators'">
           <a routerLink="/admin/administrators" routerLinkActive="active">Administrátoři</a>
         </li>
