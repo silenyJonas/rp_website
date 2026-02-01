@@ -66,21 +66,42 @@ class SalesOrderController extends Controller
     /**
      * Veřejné uložení z formuláře
      */
-    public function store(StoreSalesOrderRequest $request): JsonResponse
-    {
-        $validatedData = $request->validated();
+    // public function store(StoreSalesOrderRequest $request): JsonResponse
+    // {
+    //     $validatedData = $request->validated();
 
-        // Automatické dohledání obchodníka z původního Leadu
+    //     // Automatické dohledání obchodníka z původního Leadu
+    //     $lead = SalesLead::find($validatedData['lead_id']);
+    //     $validatedData['salesman_name'] = $lead ? $lead->salesman_name : 'Neznámý obchodník';
+
+    //     $order = SalesOrder::create($validatedData);
+
+    //     $this->logAction($request, 'create', 'SalesOrder', "Vytvořena realizace (veřejný formulář) pro: {$order->client_name}", $order->id);
+        
+    //     return response()->json(new SalesOrderResource($order), 201);
+    // }
+    public function store(StoreSalesOrderRequest $request): JsonResponse
+{
+    $validatedData = $request->validated();
+
+        // ZPRACOVÁNÍ SOUBORU
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            // Uloží soubor do public/orders a vrátí cestu
+            $path = $file->store('orders', 'public');
+            $validatedData['attachment_path'] = $path;
+        }
+
+        // Automatické dohledání obchodníka
         $lead = SalesLead::find($validatedData['lead_id']);
         $validatedData['salesman_name'] = $lead ? $lead->salesman_name : 'Neznámý obchodník';
 
         $order = SalesOrder::create($validatedData);
 
-        $this->logAction($request, 'create', 'SalesOrder', "Vytvořena realizace (veřejný formulář) pro: {$order->client_name}", $order->id);
+        $this->logAction($request, 'create', 'SalesOrder', "Vytvořena poptávka pro: {$order->client_name}" . ($request->hasFile('attachment') ? " (s přílohou)" : ""), $order->id);
         
         return response()->json(new SalesOrderResource($order), 201);
     }
-
     /**
      * Zobrazení detailů (nasazeno na routu /details i standardní show)
      */

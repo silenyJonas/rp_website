@@ -4,4 +4,7 @@
 -dat paginaci tlacitka do komponentu at to neni na kazde page zvlast + lepsi UI
 --------------------------
 
-udelat aby mohlo byt prihlaseni vice uzivatelu zaroven nejspis pres web session
+
+zkontrolovat edity aby fungovaly
+
+u poptavkoveho formu moznost vlozit soubor

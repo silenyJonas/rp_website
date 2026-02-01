@@ -19,9 +19,9 @@ export const NEWS_THEMA_OPTIONS: string[] = [
 ];
 
 export const NEWS_BUTTONS: Buttons[] = [
-  { display_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
-  { display_name: 'Editovat', isActive: true, type: 'neutral_button', action: 'edit' },
-  { display_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
+  { display_name: '🔎',header_name: 'Detaily',  isActive: true, type: 'info_button', action: 'details' },
+  { display_name: '✒️',header_name: 'Edit',  isActive: true, type: 'neutral_button', action: 'edit' },
+  { display_name: '🗑️', header_name: 'Del', isActive: true, type: 'delete_button', action: 'delete' },
 ];
 
 export const NEWS_FORM_FIELDS: InputDefinition[] = [

@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage; // Přidáno pro generování URL
 
 class SalesOrderResource extends JsonResource
 {
@@ -19,10 +20,18 @@ class SalesOrderResource extends JsonResource
             'client_phone'      => $this->client_phone,
             'client_email'      => $this->client_email,
             'order_description' => $this->order_description,
+            
+            // PŘIDÁNO: Cesta k souboru (přímo z DB)
+            'attachment_path'   => $this->attachment_path,
+            
+            // VOLITELNÉ: Plná URL adresa pro snadné stažení v Angularu
+            'attachment_url'    => $this->attachment_path 
+                                    ? asset('storage/' . $this->attachment_path) 
+                                    : null,
+
             'created_at'        => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'        => $this->updated_at?->format('Y-m-d H:i:s'),
             'deleted_at'        => $this->deleted_at?->format('Y-m-d H:i:s'),
-            // Relace na lead pro zobrazení v UI
             'lead'              => $this->whenLoaded('lead')
         ];
     }

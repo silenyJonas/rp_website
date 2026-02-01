@@ -10,13 +10,14 @@ import { AlertDialogService } from '../../../core/services/alert-dialog.service'
 import { AuthService } from '../../../core/auth/auth.service';
 
 /**
- * Původní rozhraní Buttons rozšířené o generate_form.
+ * Rozhraní Buttons rozšířené o generate_form.
  */
 export interface Buttons {
   display_name: string;
+  header_name: string;
   isActive: boolean;
   action: string;
-  type: 'info_button' | 'create_button' | 'delete_button' | 'neutral_button' | 'generate_form'; // Přidán typ pro styling pokud je třeba
+  type: 'info_button' | 'create_button' | 'delete_button' | 'neutral_button' | 'generate_form';
 }
 
 @Component({
@@ -92,33 +93,28 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     return typeof value === 'object' && value !== null && !Array.isArray(value);
   }
 
-/**
+  /**
    * Sestaví odkaz s parametrem sales_lead_id a zkopíruje jej do schránky
    */
   getFormLink(item: any): void {
-    // Získáme základní URL (např. https://localhost:4200/ nebo https://vasedomena.cz/)
     const baseUrl = window.location.origin;
-    
-    // Sestavení finálního odkazu dle tvého zadání
     const url = `${baseUrl}/order_form/sales_lead_id=${item.id}`;
 
     navigator.clipboard.writeText(url).then(() => {
-      console.log('Odkaz zkopírován:', url);
       this.alertDialogService.open(
         'Odkaz zkopírován', 
-        `Odkaz pro sales_lead_id=${item.id} byl uložen do schránky.`, 
+        `Odkaz pro lead s id: ${item.id} byl uložen do schránky.`, 
         'success'
       );
     }).catch(err => {
       console.error('Chyba při kopírování:', err);
-      this.alertDialogService.open(
-        'Chyba', 
-        'Nepodařilo se zkopírovat odkaz.', 
-        'danger'
-      );
+      this.alertDialogService.open('Chyba', 'Nepodařilo se zkopírovat odkaz.', 'danger');
     });
   }
   
+  /**
+   * Rozcestník pro akce tlačítek
+   */
   handleAction(item: any, buttonType: string): void {
     switch (buttonType) {
       case 'generate_form':
@@ -128,32 +124,10 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
         this.viewDetailsOpened.emit(item);
         break;
       case 'create':
-        this.createFormOpened.emit();
+        this.openCreateForm();
         break;
       case 'delete':
-        this.confirmDialogService.open('Potvrzení smazání', 'Opravdu si přejete smazat tuto položku?').then(result => {
-          if (result) {
-            this.deleteData(item.id).subscribe({
-              next: () => {
-                this.alertDialogService.open('Úspěch', 'Položka byla úspěšně smazána.', 'success');
-                const index = this.data.findIndex(dataItem => dataItem.id === item.id);
-                if (index > -1) {
-                  this.data.splice(index, 1);
-                  this.cd.markForCheck();
-                  this.itemDeleted.emit(item);
-                }
-              },
-              error: (err) => {
-                console.error('Soft delete error:', err);
-              }
-            });
-          } else {
-            this.alertDialogService.open('Zrušeno', 'Smazání položky bylo zrušeno.', 'warning');
-          }
-        }).catch(error => {
-          this.alertDialogService.open('Chyba', 'Při pokusu o smazání nastala chyba.', 'danger');
-          console.error('Dialog error:', error);
-        });
+        this.onDeleteAction(item);
         break;
       case 'edit':
         this.editFormOpened.emit(item);
@@ -164,6 +138,40 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
       default:
         console.warn('Neznámý typ tlačítka:', buttonType);
     }
+  }
+
+  /**
+   * Samostatná funkce pro smazání položky
+   */
+  public onDeleteAction(item: any): void {
+    this.confirmDialogService.open(
+      'Potvrzení smazání', 
+      'Opravdu si přejete smazat tuto položku?'
+    ).then(result => {
+      if (result) {
+        this.deleteData(item.id).subscribe({
+          next: () => {
+            this.alertDialogService.open('Úspěch', 'Položka byla úspěšně smazána.', 'success');
+            
+            // Odstranění z lokálního zobrazení
+            const index = this.data.findIndex(dataItem => dataItem.id === item.id);
+            if (index > -1) {
+              this.data.splice(index, 1);
+              this.cd.markForCheck();
+              this.itemDeleted.emit(item);
+            }
+          },
+          error: (err) => {
+            console.error('Delete error:', err);
+            this.alertDialogService.open('Chyba', 'Smazání se nezdařilo.', 'danger');
+          }
+        });
+      } else {
+        this.alertDialogService.open('Zrušeno', 'Smazání položky bylo zrušeno.', 'warning');
+      }
+    }).catch(error => {
+      console.error('Dialog error:', error);
+    });
   }
 
   get colspanValue(): number {
@@ -187,9 +195,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
         allData.forEach(item => {
           const row = this.columnDefinitions.map(column => {
             let value = this.getCellValue(item, column);
-            if (value === null || value === undefined) {
-              value = '';
-            }
+            if (value === null || value === undefined) value = '';
             return `"${String(value).replace(/"/g, '""')}"`;
           }).join(';');
           csv += row + '\n';
@@ -205,15 +211,13 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-        } else {
-          this.alertDialogService.open('Upozornění', 'Váš prohlížeč nepodporuje automatické stažení. Zkopírujte data ručně.', 'info');
         }
       } else {
         this.alertDialogService.open('Export', 'Žádná data k exportu.', 'warning');
       }
     } catch (error: any) {
-      this.alertDialogService.open('Chyba', 'Při exportu dat nastala chyba. Více informací v konzoli pro vývojáře.', 'danger');
       console.error('Export error:', error);
+      this.alertDialogService.open('Chyba', 'Při exportu nastala chyba.', 'danger');
     } finally {
       this.isLoading = false;
       this.cd.markForCheck();
