@@ -40,7 +40,7 @@
         "login_btn": "Přihlásit"
     },
     "projects": {
-        "header_1": "Posledních 5 dokončených projektů",
+        "header_1": "Poslední dokončené projekty",
         "table_header_title": "Název projektu",
         "table_header_duration": "Doba plnění",
         "table_header_client": "Zadavatel",

@@ -39,7 +39,7 @@
     "login_btn": "Log in"
   },
   "projects": {
-    "header_1": "Last 5 Completed Projects",
+    "header_1": "Last Completed Projects",
     "table_header_title": "Project Name",
     "table_header_duration": "Duration",
     "table_header_client": "Client",

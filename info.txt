@@ -4,9 +4,4 @@
 -dat paginaci tlacitka do komponentu at to neni na kazde page zvlast + lepsi UI
 --------------------------
 
-SPECHA
-salesman vygeneruje link a ten link bude mittreba na konci /123 a to se vlozi do neviditelneho pole ve formu a ten form se  odesle na muj backend a bude to prolinkovane takto 
-
-kde jsem zkoncil:
-kdyz se klikne v sales leads na form tak se vygeneruje odkaz -> ten form povede na verejny form a z linku: sales_lead_id=14 se vyplni ta 14 do neviditelneho pole ve formu a ta 14 se pak v db da do pole lead_id coz je vedlejsi klic a prolinkuje se to a zaroven se api podiva kde je majitel toho id14 leadu a vyplni jeho jmeno jako plan do te tabulky take 
-jak se to odesle zmenit status na formular odeslan
+udelat aby mohlo byt prihlaseni vice uzivatelu zaroven nejspis pres web session

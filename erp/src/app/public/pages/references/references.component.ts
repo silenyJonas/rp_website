@@ -46,9 +46,6 @@ export class ReferencesComponent implements OnInit, OnDestroy {
   projectsConfig: ProjectItemConfig[] = [
     { id: 1, nameKey: 'projects.project_1.name', durationKey: 'projects.project_1.duration', clientKey: 'projects.project_1.client', descriptionKey: 'projects.project_1.description' },
     { id: 2, nameKey: 'projects.project_2.name', durationKey: 'projects.project_2.duration', clientKey: 'projects.project_2.client', descriptionKey: 'projects.project_2.description' },
-    { id: 3, nameKey: 'projects.project_3.name', durationKey: 'projects.project_3.duration', clientKey: 'projects.project_3.client', descriptionKey: 'projects.project_3.description' },
-    { id: 4, nameKey: 'projects.project_4.name', durationKey: 'projects.project_4.duration', clientKey: 'projects.project_4.client', descriptionKey: 'projects.project_4.description' },
-    { id: 5, nameKey: 'projects.project_5.name', durationKey: 'projects.project_5.duration', clientKey: 'projects.project_5.client', descriptionKey: 'projects.project_5.description' }
   ];
 
   // Pole projektů s přeloženými texty

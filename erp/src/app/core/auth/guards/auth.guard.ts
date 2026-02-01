@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, take, switchMap } from 'rxjs/operators'; // Přidán switchMap
 import { AuthService } from '../auth.service';
 import { PermissionService } from '../services/permission.service';
 
@@ -19,18 +19,20 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> {
-    return this.authService.isLoggedIn$.pipe(
+    // Místo isLoggedIn$ použijeme přímo checkAuth(), který se ptá serveru
+    return this.authService.checkAuth().pipe(
       take(1),
       map(isLoggedIn => {
         if (!isLoggedIn) {
+          // Pokud server řekne, že token neplatí, smažeme data a jdeme na login
           return this.router.createUrlTree(['/auth/login']);
         }
 
-        // Získáme požadované oprávnění z definice routy
+        // --- KONTROLA OPRÁVNĚNÍ ---
         const requiredPermission = route.data['permission'] as string;
         
-        // Pokud routa vyžaduje oprávnění, zkontrolujeme ho v PermissionService
         if (requiredPermission) {
+          // checkAuth už v tap() metodě v AuthService naplnil PermissionService čerstvými daty
           if (this.permissionService.hasPermission(requiredPermission)) {
             return true;
           } else {
