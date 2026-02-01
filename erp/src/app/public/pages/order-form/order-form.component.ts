@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { BaseDataComponent } from '../../../admin/components/base-data/base-data.component';
-import { DataHandler } from '../../../core/services/data-handler.service'; // Uprav cestu podle potřeby
+import { DataHandler } from '../../../core/services/data-handler.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -14,12 +14,12 @@ import { finalize } from 'rxjs/operators';
   styleUrl: './order-form.component.css',
 })
 export class OrderFormComponent extends BaseDataComponent<any> implements OnInit {
-  // Definice endpointu pro BaseDataComponent
   override apiEndpoint: string = 'sales_orders';
   
   orderForm!: FormGroup;
   leadId: string | null = null;
   isSubmitted = false;
+  selectedFile: File | null = null;
 
   constructor(
     protected override dataHandler: DataHandler,
@@ -27,20 +27,15 @@ export class OrderFormComponent extends BaseDataComponent<any> implements OnInit
     private route: ActivatedRoute,
     private fb: FormBuilder
   ) {
-    // Volání konstruktoru BaseDataComponent
     super(dataHandler, cd);
   }
 
   override ngOnInit(): void {
-    // Inicializace BaseDataComponent (pokud tam máš logiku, kterou potřebuješ)
     super.ngOnInit();
-
-    // Extrakce ID z parametru (např. sales_lead_id=13)
     const param = this.route.snapshot.paramMap.get('leadParam');
     if (param && param.includes('=')) {
       this.leadId = param.split('=')[1];
     }
-
     this.initForm();
   }
 
@@ -57,26 +52,47 @@ export class OrderFormComponent extends BaseDataComponent<any> implements OnInit
     });
   }
 
+  // Pomocná metoda pro text tlačítka (fixuje NG5002)
+  get btnText(): string {
+    return this.isLoading ? 'Odesílám...' : 'Odeslat poptávku';
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
+  }
+
   onSubmit(): void {
     if (this.orderForm.valid) {
       this.isLoading = true;
       this.cd.detectChanges();
 
-      // Použití metody postData z BaseDataComponent
-      this.postData(this.orderForm.value).pipe(
+      const formData = new FormData();
+      Object.keys(this.orderForm.value).forEach(key => {
+        const value = this.orderForm.value[key];
+        if (value !== null && value !== undefined) {
+          formData.append(key, value);
+        }
+      });
+
+      if (this.selectedFile) {
+        formData.append('attachment', this.selectedFile, this.selectedFile.name);
+      }
+
+      this.uploadData<any>(formData).pipe(
         finalize(() => {
           this.isLoading = false;
           this.cd.detectChanges();
         })
       ).subscribe({
         next: (response) => {
-          console.log('Data úspěšně uložena přes API:', response);
           this.isSubmitted = true;
           this.cd.markForCheck();
         },
         error: (err) => {
-          console.error('Chyba při odesílání poptávky:', err);
-          // Zde můžeš přidat zobrazení chybové hlášky pro uživatele
+          console.error('Chyba při odesílání:', err);
         }
       });
     }

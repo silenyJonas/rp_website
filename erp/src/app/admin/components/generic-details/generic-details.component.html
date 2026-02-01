@@ -1,4 +1,3 @@
-
 <div class="popup-overlay" (mousedown)="onOverlayClick($event)">
   <div class="form-container" (click)="$event.stopPropagation()">
     <div class="form-header">
@@ -12,7 +11,23 @@
       <div *ngIf="itemData" class="details-list">
         <div *ngFor="let column of itemDetailColumns" class="details-item">
           <strong>{{ column.displayName }}:</strong>
-          {{ getFormattedValue(itemData, column.key, column) }}
+          
+          <ng-container [ngSwitch]="column.type">
+            
+            <div *ngSwitchCase="'file'">
+              <div *ngIf="getValueByPath(itemData, column.key) as fileUrl; else noFile">
+                <a [href]="fileUrl" target="_blank" class="attachment-link">
+                  📄 Otevřít přílohu
+                </a>
+              </div>
+              <ng-template #noFile><span class="text-muted">Není přiložena</span></ng-template>
+            </div>
+
+            <div *ngSwitchDefault>
+              {{ getFormattedValue(itemData, column.key, column) }}
+            </div>
+            
+          </ng-container>
         </div>
       </div>
     </div>

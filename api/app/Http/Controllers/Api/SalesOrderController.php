@@ -12,6 +12,7 @@ use App\Http\Requests\UpdateSalesOrderRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage; // Přidat na začátek souboru
 
 class SalesOrderController extends Controller
 {
@@ -118,16 +119,26 @@ class SalesOrderController extends Controller
         return response()->json(new SalesOrderResource($salesOrder));
     }
 
-    public function destroy(Request $request, $id): JsonResponse
-    {
-        $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
-        $item = SalesOrder::withTrashed()->findOrFail($id);
-        
-        $forceDelete ? $item->forceDelete() : $item->delete();
-        $this->logAction($request, $forceDelete ? 'hard_delete' : 'soft_delete', 'SalesOrder', "Smazání realizace ID: $id", $id);
 
-        return response()->json(null, 204);
+public function destroy(Request $request, $id): JsonResponse
+{
+    $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
+    $item = SalesOrder::withTrashed()->findOrFail($id);
+    
+    if ($forceDelete) {
+        // Pokud existuje cesta k souboru, smažeme ho z disku
+        if ($item->attachment_path) {
+            Storage::disk('public')->delete($item->attachment_path);
+        }
+        $item->forceDelete();
+    } else {
+        $item->delete(); // Soft delete - soubor ponecháme pro případnou obnovu
     }
+
+    $this->logAction($request, $forceDelete ? 'hard_delete' : 'soft_delete', 'SalesOrder', "Smazání realizace ID: $id", $id);
+
+    return response()->json(null, 204);
+}
 
     public function restore(Request $request, $id): JsonResponse
     {

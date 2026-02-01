@@ -1,77 +1,3 @@
-<!-- <div class="form-wrp">
-  <div class="contact-form">
-    
-    <ng-container *ngIf="!isSubmitted; else thankYouMessage">
-      <h2>Poptávkový formulář</h2>
-      
-      <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
-        <input type="hidden" formControlName="lead_id">
-
-        <div class="form-group">
-          <label>Jméno klienta <span class="required-asterisk">*</span></label>
-          <input type="text" formControlName="client_name">
-        </div>
-
-        <div class="form-group">
-          <label>IČO</label>
-          <input type="text" formControlName="ico">
-        </div>
-
-        <div class="form-group">
-          <label>Adresa klienta</label>
-          <input type="text" formControlName="client_address">
-        </div>
-
-        <div class="mobile-flex-stack" style="display: flex; gap: 20px;">
-          <div class="form-group" style="flex: 1;">
-            <label>Telefon klienta</label>
-            <input type="text" formControlName="client_phone">
-          </div>
-          <div class="form-group" style="flex: 1;">
-            <label>Email klienta<span class="required-asterisk">*</span></label>
-            <input type="email" formControlName="client_email">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Detailní popis objednávky <span class="required-asterisk">*</span></label>
-          <textarea formControlName="order_description" rows="4"></textarea>
-        </div>
-
-        <div class="checkbox-container">
-          <div class="checkbox-group">
-            <input type="checkbox" id="dataProcessingAgreement" formControlName="dataProcessingAgreement">
-            <label for="dataProcessingAgreement">
-              Souhlasím se zpracováním osobních údajů <span class="required-asterisk">*</span>
-            </label>
-          </div>
-          <a routerLink="/privacy-policy" target="_blank" class="privacy-policy-link">Zásady ochrany osobních údajů</a>
-        </div>
-
-        <p class="required-info">* Označuje povinné pole</p>
-
-        <button type="submit" class="submit-btn" [disabled]="orderForm.invalid">
-          <span>Odeslat poptávku</span>
-        </button>
-      </form>
-    </ng-container>
-
-    <ng-template #thankYouMessage>
-      <div class="success-container">
-        <div class="success-icon">✓</div>
-        <h2>Děkujeme za odeslání poptávky</h2>
-        <p class="success-text">
-          V nejbližší době vás bude kontaktovat technik, který s vámi dohodne konkrétní řešení.
-        </p>
-        
-        <button class="submit-btn" routerLink="/home">
-          <span>Odejít domů</span>
-        </button>
-      </div>
-    </ng-template>
-
-  </div>
-</div> -->
 <div class="form-wrp">
   <div class="contact-form">
     
@@ -129,8 +55,8 @@
 
         <p class="required-info">* Označuje povinné pole</p>
 
-        <button type="submit" class="submit-btn" [disabled]="orderForm.invalid">
-          <span>Odeslat poptávku</span>
+        <button type="submit" class="submit-btn" [disabled]="orderForm.invalid || isLoading">
+          <span>{{ btnText }}</span>
         </button>
       </form>
     </ng-container>

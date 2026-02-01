@@ -96,6 +96,7 @@ export const SALES_ORDER_DETAILS_COLUMNS: ItemDetailsColumns[] = [
   { key: 'client_email', displayName: 'Email', type: 'text' },
   { key: 'client_phone', displayName: 'Telefon', type: 'text' },
   { key: 'order_description', displayName: 'Popis realizace', type: 'text' },
+  { key: 'attachment_url', displayName: 'Příloha', type: 'file' }, 
   { key: 'created_at', displayName: 'Vytvořeno', type: 'date', format: 'medium' },
   { key: 'updated_at', displayName: 'Změněno', type: 'date', format: 'medium' }
 ];

@@ -21,12 +21,10 @@ class SalesOrder extends Model
         'client_phone',
         'client_email',
         'order_description',
-        'salesman_name' // <--- Nezapomeň na tohle!
+        'salesman_name',
+        'attachment_path' // Přidáno pro uložení cesty k souboru
     ];
 
-    /**
-     * Vazba na původní lead
-     */
     public function lead(): BelongsTo
     {
         return $this->belongsTo(SalesLead::class, 'lead_id');
