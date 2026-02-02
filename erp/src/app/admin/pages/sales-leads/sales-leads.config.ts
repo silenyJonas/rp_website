@@ -126,15 +126,6 @@ export const SALES_LEAD_FORM_FIELDS: InputDefinition[] = [
     show_in_create: true,
   },
   {
-    column_name: 'first_contact_date',
-    label: 'Datum prvního kontaktu',
-    type: 'date',
-    required: true,
-    editable: true,
-    show_in_edit: true,
-    show_in_create: true
-  },
-  {
     column_name: 'status',
     label: 'Aktuální stav',
     type: 'select',
@@ -204,7 +195,6 @@ export const SALES_LEAD_COLUMNS: ColumnDefinition[] = [
   { key: 'contact_other', header: 'Ostatní kontakt', type: 'text' },
   { key: 'location', header: 'Lokalita', type: 'text' },
   { key: 'salesman_name', header: 'Obchodník', type: 'text' },
-  { key: 'first_contact_date', header: 'Kontaktováno', type: 'date', format: 'short' },
   { key: 'next_step', header: 'Další krok', type: 'text' },
   { key: 'updated_at', header: 'Aktualizace', type: 'date', format: 'short' }
 ];
@@ -239,7 +229,6 @@ export const SALES_LEAD_DETAILS_COLUMNS: ItemDetailsColumns[] = [
   { key: 'source_url', displayName: 'Odkaz (URL)', type: 'text' },
   { key: 'status', displayName: 'Stav', type: 'text' },
   { key: 'priority', displayName: 'Priorita', type: 'text' },
-  { key: 'first_contact_date', displayName: 'První kontakt', type: 'date', format: 'medium' },
   { key: 'last_contact_date', displayName: 'Poslední kontakt', type: 'date', format: 'medium' },
   { key: 'next_step', displayName: 'Následný krok', type: 'text' },
   { key: 'description', displayName: 'Popis/Poznámka', type: 'text' },

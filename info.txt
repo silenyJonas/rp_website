@@ -3,8 +3,5 @@
 -na dashboardu budou vseobecne info a statistiky treba pocet zamestnancu nebo pocet novych veci atd
 -dat paginaci tlacitka do komponentu at to neni na kazde page zvlast + lepsi UI
 --------------------------
-
-
 zkontrolovat edity aby fungovaly
-
-u poptavkoveho formu moznost vlozit soubor
+udelat knowledge base aktualizovat

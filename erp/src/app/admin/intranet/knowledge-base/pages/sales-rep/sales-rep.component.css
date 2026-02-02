@@ -1,270 +1,379 @@
+/* --- ZÁKLADNÍ KONTEJNER --- */
 .kb-article-container {
-  max-width: 950px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 30px;
-  font-family: 'Inter', -apple-system, sans-serif;
+  padding: 40px 20px;
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
   color: #d4d4d8;
   line-height: 1.6;
+  background-color: transparent;
+}
+
+/* --- HLAVIČKA --- */
+.article-header {
+  margin-bottom: 30px;
 }
 
 .breadcrumb {
-  font-family: monospace;
-  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
   color: #52525b;
   text-transform: uppercase;
-  margin-bottom: 10px;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
 }
 
 h1 {
-  font-size: 2.4rem;
-  color: #fff;
+  font-size: 2.8rem;
+  color: #ffffff;
   font-weight: 800;
   margin-bottom: 15px;
-  letter-spacing: -0.02em;
-}
-
-p {
-  margin: 0;
+  letter-spacing: -0.03em;
 }
 
 .lead-text {
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   color: #a1a1aa;
-  max-width: 800px;
-  margin-bottom: 40px;
+  max-width: 850px;
 }
 
 .section-divider {
   border: 0;
-  border-top: 1px solid #1e1e20;
+  border-top: 1px solid #27272a;
   margin: 40px 0;
 }
 
+/* --- SEKCE A NADPISY --- */
 .kb-section {
-  margin-bottom: 45px;
+  margin-bottom: 60px;
 }
 
 h2 {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
   color: #a67dff;
-  margin-bottom: 20px;
-  border-left: 2px solid #a67dff;
+  margin-bottom: 25px;
+  border-left: 3px solid #a67dff;
   padding-left: 15px;
 }
 
-/* Workflow steps */
+/* --- WORKFLOW (KROKY) --- */
 .process-flow {
   display: flex;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 20px;
+  margin-top: 25px;
 }
 
 .flow-item {
   flex: 1;
-  background: #161618;
-  padding: 15px;
-  border-radius: 8px;
+  background: #111113;
+  padding: 20px;
+  border-radius: 12px;
   border: 1px solid #27272a;
+  transition: all 0.3s ease;
 }
 
-.flow-item.active { border-color: rgba(166, 125, 255, 0.4); }
+.flow-item.active { 
+  border-color: rgba(166, 125, 255, 0.4); 
+  background: rgba(166, 125, 255, 0.03);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
 
 .step {
   display: block;
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 5px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 8px;
+  color: #a67dff;
 }
 
-.flow-item p { font-size: 0.8rem; color: #71717a; margin: 0; }
+.flow-item p { 
+  font-size: 0.85rem; 
+  color: #71717a; 
+  margin: 0; 
+}
 
-/* Leads Grid - 2 sloupce */
+/* --- GRID PRO EVIDENCE (LEADS) --- */
 .leads-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 25px;
 }
 
 .leads-block {
-  background: #111113;
+  background: #09090b;
   border: 1px solid #27272a;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
 .block-header {
-  background: #1a1a1c;
-  padding: 10px 15px;
-  font-size: 0.75rem;
+  background: #18181b;
+  padding: 12px 18px;
+  font-size: 0.8rem;
   font-weight: 700;
-  color: #fff;
+  color: #ffffff;
   border-bottom: 1px solid #27272a;
 }
 
-.form-guide { list-style: none; padding: 0; margin: 0; }
-.form-guide li {
-  padding: 12px 15px;
-  border-bottom: 1px solid #1a1a1c;
+.form-guide { 
+  list-style: none; 
+  padding: 0; 
+  margin: 0; 
 }
 
-.label { display: block; font-size: 0.8rem; color: #a67dff; font-weight: 600; }
-.desc { font-size: 0.75rem; color: #71717a; }
+.form-guide li {
+  padding: 15px 18px;
+  border-bottom: 1px solid #18181b;
+  transition: background 0.2s ease;
+}
 
-/* Cards */
+.form-guide li:last-child { border-bottom: none; }
+
+.label { 
+  display: block; 
+  font-size: 0.85rem; 
+  color: #a67dff; 
+  font-weight: 600; 
+  margin-bottom: 2px;
+}
+
+.desc { 
+  font-size: 0.8rem; 
+  color: #71717a; 
+}
+
+/* --- KARTY (INFO & WARNING) --- */
 .grid-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 25px;
 }
 
 .info-card {
-  background: #111113;
-  padding: 20px;
-  border-radius: 8px;
+  background: #09090b;
+  padding: 25px;
+  border-radius: 10px;
   border: 1px solid #27272a;
 }
 
-.info-card h3 { font-size: 0.9rem; color: #fff; margin-bottom: 10px; }
-.info-card.warning { border-color: #450a0a; }
-
-.list-small { padding-left: 20px; font-size: 0.85rem; color: #a1a1aa; }
-.list-small li { margin-bottom: 8px; }
-
-.method-card {
-  background: #0d0d0f;
-  padding: 12px;
-  border-left: 2px solid #3f3f46;
-  font-size: 0.85rem;
+.info-card h3 { 
+  font-size: 1rem; 
+  color: #ffffff; 
+  margin-bottom: 15px; 
 }
 
-.small-text { font-size: 0.8rem; margin-bottom: 10px; color: #a1a1aa; }
+.info-card.warning { 
+  background: rgba(127, 29, 29, 0.05);
+  border-color: #7f1d1d; 
+}
 
-/* Tables - Obecné */
+.info-card.warning h3 { color: #f87171; }
+
+.list-small { 
+  padding-left: 18px; 
+  font-size: 0.9rem; 
+  color: #a1a1aa; 
+}
+
+.list-small li { margin-bottom: 10px; }
+
+.method-card {
+  background: #09090b;
+  padding: 15px;
+  border-left: 3px solid #3f3f46;
+  font-size: 0.9rem;
+  border-radius: 0 4px 4px 0;
+}
+
+.small-text { 
+  font-size: 0.85rem; 
+  margin-bottom: 12px; 
+  color: #a1a1aa; 
+}
+
+/* --- TABULKY --- */
 .data-table {
   width: 100%;
   border-collapse: collapse;
+  background: #09090b;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #27272a;
 }
 
 .data-table th {
+  background: #18181b;
   text-align: left;
-  font-size: 0.7rem;
-  color: #52525b;
-  padding: 10px;
+  font-size: 0.75rem;
+  color: #a1a1aa;
+  padding: 12px 15px;
   border-bottom: 1px solid #27272a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .data-table td {
-  padding: 15px 10px;
-  border-bottom: 1px solid #161618;
-  font-size: 0.9rem;
-}
-
-/* Úprava specificky pro cenovou tabulku (Sekce 06) */
-.price-table {
-  table-layout: fixed; /* Zajišťuje, že sloupce mají stejnou šířku */
-}
-
-.price-table th, 
-.price-table td {
-  text-align: center; /* Centrování textu na střed */
-  vertical-align: middle;
-  padding: 15px 5px;
-  width: 16.66%; /* Každý z 6 sloupců má přesně 1/6 šířky */
-}
-
-.price-table td { font-size: 0.8rem; }
-
-.accent { color: #a67dff; font-weight: 700; }
-
-/* Boxes */
-.alert-box {
-  background: rgba(166, 125, 255, 0.05);
-  border: 1px solid #a67dff;
   padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  margin-top: 20px;
-  font-size: 0.85rem;
+  border-bottom: 1px solid #18181b;
+  font-size: 0.95rem;
 }
 
-.alert-box.light { border-color: #3f3f46; background: transparent; color: #71717a; }
+.price-table { table-layout: fixed; }
+.price-table th, .price-table td { text-align: center; }
+
+.accent { 
+  color: #a67dff; 
+  font-weight: 700; 
+}
+
+/* --- BOXY A POZNÁMKY --- */
+.alert-box {
+  background: rgba(166, 125, 255, 0.08);
+  border: 1px solid #a67dff;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 25px 0;
+  font-size: 0.95rem;
+  color: #e4e4e7;
+}
 
 .note-box {
-  background: #0c0c0e;
-  padding: 15px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  margin-top: 15px;
+  background: #18181b;
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-top: 20px;
   color: #a1a1aa;
 }
 
-.highlight-note { border-left: 2px solid #a67dff; }
-
-.article-footer {
-  margin-top: 50px;
-  padding-top: 20px;
-  border-top: 1px solid #1e1e20;
-  text-align: center;
-  color: #52525b;
+.highlight-note { 
+  border-left: 4px solid #a67dff; 
 }
 
-@media (max-width: 768px) {
-  .leads-grid, .grid-layout, .process-flow { grid-template-columns: 1fr; flex-direction: column; }
-  .price-table { 
-    display: block; 
-    overflow-x: auto; 
-    table-layout: auto; /* Na mobilu se vrátí k automatické šířce pro čitelnost */
-  }
-}
-/* --- AKTUALIZOVANÁ PATIČKA --- */
+/* --- PATIČKA --- */
 .article-footer {
-  margin-top: 60px;
-  padding: 30px 0;
-  border-top: 1px solid #1e1e20;
-  color: #52525b;
+  margin-top: 80px;
+  padding: 40px 0;
+  border-top: 1px solid #27272a;
 }
 
 .footer-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
 }
 
 .footer-contact p {
-  font-size: 0.8rem;
-  margin-bottom: 5px;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
 }
 
-.footer-contact strong {
-  color: #a1a1aa;
-}
+.footer-contact strong { color: #ffffff; }
 
 .discord-link-small {
-  color: #5865F2;
+  background: #5865F2;
+  color: #ffffff;
   text-decoration: none;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  padding: 8px 16px;
-  border: 1px solid rgba(88, 101, 242, 0.3);
-  border-radius: 4px;
-  transition: all 0.2s ease;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 6px;
+  transition: opacity 0.2s;
 }
 
-.discord-link-small:hover {
-  background: rgba(88, 101, 242, 0.1);
-  border-color: #5865F2;
-}
 
-/* Responzivita pro footer */
-@media (max-width: 768px) {
+/* --- RESPONZIVITA --- */
+@media (max-width: 850px) {
+  .leads-grid, .grid-layout, .process-flow { 
+    grid-template-columns: 1fr; 
+    flex-direction: column; 
+  }
+  
+  h1 { font-size: 2.2rem; }
+  
   .footer-content {
     flex-direction: column;
     text-align: center;
+    gap: 30px;
   }
+  
+  .price-table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+/* --- DECISION CARDS (Kdy poslat) --- */
+.decision-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.decision-card {
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #27272a;
+}
+
+.decision-card h3 {
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+.decision-card ul {
+  padding-left: 20px;
+  margin: 0;
+  font-size: 0.85rem;
+  color: #a1a1aa;
+}
+
+.decision-card ul li {
+  margin-bottom: 10px;
+}
+
+.decision-card.negative {
+  background: rgba(239, 68, 68, 0.03);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.decision-card.negative h3 { color: #ef4444; }
+
+.decision-card.positive {
+  background: rgba(34, 197, 94, 0.03);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.decision-card.positive h3 { color: #22c55e; }
+
+/* --- ACTION BLOCK --- */
+.action-block {
+  border: 1px solid #a67dff !important;
+  background: linear-gradient(145deg, #09090b, #111113) !important;
+}
+
+.action-content {
+  padding: 20px;
+  text-align: center;
+}
+
+.action-content p {
+  font-size: 0.85rem;
+  margin-bottom: 15px;
+}
+
+.action-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  background: #a67dff;
+  color: #000;
+  font-weight: 800;
+  font-size: 0.75rem;
+  border-radius: 20px;
+  text-transform: uppercase;
 }

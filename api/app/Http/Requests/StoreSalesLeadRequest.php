@@ -11,7 +11,7 @@ class StoreSalesLeadRequest extends FormRequest
     {
         return [
             'subject_name'       => ['required', 'string', 'max:255'],
-            'first_contact_date' => ['required', 'date'],
+            'first_contact_date' => ['nullable', 'date'],
             'source_channel'     => ['required', 'string', 'max:255'],
             'user_login_id'      => ['nullable', 'integer'],
             'salesman_name'      => ['nullable', 'string', 'max:255'],
