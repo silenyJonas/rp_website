@@ -21,6 +21,7 @@ import { ContactsComponent } from './intranet/knowledge-base/pages/contacts/cont
 import { EditNewsComponent } from './pages/edit-news/edit-news.component';
 import { SalesOrdersComponent } from './pages/sales-orders/sales-orders.component';
 import { SupportFormComponent } from './intranet/knowledge-base/pages/support-form/support-form.component';
+import { SupportTicketsComponent } from './pages/support-tickets/support-tickets.component';
 const routes: Routes = [
   // SEKCE 1: Klasický Admin se sidebarem
   {
@@ -38,6 +39,7 @@ const routes: Routes = [
       { path: 'sales-leads', component: SalesLeadsComponent, data: { permission: 'view-sales-leads' } },
       { path: 'edit-news', component: EditNewsComponent, data: { permission: 'view-news' } },
       { path: 'sales-orders', component: SalesOrdersComponent, data: { permission: 'view-sales-orders' } },
+      { path: 'support-tickets', component: SupportTicketsComponent, data: { permission: 'view-support-tickets' } },
     ]
   },
 

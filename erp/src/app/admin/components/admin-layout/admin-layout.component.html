@@ -57,6 +57,9 @@
         <li *appHasPermission="'view-news'">
           <a routerLink="/admin/edit-news" routerLinkActive="active">Edit News</a>
         </li>
+        <li *appHasPermission="'view-support-tickets'">
+          <a routerLink="/admin/support-tickets" routerLinkActive="active">Tickets</a>
+        </li>
         <li *appHasPermission="'view-business-logs'">
           <a routerLink="/admin/business-logs" routerLinkActive="active">Business Logs</a>
         </li>

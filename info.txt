@@ -5,3 +5,5 @@
 --------------------------
 zkontrolovat edity aby fungovaly
 udelat knowledge base aktualizovat
+
+view-support-tickets
