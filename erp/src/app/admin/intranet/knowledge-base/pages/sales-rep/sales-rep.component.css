@@ -285,7 +285,9 @@ h2 {
   transition: opacity 0.2s;
 }
 
-
+.m-t-20{
+  margin-top: 20px;
+}
 /* --- RESPONZIVITA --- */
 @media (max-width: 850px) {
   .leads-grid, .grid-layout, .process-flow { 

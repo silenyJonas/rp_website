@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\TranslationController;
 use App\Http\Controllers\Api\SalesLeadController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\SalesOrderController;
+use App\Http\Controllers\Api\SupportTicketController; // Import nového controlleru
 
 Route::get('/sanctum/csrf-cookie', function (Request $request) {
     return response()->json([], 204);
@@ -23,6 +24,7 @@ Route::post('/refresh', [AuthController::class, 'refresh']);
 // Veřejné odesílání formulářů (nepotřebuje token)
 Route::post('raw_request_commissions', [RawRequestCommissionController::class, 'store']);
 Route::post('sales_orders', [SalesOrderController::class, 'store']);
+
 
 // --- ROUTY VYŽADUJÍCÍ AUTENTIZACI (Protected) ---
 Route::middleware('auth:sanctum')->group(function () {
@@ -39,6 +41,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{businessLog}/details', [BusinessLogController::class, 'showDetails']);
     });
     
+    // Support Tickets (NOVÉ)
+    Route::prefix('support_tickets')->group(function () {
+        Route::get('/{supportTicket}/details', [SupportTicketController::class, 'show']); 
+        Route::post('/{id}/restore', [SupportTicketController::class, 'restore']);
+        Route::delete('/force-delete-all', [SupportTicketController::class, 'forceDeleteAllTrashed']);
+    });
+    Route::apiResource('support_tickets', SupportTicketController::class);
+
     // RawRequestCommission
     Route::prefix('raw_request_commissions')->group(function () {
         Route::get('/{rawRequestCommission}/details', [RawRequestCommissionController::class, 'showDetails']);
@@ -49,7 +59,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // SalesOrder (Administrace)
     Route::prefix('sales_orders')->group(function () {
-        // Přidána chybějící routa pro detaily, kterou volá tvůj Angular
         Route::get('/{salesOrder}/details', [SalesOrderController::class, 'show']); 
         Route::post('/{id}/restore', [SalesOrderController::class, 'restore']);
         Route::delete('/force-delete-all', [SalesOrderController::class, 'forceDeleteAllTrashed']);

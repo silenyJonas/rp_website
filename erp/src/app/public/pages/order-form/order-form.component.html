@@ -39,8 +39,14 @@
         </div>
 
         <div class="form-group">
-          <label>Příloha (specifikace, nákres, fotka)</label>
-          <input type="file" (change)="onFileSelected($event)" style="margin-top: 5px;">
+            <label>Příloha max 10MB (pdf,doc,docx,jpg,jpeg,png,zip)</label>
+            <div class="file-drop-area" [class.has-file]="selectedFile">
+                <span class="file-msg">
+                <span class="upload-icon">{{ selectedFile ? '✓' : '+' }}</span> 
+                <span class="file-text">{{ selectedFile ? selectedFile.name : 'Klikněte nebo přetáhněte soubor sem' }}</span>
+                </span>
+                <input type="file" class="file-input" (change)="onFileSelected($event)">
+            </div>
         </div>
 
         <div class="checkbox-container">
