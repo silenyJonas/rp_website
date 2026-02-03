@@ -1,63 +1,71 @@
-/* --- Header (Původní styl) --- */
 header {
-  height: 40px;
+  height: 48px;
   width: 100%;
-  border-bottom: 1px solid rgb(121, 121, 121);
+  border-bottom: 1px solid rgb(200, 200, 200);
   display: flex;
   align-items: center;
   background-color: #fff;
   box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 1100;
 }
 
-.header-info-group { display: flex; align-items: center; }
-.header-item { padding: 3px 5px; display: flex; align-items: center; color: #424242; font-size: 0.9rem; }
-.header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; padding-right: 15px; }
+.header-info-group { display: flex; align-items: center; overflow: hidden; }
+.header-item { padding: 3px 10px; display: flex; align-items: center; color: #424242; font-size: 0.9rem; white-space: nowrap; }
+.user-text-truncate { overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 15px; padding-right: 15px; }
+
+.bug-report-btn {
+  display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #d32f2f;
+  text-decoration: none; font-weight: 600; border: 1px solid #d32f2f;
+  padding: 5px 12px; border-radius: 4px; transition: all 0.2s ease;
+}
+.bug-report-btn:hover { background-color: #d32f2f; color: white; }
+.bug-icon { font-size: 1rem; }
+
+.wiki-link { font-size: 0.85rem; color: #1e88e5; text-decoration: none; font-weight: 600; }
+.wiki-link:hover { text-decoration: underline; }
 
 .menu-toggle-btn {
-  background: none; border: none; font-size: 1.2rem; cursor: pointer;
-  padding: 0 15px; color: #1e88e5;
+  background: none; border: none; font-size: 1.4rem; cursor: pointer;
+  padding: 0 15px; color: #1e88e5; display: flex; align-items: center;
 }
 
-/* --- Layout --- */
 .admin-dashboard-wrapper {
   display: flex;
-  min-height: calc(100vh - 41px);
+  min-height: calc(100vh - 48px);
   background-color: #f0f2f5;
   position: relative;
 }
 
 .admin-sidebar {
   background-color: #ffffff;
-  border-right: 1px solid rgb(121, 121, 121);
+  border-right: 1px solid rgb(200, 200, 200);
   display: flex;
   flex-direction: column;
   position: relative;
   flex-shrink: 0;
-  overflow: visible;
+  transition: width 0.2s ease, transform 0.3s ease;
+  z-index: 1050;
 }
 
-/* Sbalený stav (Azure style) */
-.collapsed .admin-sidebar {
-  width: 50px !important;
+@media (min-width: 769px) {
+  .collapsed .admin-sidebar { width: 50px !important; }
+  .collapsed .nav-text { display: none; }
+  .collapsed .nav-icon { margin-right: 0; width: 100%; text-align: center; }
 }
-.collapsed .nav-text { display: none; }
-.collapsed .nav-icon { margin-right: 0; width: 100%; text-align: center; }
 
-/* Resizer Handle */
 .resizer-handle {
-  position: absolute;
-  top: 0; right: -3px; width: 6px; height: 100%;
+  position: absolute; top: 0; right: -3px; width: 6px; height: 100%;
   cursor: col-resize; z-index: 10;
-  transition: background 0.2s;
 }
-.resizer-handle:hover { background: rgba(30, 136, 229, 0.5); }
-.resizing { cursor: col-resize; } /* Změna kurzoru nad celou plochou při dragu */
+.resizer-handle:hover { background: rgba(30, 136, 229, 0.4); }
 
-/* Navigace */
 .admin-nav { flex-grow: 1; overflow-y: auto; overflow-x: hidden; }
 .admin-nav ul { list-style: none; padding: 0; margin: 0; }
 .admin-nav li a {
-  display: flex; align-items: center; padding: 10px 10px;
+  display: flex; align-items: center; padding: 12px 12px;
   color: #424242; text-decoration: none; font-size: 0.85rem;
   white-space: nowrap; border-left: 3px solid transparent;
 }
@@ -65,20 +73,39 @@ header {
 .admin-nav li a.active {
   background-color: #bbdefb; color: #1e88e5; font-weight: 600; border-left-color: #1e88e5;
 }
-.nav-icon { margin-right: 12px; font-size: 1.1rem; min-width: 20px; }
 
-/* Footer */
-.sidebar-footer { border-top: 1px solid #eceff1; padding: 5px 0; }
-.logout-btn {
-  width: 100%; background: none; border: none; display: flex;
-  align-items: center; padding: 10px 15px; color: #d32f2f; cursor: pointer;
-}
+/* Speciální barva pro logout v seznamu */
+.admin-nav li a.logout-nav-item { color: #d32f2f; }
+.admin-nav li a.logout-nav-item:hover { background-color: #ffebee; }
 
-/* Ostatní UI prvky */
-.info-icon-circle, .kb-icon-circle {
-  display: flex; align-items: center; justify-content: center;
-  width: 26px; height: 26px; background-color: #1e88e5; color: white;
-  border-radius: 50%; font-weight: bold; font-size: 15px;
+.nav-icon { margin-right: 12px; font-size: 1.1rem; min-width: 20px; text-align: center; }
+
+.sidebar-overlay { display: none; }
+
+@media (max-width: 768px) {
+  .time-hide-mobile { display: none; }
+  .bug-report-btn { padding: 5px 8px; font-size: 0; } 
+  .bug-icon { font-size: 1.2rem; }
+
+  .admin-dashboard-wrapper { display: block; }
+  .sidebar-overlay {
+    display: block; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4); z-index: 1200;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+  }
+  .admin-sidebar {
+    position: fixed; top: 0; bottom: 0; left: 0;
+    width: 260px !important;
+    transform: translateX(-100%);
+    z-index: 1300;
+    height: 100vh;
+  }
+  .mobile-open .sidebar-overlay { opacity: 1; pointer-events: auto; }
+  .mobile-open .admin-sidebar { transform: translateX(0); box-shadow: 5px 0 15px rgba(0,0,0,0.15); }
+  .mobile-open .nav-text { display: inline-block !important; }
+  .mobile-open .nav-icon { margin-right: 12px !important; width: auto !important; }
+  .resizer-handle { display: none; }
+  .admin-content { width: 100%; padding: 15px; box-sizing: border-box; }
 }
 
 .admin-content { flex-grow: 1; overflow-y: auto; padding: 20px; background: white; }

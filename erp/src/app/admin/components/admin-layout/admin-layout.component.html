@@ -1,85 +1,92 @@
 <header>
   <div class="header-info-group">
     <button class="menu-toggle-btn" (click)="toggleMenu()">☰</button>
-    <div class="header-item">
-      <ng-container *ngIf="isLoggedIn; else notLoggedIn">{{ userEmail }} |</ng-container>
-      <ng-template #notLoggedIn>Nepřihlášený uživatel |</ng-template>
+    
+    <div class="header-item user-text-truncate">
+      <ng-container *ngIf="isLoggedIn; else notLoggedIn">{{ userEmail }}</ng-container>
+      <ng-template #notLoggedIn>Nepřihlášený</ng-template>
     </div>
-    <div class="header-item" *ngIf="isLoggedIn && userRole">{{ userRole }} |</div>
-    <div class="header-item">{{ currentDate | date:'HH:mm:ss d. MMMM yyyy' }}</div>
+
+    <div class="header-item time-hide-mobile" *ngIf="isLoggedIn && userRole">| {{ userRole }}</div>
+    <div class="header-item time-hide-mobile">| {{ currentDate | date:'HH:mm:ss d. MMMM yyyy' }}</div>
   </div>
 
   <div class="header-item header-right">
-    <div class="info-tooltip" title="Systém je ve fázi aktivního vývoje...">
-      <span class="info-icon-circle">!</span>
-    </div>
-    <a routerLink="/admin/intranet/knowledge-base" class="kb-link" title="Knowledge Base">
-      <span class="kb-icon-circle">?</span>
+    <a routerLink="/admin/intranet/knowledge-base/support-form" class="bug-report-btn">
+      <span class="bug-icon">🐞</span> Nahlásit bug
+    </a>
+    <a routerLink="/admin/intranet/knowledge-base" class="wiki-link">
+      RPSW Wiki
     </a>
   </div>
 </header>
 
-<div class="admin-dashboard-wrapper" [class.collapsed]="!isMenuOpen" [class.resizing]="isResizing">
+<div class="admin-dashboard-wrapper" 
+     [class.collapsed]="!isMenuOpen" 
+     [class.mobile-open]="isMenuOpen">
+  
+  <div class="sidebar-overlay" (click)="toggleMenu()"></div>
+
   <aside class="admin-sidebar" [style.width.px]="isMenuOpen ? sidebarWidth : 50">
     <nav class="admin-nav">
       <ul>
         <li *appHasPermission="'view-dashboard'">
-          <a routerLink="/admin/dashboard" routerLinkActive="active" title="Dashboard">
+          <a routerLink="/admin/dashboard" routerLinkActive="active" (click)="onLinkClick()" title="Dashboard">
             <span class="nav-icon">📊</span><span class="nav-text">Dashboard</span>
           </a>
         </li>
         <li *appHasPermission="'view-user-requests'">
-          <a routerLink="/admin/user-request" routerLinkActive="active" title="User Requests">
-            <span class="nav-icon">👤</span><span class="nav-text">User Requests</span>
+          <a routerLink="/admin/user-request" routerLinkActive="active" (click)="onLinkClick()" title="User Requests">
+            <span class="nav-icon">📝</span><span class="nav-text">Webový formulář</span>
           </a>
         </li>
         <li *appHasPermission="'view-sales-leads'">
-          <a routerLink="/admin/sales-leads" routerLinkActive="active" title="Sales Leads">
-            <span class="nav-icon">🎯</span><span class="nav-text">Sales Leads</span>
+          <a routerLink="/admin/sales-leads" routerLinkActive="active" (click)="onLinkClick()" title="Sales Leads">
+            <span class="nav-icon">🎯</span><span class="nav-text">Obchodní Leady</span>
           </a>
         </li>
         <li *appHasPermission="'view-sales-orders'">
-          <a routerLink="/admin/sales-orders" routerLinkActive="active" title="Sales Orders">
-            <span class="nav-icon">📦</span><span class="nav-text">Sales Orders</span>
+          <a routerLink="/admin/sales-orders" routerLinkActive="active" (click)="onLinkClick()" title="Sales Orders">
+            <span class="nav-icon">📦</span><span class="nav-text">Přijaté poptávky</span>
           </a>
         </li>
         <li *appHasPermission="'manage-administrators'">
-          <a routerLink="/admin/administrators" routerLinkActive="active" title="Administrátoři">
+          <a routerLink="/admin/administrators" routerLinkActive="active" (click)="onLinkClick()" title="Administrátoři">
             <span class="nav-icon">🛡️</span><span class="nav-text">Administrátoři</span>
           </a>
         </li>
         <li *appHasPermission="'view-edit-website'">
-          <a routerLink="/admin/edit-website" routerLinkActive="active" title="Edit Website">
-            <span class="nav-icon">🌐</span><span class="nav-text">Edit Website</span>
+          <a routerLink="/admin/edit-website" routerLinkActive="active" (click)="onLinkClick()" title="Edit Website">
+            <span class="nav-icon">💻</span><span class="nav-text">Správa Webu</span>
           </a>
         </li>
         <li *appHasPermission="'view-news'">
-          <a routerLink="/admin/edit-news" routerLinkActive="active" title="Edit News">
-            <span class="nav-icon">📰</span><span class="nav-text">Edit News</span>
+          <a routerLink="/admin/edit-news" routerLinkActive="active" (click)="onLinkClick()" title="Edit News">
+            <span class="nav-icon">📰</span><span class="nav-text">Správa Novinek</span>
           </a>
         </li>
         <li *appHasPermission="'view-support-tickets'">
-          <a routerLink="/admin/support-tickets" routerLinkActive="active" title="Tickets">
-            <span class="nav-icon">🎫</span><span class="nav-text">Tickets</span>
+          <a routerLink="/admin/support-tickets" routerLinkActive="active" (click)="onLinkClick()" title="Tickets">
+            <span class="nav-icon">🎫</span><span class="nav-text">Helpdesk Tikety</span>
           </a>
         </li>
         <li *appHasPermission="'view-business-logs'">
-          <a routerLink="/admin/business-logs" routerLinkActive="active" title="Business Logs">
-            <span class="nav-icon">📜</span><span class="nav-text">Business Logs</span>
+          <a routerLink="/admin/business-logs" routerLinkActive="active" (click)="onLinkClick()" title="Business Logs">
+            <span class="nav-icon">📑</span><span class="nav-text">Logování</span>
           </a>
         </li>
         <li *appHasPermission="'view-personal-info'">
-          <a routerLink="/admin/personal-info" routerLinkActive="active" title="Osobní Informace">
-            <span class="nav-icon">🆔</span><span class="nav-text">Osobní Informace</span>
+          <a routerLink="/admin/personal-info" routerLinkActive="active" (click)="onLinkClick()" title="Osobní Informace">
+            <span class="nav-icon">👤</span><span class="nav-text">Osobní Informace</span>
+          </a>
+        </li>
+        <li>
+          <a href="javascript:void(0)" (click)="logout()" title="Logout" class="logout-nav-item">
+            <span class="nav-icon">🚪</span><span class="nav-text">Odhlásit se</span>
           </a>
         </li>
       </ul>
     </nav>
-    <div class="sidebar-footer">
-      <button class="logout-btn" (click)="logout()">
-        <span class="nav-icon">🚪</span><span class="nav-text">Logout</span>
-      </button>
-    </div>
 
     <div *ngIf="isMenuOpen" class="resizer-handle" (mousedown)="startResizing($event)"></div>
   </aside>

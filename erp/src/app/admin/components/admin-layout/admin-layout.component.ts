@@ -19,7 +19,6 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean = false;
   currentDate: Date = new Date();
   
-  // Stavy sidebaru
   isMenuOpen: boolean = true;
   sidebarWidth: number = 200; 
   isResizing: boolean = false;
@@ -38,12 +37,19 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    // Načtení uložených preferencí
-    const savedWidth = localStorage.getItem('admin_sidebar_width');
-    if (savedWidth) this.sidebarWidth = parseInt(savedWidth, 10);
-    
-    const savedState = localStorage.getItem('admin_menu_open');
-    this.isMenuOpen = savedState !== null ? savedState === 'true' : true;
+    if (typeof window !== 'undefined') {
+      const savedWidth = localStorage.getItem('admin_sidebar_width');
+      if (savedWidth) this.sidebarWidth = parseInt(savedWidth, 10);
+      
+      const savedState = localStorage.getItem('admin_menu_open');
+      
+      // Detekce mobilu při načtení
+      if (window.innerWidth <= 768) {
+        this.isMenuOpen = false; 
+      } else {
+        this.isMenuOpen = savedState !== null ? savedState === 'true' : true;
+      }
+    }
 
     this.authSubscription = this.authService.isLoggedIn$.subscribe(loggedIn => {
       this.isLoggedIn = loggedIn;
@@ -64,20 +70,31 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
-    localStorage.setItem('admin_menu_open', this.isMenuOpen.toString());
+    // Ukládáme stav jen na desktopu, na mobilu chceme vždy začínat zavření
+    if (window.innerWidth > 768) {
+      localStorage.setItem('admin_menu_open', this.isMenuOpen.toString());
+    }
     this.cdr.detectChanges();
   }
 
-  // --- Resize Logika ---
+  onLinkClick(): void {
+    // Na mobilu po kliknutí na odkaz menu zavřeme
+    if (window.innerWidth <= 768) {
+      this.isMenuOpen = false;
+      this.cdr.detectChanges();
+    }
+  }
+
   startResizing(event: MouseEvent): void {
-    this.isResizing = true;
-    event.preventDefault(); // Zabrání označování textu při dragu
+    if (window.innerWidth > 768) {
+      this.isResizing = true;
+      event.preventDefault();
+    }
   }
 
   @HostListener('window:mousemove', ['$event'])
   onMouseMove(event: MouseEvent): void {
     if (!this.isResizing) return;
-    
     let newWidth = event.clientX;
     if (newWidth >= this.minWidth && newWidth <= this.maxWidth) {
       this.sidebarWidth = newWidth;
