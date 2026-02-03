@@ -1,76 +1,87 @@
 <header>
   <div class="header-info-group">
+    <button class="menu-toggle-btn" (click)="toggleMenu()">☰</button>
     <div class="header-item">
-      <ng-container *ngIf="isLoggedIn; else notLoggedIn">
-        {{ userEmail }} |
-      </ng-container>
-      <ng-template #notLoggedIn>
-        Nepřihlášený uživatel |
-      </ng-template>
+      <ng-container *ngIf="isLoggedIn; else notLoggedIn">{{ userEmail }} |</ng-container>
+      <ng-template #notLoggedIn>Nepřihlášený uživatel |</ng-template>
     </div>
-
-    <div class="header-item" *ngIf="isLoggedIn && userRole">
-      {{ userRole }} |
-    </div>
-
-    <div class="header-item">
-      {{ currentDate | date:'HH:mm:ss d. MMMM yyyy' }}
-    </div>
+    <div class="header-item" *ngIf="isLoggedIn && userRole">{{ userRole }} |</div>
+    <div class="header-item">{{ currentDate | date:'HH:mm:ss d. MMMM yyyy' }}</div>
   </div>
 
   <div class="header-item header-right">
-    <div class="info-tooltip" 
-         title="Tento systém je ve fázi aktivního vývoje. Čas od času může dojít ke změnám funkcí nebo vzhledu. O všech podstatných novinkách se dozvíte v sekci Novinky na Intranetu. Systém může obsahovat bugy - prosím nahlašte veškeré závady administrátorskému týmu. - Každé zmeužití zranitelnosti systému se trestá.">
+    <div class="info-tooltip" title="Systém je ve fázi aktivního vývoje...">
       <span class="info-icon-circle">!</span>
     </div>
-
-    <a routerLink="/admin/intranet/knowledge-base" 
-       class="kb-link" 
-       title="Knowledge Base">
+    <a routerLink="/admin/intranet/knowledge-base" class="kb-link" title="Knowledge Base">
       <span class="kb-icon-circle">?</span>
     </a>
   </div>
 </header>
 
-<div class="admin-dashboard-wrapper">
-  <aside class="admin-sidebar">
+<div class="admin-dashboard-wrapper" [class.collapsed]="!isMenuOpen" [class.resizing]="isResizing">
+  <aside class="admin-sidebar" [style.width.px]="isMenuOpen ? sidebarWidth : 50">
     <nav class="admin-nav">
       <ul>
         <li *appHasPermission="'view-dashboard'">
-          <a routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a>
+          <a routerLink="/admin/dashboard" routerLinkActive="active" title="Dashboard">
+            <span class="nav-icon">📊</span><span class="nav-text">Dashboard</span>
+          </a>
         </li>
         <li *appHasPermission="'view-user-requests'">
-          <a routerLink="/admin/user-request" routerLinkActive="active">User Requests</a>
+          <a routerLink="/admin/user-request" routerLinkActive="active" title="User Requests">
+            <span class="nav-icon">👤</span><span class="nav-text">User Requests</span>
+          </a>
         </li>
         <li *appHasPermission="'view-sales-leads'">
-          <a routerLink="/admin/sales-leads" routerLinkActive="active">Sales Leads</a>
+          <a routerLink="/admin/sales-leads" routerLinkActive="active" title="Sales Leads">
+            <span class="nav-icon">🎯</span><span class="nav-text">Sales Leads</span>
+          </a>
         </li>
         <li *appHasPermission="'view-sales-orders'">
-          <a routerLink="/admin/sales-orders" routerLinkActive="active">Sales Orders</a>
+          <a routerLink="/admin/sales-orders" routerLinkActive="active" title="Sales Orders">
+            <span class="nav-icon">📦</span><span class="nav-text">Sales Orders</span>
+          </a>
         </li>
         <li *appHasPermission="'manage-administrators'">
-          <a routerLink="/admin/administrators" routerLinkActive="active">Administrátoři</a>
+          <a routerLink="/admin/administrators" routerLinkActive="active" title="Administrátoři">
+            <span class="nav-icon">🛡️</span><span class="nav-text">Administrátoři</span>
+          </a>
         </li>
         <li *appHasPermission="'view-edit-website'">
-          <a routerLink="/admin/edit-website" routerLinkActive="active">Edit Website</a>
+          <a routerLink="/admin/edit-website" routerLinkActive="active" title="Edit Website">
+            <span class="nav-icon">🌐</span><span class="nav-text">Edit Website</span>
+          </a>
         </li>
         <li *appHasPermission="'view-news'">
-          <a routerLink="/admin/edit-news" routerLinkActive="active">Edit News</a>
+          <a routerLink="/admin/edit-news" routerLinkActive="active" title="Edit News">
+            <span class="nav-icon">📰</span><span class="nav-text">Edit News</span>
+          </a>
         </li>
         <li *appHasPermission="'view-support-tickets'">
-          <a routerLink="/admin/support-tickets" routerLinkActive="active">Tickets</a>
+          <a routerLink="/admin/support-tickets" routerLinkActive="active" title="Tickets">
+            <span class="nav-icon">🎫</span><span class="nav-text">Tickets</span>
+          </a>
         </li>
         <li *appHasPermission="'view-business-logs'">
-          <a routerLink="/admin/business-logs" routerLinkActive="active">Business Logs</a>
+          <a routerLink="/admin/business-logs" routerLinkActive="active" title="Business Logs">
+            <span class="nav-icon">📜</span><span class="nav-text">Business Logs</span>
+          </a>
         </li>
         <li *appHasPermission="'view-personal-info'">
-          <a routerLink="/admin/personal-info" routerLinkActive="active">Osobní Informace</a>
+          <a routerLink="/admin/personal-info" routerLinkActive="active" title="Osobní Informace">
+            <span class="nav-icon">🆔</span><span class="nav-text">Osobní Informace</span>
+          </a>
         </li>
       </ul>
     </nav>
     <div class="sidebar-footer">
-      <button class="delete_button" (click)="logout()">Logout</button>
+      <button class="logout-btn" (click)="logout()">
+        <span class="nav-icon">🚪</span><span class="nav-text">Logout</span>
+      </button>
     </div>
+
+    <div *ngIf="isMenuOpen" class="resizer-handle" (mousedown)="startResizing($event)"></div>
   </aside>
 
   <main class="admin-content">

@@ -1,20 +1,17 @@
-import { Component, OnInit, OnDestroy, LOCALE_ID, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../core/auth/auth.service';
 import { PermissionService } from '../../../core/auth/services/permission.service';
 import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
-import localeCs from '@angular/common/locales/cs';
-registerLocaleData(localeCs);
 
 @Component({
   selector: 'app-admin-layout',
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.css'],
   standalone: true,
-  imports: [CommonModule, RouterModule, DatePipe, HasPermissionDirective],
-  providers: [{ provide: LOCALE_ID, useValue: 'cs' }]
+  imports: [CommonModule, RouterModule, DatePipe, HasPermissionDirective]
 })
 export class AdminLayoutComponent implements OnInit, OnDestroy {
   userEmail: string | null = null;
@@ -22,6 +19,13 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean = false;
   currentDate: Date = new Date();
   
+  // Stavy sidebaru
+  isMenuOpen: boolean = true;
+  sidebarWidth: number = 200; 
+  isResizing: boolean = false;
+
+  private minWidth: number = 150;
+  private maxWidth: number = 500;
   private authSubscription: Subscription | undefined;
   private userEmailSubscription: Subscription | undefined;
   private intervalId: any;
@@ -29,11 +33,18 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router, 
     private authService: AuthService,
-    private permissionService: PermissionService, // Necháváme pro logout
+    private permissionService: PermissionService,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
+    // Načtení uložených preferencí
+    const savedWidth = localStorage.getItem('admin_sidebar_width');
+    if (savedWidth) this.sidebarWidth = parseInt(savedWidth, 10);
+    
+    const savedState = localStorage.getItem('admin_menu_open');
+    this.isMenuOpen = savedState !== null ? savedState === 'true' : true;
+
     this.authSubscription = this.authService.isLoggedIn$.subscribe(loggedIn => {
       this.isLoggedIn = loggedIn;
       this.userRole = loggedIn ? this.authService.getUserRole() : null;
@@ -51,7 +62,36 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  // TATO METODA UŽ NENÍ POTŘEBA - SMAZÁNO, DIREKTIVA JI NAHRADILA
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+    localStorage.setItem('admin_menu_open', this.isMenuOpen.toString());
+    this.cdr.detectChanges();
+  }
+
+  // --- Resize Logika ---
+  startResizing(event: MouseEvent): void {
+    this.isResizing = true;
+    event.preventDefault(); // Zabrání označování textu při dragu
+  }
+
+  @HostListener('window:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent): void {
+    if (!this.isResizing) return;
+    
+    let newWidth = event.clientX;
+    if (newWidth >= this.minWidth && newWidth <= this.maxWidth) {
+      this.sidebarWidth = newWidth;
+      this.cdr.detectChanges();
+    }
+  }
+
+  @HostListener('window:mouseup')
+  onMouseUp(): void {
+    if (this.isResizing) {
+      this.isResizing = false;
+      localStorage.setItem('admin_sidebar_width', this.sidebarWidth.toString());
+    }
+  }
 
   logout(): void {
     this.authService.logout().subscribe({
