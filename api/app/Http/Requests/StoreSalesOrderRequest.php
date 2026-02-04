@@ -19,25 +19,25 @@ class StoreSalesOrderRequest extends FormRequest
             'client_address'    => 'nullable|string|max:500',
             'client_phone'      => 'nullable|string|max:20',
             
-            // Validace pro nahrávaný soubor
-            // max:10240 znamená limit 10MB
-            'attachment'        => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png,zip|max:10240',
+            'attachment'        => [
+                'nullable',
+                'file',
+                'max:20480', //limit 20M
+                function ($attribute, $value, $fail) {
+                    if ($this->hasFile('attachment')) {
+                        $file = $this->file('attachment');
+                        if (!$file->isValid()) return $fail('Chyba nahrávání souboru.');
 
-            // dataProcessingAgreement musí být 'accepted' (1, true, "on", nebo "yes")
+                        $forbidden = ['php', 'exe', 'bat', 'sh', 'js', 'bin', 'msi', 'cgi', 'pl'];
+                        $extension = strtolower($file->getClientOriginalExtension());
+                        
+                        if (in_array($extension, $forbidden)) {
+                            $fail('Soubor .' . $extension . ' je zakázán.');
+                        }
+                    }
+                },
+            ],
             'dataProcessingAgreement' => 'required|accepted',
-        ];
-    }
-
-    /**
-     * Volitelné: Vlastní chybové hlášky pro lepší UX
-     */
-    public function messages(): array
-    {
-        return [
-            'lead_id.exists' => 'Neplatné ID obchodního případu.',
-            'attachment.max' => 'Soubor je příliš velký (maximální velikost je 10 MB).',
-            'attachment.mimes' => 'Podporované formáty jsou PDF, Word, obrázky nebo ZIP.',
-            'dataProcessingAgreement.accepted' => 'Musíte souhlasit se zpracováním osobních údajů.',
         ];
     }
 }

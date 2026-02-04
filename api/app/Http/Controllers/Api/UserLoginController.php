@@ -12,70 +12,143 @@ use Illuminate\Support\Facades\{Hash, Log};
 class UserLoginController extends Controller
 {
 
+    // public function index(Request $request): JsonResponse
+    // {
+    //     $perPage = $request->input('per_page', 15);
+    //     $onlyTrashed = filter_var($request->input('only_trashed', false), FILTER_VALIDATE_BOOLEAN) || filter_var($request->input('is_deleted', false), FILTER_VALIDATE_BOOLEAN);
+
+    //     $query = UserLogin::query()->withTrashed();
+        
+    //     // Ochrana PrimeAdmin a filtrace smazaných
+    //     $query->whereDoesntHave('roles', fn($q) => $q->where('role_name', 'primeadmin'));
+    //     $onlyTrashed ? $query->whereNotNull('user_login.deleted_at') : $query->whereNull('user_login.deleted_at');
+
+    //     // Dynamické filtry (Like)
+    //     foreach (['user_email', 'contact_email', 'full_name', 'personal_id_num'] as $f) {
+    //         if ($request->filled($f)) $query->where("user_login.$f", 'like', "%{$request->input($f)}%");
+    //     }
+    //     if ($request->filled('user_login_id')) $query->where('user_login.user_login_id', $request->user_login_id);
+
+    //     // Datumové filtry
+    //     foreach (['created_at', 'updated_at', 'last_login_at'] as $col) {
+    //         if ($val = $request->input($col)) {
+    //             if (is_numeric($val) && strlen($val) <= 2) {
+    //                 $query->where(fn($q) => $q->whereRaw("DAY(user_login.$col) = ?", [$val])->orWhereRaw("MONTH(user_login.$col) = ?", [$val]));
+    //             } else {
+    //                 $query->whereDate("user_login.$col", $val);
+    //             }
+    //         }
+    //     }
+
+    //     if ($request->filled('role_name')) {
+    //         $query->whereHas('roles', fn($q) => $q->where('role_name', 'like', "%{$request->role_name}%"));
+    //     }
+
+    //     // --- ŘAZENÍ ---
+    //     $sortBy = $request->input('sort_by', 'user_login_id');
+    //     $dir = in_array(strtolower($request->input('sort_direction')), ['asc', 'desc']) ? $request->sort_direction : 'desc';
+        
+    //     if ($sortBy === 'role_name') {
+    //         $query->leftJoin('user_roles as ur', 'user_login.user_login_id', '=', 'ur.user_login_id')
+    //               ->leftJoin('roles as r', 'ur.role_id', '=', 'r.role_id')
+    //               ->orderBy('r.role_name', $dir)->select('user_login.*');
+    //     } else {
+    //         $query->orderBy($sortBy, $dir);
+    //     }
+
+    //     $users = filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN) 
+    //         ? $query->with('roles.permissions')->get() 
+    //         : $query->with('roles.permissions')->paginate($perPage);
+
+    //     // Pokud není paginace, vrátíme jen kolekci
+    //     if (filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN)) {
+    //         return response()->json(UserLoginResource::collection($users));
+    //     }
+
+    //     // --- PLOCHÁ STRUKTURA PRO ANGULAR (Oprava NaN) ---
+    //     return response()->json([
+    //         'data'         => UserLoginResource::collection($users->items()),
+    //         'total'        => $users->total(),
+    //         'per_page'     => $users->perPage(),
+    //         'current_page' => $users->currentPage(),
+    //         'last_page'    => $users->lastPage(),
+    //         'from'         => $users->firstItem(),
+    //         'to'           => $users->lastItem(),
+    //     ]);
+    // }
     public function index(Request $request): JsonResponse
-    {
-        $perPage = $request->input('per_page', 15);
-        $onlyTrashed = filter_var($request->input('only_trashed', false), FILTER_VALIDATE_BOOLEAN) || filter_var($request->input('is_deleted', false), FILTER_VALIDATE_BOOLEAN);
+{
+    $perPage = $request->input('per_page', 15);
+    $onlyTrashed = filter_var($request->input('only_trashed', false), FILTER_VALIDATE_BOOLEAN) || filter_var($request->input('is_deleted', false), FILTER_VALIDATE_BOOLEAN);
 
-        $query = UserLogin::query()->withTrashed();
-        
-        // Ochrana PrimeAdmin a filtrace smazaných
-        $query->whereDoesntHave('roles', fn($q) => $q->where('role_name', 'primeadmin'));
-        $onlyTrashed ? $query->whereNotNull('user_login.deleted_at') : $query->whereNull('user_login.deleted_at');
+    // Důležité: Přidáme select, aby joiny nepřepsaly ID uživatele
+    $query = UserLogin::query()->select('user_login.*')->withTrashed();
+    
+    // Ochrana PrimeAdmin
+    $query->whereDoesntHave('roles', fn($q) => $q->where('role_name', 'primeadmin'));
+    
+    // Filtrace smazaných
+    $onlyTrashed ? $query->whereNotNull('user_login.deleted_at') : $query->whereNull('user_login.deleted_at');
 
-        // Dynamické filtry (Like)
-        foreach (['user_email', 'contact_email', 'full_name', 'personal_id_num'] as $f) {
-            if ($request->filled($f)) $query->where("user_login.$f", 'like', "%{$request->input($f)}%");
-        }
-        if ($request->filled('user_login_id')) $query->where('user_login.user_login_id', $request->user_login_id);
-
-        // Datumové filtry
-        foreach (['created_at', 'updated_at', 'last_login_at'] as $col) {
-            if ($val = $request->input($col)) {
-                if (is_numeric($val) && strlen($val) <= 2) {
-                    $query->where(fn($q) => $q->whereRaw("DAY(user_login.$col) = ?", [$val])->orWhereRaw("MONTH(user_login.$col) = ?", [$val]));
-                } else {
-                    $query->whereDate("user_login.$col", $val);
-                }
-            }
-        }
-
-        if ($request->filled('role_name')) {
-            $query->whereHas('roles', fn($q) => $q->where('role_name', 'like', "%{$request->role_name}%"));
-        }
-
-        // --- ŘAZENÍ ---
-        $sortBy = $request->input('sort_by', 'user_login_id');
-        $dir = in_array(strtolower($request->input('sort_direction')), ['asc', 'desc']) ? $request->sort_direction : 'desc';
-        
-        if ($sortBy === 'role_name') {
-            $query->leftJoin('user_roles as ur', 'user_login.user_login_id', '=', 'ur.user_login_id')
-                  ->leftJoin('roles as r', 'ur.role_id', '=', 'r.role_id')
-                  ->orderBy('r.role_name', $dir)->select('user_login.*');
-        } else {
-            $query->orderBy($sortBy, $dir);
-        }
-
-        $users = filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN) 
-            ? $query->with('roles.permissions')->get() 
-            : $query->with('roles.permissions')->paginate($perPage);
-
-        // Pokud není paginace, vrátíme jen kolekci
-        if (filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN)) {
-            return response()->json(UserLoginResource::collection($users));
-        }
-
-        // --- PLOCHÁ STRUKTURA PRO ANGULAR (Oprava NaN) ---
-        return response()->json([
-            'data'         => UserLoginResource::collection($users->items()),
-            'total'        => $users->total(),
-            'per_page'     => $users->perPage(),
-            'current_page' => $users->currentPage(),
-            'last_page'    => $users->lastPage(),
-            'from'         => $users->firstItem(),
-            'to'           => $users->lastItem(),
-        ]);
+    // --- OPRAVENÉ FILTRY ---
+    // Explicitně definujeme tabulku user_login, aby joiny nezpůsobily "Ambiguous column"
+    if ($request->filled('full_name')) {
+        $query->where('user_login.full_name', 'like', "%{$request->input('full_name')}%");
     }
+    if ($request->filled('user_email')) {
+        $query->where('user_login.user_email', 'like', "%{$request->input('user_email')}%");
+    }
+    if ($request->filled('contact_email')) {
+        $query->where('user_login.contact_email', 'like', "%{$request->input('contact_email')}%");
+    }
+    if ($request->filled('personal_id_num')) {
+        $query->where('user_login.personal_id_num', 'like', "%{$request->input('personal_id_num')}%");
+    }
+    if ($request->filled('user_login_id')) {
+        $query->where('user_login.user_login_id', $request->user_login_id);
+    }
+
+    // Datumové filtry (ponecháno, jen přidán prefix)
+    foreach (['created_at', 'updated_at', 'last_login_at'] as $col) {
+        if ($val = $request->input($col)) {
+            $query->whereDate("user_login.$col", $val);
+        }
+    }
+
+    if ($request->filled('role_name')) {
+        $query->whereHas('roles', fn($q) => $q->where('role_name', 'like', "%{$request->role_name}%"));
+    }
+
+    // --- ŘAZENÍ ---
+    $sortBy = $request->input('sort_by', 'user_login_id');
+    $dir = in_array(strtolower($request->input('sort_direction')), ['asc', 'desc']) ? $request->sort_direction : 'desc';
+    
+    if ($sortBy === 'role_name') {
+        $query->leftJoin('user_roles as ur', 'user_login.user_login_id', '=', 'ur.user_login_id')
+              ->leftJoin('roles as r', 'ur.role_id', '=', 'r.role_id')
+              ->orderBy('r.role_name', $dir);
+    } else {
+        // Ochrana řazení - pokud sloupec neobsahuje tečku, přidáme prefix tabulky
+        $sortColumn = str_contains($sortBy, '.') ? $sortBy : "user_login.$sortBy";
+        $query->orderBy($sortColumn, $dir);
+    }
+
+    $users = filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN) 
+        ? $query->with('roles.permissions')->get() 
+        : $query->with('roles.permissions')->paginate($perPage);
+
+    if (filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN)) {
+        return response()->json(UserLoginResource::collection($users));
+    }
+
+    return response()->json([
+        'data'         => UserLoginResource::collection($users->items()),
+        'total'        => $users->total(),
+        'per_page'     => $users->perPage(),
+        'current_page' => $users->currentPage(),
+        'last_page'    => $users->lastPage(),
+    ]);
+}
     public function store(StoreUserLoginRequest $request): JsonResponse
     {
         $validated = $request->validated();

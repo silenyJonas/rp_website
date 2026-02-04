@@ -11,7 +11,8 @@ use App\Http\Controllers\Api\TranslationController;
 use App\Http\Controllers\Api\SalesLeadController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\SalesOrderController;
-use App\Http\Controllers\Api\SupportTicketController; // Import nového controlleru
+use App\Http\Controllers\Api\SupportTicketController;
+use App\Http\Controllers\Api\JobApplicationController; // Import nového controlleru
 
 Route::get('/sanctum/csrf-cookie', function (Request $request) {
     return response()->json([], 204);
@@ -24,6 +25,7 @@ Route::post('/refresh', [AuthController::class, 'refresh']);
 // Veřejné odesílání formulářů (nepotřebuje token)
 Route::post('raw_request_commissions', [RawRequestCommissionController::class, 'store']);
 Route::post('sales_orders', [SalesOrderController::class, 'store']);
+Route::post('job_applications', [JobApplicationController::class, 'store']); // Veřejné podání přihlášky
 
 
 // --- ROUTY VYŽADUJÍCÍ AUTENTIZACI (Protected) ---
@@ -35,13 +37,22 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/save-translations', [TranslationController::class, 'save']);
 
+    // Job Applications (Administrace uchazečů)
+    Route::prefix('job_applications')->group(function () {
+        Route::get('/{jobApplication}/details', [JobApplicationController::class, 'show']); 
+        Route::post('/{id}/restore', [JobApplicationController::class, 'restore']);
+        Route::delete('/force-delete-all', [JobApplicationController::class, 'forceDeleteAllTrashed']);
+    });
+    // Resource pro adminy - vynecháváme store, protože ten je veřejný výše
+    Route::apiResource('job_applications', JobApplicationController::class)->except(['store', 'create', 'edit']);
+
     // BusinessLogs
     Route::prefix('business_logs')->group(function () {
         Route::get('/', [BusinessLogController::class, 'index']);
         Route::get('/{businessLog}/details', [BusinessLogController::class, 'showDetails']);
     });
     
-    // Support Tickets (NOVÉ)
+    // Support Tickets
     Route::prefix('support_tickets')->group(function () {
         Route::get('/{supportTicket}/details', [SupportTicketController::class, 'show']); 
         Route::post('/{id}/restore', [SupportTicketController::class, 'restore']);

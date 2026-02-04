@@ -65,6 +65,11 @@
             <span class="nav-icon">📰</span><span class="nav-text">Správa Novinek</span>
           </a>
         </li>
+        <li *appHasPermission="'view-job-applications'">
+          <a routerLink="/admin/job-applications" routerLinkActive="active" (click)="onLinkClick()" title="Správa u">
+            <span class="nav-icon">🤝</span><span class="nav-text">Správa Uchazečů</span>
+          </a>
+        </li>
         <li *appHasPermission="'view-support-tickets'">
           <a routerLink="/admin/support-tickets" routerLinkActive="active" (click)="onLinkClick()" title="Tickets">
             <span class="nav-icon">🎫</span><span class="nav-text">Helpdesk Tikety</span>

@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -31,7 +30,7 @@ import {
   RESET_PASSWORD_FORM_FIELDS
 } from './administrators.config';
 
-type ItemType = any; // You should replace 'any' with the specific interface if needed, e.g., RawRequestCommission
+type ItemType = any; 
 
 @Component({
   selector: 'app-administrators',
@@ -56,7 +55,7 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
   override trashData: ItemType[] = [];
   override isLoading: boolean = false;
   isTrashTableLoading: boolean = false;
-  override errorMessage: string | null = null; // Přidáno pro zobrazení chybové zprávy v HTML
+  override errorMessage: string | null = null; 
   isAdminTable: boolean = true;
   showResetPasswordForm: boolean = false;
 
@@ -83,8 +82,8 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
   trashTotalItems: number = 0;
   trashTotalPages: number = 0;
 
-  // Opravené filtrovací proměnné, aby odpovídaly konfigu
   filterUserLoginId: string = '';
+  filterFullName: string = ''; // Přidáno
   filterUserEmail: string = '';
   filterLastLoginAt: string = '';
   filterCreatedAt: string = '';
@@ -122,7 +121,6 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
     });
   }
 
-  // Veřejná metoda pro znovunačtení dat, volaná z HTML
   public refreshData(): void {
     this.forceFullRefresh();
   }
@@ -130,6 +128,7 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
   private getBaseFilters(): FilterParams {
     const filters: FilterParams = {
       user_login_id: this.filterUserLoginId,
+      full_name: this.filterFullName, // Přidáno do odesílaných filtrů
       user_email: this.filterUserEmail,
       last_login_at: this.filterLastLoginAt,
       created_at: this.filterCreatedAt,
@@ -138,7 +137,6 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
       sort_direction: this.filterSortDirection
     };
 
-    // Pokud existuje filtr role_name, přidej ho pod správným klíčem pro backend
     if (this.filterRoleName) {
       filters['role_name'] = this.filterRoleName;
     }
@@ -153,7 +151,7 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
     cache: Map<number, ItemType[]>,
     currentFilters: FilterParams
   ): Observable<PaginatedResponse<ItemType>> {
-    this.errorMessage = null; // Reset chybové zprávy
+    this.errorMessage = null; 
     const newFilters = this.getBaseFilters();
     if (isTrash) {
       newFilters['only_trashed'] = 'true';
@@ -249,7 +247,6 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
         cache.set(page, response.data);
       },
       error: (error) => {
-        // Handle error silently, as it's a preload
       }
     });
   }
@@ -269,11 +266,11 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
 
   applyFilters(filters: any): void {
     this.filterUserLoginId = filters.user_login_id || '';
+    this.filterFullName = filters.full_name || ''; // Mapování z formu
     this.filterUserEmail = filters.user_email || '';
     this.filterLastLoginAt = filters.last_login_at || '';
     this.filterCreatedAt = filters.created_at || '';
     this.filterUpdatedAt = filters.updated_at || '';
-    // Změna pro přímé mapování role_name
     this.filterRoleName = filters.role_name || '';
     this.filterSortBy = filters.sort_by || '';
     this.filterSortDirection = filters.sort_direction || 'asc';
@@ -282,6 +279,7 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
 
   clearFilters(): void {
     this.filterUserLoginId = '';
+    this.filterFullName = ''; // Reset
     this.filterUserEmail = '';
     this.filterLastLoginAt = '';
     this.filterCreatedAt = '';
@@ -414,7 +412,6 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
         this.forceFullRefresh();
       },
       error: (err) => {
-        // Handle error
       }
     });
   }
@@ -466,7 +463,6 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
   }
 
   handleResetPasswordFormSubmitted(formData: ItemType) {
-
     
     if (!formData.target_user_id || !formData.current_user_id) {
       console.error('ID cílového nebo aktuálního uživatele chybí.');
@@ -482,7 +478,6 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
       target_user_id: formData.target_user_id,
     };
 
-    console.log('Odesílaná data pro změnu hesla:', passwordData);
     this.updatePassword(passwordData.target_user_id, passwordData)
       .pipe(
         finalize(() => {
@@ -491,14 +486,12 @@ export class AdministratorsComponent extends BaseDataComponent<ItemType> impleme
       )
       .subscribe({
         next: (response) => {
-          console.log('Heslo bylo úspěšně změněno.', response);
            this.alertDialogService.open('Úspěch', 'Heslo bylo úspěšně změněno.', 'success');
           this.forceFullRefresh();
         },
         error: (err) => {
-          console.error('Chyba při změně hesla:', err);
           this.errorMessage = err.message || 'Chyba při změně hesla. Zkuste to prosím znovu.';
-           this.alertDialogService.open('Úspěch', 'Chyba při změně hesla. Zkuste to prosím znovu.', 'success');
+           this.alertDialogService.open('Chyba', 'Chyba při změně hesla. Zkuste to prosím znovu.', 'danger');
           this.cd.markForCheck();
         }
       });

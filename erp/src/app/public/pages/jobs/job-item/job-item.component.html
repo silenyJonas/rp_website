@@ -2,13 +2,96 @@
   <div class="container-width-fix">
 
     <div class="header-1" *ngIf="job">{{ job.title }}</div>
+    
     <div class="content-display" *ngIf="job">
-    <a routerLink="/jobs" class="back-link">{{ back_link_text }}</a>
+      <a routerLink="/jobs" class="back-link">{{ back_link_text }}</a>
 
       <div class="paragraph-node" [innerHTML]="job.fullContent"></div>
       
-      <div class="minimal-contact-box">
-        <span class="contact-label">Máte zájem?</span>
+      <div class="application-form-wrapper">
+        
+        <ng-container *ngIf="!isSubmitted; else thankYouMessage">
+          <h2>Mám zájem o tuto pozici</h2>
+          
+          <form [formGroup]="applicationForm" (ngSubmit)="onSubmit()">
+            
+            <div class="grid-layout">
+              <div class="form-group">
+                <label>Jméno <span class="required-asterisk">*</span></label>
+                <input type="text" formControlName="first_name">
+              </div>
+              <div class="form-group">
+                <label>Příjmení <span class="required-asterisk">*</span></label>
+                <input type="text" formControlName="last_name">
+              </div>
+            </div>
+
+            <div class="grid-layout mt-10">
+              <div class="form-group">
+                <label>E-mail <span class="required-asterisk">*</span></label>
+                <input type="email" formControlName="email">
+              </div>
+              <div class="form-group">
+                <label>Telefon</label>
+                <input type="tel" formControlName="phone">
+              </div>
+            </div>
+
+            <div class="form-group mt-10">
+              <label>Zpráva / Průvodní dopis</label>
+              <textarea formControlName="message" rows="4"></textarea>
+            </div>
+
+            <div class="form-group mt-15">
+              <label>Životopis (libovolný soubor) <span class="required-asterisk">*</span></label>
+              <div class="file-drop-area" [class.has-file]="selectedFile">
+                <input type="file" (change)="onFileSelected($event)" class="file-input-styled">
+                <div class="file-msg">
+                  <div class="upload-icon">{{ selectedFile ? '✓' : '+' }}</div>
+                  <div class="file-text">
+                    {{ selectedFile ? selectedFile.name : 'Klikněte nebo přetáhněte soubor sem' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="checkbox-container">
+              <div class="checkbox-group">
+                <input id="gdpr" type="checkbox" formControlName="dataProcessingAgreement">
+                <label for="gdpr">
+                  Souhlasím se <a routerLink="/privacy-policy" target="_blank" class="gdpr-link">zpracováním osobních údajů</a> *
+                </label>
+              </div>
+            </div>
+
+            <p class="required-info">* Označuje povinné pole</p>
+
+            <button type="submit" [disabled]="applicationForm.invalid || !selectedFile || isLoading" class="submit-btn-skew">
+              <span>{{ isLoading ? 'Odesílám...' : 'Odeslat přihlášku' }}</span>
+            </button>
+
+            <div *ngIf="errorMessage" class="message-box error-msg">{{ errorMessage }}</div>
+          </form>
+        </ng-container>
+
+        <ng-template #thankYouMessage>
+          <div class="success-container" style="text-align: center; padding: 40px 0;">
+            <div class="success-icon" style="font-size: 48px; color: #4caf50; margin-bottom: 20px;">✓</div>
+            <h2 style="margin-bottom: 10px;">Děkujeme za váš zájem!</h2>
+            <p class="success-text" style="margin-bottom: 30px;">
+              Vaše přihláška na pozici <strong>{{ job.title }}</strong> byla úspěšně odeslána. <br>
+              Budeme vás kontaktovat co nejdříve.
+            </p>
+            <button class="submit-btn-skew" routerLink="/jobs">
+              <span>Zpět na výpis pozic</span>
+            </button>
+          </div>
+        </ng-template>
+
+      </div>
+
+      <div class="minimal-contact-box mt-10">
+        <span class="contact-label">Máte dotaz?</span>
         <a href="tel:+420733188328">733 188 328</a>
         <span class="sep">•</span>
         <a href="mailto:info@rpsw.cz">info@rpsw.cz</a>
