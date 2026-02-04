@@ -2,6 +2,8 @@
 -dynamicka sprava roli-vytvorit nazev role a priradit k ni permissions v komponente se to bude delat na adminu
 -na dashboardu budou vseobecne info a statistiky treba pocet zamestnancu nebo pocet novych veci atd
 -dat paginaci tlacitka do komponentu at to neni na kazde page zvlast + lepsi UI
+
+-dat v KB footer do componenty
 --------------------------
 udelat knowledge base aktualizovat
 udelat dalsi tabulku ktera bude prijimat data z formu co bude na /jobs kazdy detail jobu bude mit formular a do neho se vlozi rovnou predvyplnenie pak do tabulku nazev pozice atd a ja to budu v adminu sbirat

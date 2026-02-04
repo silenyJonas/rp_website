@@ -28,7 +28,16 @@ h1 {
 p {
   margin: 0;
 }
+a {
+  text-decoration: none; /* Odstraní podtržení */
+  color: #007bff;       /* Nastaví barvu (uprav podle svého brandu) */
+  transition: color 0.2s ease-in-out;
+}
 
+a:hover {
+  text-decoration: underline; /* Podtržení se ukáže jen při najetí myší (dobré pro UX) */
+  color: #0056b3;
+}
 .lead-text {
   font-size: 1.05rem;
   color: #a1a1aa;
