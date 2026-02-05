@@ -45,14 +45,18 @@ export class OrderFormComponent extends BaseDataComponent<any> implements OnInit
       client_name: ['', Validators.required],
       ico: ['', [Validators.pattern('^[0-9]*$')]],
       client_address: [''],
-      client_phone: [''],
+      // Telefon: max 20 znaků, povoleny jen číslice a volitelné "+"
+      client_phone: ['', [
+        Validators.pattern('^\\+?[0-9]*$'), 
+        Validators.maxLength(20)
+      ]],
       client_email: ['', [Validators.required, Validators.email]],
       order_description: ['', Validators.required],
-      dataProcessingAgreement: [false, Validators.requiredTrue]
+      dataProcessingAgreement: [false, Validators.requiredTrue],
+      tosAgreement: [false, Validators.requiredTrue]
     });
   }
 
-  // Pomocná metoda pro text tlačítka (fixuje NG5002)
   get btnText(): string {
     return this.isLoading ? 'Odesílám...' : 'Odeslat poptávku';
   }

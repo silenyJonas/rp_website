@@ -1,321 +1,191 @@
-/* Globální styly pro overlay a kontejner formuláře */
+/* OVERLAY & ZÁKLADNÍ KONTEJNER */
 .popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
 }
 
-.form-container {
-  padding: 1rem;
-  border-radius: 6px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  background-color: #ffffff;
-  max-width: 700px;
-  width: 90%;
-  position: relative;
-  animation: fadeIn 0.3s ease-out;
-  border: 1px solid #dee2e6;
-  font-family: Arial, sans-serif;
-  box-sizing: border-box;
+.form-container.wide-style {
+    background: #ffffff;
+    color: #333;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: slideUp 0.3s ease-out;
 }
 
-/* Hlavička formuláře */
+/* HLAVIČKA */
 .form-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-  border-bottom: 1px solid #e9ecef;
-  padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    min-height: 60px;
 }
 
-.form-header h2 {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #333;
+.header-title {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #222;
+    font-weight: 600;
 }
 
 .close-button {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  line-height: 1;
-  color: #adb5bd;
-  cursor: pointer;
-  transition: color 0.2s ease-in-out;
-  padding: 0;
+    background: transparent;
+    border: none;
+    color: #999;
+    font-size: 2.2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+.close-button:hover { color: #ff4d4d; }
+
+/* OBSAH */
+.details-content {
+    padding: 25px;
+    overflow-y: auto;
+    flex: 1;
 }
 
-.close-button:hover {
-  color: #495057;
+/* GRID LAYOUT FORMULÁŘE */
+.form-grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dva sloupce na desktopu */
+    gap: 20px;
 }
 
-/* Dvousloupcové rozložení */
-.form-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-/* Formulářová skupina */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 0;
-}
-
-label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #444;
-  margin-bottom: 0.15rem;
-  font-family: Arial, sans-serif;
-}
-
-/* Styly pro inputy, selecty a textarea */
-.form-control {
-  width: 100%;
-  padding: 0.3rem 0.5rem;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  background-color: #ffffff;
-  box-sizing: border-box;
-  font-size: 0.85rem;
-  color: #444;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 1px #6366f1, 0 0 0 3px rgba(99, 102, 241, 0.2);
-  background-color: #fff;
-}
-
-/* Textarea zabírá oba sloupce */
-.form-group:has(textarea) {
-  grid-column: span 2;
-}
-
-textarea.form-control {
-  min-height: 100px;
-  resize: vertical;
-}
-
-/* Styly pro validaci */
-.form-control.ng-invalid.ng-touched,
-.form-control.ng-invalid.ng-dirty {
-  border-color: #dc3545;
-  box-shadow: 0 0 0 1px #dc3545, 0 0 0 3px rgba(220, 53, 69, 0.25);
-}
-
-.validation-message {
-  color: #dc3545;
-  font-size: 0.8rem;
-  margin-top: 0.2rem;
-}
-
-.required-star {
-  color: #dc3545;
-  margin-left: 2px;
-}
-
-.required-note {
-  font-size: 0.85rem;
-  color: #6c757d;
-  margin-top: 1rem;
-}
-
-/* Styly pro radio a checkbox */
-.radio-group,
-.checkbox-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-}
-
-.radio-option {
-  font-weight: normal;
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.radio-option input[type="radio"],
-.checkbox-container input[type="checkbox"] {
-  width: auto;
-  margin-right: 0.4rem;
-  transform: scale(1.1);
-}
-
-/* Akční tlačítka a poznámka */
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e9ecef;
-}
-
-.required-note {
-  font-size: 0.85rem;
-  color: #6c757d;
-  margin-right: auto;
-  margin-top: 0;
-  padding-top: 0.5rem;
-}
-
-/* Styly tlačítek */
-.submit-button,
-.cancel-button {
-  padding: 0.3rem 0.5rem;
-  border-radius: 4px;
-  font-weight: bold;
-  font-size: 0.65rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  border: 1px solid transparent;
-  text-transform: uppercase;
-  color: white;
-  box-shadow: none;
-}
-
-/* Tlačítko Zrušit */
-.cancel-button {
-  background-color: #6c757d;
-}
-
-.cancel-button:hover {
-  background-color: #5a6268;
-}
-
-/* Tlačítko Potvrdit */
-.submit-button {
-  background-color: #28a745;
-}
-
-.submit-button:hover:not(:disabled) {
-  background-color: #218838;
-}
-
-.submit-button:disabled {
-  background-color: #c8d1d8;
-  cursor: not-allowed;
-  opacity: 0.8;
-  border-color: transparent;
-}
-
-/* Doplňkové styly pro slider */
-.slider-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.slider-value {
-  font-size: 0.85rem;
-  font-weight: 500;
-  min-width: 50px;
-  text-align: right;
-}
-
-/* Animace */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Nové styly pro needitovatelná pole */
-.form-control[disabled] {
-  background-color: #e9ecef;
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-
-.radio-option[disabled],
-.checkbox-container[disabled] {
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-
-select[disabled],
-input[type="radio"][disabled] + label,
-input[type="checkbox"][disabled] + label {
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-/* Původní styly */
-.form-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-/* Nové styly pro omezení výšky a povolení posouvání */
-.form-columns {
-  max-height: 50vh; /* Omezení výšky na 50 % výšky okna prohlížeče */
-  overflow-y: auto; /* Povolení vertikálního posouvání, pokud je obsah větší */
-  padding-right: 1rem; /* Zabraňuje posuvníku překrývat obsah */
-}
-
-/* Přidat pro Firefox, aby se posuvník zobrazoval stejně */
-.form-columns {
-  scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
-}
-
-.form-columns::-webkit-scrollbar {
-  width: 8px;
-}
-
-.form-columns::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.form-columns::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-/* .locked-role {
-  border-color: red !important;
-  color: red !important;
-} */
-
-.locked-role-message {
-  color: #444;
-  font-size: 0.875rem;
-  margin-top: 5px;
-  padding-left: 2px;
-}
-.hidden-field {
-  display: none;
-}
-/* Zajištění správné responzivity */
-@media (max-width: 600px) {
-  .form-columns {
+.form-row-item {
+    display: flex;
     flex-direction: column;
-  }
-  .form-group {
+    gap: 5px;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+/* STYLY PRVKŮ */
+.field-label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.custom-input {
     width: 100%;
-  }
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.custom-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.custom-input:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+    color: #888;
+}
+
+.textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* CHECKBOX & RADIO */
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 5px;
+}
+
+/* CHYBY A POZNÁMKY */
+.error-text {
+    color: #dc3545;
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+.required-star { color: #dc3545; }
+
+.required-info {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.locked-msg {
+    font-size: 0.75rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* PATIČKA S TLAČÍTKY */
+.form-footer-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.btn-primary { background: #444; color: #fff; }
+.btn-primary:hover:not(:disabled) { background: #222; }
+.btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+
+.btn-secondary { background: #f0f0f0; color: #555; }
+.btn-secondary:hover { background: #e0e0e0; }
+
+/* RESPONSIVITA (SHODNÁ S DETAILŮM) */
+@media (max-width: 768px) {
+    .form-container.wide-style {
+        width: 100%; height: 100%;
+        max-height: 100vh; border-radius: 0;
+    }
+
+    .form-grid-layout {
+        grid-template-columns: 1fr; /* Na mobilu vše pod sebou */
+    }
+
+    .full-width { grid-column: span 1; }
+
+    .details-content { padding: 20px; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }

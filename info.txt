@@ -6,4 +6,6 @@
 -dat v KB footer do componenty
 --------------------------
 udelat knowledge base aktualizovat
-udelat dalsi tabulku ktera bude prijimat data z formu co bude na /jobs kazdy detail jobu bude mit formular a do neho se vlozi rovnou predvyplnenie pak do tabulku nazev pozice atd a ja to budu v adminu sbirat
+
+-vsude kde je checkbox na GDPR u formu tak udelat i checbox na obchodni podminky
+-udelat moznost stahnout prilohu

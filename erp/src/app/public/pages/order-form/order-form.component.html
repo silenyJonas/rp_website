@@ -14,7 +14,11 @@
 
         <div class="form-group">
           <label>IČO</label>
-          <input type="text" formControlName="ico">
+          <input type="text" formControlName="ico" 
+                 [class.error-input]="orderForm.get('ico')?.invalid && orderForm.get('ico')?.dirty">
+          <small class="error-msg" *ngIf="orderForm.get('ico')?.errors?.['pattern']">
+            IČO musí obsahovat pouze číslice.
+          </small>
         </div>
 
         <div class="form-group">
@@ -25,11 +29,24 @@
         <div class="mobile-flex-stack" style="display: flex; gap: 20px;">
           <div class="form-group" style="flex: 1;">
             <label>Telefon klienta</label>
-            <input type="text" formControlName="client_phone">
+            <input type="text" formControlName="client_phone" 
+                   placeholder="+420..."
+                   maxlength="20"
+                   [class.error-input]="orderForm.get('client_phone')?.invalid && orderForm.get('client_phone')?.dirty">
+            <small class="error-msg" *ngIf="orderForm.get('client_phone')?.errors?.['pattern']">
+              Pouze číslice a "+" na začátku.
+            </small>
+            <small class="error-msg" *ngIf="orderForm.get('client_phone')?.errors?.['maxlength']">
+              Maximální délka je 20 znaků.
+            </small>
           </div>
           <div class="form-group" style="flex: 1;">
             <label>Email klienta<span class="required-asterisk">*</span></label>
-            <input type="email" formControlName="client_email">
+            <input type="email" formControlName="client_email"
+                   [class.error-input]="orderForm.get('client_email')?.invalid && orderForm.get('client_email')?.dirty">
+            <small class="error-msg" *ngIf="orderForm.get('client_email')?.errors?.['email'] && orderForm.get('client_email')?.dirty">
+              Zadejte platný email.
+            </small>
           </div>
         </div>
 
@@ -57,6 +74,14 @@
             </label>
           </div>
           <a routerLink="/privacy-policy" target="_blank" class="privacy-policy-link">Zásady ochrany osobních údajů</a>
+
+          <div class="checkbox-group" style="margin-top: 15px;">
+            <input type="checkbox" id="tosAgreement" formControlName="tosAgreement">
+            <label for="tosAgreement">
+              Souhlasím s obchodními podmínkami <span class="required-asterisk">*</span>
+            </label>
+          </div>
+          <a routerLink="/tos" target="_blank" class="privacy-policy-link">Všeobecné obchodní podmínky (TOS)</a>
         </div>
 
         <p class="required-info">* Označuje povinné pole</p>

@@ -1,6 +1,4 @@
-
-
-import { Component, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm, FormControl } from '@angular/forms';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -32,7 +30,7 @@ export interface InputDefinition {
   templateUrl: './generic-form.component.html',
   styleUrl: './generic-form.component.css',
 })
-export class GenericFormComponent implements OnInit {
+export class GenericFormComponent implements OnInit, OnDestroy {
   // Nový Input pro nadpis
   @Input() headerText: string = 'Vytvořit nový záznam';
 
@@ -57,11 +55,13 @@ export class GenericFormComponent implements OnInit {
   // Nová proměnná pro uchování stavu, zda je role uživatele uzamčena
   isUserRoleLocked: boolean = false;
 
-  constructor(private cd: ChangeDetectorRef, private authService: AuthService) {} // Vstříkněte AuthService
+  constructor(private cd: ChangeDetectorRef, private authService: AuthService) {}
 
   ngOnInit(): void {
-    console.log(this.formDataToEdit)
+    // ZABLOKOVÁNÍ SCROLLU POZADÍ
+    document.body.style.overflow = 'hidden';
 
+    console.log(this.formDataToEdit)
     const currentUserId = this.authService.getUserId();
 
     // Logika pro inicializaci formuláře na základě, zda se jedná o editaci nebo vytvoření
@@ -92,6 +92,11 @@ export class GenericFormComponent implements OnInit {
         this.formData[input.column_name] = input.defaultValue || '';
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    // OBNOVENÍ SCROLLU POZADÍ PŘI ZAVŘENÍ / ZNIČENÍ KOMPONENTY
+    document.body.style.overflow = 'auto';
   }
 
   // Pomocná metoda pro získání FormControl
