@@ -2,10 +2,6 @@
 -dynamicka sprava roli-vytvorit nazev role a priradit k ni permissions v komponente se to bude delat na adminu
 -na dashboardu budou vseobecne info a statistiky treba pocet zamestnancu nebo pocet novych veci atd
 -dat paginaci tlacitka do komponentu at to neni na kazde page zvlast + lepsi UI
-
 -dat v KB footer do componenty
 --------------------------
 udelat knowledge base aktualizovat
-
--vsude kde je checkbox na GDPR u formu tak udelat i checbox na obchodni podminky
--udelat moznost stahnout prilohu

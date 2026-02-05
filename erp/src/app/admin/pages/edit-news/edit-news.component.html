@@ -4,6 +4,30 @@
   <div *ngIf="errorMessage" class="text-center text-red-500">{{ errorMessage }}</div>
   
   <div *ngIf="!isLoading && !errorMessage">
+    <div class="toolbar-actions m-b-20">
+      <div class="flex flex-wrap gap-2 items-center">
+        <button (click)="toggleFilters()" class="neutral_button">
+          {{ isFilterVisible ? '✕ Skrýt filtry' : 'Zobrazit filtry' }}
+        </button>
+
+        <button *appHasPermission="'view-deleted'" (click)="toggleTable()" class="neutral_button">
+          {{ showTrashTable ? 'Zobrazit Aktivní' : 'Zobrazit Smazané' }}
+        </button>
+
+        <button class="neutral_button" (click)="exportActiveTable()">
+          Exportovat do CSV
+        </button>
+
+        <button *ngIf="!showTrashTable" class="confirm_button" (click)="handleCreateFormOpened()">
+          Přidat novinku
+        </button>
+
+        <label class="checkbox-container m-l-10">
+          <input type="checkbox" [(ngModel)]="isTableFullWidth"> Plná šířka tabulky
+        </label>
+      </div>
+    </div>
+
     <div class="main-content-layout">
       <div class="filter-side-panel" [class.active]="isFilterVisible">
         <app-generic-filter-form
@@ -22,18 +46,11 @@
       </div>
 
       <div class="table-and-pagination-container">
-        <button (click)="toggleFilters()" class="neutral_button m-b-10">
-          {{ isFilterVisible ? '✕ Skrýt filtry' : 'Zobrazit filtry' }}
-        </button>
-        
-        <button *appHasPermission="'view-deleted'" (click)="toggleTable()" class="toggle-table-btn neutral_button m-b-10 p-l-10">
-          {{ showTrashTable ? 'Zobrazit Aktivní Novinky' : 'Zobrazit Smazané Novinky' }}
-        </button>
-
-        <app-generic-table *ngIf="!showTrashTable"
+        <app-generic-table #activeTable *ngIf="!showTrashTable"
           [buttons]="buttons"
           [data]="data"
           [columns]="newsColumns"
+          [isFullWidth]="isTableFullWidth"
           [tableCaption]="'Seznam aktualit a novinek'"
           [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
@@ -68,14 +85,18 @@
             </select>
           </div>
           <nav class="pagination-nav" aria-label="Pagination">
-            <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" class="pagination-button first-page-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+            <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" class="pagination-button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
             </button>
             <button *ngFor="let page of pagesArray" (click)="goToPage(page)" [ngClass]="{ 'active-page': page === currentPage }" class="pagination-button">
               {{ page }}
             </button>
-            <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" class="pagination-button last-page-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+            <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" class="pagination-button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
             </button>
           </nav>
         </div>
@@ -96,14 +117,18 @@
             </select>
           </div>
           <nav class="pagination-nav" aria-label="Pagination">
-            <button (click)="goToTrashPage(trashCurrentPage - 1)" [disabled]="trashCurrentPage === 1" class="pagination-button first-page-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+            <button (click)="goToTrashPage(trashCurrentPage - 1)" [disabled]="trashCurrentPage === 1" class="pagination-button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
             </button>
             <button *ngFor="let page of trashPagesArray" (click)="goToTrashPage(page)" [ngClass]="{ 'active-page': page === trashCurrentPage }" class="pagination-button">
               {{ page }}
             </button>
-            <button (click)="goToTrashPage(trashCurrentPage + 1)" [disabled]="trashCurrentPage === trashTotalPages" class="pagination-button last-page-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+            <button (click)="goToTrashPage(trashCurrentPage + 1)" [disabled]="trashCurrentPage === trashTotalPages" class="pagination-button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
             </button>
           </nav>
         </div>

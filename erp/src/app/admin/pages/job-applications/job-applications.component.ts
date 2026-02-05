@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -38,10 +38,12 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JobApplicationsComponent extends BaseDataComponent<any> implements OnInit {
+  @ViewChild('activeTable') activeTable!: GenericTableComponent;
+  
   override apiEndpoint: string = 'job_applications';
   
-  // Tlačítka jsou filtrována - žádné 'create' nebude v tabulce povoleno
-  buttons: Buttons[] = JOB_APPLICATION_BUTTONS;
+  // Filtrujeme tlačítka pro vyloučení akce 'create'
+  buttons: Buttons[] = JOB_APPLICATION_BUTTONS.filter(b => b.action !== 'create');
   
   formFields: InputDefinition[] = JOB_APPLICATION_FORM_FIELDS;
   columns: any[] = JOB_APPLICATION_COLUMNS;
@@ -49,16 +51,20 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
   filterColumns = JOB_APPLICATION_FILTER_COLUMNS;
   detailsColumns = JOB_APPLICATION_DETAILS_COLUMNS;
 
+  // UI Stavy
+  isTableFullWidth = true;
+  isFilterVisible = false;
   showTrashTable = false;
   showCreateForm = false;
   showDetails = false;
-  isFilterVisible = false;
   
+  // Aktivní paginace
   currentPage = 1;
   itemsPerPage = 15;
   totalItems = 0;
   totalPages = 0;
   
+  // Trash paginace
   trashCurrentPage = 1;
   trashItemsPerPage = 15;
   trashTotalItems = 0;
@@ -84,6 +90,10 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
     this.authService.isLoggedIn$.subscribe(loggedIn => {
       loggedIn ? this.forceFullRefresh() : this.router.navigate(['/auth/login']);
     });
+  }
+
+  exportActiveTable(): void {
+    if (this.activeTable) this.activeTable.exportToCSV();
   }
 
   public refreshData(): void { this.forceFullRefresh(); }
@@ -114,11 +124,8 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
   }
 
   forceFullRefresh(): void {
-    this.activeCache.clear();
-    this.trashCache.clear();
-    this.isLoading = true;
-    this.currentPage = 1;
-    this.trashCurrentPage = 1;
+    this.activeCache.clear(); this.trashCache.clear();
+    this.isLoading = true; this.currentPage = 1; this.trashCurrentPage = 1;
     
     forkJoin([
       this.fetchPaginatedData(false, this.currentPage, this.itemsPerPage, this.activeCache),
@@ -128,16 +135,8 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
     ).subscribe();
   }
 
-  applyFilters(f: any): void {
-    this.filters = { ...this.filters, ...f };
-    this.forceFullRefresh();
-  }
-
-  clearFilters(): void {
-    this.filters = { sort_direction: 'desc', sort_by: 'id' };
-    this.forceFullRefresh();
-  }
-
+  applyFilters(f: any): void { this.filters = { ...this.filters, ...f }; this.forceFullRefresh(); }
+  clearFilters(): void { this.filters = { sort_direction: 'desc', sort_by: 'id' }; this.forceFullRefresh(); }
   toggleFilters(): void { this.isFilterVisible = !this.isFilterVisible; }
   toggleTable(): void { this.showTrashTable = !this.showTrashTable; this.forceFullRefresh(); }
 
@@ -148,19 +147,28 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
     }
   }
 
+  goToTrashPage(p: number): void {
+    if (p >= 1 && p <= this.trashTotalPages && p !== this.trashCurrentPage) {
+      this.trashCurrentPage = p;
+      this.fetchPaginatedData(true, p, this.trashItemsPerPage, this.trashCache).subscribe();
+    }
+  }
+
   onItemsPerPageChange(e: any): void { this.itemsPerPage = +e.target.value; this.forceFullRefresh(); }
+  onTrashItemsPerPageChange(e: any): void { this.trashItemsPerPage = +e.target.value; this.forceFullRefresh(); }
 
-  // ... (Podobné metody pro Trash paginaci jako ve vzoru) ...
-
-  get pagesArray(): number[] {
+  private getPaginationArray(current: number, total: number): number[] {
     const max = 5;
-    let start = Math.max(1, this.currentPage - Math.floor(max / 2));
-    let end = Math.min(this.totalPages, start + max - 1);
+    let start = Math.max(1, current - Math.floor(max / 2));
+    let end = Math.min(total, start + max - 1);
     if (end - start + 1 < max) start = Math.max(1, end - max + 1);
     const pages = [];
     for (let i = start; i <= end; i++) pages.push(i);
     return pages;
   }
+
+  get pagesArray(): number[] { return this.getPaginationArray(this.currentPage, this.totalPages); }
+  get trashPagesArray(): number[] { return this.getPaginationArray(this.trashCurrentPage, this.trashTotalPages); }
 
   handleEditFormOpened(item: any): void { 
     this.selectedItemForEdit = { ...item }; 
@@ -182,7 +190,6 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
 
   handleFormSubmitted(formData: any): void {
     this.isLoading = true;
-    // Zde probíhá pouze update (stav nebo poznámka)
     this.updateData(formData.id, formData).pipe(
       finalize(() => this.isLoading = false)
     ).subscribe(() => {

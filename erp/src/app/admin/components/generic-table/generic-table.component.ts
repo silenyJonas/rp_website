@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { CommonModule, CurrencyPipe, KeyValuePipe, DatePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
@@ -41,6 +41,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   @Input() buttons: Buttons[] = [];
   @Input() isLogsTable: boolean = false;
   @Input() isAdminTable: boolean = false;
+  @Input() isFullWidth: boolean = true; // Přesunuto na Input pro ovládání zvenčí
   
   @Output() itemDeleted = new EventEmitter<any>();
   @Output() createFormOpened = new EventEmitter<void>();
@@ -48,8 +49,6 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   @Output() resetPasswordFormOpened = new EventEmitter<any>(); 
   @Output() viewDetailsOpened = new EventEmitter<any>();
 
-  public isFullWidth: boolean = true;
-  
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
@@ -179,6 +178,9 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     return this.columnDefinitions.length + (activeButtonsCount > 0 ? 1 : 0);
   }
 
+  /**
+   * Veřejná metoda pro export, kterou lze volat z rodiče
+   */
   async exportToCSV() {
     try {
       this.isLoading = true;

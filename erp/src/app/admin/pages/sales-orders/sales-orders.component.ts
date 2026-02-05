@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -38,9 +38,11 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SalesOrdersComponent extends BaseDataComponent<any> implements OnInit {
+  @ViewChild('activeTable') activeTable!: GenericTableComponent;
+  
   override apiEndpoint: string = 'sales_orders';
   
-  // Odfiltrování tlačítka pro vytvoření (povoleny pouze edit, delete, view)
+  // Odfiltrování akce 'create' - záznamy tvoří zákazníci
   buttons: Buttons[] = SALES_ORDER_BUTTONS.filter(b => b.action !== 'create');
   
   formFields: InputDefinition[] = SALES_ORDER_FORM_FIELDS;
@@ -49,18 +51,18 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
   filterColumns = SALES_ORDER_FILTER_COLUMNS;
   detailsColumns = SALES_ORDER_DETAILS_COLUMNS;
 
+  // UI Stavy
+  isTableFullWidth = true;
   showTrashTable = false;
-  showCreateForm = false;
+  showCreateForm = false; // Použito pouze pro Editaci existujících
   showDetails = false;
   isFilterVisible = false;
   
-  // Paginace Aktivní
   currentPage = 1;
   itemsPerPage = 15;
   totalItems = 0;
   totalPages = 0;
   
-  // Paginace Koš
   trashCurrentPage = 1;
   trashItemsPerPage = 15;
   trashTotalItems = 0;
@@ -88,9 +90,14 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
     });
   }
 
-  public refreshData(): void {
-    this.forceFullRefresh();
+  // Metoda pro volání exportu z generic-table
+  exportActiveTable(): void {
+    if (this.activeTable) {
+      this.activeTable.exportToCSV();
+    }
   }
+
+  public refreshData(): void { this.forceFullRefresh(); }
 
   private fetchPaginatedData(isTrash: boolean, page: number, perPage: number, cache: Map<number, any[]>): Observable<any> {
     const params: FilterParams = { ...this.filters };
@@ -132,16 +139,8 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
     ).subscribe();
   }
 
-  applyFilters(f: any): void {
-    this.filters = { ...this.filters, ...f };
-    this.forceFullRefresh();
-  }
-
-  clearFilters(): void {
-    this.filters = { sort_direction: 'desc', sort_by: 'id' };
-    this.forceFullRefresh();
-  }
-
+  applyFilters(f: any): void { this.filters = { ...this.filters, ...f }; this.forceFullRefresh(); }
+  clearFilters(): void { this.filters = { sort_direction: 'desc', sort_by: 'id' }; this.forceFullRefresh(); }
   toggleFilters(): void { this.isFilterVisible = !this.isFilterVisible; }
   toggleTable(): void { this.showTrashTable = !this.showTrashTable; this.forceFullRefresh(); }
 
@@ -152,11 +151,6 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
     }
   }
 
-  onItemsPerPageChange(e: any): void {
-    this.itemsPerPage = +e.target.value;
-    this.forceFullRefresh();
-  }
-
   goToTrashPage(p: number): void {
     if (p >= 1 && p <= this.trashTotalPages && p !== this.trashCurrentPage) {
       this.trashCurrentPage = p;
@@ -164,10 +158,8 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
     }
   }
 
-  onTrashItemsPerPageChange(e: any): void {
-    this.trashItemsPerPage = +e.target.value;
-    this.forceFullRefresh();
-  }
+  onItemsPerPageChange(e: any): void { this.itemsPerPage = +e.target.value; this.forceFullRefresh(); }
+  onTrashItemsPerPageChange(e: any): void { this.trashItemsPerPage = +e.target.value; this.forceFullRefresh(); }
 
   private getPaginationArray(current: number, total: number): number[] {
     const max = 5;
@@ -199,7 +191,8 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
 
   handleFormSubmitted(formData: any): void {
     this.isLoading = true;
-    const req = formData.id ? this.updateData(formData.id, formData) : this.postData(formData);
+    // Zde už se nepředpokládá Post (tvorba), ale pouze Update
+    const req = this.updateData(formData.id, formData);
     req.pipe(finalize(() => this.isLoading = false)).subscribe(() => {
       this.showCreateForm = false;
       this.forceFullRefresh();

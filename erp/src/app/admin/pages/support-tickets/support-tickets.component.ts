@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -38,6 +38,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SupportTicketsComponent extends BaseDataComponent<any> implements OnInit {
+  @ViewChild('activeTable') activeTable!: GenericTableComponent;
+
   override apiEndpoint: string = 'support_tickets';
   
   buttons: Buttons[] = SUPPORT_TICKET_BUTTONS;
@@ -47,16 +49,20 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
   filterColumns = SUPPORT_TICKET_FILTER_COLUMNS;
   detailsColumns = SUPPORT_TICKET_DETAILS_COLUMNS;
 
+  // UI Stavy
+  isTableFullWidth = true;
   showTrashTable = false;
   showCreateForm = false;
   showDetails = false;
   isFilterVisible = false;
   
+  // Paginace Aktivní
   currentPage = 1;
   itemsPerPage = 15;
   totalItems = 0;
   totalPages = 0;
   
+  // Paginace Koš
   trashCurrentPage = 1;
   trashItemsPerPage = 15;
   trashTotalItems = 0;
@@ -82,6 +88,10 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
     this.authService.isLoggedIn$.subscribe(loggedIn => {
       loggedIn ? this.forceFullRefresh() : this.router.navigate(['/auth/login']);
     });
+  }
+
+  exportActiveTable(): void {
+    if (this.activeTable) this.activeTable.exportToCSV();
   }
 
   public refreshData(): void { this.forceFullRefresh(); }
@@ -112,8 +122,7 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
   }
 
   forceFullRefresh(): void {
-    this.activeCache.clear();
-    this.trashCache.clear();
+    this.activeCache.clear(); this.trashCache.clear();
     this.isLoading = true;
     forkJoin([
       this.fetchPaginatedData(false, this.currentPage, this.itemsPerPage, this.activeCache),
@@ -157,6 +166,7 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
     return pages;
   }
 
+  handleCreateFormOpened(): void { this.selectedItemForEdit = null; this.showCreateForm = true; }
   handleEditFormOpened(item: any): void { this.selectedItemForEdit = item; this.showCreateForm = true; }
   
   handleViewDetails(item: any): void {

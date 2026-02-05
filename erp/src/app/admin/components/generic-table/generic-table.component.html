@@ -1,6 +1,4 @@
-
-
- <div class="table-responsive">
+<div class="table-responsive">
   <table [class.fit-content-table]="!isFullWidth">
     <caption *ngIf="tableCaption">
       <div class="caption-content-wrapper">
@@ -65,11 +63,4 @@
       </ng-template>
     </tbody>
   </table>
-</div>
-<div class="toolbar">
-  <button class="neutral_button" (click)="exportToCSV()">Exportovat tabulku</button>
-  <button *ngIf="isLogsTable == false" class="confirm_button" (click)="openCreateForm()">Přidat záznam</button>
-  <label class="checkbox-container">
-    <input type="checkbox" [(ngModel)]="isFullWidth"> Zobrazit tabulku na šířce stránky
-  </label>
 </div>
