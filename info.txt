@@ -5,3 +5,5 @@
 -dat v KB footer do componenty
 --------------------------
 udelat knowledge base aktualizovat
+upravit tak aby u table tlacitka popupy prekryvali celou obrazovku
+upravit rozlozeni tablu na strance at tam neni nevyuzite mistos

@@ -36,7 +36,18 @@
   border: 1px solid #e5e7eb;
   margin-bottom: 10px;
 }
-
+.toolbar-actions{
+  display: flex;
+  justify-content: end;
+}
+.toolbar-actions-in{
+  display: flex;
+  justify-content: end;
+}
+.checkbox-container{
+  display: flex;
+  justify-content: end;
+}
 /* --- Sekce Tabulka --- */
 .table-and-pagination-container {
   flex-grow: 1;
@@ -141,3 +152,35 @@
   height: 1.25rem;
   width: 1.25rem;
 }
+/* Nové styly pro kompaktní barevná tlačítka */
+.small-btn {
+  margin: 5px;
+  padding: 5px 12px;
+  font-size: 13px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.btn-filter { background-color: #f3f4f6; color: #374151; border-color: #d1d5db; }
+.btn-filter:hover { background-color: #e5e7eb; }
+
+.btn-trash { background-color: #fef2f2; color: #dc2626; border-color: #fecaca; }
+.btn-trash:hover { background-color: #fee2e2; }
+
+.btn-export { background-color: #ecfdf5; color: #059669; border-color: #a7f3d0; }
+.btn-export:hover { background-color: #d1fae5; }
+
+.btn-create { background-color: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+.btn-create:hover { background-color: #dbeafe; }
+
+.text-xs { font-size: 12px; }
+
+/* Přidání zarovnání doprava pro flex kontejner */
+.justify-end { justify-content: flex-end; }

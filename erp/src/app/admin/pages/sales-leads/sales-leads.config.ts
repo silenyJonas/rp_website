@@ -5,24 +5,27 @@ import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 
 export const SALES_LEAD_BUTTONS: Buttons[] = [
-  { display_name: '🔎',header_name: 'Detaily',  isActive: true, type: 'info_button', action: 'details' },
+  { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
   { display_name: 'Copy', header_name: 'Link', isActive: true, type: 'neutral_button', action: 'generate_form' },
   { display_name: '🗑️', header_name: 'Del', isActive: true, type: 'delete_button', action: 'delete' },
 ];
 
 export const SALES_LEAD_STATUS_OPTIONS: string[] = [
-  'nové', 
-  'probíhá komunikace', 
-  'příprava nabídky', 
-  'nabídka odeslána', 
-  'popt. form. odeslán', 
-  'vyjednávání', 
-  'pozastaveno', 
+  'Nové', 
+  'Probíhá komunikace', 
+  'Příprava nabídky', 
+  'Nabídka odeslána', 
+  'Poptávkový formulář odeslán', 
+  'Vyjednávání', 
+  'Pozastaveno', 
   'Přebírá si dev team',
-  'uzavřeno - získáno', 
-  'uzavřeno - ztraceno',
-  'jiné'
+  'Uzavřeno - Získáno', 
+  'Čeká se na fakturaci',
+  'Čeká se na zaplacení',
+  'Uhrazeno - Projekt spuštěn',
+  'Uzavřeno - Ztraceno',
+  'Jiné'
 ];
 
 export const SALES_LEAD_PRIORITY_OPTIONS: string[] = [
@@ -34,14 +37,29 @@ export const SALES_LEAD_PRIORITY_OPTIONS: string[] = [
 ];
 
 export const SALES_LEAD_SOURCE_CHANNELS: string[] = [
-  'LinkedIn', 
-  'Instagram', 
-  'Telefon', 
-  'Inzerát', 
-  'Osobní', 
-  'Web', 
-  'Email',
-  'Doporučení'
+  'LinkedIn - Direct Message',
+  'LinkedIn - Komentář/Post',
+  'Facebook - Skupina',
+  'Facebook - Direct Message',
+  'Instagram - DM',
+  'X (Twitter)',
+  'WhatsApp',
+  'Telegram',
+  'Webový formulář',
+  'Email - Studený (Cold Email)',
+  'Email - Newsletter',
+  'Telefon - Studený (Cold Call)',
+  'Telefon - Příchozí poptávka',
+  'Osobní setkání',
+  'Networking / Akce / Konference',
+  'Doporučení (Referral)',
+  'Bývalý klient',
+  'Poptávkový portál',
+  'Google Moje Firma',
+  'Inzerát / Placená reklama (PPC)',
+  'Partner / Affiliate',
+  'Jiný online kanál',
+  'Jiný offline kanál'
 ];
 
 export const SALES_LEAD_FORM_FIELDS: InputDefinition[] = [
@@ -192,10 +210,7 @@ export const SALES_LEAD_COLUMNS: ColumnDefinition[] = [
   { key: 'contact_person', header: 'Kontaktní osoba', type: 'text' },
   { key: 'contact_email', header: 'Email', type: 'text' },
   { key: 'contact_phone', header: 'Telefon', type: 'text' },
-  { key: 'contact_other', header: 'Ostatní kontakt', type: 'text' },
-  { key: 'location', header: 'Lokalita', type: 'text' },
   { key: 'salesman_name', header: 'Obchodník', type: 'text' },
-  { key: 'next_step', header: 'Další krok', type: 'text' },
   { key: 'updated_at', header: 'Aktualizace', type: 'date', format: 'short' }
 ];
 
@@ -211,9 +226,8 @@ export const SALES_LEAD_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'status', header: 'Stav', type: 'select', options: SALES_LEAD_STATUS_OPTIONS, placeholder: '-- Stav --', canSort: true },
   { key: 'priority', header: 'Priorita', type: 'select', options: SALES_LEAD_PRIORITY_OPTIONS, placeholder: '-- Priorita --', canSort: true },
   { key: 'contact_email', header: 'Email', type: 'text', placeholder: 'Hledat email...', canSort: true },
-  { key: 'contact_phone', header: 'Telefon', type: 'text', placeholder: 'Hledat telefon...', canSort: true },
-  { key: 'contact_other', header: 'Ostatní', type: 'text', placeholder: 'Ostatní kontakt...', canSort: true },
   { key: 'salesman_name', header: 'Obchodník', type: 'text', placeholder: 'Jméno...', canSort: true },
+  { key: 'source_channel', header: 'Zdroj', type: 'select', options: SALES_LEAD_SOURCE_CHANNELS, placeholder: '-- Zdroj --', canSort: true },
 ];
 
 export const SALES_LEAD_DETAILS_COLUMNS: ItemDetailsColumns[] = [
