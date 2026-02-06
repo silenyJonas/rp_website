@@ -18,7 +18,7 @@ import { GenericFilterFormComponent } from '../../components/generic-filter-form
 import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
-
+import { PaginationButtonsComponent } from '../../components/pagination-buttons/pagination-buttons.component';
 import {
   USER_REQUEST_BUTTONS,
   USER_REQUEST_FORM_FIELDS,
@@ -36,7 +36,7 @@ import {
   imports: [
     CommonModule, FormsModule, GenericTableComponent, GenericTrashTableComponent,
     GenericFormComponent, GenericFilterFormComponent, GenericDetailsComponent,
-    HasPermissionDirective
+    HasPermissionDirective, PaginationButtonsComponent
   ],
   templateUrl: './user-request.component.html',
   styleUrl: '../default-style.css',
@@ -199,8 +199,9 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     }
   }
 
-  onItemsPerPageChange(event: Event): void {
-    this.itemsPerPage = Number((event.target as HTMLSelectElement).value);
+  // Původní: onItemsPerPageChange(event: Event): void { ... }
+  onItemsPerPageChange(value: number): void {
+    this.itemsPerPage = value; // 'value' už je číslo díky EventEmitteru
     this.forceFullRefresh();
   }
 

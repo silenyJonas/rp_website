@@ -1,0 +1,93 @@
+.pagination-controls-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 25px;
+  padding: 15px 0;
+  border-top: 1px solid #1e1e20;
+}
+
+.pagination-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.pagination-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.pagination-button {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid #27272a;
+  background: #18181b;
+  color: #a1a1aa;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-button:hover:not(:disabled) {
+  border-color: #a67dff;
+  color: #ffffff;
+  background: #27272a;
+}
+
+.pagination-button:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.active-page {
+  background: #a67dff !important;
+  color: #000000 !important;
+  border-color: #a67dff !important;
+  font-weight: 700;
+}
+
+.items-per-page-select {
+  background: #18181b;
+  color: #e4e4e7;
+  border: 1px solid #27272a;
+  padding: 5px 10px;
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.items-per-page-select:focus {
+  border-color: #a67dff;
+}
+
+.nav-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Pomocné třídy pro zachování layoutu */
+.text-sm { font-size: 0.875rem; }
+.text-gray-700 { color: #71717a; }
+.p-b-10 { padding-bottom: 10px; }
+.flex { display: flex; }
+.items-center { align-items: center; }
+.space-x-2 > * + * { margin-left: 0.5rem; }
+
+@media (max-width: 640px) {
+  .pagination-controls-wrapper {
+    align-items: center;
+  }
+  .pagination-actions {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

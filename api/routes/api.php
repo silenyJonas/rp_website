@@ -78,7 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // News
     Route::prefix('news')->group(function () {
-        Route::get('/{news}/details', [NewsController::class, 'showDetails']);
+        Route::get('/{news}/details', [NewsController::class, 'show']);
         Route::post('/{news}/restore', [NewsController::class, 'restore']);
         Route::delete('/force-delete-all', [NewsController::class, 'forceDeleteAllTrashed']);
     });
