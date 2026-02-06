@@ -25,19 +25,19 @@ h1 {
   letter-spacing: -0.02em;
 }
 
-p {
-  margin: 0;
-}
+p { margin: 0; }
+
 a {
-  text-decoration: none; /* Odstraní podtržení */
-  color: #007bff;       /* Nastaví barvu (uprav podle svého brandu) */
+  text-decoration: none;
+  color: #007bff;
   transition: color 0.2s ease-in-out;
 }
 
 a:hover {
-  text-decoration: underline; /* Podtržení se ukáže jen při najetí myší (dobré pro UX) */
+  text-decoration: underline;
   color: #0056b3;
 }
+
 .lead-text {
   font-size: 1.05rem;
   color: #a1a1aa;
@@ -55,7 +55,6 @@ h2 {
   border-left: 2px solid #a67dff;
   padding-left: 15px;
 }
-
 
 /* --- STRUKTURA A DIVIDERY --- */
 .section-divider {
@@ -95,11 +94,12 @@ h2 {
 
 .flow-item p { font-size: 0.8rem; color: #71717a; margin: 0; }
 
-/* --- GRID LAYOUTY (Karty, Leads) --- */
+/* --- GRID LAYOUTY --- */
 .grid-layout, .leads-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  margin-top: 15px;
 }
 
 .info-card, .leads-block {
@@ -189,69 +189,12 @@ h2 {
 
 .highlight-note { border-left: 2px solid #a67dff; }
 
-/* --- FOOTER --- */
-.article-footer {
-  margin-top: 50px;
-  padding-top: 20px;
-  border-top: 1px solid #1e1e20;
-  text-align: center;
-  color: #52525b;
-}
-
-/* --- RESPONSIVE --- */
+/* --- RESPONSIVE (BEZ FOOTERU) --- */
 @media (max-width: 768px) {
   .leads-grid, .grid-layout, .process-flow { grid-template-columns: 1fr; flex-direction: column; }
   .price-table { 
     display: block; 
     overflow-x: auto; 
     table-layout: auto;
-  }
-}
-/* --- AKTUALIZOVANÁ PATIČKA --- */
-.article-footer {
-  margin-top: 60px;
-  padding: 30px 0;
-  border-top: 1px solid #1e1e20;
-  color: #52525b;
-}
-
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-}
-
-.footer-contact p {
-  font-size: 0.8rem;
-  margin-bottom: 5px;
-}
-
-.footer-contact strong {
-  color: #a1a1aa;
-}
-
-.discord-link-small {
-  color: #5865F2;
-  text-decoration: none;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  padding: 8px 16px;
-  border: 1px solid rgba(88, 101, 242, 0.3);
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.discord-link-small:hover {
-  background: rgba(88, 101, 242, 0.1);
-  border-color: #5865F2;
-}
-
-/* Responzivita pro footer */
-@media (max-width: 768px) {
-  .footer-content {
-    flex-direction: column;
-    text-align: center;
   }
 }

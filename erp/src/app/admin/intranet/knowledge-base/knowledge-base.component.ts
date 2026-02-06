@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
+import { KbFooterComponent } from './substitutions/kb-footer/kb-footer.component';
 @Component({
   selector: 'app-knowledge-base',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, KbFooterComponent],
   templateUrl: './knowledge-base.component.html',
   styleUrl: './knowledge-base.component.css'
 })
 export class KnowledgeBaseComponent {
-  isMenuOpen = false; // Stav pro hamburger menu
+  isMenuOpen = false;
 
   constructor(private router: Router) {}
 

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UiDesignerComponent } from './ui-designer.component';
+import { KbFooterComponent } from './kb-footer.component';
 
-describe('UiDesignerComponent', () => {
-  let component: UiDesignerComponent;
-  let fixture: ComponentFixture<UiDesignerComponent>;
+describe('KbFooterComponent', () => {
+  let component: KbFooterComponent;
+  let fixture: ComponentFixture<KbFooterComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UiDesignerComponent]
+      imports: [KbFooterComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UiDesignerComponent);
+    fixture = TestBed.createComponent(KbFooterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

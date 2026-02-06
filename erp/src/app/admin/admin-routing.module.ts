@@ -11,9 +11,7 @@ import { EditWebsiteComponent } from './pages/edit-website/edit-website.componen
 import { KnowledgeBaseComponent } from './intranet/knowledge-base/knowledge-base.component';
 import { KbArticleComponent } from './intranet/knowledge-base/kb-article/kb-article.component';
 import { IntroductionsComponent } from './intranet/knowledge-base/pages/introductions/introductions.component';
-import { WorkflowComponent } from './intranet/knowledge-base/pages/workflow/workflow.component';
 import { SalesRepComponent } from './intranet/knowledge-base/pages/sales-rep/sales-rep.component';
-import { UiDesignerComponent } from './intranet/knowledge-base/pages/ui-designer/ui-designer.component';
 import { SalesLeadsComponent } from './pages/sales-leads/sales-leads.component';
 import { NewsComponent } from './intranet/knowledge-base/pages/news/news.component';
 import { SecurityComponent } from './intranet/knowledge-base/pages/security/security.component';
@@ -55,9 +53,7 @@ const routes: Routes = [
         component: KnowledgeBaseComponent,
         children: [
           { path: 'introductions', component: IntroductionsComponent },
-          { path: 'workflow', component: WorkflowComponent },
           { path: 'sales-rep', component: SalesRepComponent },
-          { path: 'ui-designer', component: UiDesignerComponent },
           { path: 'news', component: NewsComponent },
           { path: 'security', component: SecurityComponent },
           { path: 'contacts', component: ContactsComponent },

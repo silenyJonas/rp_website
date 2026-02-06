@@ -28,7 +28,7 @@ export interface Buttons {
     FormsModule
   ],
   templateUrl: './generic-table.component.html',
-  styleUrls: ['./generic-table.component.css'],
+  styleUrls: ['../table-style.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GenericTableComponent extends BaseDataComponent<any> implements OnInit, OnChanges {

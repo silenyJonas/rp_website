@@ -6,6 +6,9 @@
 .m-b-20 { margin-bottom: 20px; }
 .p-l-10 { margin-left: 15px; }
 
+.table-header{
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
 /* Nadpis tabulky */
 .table-header {
   font-size: 1.25rem;

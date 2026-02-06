@@ -37,11 +37,7 @@
         <div class="nav-group">
           <span class="group-title">Support</span>
           <ul>
-            <li>
-              <a routerLink="support-form" (click)="closeMenu()" routerLinkActive="active-kb">
-                <span class="num">INT.</span> Support Form
-              </a>
-            </li>
+            <li><a routerLink="support-form" (click)="closeMenu()" routerLinkActive="active-kb"><span class="num">INT.</span> Support Form</a></li>
           </ul>
         </div>
       </nav>
@@ -58,6 +54,8 @@
           <h1>Documentation</h1>
           <p>Vyberte kapitolu z menu pro pokračování.</p>
         </div>
+
+        <app-kb-footer></app-kb-footer>
       </div>
     </main>
   </div>

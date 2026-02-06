@@ -24,7 +24,7 @@ export interface Buttons {
     FormsModule,
 ],
   templateUrl: './generic-trash-table.component.html',
-  styleUrls: ['./generic-trash-table.component.css'],
+  styleUrls: ['../table-style.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GenericTrashTableComponent extends BaseDataComponent<any> implements OnInit, OnChanges {

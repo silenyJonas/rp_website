@@ -254,37 +254,6 @@ h2 {
   border-left: 4px solid #a67dff; 
 }
 
-/* --- PATIČKA --- */
-.article-footer {
-  margin-top: 80px;
-  padding: 40px 0;
-  border-top: 1px solid #27272a;
-}
-
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer-contact p {
-  font-size: 0.85rem;
-  margin-bottom: 8px;
-}
-
-.footer-contact strong { color: #ffffff; }
-
-.discord-link-small {
-  background: #5865F2;
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 12px 24px;
-  border-radius: 6px;
-  transition: opacity 0.2s;
-}
-
 .m-t-20{
   margin-top: 20px;
 }
