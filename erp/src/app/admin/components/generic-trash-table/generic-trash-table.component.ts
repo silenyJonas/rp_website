@@ -13,6 +13,7 @@ export interface Buttons {
   display_name: string;
   isActive: boolean;
   type: 'confirm_button' | 'delete_button' | 'info_button' | 'create_button' | 'delete_button' | 'neutral_button';
+  header_name: string;
 }
 
 @Component({
@@ -35,8 +36,8 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
   @Input() uploadsBaseUrl: string = '';
   
   buttons: Buttons[] = [
-    {display_name: 'Obnovit', isActive: true, type: 'confirm_button'},
-    {display_name: 'Trvale Smazat', isActive: true, type: 'delete_button'},
+    {display_name: '♻️', header_name: "Obnovit", isActive: true, type: 'confirm_button'},
+    {display_name: '🧨', header_name: "Trvale smazat", isActive: true, type: 'delete_button'},
   ];
 
   public isFullWidth: boolean = true;

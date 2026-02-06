@@ -1,3 +1,5 @@
+// src/app/pages/sales-lead/sales-lead.config.ts
+
 import { Buttons } from '../../components/generic-table/generic-table.component';
 import { InputDefinition } from '../../components/generic-form/generic-form.component';
 import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
@@ -7,8 +9,8 @@ import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-colu
 export const SALES_LEAD_BUTTONS: Buttons[] = [
   { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
-  { display_name: 'Copy', header_name: 'Link', isActive: true, type: 'neutral_button', action: 'generate_form' },
-  { display_name: '🗑️', header_name: 'Del', isActive: true, type: 'delete_button', action: 'delete' },
+  { display_name: '🔗', header_name: 'Link', isActive: true, type: 'neutral_button', action: 'generate_form' },
+  { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
 ];
 
 export const SALES_LEAD_STATUS_OPTIONS: string[] = [
@@ -202,36 +204,44 @@ export const SALES_LEAD_FORM_FIELDS: InputDefinition[] = [
   }
 ];
 
+/**
+ * HLAVNÍ TABULKA - Jen ty nejdůležitější sloupce pro přehled
+ */
 export const SALES_LEAD_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'subject_name', header: 'Subjekt / Firma', type: 'text' },
   { key: 'status', header: 'Stav', type: 'text' },
   { key: 'priority', header: 'Priorita', type: 'text' },
-  { key: 'contact_person', header: 'Kontaktní osoba', type: 'text' },
-  { key: 'contact_email', header: 'Email', type: 'text' },
-  { key: 'contact_phone', header: 'Telefon', type: 'text' },
   { key: 'salesman_name', header: 'Obchodník', type: 'text' },
   { key: 'updated_at', header: 'Aktualizace', type: 'date', format: 'short' }
 ];
 
+/**
+ * TRASH TABULKA
+ */
 export const SALES_LEAD_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'subject_name', header: 'Subjekt', type: 'text' },
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' }
 ];
 
+/**
+ * FILTRY
+ */
 export const SALES_LEAD_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID...', canSort: true },
   { key: 'subject_name', header: 'Subjekt', type: 'text', placeholder: 'Hledat firmu...', canSort: true },
   { key: 'status', header: 'Stav', type: 'select', options: SALES_LEAD_STATUS_OPTIONS, placeholder: '-- Stav --', canSort: true },
   { key: 'priority', header: 'Priorita', type: 'select', options: SALES_LEAD_PRIORITY_OPTIONS, placeholder: '-- Priorita --', canSort: true },
-  { key: 'contact_email', header: 'Email', type: 'text', placeholder: 'Hledat email...', canSort: true },
   { key: 'salesman_name', header: 'Obchodník', type: 'text', placeholder: 'Jméno...', canSort: true },
   { key: 'source_channel', header: 'Zdroj', type: 'select', options: SALES_LEAD_SOURCE_CHANNELS, placeholder: '-- Zdroj --', canSort: true },
 ];
 
+/**
+ * DETAIL LEADU - TADY JE ÚPLNĚ VŠE
+ */
 export const SALES_LEAD_DETAILS_COLUMNS: ItemDetailsColumns[] = [
-  { key: 'id', displayName: 'ID', type: 'text' },
+  { key: 'id', displayName: 'ID Leadů', type: 'text' },
   { key: 'subject_name', displayName: 'Název subjektu', type: 'text' },
   { key: 'contact_person', displayName: 'Kontaktní osoba', type: 'text' },
   { key: 'contact_email', displayName: 'Email', type: 'text' },

@@ -1,9 +1,8 @@
 ----NESPECHA----
 -dynamicka sprava roli-vytvorit nazev role a priradit k ni permissions v komponente se to bude delat na adminu
 -na dashboardu budou vseobecne info a statistiky treba pocet zamestnancu nebo pocet novych veci atd
--dat paginaci tlacitka do komponentu at to neni na kazde page zvlast + lepsi UI
 -dat v KB footer do componenty
+-dat full width primo do telo table komponenty
 --------------------------
 udelat knowledge base aktualizovat
-upravit tak aby u table tlacitka popupy prekryvali celou obrazovku
-upravit rozlozeni tablu na strance at tam neni nevyuzite mistos
+-dat paginaci tlacitka do komponentu at to neni na kazde page zvlast + lepsi UI

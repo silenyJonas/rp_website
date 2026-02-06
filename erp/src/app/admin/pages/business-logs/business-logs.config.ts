@@ -1,213 +1,87 @@
+// src/app/pages/business-log/business-log.config.ts
+
 import { Buttons } from '../../components/generic-table/generic-table.component';
 import { InputDefinition } from '../../components/generic-form/generic-form.component';
 import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
 import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 
+/**
+ * TLAČÍTKA - U logů většinou stačí jen detail (lupa), smazání nebo editace logů nedává smysl.
+ */
 export const BUTTONS: Buttons[] = [
-  { display_name: '🔎',header_name: 'Detaily',  isActive: true, type: 'info_button', action: 'details' },
-  { display_name: 'Editovat',header_name: 'Edit',  isActive: false, type: 'neutral_button', action: '' },
-  { display_name: 'Nove button',header_name: 'Nove button',  isActive: false, type: 'neutral_button', action: '' },
-  { display_name: 'Smazat', header_name: 'Del', isActive: false, type: 'delete_button', action: '' },
+  { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
 ];
 
+/**
+ * FORMULÁŘOVÁ POLE (Většinou se logy needitují, ale ponechávám dle zadání)
+ */
 export const FORM_FIELDS: InputDefinition[] = [
-  {
-    column_name: 'user_email',
-    label: 'Přihlašovaci email',
-    placeholder: 'Zadejte Email',
-    type: 'text',
-    required: true,
-    pattern: '[^@]+@[^@]+\\.[^@]+',
-    errorMessage: 'spatny format',
-    editable: true,
-    show_in_edit: true,
-    show_in_create: true,
-  },
-  {
-    column_name: 'user_password_hash',
-    label: 'Heslo',
-    placeholder: 'Zadejte heslo',
-    type: 'password',
-    required: true,
-    pattern: '^.{8,}$',
-    errorMessage: 'Zadejte heslo minimalne 8 znaku',
-    editable: true,
-    show_in_edit: false,
-    show_in_create: true
-  },
-  {
-    column_name: 'role_id',
-    label: 'Role',
-    placeholder: '',
-    type: 'select',
-    options: [
-      { value: '1', label: 'sysadmin' },
-      { value: '2', label: 'admin' },
-    ],
-    required: true,
-    errorMessage: 'Pole je povinné.',
-    editable: true,
-    show_in_edit: true,
-    show_in_create: true
-  }
-];
-
-export const STATUS_OPTIONS: string[] = ['Nově zadané', 'Zpracovává se', 'Dokončeno', 'Zrušeno'];
-export const PRIORITY_OPTIONS: string[] = ['Nízká', 'Neutrální', 'Vysoká'];
-
-export const TABLE_COLUMNS: ColumnDefinition[] = [
-  { key: 'business_log_id', header: 'ID', type: 'text' },
-  { key: 'created_at', header: 'Vytvořen', type: 'date', format: 'short' },
-  { key: 'origin', header: 'IP zdroje', type: 'text' },
-  { key: 'event_type', header: 'Událost',   type: 'text'},
-  { key: 'module', header: 'Modul',   type: 'text' },
-  { key: 'description', header: 'Popis', type: 'text' },
-  { key: 'affected_entity_type', header: 'Ovlivněná Entita', type: 'text' },
-  { key: 'affected_entity_id', header: 'ID Ovlivněná Entita', type: 'text' },
-  { key: 'user_login_id_plain', header: 'ID uživatele', type: 'text' },
-  { key: 'user_login_email_plain', header: 'Uživatel', type: 'text' },
-  { key: 'user_login_id', header: 'ID uživatele (Reference)', type: 'text' },
-  { key: 'user.user_email', header: 'Uživatel (Reference)', type: 'text' },
-  { key: 'context_data', header: 'Doplňující data', type: 'text' },
-];
-
-export const FILTER_COLUMNS: FilterColumns[] = [
-  {
-    key: 'business_log_id',
-    header: 'ID',
-    type: 'text',
-    placeholder: 'Hledat podle ID',
-    canSort: true,
-  },
-  {
-    key: 'created_at',
-    header: 'Vytvořen',
-    type: 'text',
-    placeholder: 'Filtrovat podle data vytvoření',
-    canSort: true,
-  },
-  {
-    key: 'origin',
-    header: 'IP zdroje',
-    type: 'text',
-    placeholder: 'Hledat podle IP zdroje',
-    canSort: true,
-  },
-  {
-    key: 'event_type',
-    header: 'Událost',
+  {
+    column_name: 'user_email',
+    label: 'Přihlašovací email',
+    placeholder: 'Zadejte Email',
+    type: 'text',
+    required: true,
+    pattern: '[^@]+@[^@]+\\.[^@]+',
+    errorMessage: 'Špatný formát emailu',
+    editable: true,
+    show_in_edit: true,
+    show_in_create: true,
+  },
+  {
+    column_name: 'role_id',
+    label: 'Role',
     type: 'select',
-    options: ["create", "update", "soft_delete", "hard_delete", "restore"],
-    placeholder: '-- Vybrat prioritu --',
-    canSort: true,
-  },
-  {
-    key: 'module',
-    header: 'Modul',
-    type: 'text',
-    placeholder: 'Hledat podle modulu',
-    canSort: true,
-  },
-  {
-    key: 'description',
-    header: 'Popis',
-    type: 'text',
-    placeholder: 'Hledat podle popisu',
-    canSort: true,
-  },
-  {
-    key: 'affected_entity_type',
-    header: 'Ovlivněná Entita',
-    type: 'text',
-    placeholder: 'Hledat podle ovlivněné entity',
-    canSort: true,
-  },
-  {
-    key: 'affected_entity_id',
-    header: 'ID Ovlivněná Entita',
-    type: 'text',
-    placeholder: 'Hledat podle ID ovlivněné entity',
-    canSort: true,
-  },
-  {
-    key: 'user_login_id',
-    header: 'ID uživatele',
-    type: 'text',
-    placeholder: 'Hledat podle ID uživatele',
-    canSort: true,
-  },
-  {
-    key: 'user.user_email',
-    header: 'Uživatel',
-    type: 'text',
-    placeholder: 'Hledat podle uživatele',
-    canSort: true,
-  },
-  {
-    key: 'context_data',
-    header: 'Doplňující data',
-    type: 'text',
-    placeholder: 'Hledat podle doplňujících dat',
-    canSort: true,
-  }
+    options: [
+      { value: '1', label: 'sysadmin' },
+      { value: '2', label: 'admin' },
+    ],
+    required: true,
+    errorMessage: 'Pole je povinné.',
+    editable: true,
+    show_in_edit: true,
+    show_in_create: true
+  }
 ];
 
+/**
+ * HLAVNÍ TABULKA LOGŮ - PŘEHLEDNÁ A RYCHLÁ
+ */
+export const TABLE_COLUMNS: ColumnDefinition[] = [
+  { key: 'business_log_id', header: 'ID', type: 'text' },
+  { key: 'created_at', header: 'Čas', type: 'date', format: 'short' },
+  { key: 'user_login_email_plain', header: 'Uživatel', type: 'text' },
+  { key: 'event_type', header: 'Akce', type: 'text' },
+  { key: 'module', header: 'Modul', type: 'text' },
+  { key: 'description', header: 'Popis události', type: 'text' },
+  { key: 'origin', header: 'IP', type: 'text' }
+];
+
+/**
+ * FILTRY
+ */
+export const FILTER_COLUMNS: FilterColumns[] = [
+  { key: 'business_log_id', header: 'ID', type: 'text', placeholder: 'ID logu', canSort: true },
+  { key: 'user_login_email_plain', header: 'Uživatel', type: 'text', placeholder: 'Email uživatele', canSort: true },
+  { key: 'event_type', header: 'Událost', type: 'select', options: ["create", "update", "soft_delete", "hard_delete", "restore"], placeholder: '-- Typ --', canSort: true },
+  { key: 'module', header: 'Modul', type: 'text', placeholder: 'Modul systému', canSort: true },
+  { key: 'origin', header: 'IP adresa', type: 'text', placeholder: 'Hledat IP', canSort: true }
+];
+
+/**
+ * DETAIL LOGU - TADY JSOU VŠECHNA TECHNICKÁ DATA
+ */
 export const DETAILS_COLUMNS: ItemDetailsColumns[] = [
-  {
-    key: 'business_log_id',
-    displayName: 'ID',
-    type: 'text'
-  },
-  {
-    key: 'created_at',
-    displayName: 'Vytvořen',
-    type: 'date',
-    format: 'medium'
-  },
-  {
-    key: 'origin',
-    displayName: 'IP zdroje',
-    type: 'text'
-  },
-  {
-    key: 'event_type',
-    displayName: 'Událost',
-    type: 'text'
-  },
-  {
-    key: 'module',
-    displayName: 'Modul',
-    type: 'text'
-  },
-  {
-    key: 'description',
-    displayName: 'Popis',
-    type: 'text'
-  },
-  {
-    key: 'affected_entity_type',
-    displayName: 'Ovlivněná Entita',
-    type: 'text'
-  },
-  {
-    key: 'affected_entity_id',
-    displayName: 'ID Ovlivněná Entita',
-    type: 'text'
-  },
-  {
-    key: 'user.user_login_id',
-    displayName: 'ID uživatele',
-    type: 'text'
-  },
-  {
-    key: 'user.user_email',
-    displayName: 'Uživatel',
-    type: 'text'
-  },
-  {
-    key: 'context_data',
-    displayName: 'Doplňující data',
-    type: 'text'
-  },
+  { key: 'business_log_id', displayName: 'ID Záznamu', type: 'text' },
+  { key: 'created_at', displayName: 'Čas události', type: 'date', format: 'medium' },
+  { key: 'origin', displayName: 'IP adresa zdroje', type: 'text' },
+  { key: 'event_type', displayName: 'Typ události', type: 'text' },
+  { key: 'module', displayName: 'Systémový modul', type: 'text' },
+  { key: 'description', displayName: 'Podrobný popis', type: 'text' },
+  { key: 'affected_entity_type', displayName: 'Ovlivněná entita (Tabulka)', type: 'text' },
+  { key: 'affected_entity_id', displayName: 'ID ovlivněné entity', type: 'text' },
+  { key: 'user_login_id_plain', displayName: 'ID uživatele', type: 'text' },
+  { key: 'user_login_email_plain', displayName: 'Uživatel (Email)', type: 'text' },
+  { key: 'context_data', displayName: 'Technická data (JSON)', type: 'text' }
 ];

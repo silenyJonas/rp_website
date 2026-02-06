@@ -9,7 +9,10 @@
   <div *ngIf="errorMessage" class="text-center text-red-500">{{ errorMessage }}</div>
   
   <div *ngIf="!isLoading && !errorMessage">
- <div class="toolbar-actions m-b-20">
+    <div class="toolbar-actions m-b-t-5">
+      <div class="table-header">
+        Správa účtů
+      </div>
       <div class="toolbar-actions-in">
         
         <button (click)="toggleFilters()" class="btn-filter small-btn">
@@ -78,7 +81,7 @@
           [uploadsBaseUrl]="'https://your-upload-domain.com/uploads/'"
           (itemRestored)="handleItemRestored()">
         </app-generic-trash-table>
- <label class="checkbox-container m-l-10 text-xs">
+ <label *ngIf="!showTrashTable" class="checkbox-container m-l-10 text-xs">
           <input type="checkbox" [(ngModel)]="isTableFullWidth"> Full-width
         </label>
         <div class="pagination-controls-wrapper" *ngIf="!showTrashTable">

@@ -19,9 +19,9 @@ export const NEWS_THEMA_OPTIONS: string[] = [
 ];
 
 export const NEWS_BUTTONS: Buttons[] = [
-  { display_name: '🔎',header_name: 'Detaily',  isActive: true, type: 'info_button', action: 'details' },
-  { display_name: '✒️',header_name: 'Edit',  isActive: true, type: 'neutral_button', action: 'edit' },
-  { display_name: '🗑️', header_name: 'Del', isActive: true, type: 'delete_button', action: 'delete' },
+  { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
+  { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
+  { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
 ];
 
 export const NEWS_FORM_FIELDS: InputDefinition[] = [
@@ -120,15 +120,20 @@ export const NEWS_FORM_FIELDS: InputDefinition[] = [
   }
 ];
 
+/**
+ * HLAVNÍ TABULKA - PŘEHLED NOVINEK
+ */
 export const NEWS_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'title', header: 'Titulek', type: 'text' },
   { key: 'thema', header: 'Téma', type: 'text' },
   { key: 'author', header: 'Autor', type: 'text' },
-  { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' },
-  { key: 'updated_at', header: 'Změněno', type: 'date', format: 'short' }
+  { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' }
 ];
 
+/**
+ * TRASH TABULKA
+ */
 export const NEWS_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'title', header: 'Titulek', type: 'text' },
@@ -136,24 +141,29 @@ export const NEWS_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' }
 ];
 
+/**
+ * FILTRY
+ */
 export const NEWS_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID', canSort: true },
   { key: 'title', header: 'Titulek', type: 'text', placeholder: 'Hledat v titulku', canSort: true },
   { key: 'author', header: 'Autor', type: 'text', placeholder: 'Hledat autora', canSort: true },
-  { key: 'thema', header: 'Téma', type: 'select', options: NEWS_THEMA_OPTIONS, placeholder: '-- Vybrat téma --', canSort: true },
-  { key: 'created_at', header: 'Vytvořeno', type: 'text', placeholder: 'Datum vytvoření', canSort: true }
+  { key: 'thema', header: 'Téma', type: 'select', options: NEWS_THEMA_OPTIONS, placeholder: '-- Vybrat téma --', canSort: true }
 ];
 
+/**
+ * DETAIL NOVINKY - KOMPLETNÍ OBSAH VČETNĚ ODRÁŽEK
+ */
 export const NEWS_DETAILS_COLUMNS: ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID záznamu', type: 'text' },
   { key: 'title', displayName: 'Titulek', type: 'text' },
   { key: 'thema', displayName: 'Kategorie / Téma', type: 'text' },
   { key: 'author', displayName: 'Autor příspěvku', type: 'text' },
   { key: 'message', displayName: 'Hlavní zpráva', type: 'text' },
-  { key: 'bullet_1', displayName: 'Bod 1', type: 'text' },
-  { key: 'bullet_2', displayName: 'Bod 2', type: 'text' },
-  { key: 'bullet_3', displayName: 'Bod 3', type: 'text' },
-  { key: 'bullet_4', displayName: 'Bod 4', type: 'text' },
+  { key: 'bullet_1', displayName: 'Doplňující bod 1', type: 'text' },
+  { key: 'bullet_2', displayName: 'Doplňující bod 2', type: 'text' },
+  { key: 'bullet_3', displayName: 'Doplňující bod 3', type: 'text' },
+  { key: 'bullet_4', displayName: 'Doplňující bod 4', type: 'text' },
   { key: 'created_at', displayName: 'Datum vytvoření', type: 'date', format: 'medium' },
   { key: 'updated_at', displayName: 'Poslední úprava', type: 'date', format: 'medium' }
 ];

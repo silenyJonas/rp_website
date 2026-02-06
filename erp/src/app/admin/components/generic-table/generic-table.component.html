@@ -1,12 +1,5 @@
 <div class="table-responsive">
   <table [class.fit-content-table]="!isFullWidth">
-    <caption *ngIf="tableCaption">
-      <div class="caption-content-wrapper">
-        <div class="caption-text">
-          {{ tableCaption }}
-        </div>
-      </div>
-    </caption>
     <thead>
       <tr>
         <th *ngFor="let col of columnDefinitions">

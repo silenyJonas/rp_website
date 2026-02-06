@@ -7,19 +7,24 @@
   </div>
 
   <div *ngIf="!isLoading && !errorMessage">
- <div class="toolbar-actions m-b-20">
+     <div class="toolbar-actions m-b-t-5">
+      <div class="table-header">
+        Serverové logy
+      </div>
       <div class="toolbar-actions-in">
         
         <button (click)="toggleFilters()" class="btn-filter small-btn">
           {{ isFilterVisible ? '✕ Skrýt' : '🔍 Filtry' }}
         </button>
-  
-        
+
 
         <button class="btn-export small-btn" (click)="exportActiveTable()">
           📥 Export
         </button>
 
+      
+
+       
       </div>
     </div>
 

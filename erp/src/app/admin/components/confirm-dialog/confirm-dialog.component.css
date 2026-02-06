@@ -1,60 +1,107 @@
+/* Overlay - zatemnění celé obrazovky */
 .dialog-overlay {
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  cursor: default;
-}
-
-.dialog-overlay.visible {
-  display: flex;
+  z-index: 30000; /* Maximální priorita nad vším ostatním */
 }
 
 .dialog-container {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  width: 90%;
-  font-family: Arial, sans-serif;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  width: 450px;
+  max-width: 90%; /* Responzivita pro mobily */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: popIn 0.2s ease-out; /* Animace při otevření */
 }
 
 .dialog-header {
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  background-color: #f8f9fa;
 }
 
-.dialog-header h2 {
+.dialog-title {
   margin: 0;
-  font-size: 1.5em;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: #333;
 }
 
-.dialog-content {
-  margin-bottom: 20px;
+.dialog-body {
+  padding: 24px 20px;
+  color: #444;
+  line-height: 1.5;
+  font-size: 1rem;
 }
 
-.dialog-content p {
-  margin: 0;
-  color: #555;
-  line-height: 1.5;
+.dialog-footer {
+  padding: 12px 20px;
+  background: #f8f9fa;
+  border-top: 1px solid #eee;
 }
 
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
 }
 
-/* Nové pravidlo pro zablokování scrollu */
-.no-scroll {
+/* Styly tlačítek */
+.confirm_button {
+  padding: 8px 24px;
+  background-color: #222;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.confirm_button:hover {
+  background-color: #000;
+  transform: translateY(-1px);
+}
+
+.neutral_button {
+  padding: 8px 20px;
+  background-color: #fff;
+  color: #444;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.neutral_button:hover {
+  background-color: #f3f4f6;
+  border-color: #ccc;
+}
+
+/* Animace popIn */
+@keyframes popIn {
+  from { 
+    opacity: 0; 
+    transform: scale(0.95) translateY(10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1) translateY(0); 
+  }
+}
+
+/* Globální pravidlo pro zablokování scrollu (přidává se na body) */
+:host-context(body.no-scroll) {
   overflow: hidden;
 }
