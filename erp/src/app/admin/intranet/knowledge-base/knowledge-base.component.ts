@@ -10,10 +10,19 @@ import { CommonModule } from '@angular/common';
   styleUrl: './knowledge-base.component.css'
 })
 export class KnowledgeBaseComponent {
+  isMenuOpen = false; // Stav pro hamburger menu
+
   constructor(private router: Router) {}
 
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu() {
+    this.isMenuOpen = false;
+  }
+
   isRootPath(): boolean {
-    // Teď už v cestě není /admin/
     return this.router.url === '/company-pages/knowledge-base';
   }
 }

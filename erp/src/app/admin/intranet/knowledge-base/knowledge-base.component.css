@@ -16,7 +16,7 @@
 
 /* --- TOP NAVIGATION BAR --- */
 .kb-top-bar {
-  height: 48px; /* Kompaktní výška */
+  height: 48px;
   padding: 0 20px;
   display: flex;
   justify-content: space-between;
@@ -24,12 +24,34 @@
   border-bottom: 1px solid #1e1e20;
   background: #0d0d0f;
   flex-shrink: 0;
+  z-index: 10002;
 }
 
 .kb-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+}
+
+/* --- HAMBURGER BUTTON --- */
+.menu-toggle {
+  display: none; /* Skryté na desktopu */
+  flex-direction: column;
+  justify-content: space-between;
+  width: 20px;
+  height: 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.menu-toggle .bar {
+  width: 100%;
+  height: 2px;
+  background-color: #a1a1aa;
+  border-radius: 2px;
+  transition: 0.3s;
 }
 
 .logo-square {
@@ -56,11 +78,6 @@
   font-size: 0.75rem;
   color: #52525b;
   text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.exit-link:hover {
-  color: #a67dff;
 }
 
 /* --- HLAVNÍ KONTEJNER --- */
@@ -69,21 +86,21 @@
   flex: 1;
   overflow: hidden;
   background: #0b0b0e;
+  position: relative;
 }
 
-/* --- SIDEBAR (LEVÝ PANEL) --- */
+/* --- SIDEBAR --- */
 .kb-sidebar {
-  width: 220px; /* Minimalistická šířka */
+  width: 220px;
   flex-shrink: 0;
   border-right: 1px solid #1e1e20;
   padding: 20px 0;
   overflow-y: auto;
   background: #0d0d0f;
+  transition: transform 0.3s ease-in-out;
 }
 
-.nav-group {
-  margin-bottom: 24px;
-}
+.nav-group { margin-bottom: 24px; }
 
 .group-title {
   display: block;
@@ -96,21 +113,22 @@
   color: #3f3f46;
 }
 
-.kb-nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+.kb-nav ul { list-style: none; padding: 0; margin: 0; }
 
 .kb-nav a {
   display: flex;
   align-items: center;
-  padding: 6px 20px;
+  padding: 8px 20px;
   font-size: 0.85rem;
   color: #71717a;
   text-decoration: none;
-  transition: all 0.15s ease;
   border-left: 2px solid transparent;
+}
+
+.kb-nav a.active-kb {
+  color: #a67dff;
+  background: rgba(166, 125, 255, 0.03);
+  border-left: 2px solid #a67dff;
 }
 
 .num {
@@ -120,126 +138,66 @@
   color: #27272a;
 }
 
-.kb-nav a:hover {
-  color: #e4e4e7;
-  background: #161618;
-}
+.kb-nav a.active-kb .num { color: #a67dff; }
 
-.kb-nav a.active-kb {
-  color: #a67dff;
-  background: rgba(166, 125, 255, 0.03);
-  border-left: 2px solid #a67dff;
-}
-
-.kb-nav a.active-kb .num {
-  color: #a67dff;
-}
-
-/* --- HLAVNÍ OBSAH (VPRAVO) --- */
+/* --- MAIN CONTENT --- */
 .kb-main-content {
   flex: 1;
   overflow-y: auto;
-  display: flex;
-  justify-content: flex-start;
   scroll-behavior: smooth;
 }
 
 .content-wrapper {
   width: 100%;
-  max-width: 1100px; /* Optimální pro široké tabulky/kód */
-  padding: 20px 40px; /* Minimalizovaný padding pro hustotu dat */
+  max-width: 1100px;
+  padding: 20px 40px;
 }
 
-/* --- WELCOME / EMPTY STATE --- */
+/* --- MOBILNÍ SPECIFIKA (POPUP MENU) --- */
+@media (max-width: 768px) {
+  .menu-toggle { display: flex; }
+
+  /* Animace hamburgeru při otevření */
+  .menu-open .menu-toggle .bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .menu-open .menu-toggle .bar:nth-child(2) { opacity: 0; }
+  .menu-open .menu-toggle .bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  .kb-sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px; /* Šířka popupu */
+    z-index: 10010;
+    transform: translateX(-100%); /* Schovaný vlevo */
+    box-shadow: 20px 0 50px rgba(0,0,0,0.5);
+    border-right: 1px solid #a67dff33;
+  }
+
+  .kb-sidebar.open {
+    transform: translateX(0); /* Vysunutí */
+  }
+
+  .kb-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(2px);
+    z-index: 10005;
+  }
+
+  .content-wrapper { padding: 20px; }
+}
+
+/* --- WELCOME VIEW --- */
 .welcome-view {
-  height: 100%;
+  height: 80%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
-  max-width: 600px;
 }
-
-.doc-code {
-  font-family: monospace;
-  font-size: 0.65rem;
-  color: #a67dff;
-  border: 1px solid rgba(166, 125, 255, 0.2);
-  padding: 2px 8px;
-  border-radius: 3px;
-  margin-bottom: 12px;
-}
-
-.welcome-view h1 {
-  font-size: 2.2rem;
-  color: #fff;
-  margin: 0 0 12px 0;
-  font-weight: 700;
-}
-
-.welcome-view p {
-  color: #71717a;
-  line-height: 1.6;
-  font-size: 0.95rem;
-}
-
-/* --- RESPONZIVITA --- */
-
-/* Tablet / Menší desktopy */
-@media (max-width: 1024px) {
-  .content-wrapper {
-    padding: 20px;
-  }
-}
-
-/* Mobilní zařízení */
-@media (max-width: 768px) {
-  .kb-container {
-    flex-direction: column;
-  }
-
-  .kb-sidebar {
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid #1e1e20;
-    padding: 10px 0;
-    max-height: 150px;
-  }
-
-  .nav-group {
-    margin-bottom: 10px;
-  }
-
-  .group-title {
-    padding: 0 15px;
-  }
-
-  .kb-nav ul {
-    display: flex;
-    overflow-x: auto;
-    padding: 0 10px;
-    gap: 5px;
-  }
-
-  .kb-nav a {
-    white-space: nowrap;
-    border-left: none;
-    border-bottom: 2px solid transparent;
-    padding: 8px 15px;
-  }
-
-  .kb-nav a.active-kb {
-    border-left: none;
-    border-bottom: 2px solid #a67dff;
-    background: transparent;
-  }
-
-  .content-wrapper {
-    padding: 20px 15px;
-  }
-
-  .welcome-view h1 {
-    font-size: 1.8rem;
-  }
-}
+.welcome-view h1 { color: #fff; font-size: 2rem; margin: 10px 0; }
+.doc-code { font-family: monospace; color: #a67dff; font-size: 0.7rem; }

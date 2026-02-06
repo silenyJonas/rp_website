@@ -289,6 +289,7 @@ h2 {
   margin-top: 20px;
 }
 /* --- RESPONZIVITA --- */
+
 @media (max-width: 850px) {
   .leads-grid, .grid-layout, .process-flow { 
     grid-template-columns: 1fr; 
@@ -378,4 +379,13 @@ h2 {
   font-size: 0.75rem;
   border-radius: 20px;
   text-transform: uppercase;
+}
+@media (max-width: 550px) {
+  .decision-grid {
+    display: block;
+    margin-top: 20px;
+  }
+  .decision-card{
+    margin-bottom: 12px;
+  }
 }
