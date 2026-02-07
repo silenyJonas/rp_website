@@ -90,15 +90,15 @@
  <label *ngIf="!showTrashTable" class="checkbox-container m-l-10 text-xs">
           <input  type="checkbox" [(ngModel)]="isTableFullWidth"> Full-width
         </label>
+
         <app-pagination-buttons
-          *ngIf="!showTrashTable"
-          [currentPage]="currentPage"
-          [totalPages]="totalPages"
-          [totalItems]="totalItems"
-          [itemsPerPage]="itemsPerPage"
-          [dataLength]="data.length"
-          (pageChange)="goToPage($event)"
-          (itemsPerPageChange)="onItemsPerPageChange($event)">
+          [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
+          [totalPages]="showTrashTable ? trashTotalPages : totalPages"
+          [totalItems]="showTrashTable ? trashTotalItems : totalItems"
+          [itemsPerPage]="showTrashTable ? trashItemsPerPage : itemsPerPage"
+          [dataLength]="showTrashTable ? trashData.length : data.length"
+          (pageChange)="onHandlePageChange($event)"
+          (itemsPerPageChange)="onHandleItemsPerPageChange($event)">
         </app-pagination-buttons>
       </div>
     </div>

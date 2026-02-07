@@ -18,6 +18,7 @@ import { GenericDetailsComponent } from '../../components/generic-details/generi
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
+import { PaginationButtonsComponent } from '../../components/pagination-buttons/pagination-buttons.component';
 
 import {
   BUTTONS,
@@ -35,7 +36,7 @@ import {
   imports: [
     CommonModule, FormsModule, GenericTableComponent, GenericTrashTableComponent,
     GenericFormComponent, GenericFilterFormComponent, GenericDetailsComponent,
-    HasPermissionDirective
+    HasPermissionDirective, PaginationButtonsComponent
   ],
   templateUrl: './administrators.component.html',
   styleUrl: '../default-style.css',
@@ -65,12 +66,13 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
   filterColumns: FilterColumns[] = FILTER_COLUMNS;
   detailsColumns: ItemDetailsColumns[] = DETAILS_COLUMNS;
 
-  // Stránkování
+  // Stránkování - Aktivní
   currentPage: number = 1;
   itemsPerPage: number = 15;
   totalItems: number = 0;
   totalPages: number = 0;
 
+  // Stránkování - Koš
   trashCurrentPage: number = 1;
   trashItemsPerPage: number = 15;
   trashTotalItems: number = 0;
@@ -108,6 +110,36 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
     });
   }
 
+  // --- HANDLERY PRO PAGINATION COMPONENT ---
+  onHandlePageChange(page: number): void {
+    if (this.showTrashTable) {
+      if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
+        this.trashCurrentPage = page;
+        this.loadTrashRequests().subscribe();
+      }
+    } else {
+      if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+        this.currentPage = page;
+        this.loadActiveRequests().subscribe();
+      }
+    }
+  }
+
+  onHandleItemsPerPageChange(value: number): void {
+    if (this.showTrashTable) {
+      this.trashItemsPerPage = value;
+      this.trashCurrentPage = 1;
+      this.trashRequestsCache.clear();
+      this.loadTrashRequests().subscribe();
+    } else {
+      this.itemsPerPage = value;
+      this.currentPage = 1;
+      this.activeRequestsCache.clear();
+      this.loadActiveRequests().subscribe();
+    }
+  }
+
+  // --- PŮVODNÍ LOGIKA ZŮSTÁVÁ ---
   public refreshData(): void {
     this.forceFullRefresh();
   }
@@ -199,17 +231,6 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
     this.forceFullRefresh();
   }
 
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
-      this.currentPage = page; this.loadActiveRequests().subscribe();
-    }
-  }
-
-  onItemsPerPageChange(event: Event): void {
-    this.itemsPerPage = Number((event.target as HTMLSelectElement).value);
-    this.forceFullRefresh();
-  }
-
   public forceFullRefresh(): void {
     this.activeRequestsCache.clear(); this.trashRequestsCache.clear();
     this.isLoading = true;
@@ -270,13 +291,10 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
   handleItemRestored() { this.forceFullRefresh(); }
   handleItemDeleted() { this.forceFullRefresh(); }
 
-  get pagesArray(): number[] {
-    const max = 5;
-    let start = Math.max(1, this.currentPage - Math.floor(max / 2));
-    let end = Math.min(this.totalPages, start + max - 1);
-    if (end - start + 1 < max) start = Math.max(1, end - max + 1);
-    const pages = [];
-    for (let i = start; i <= end; i++) pages.push(i);
-    return pages;
+  // Pomocné metody pro starou paginaci v šabloně již nebudou potřeba, ale ponecháme goToPage pro vnitřní kompatibilitu
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+      this.currentPage = page; this.loadActiveRequests().subscribe();
+    }
   }
 }

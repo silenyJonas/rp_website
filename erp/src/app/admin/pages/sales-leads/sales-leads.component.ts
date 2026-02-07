@@ -17,6 +17,7 @@ import { GenericFilterFormComponent } from '../../components/generic-filter-form
 import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
+import { PaginationButtonsComponent } from '../../components/pagination-buttons/pagination-buttons.component';
 
 import {
   SALES_LEAD_BUTTONS,
@@ -35,7 +36,7 @@ import {
   imports: [
     CommonModule, FormsModule, GenericTableComponent, GenericTrashTableComponent,
     GenericFormComponent, GenericFilterFormComponent, GenericDetailsComponent,
-    HasPermissionDirective
+    HasPermissionDirective, PaginationButtonsComponent
   ],
   templateUrl: './sales-leads.component.html',
   styleUrl: '../default-style.css',
@@ -104,6 +105,36 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
     });
   }
 
+  // --- HANDLERY PRO PAGINATION COMPONENT ---
+  onHandlePageChange(page: number): void {
+    if (this.showTrashTable) {
+      if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
+        this.trashCurrentPage = page;
+        this.loadTrashRequests().subscribe();
+      }
+    } else {
+      if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+        this.currentPage = page;
+        this.loadActiveRequests().subscribe();
+      }
+    }
+  }
+
+  onHandleItemsPerPageChange(value: number): void {
+    if (this.showTrashTable) {
+      this.trashItemsPerPage = value;
+      this.trashCurrentPage = 1;
+      this.trashRequestsCache.clear();
+      this.loadTrashRequests().subscribe();
+    } else {
+      this.itemsPerPage = value;
+      this.currentPage = 1;
+      this.activeRequestsCache.clear();
+      this.loadActiveRequests().subscribe();
+    }
+  }
+
+  // --- LOGIKA DAT ---
   public refreshData(): void {
     this.forceFullRefresh();
   }
@@ -122,8 +153,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
       updated_at: this.filterUpdatedAt, sort_by: this.filterSortBy, sort_direction: this.filterSortDirection
     };
   }
-
-  toggleFilters() { this.isFilterVisible = !this.isFilterVisible; }
 
   private fetchPaginatedData(
     isTrash: boolean, page: number, itemsPerPage: number,
@@ -164,6 +193,17 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
   loadActiveRequests() { return this.fetchPaginatedData(false, this.currentPage, this.itemsPerPage, this.activeRequestsCache, this.currentActiveFilters); }
   loadTrashRequests() { return this.fetchPaginatedData(true, this.trashCurrentPage, this.trashItemsPerPage, this.trashRequestsCache, this.currentTrashFilters); }
 
+  forceFullRefresh(): void {
+    this.activeRequestsCache.clear(); this.trashRequestsCache.clear();
+    this.isLoading = true;
+    this.cd.detectChanges();
+    forkJoin([this.loadActiveRequests(), this.loadTrashRequests()]).pipe(
+      finalize(() => { this.isLoading = false; this.cd.detectChanges(); })
+    ).subscribe();
+  }
+
+  // --- UI HANDLERY ---
+  toggleFilters() { this.isFilterVisible = !this.isFilterVisible; }
   toggleTable(): void {
     this.showTrashTable = !this.showTrashTable;
     this.forceFullRefresh();
@@ -185,27 +225,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
     this.filterId = ''; this.filterCreatedAt = ''; this.filterUpdatedAt = '';
     this.filterSortBy = ''; this.filterSortDirection = 'asc';
     this.forceFullRefresh();
-  }
-
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
-      this.currentPage = page;
-      this.loadActiveRequests().subscribe();
-    }
-  }
-
-  onItemsPerPageChange(event: Event): void {
-    this.itemsPerPage = Number((event.target as HTMLSelectElement).value);
-    this.forceFullRefresh();
-  }
-
-  private forceFullRefresh(): void {
-    this.activeRequestsCache.clear(); this.trashRequestsCache.clear();
-    this.isLoading = true;
-    this.cd.detectChanges();
-    forkJoin([this.loadActiveRequests(), this.loadTrashRequests()]).pipe(
-      finalize(() => { this.isLoading = false; this.cd.detectChanges(); })
-    ).subscribe();
   }
 
   handleCreateFormOpened() { this.selectedItemForEdit = null; this.showCreateForm = !this.showCreateForm; }
@@ -231,17 +250,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
   }
 
   handleCloseDetails() { this.selectedItemForDetails = null; this.showDetails = false; }
-
-  get pagesArray(): number[] {
-    const max = 5;
-    let start = Math.max(1, this.currentPage - Math.floor(max / 2));
-    let end = Math.min(this.totalPages, start + max - 1);
-    if (end - start + 1 < max) start = Math.max(1, end - max + 1);
-    const pages = [];
-    for (let i = start; i <= end; i++) pages.push(i);
-    return pages;
-  }
-
   handleItemRestored() { this.forceFullRefresh(); }
   handleItemDeleted() { this.forceFullRefresh(); }
 }

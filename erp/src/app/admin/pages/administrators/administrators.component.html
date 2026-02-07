@@ -10,28 +10,20 @@
   
   <div *ngIf="!isLoading && !errorMessage">
     <div class="toolbar-actions m-b-t-5">
-      <div class="table-header">
-        Správa účtů
-      </div>
+      <div class="table-header">Správa účtů</div>
       <div class="toolbar-actions-in">
-        
         <button (click)="toggleFilters()" class="btn-filter small-btn">
           {{ isFilterVisible ? '✕ Skrýt' : '🔍 Filtry' }}
         </button>
         <button *ngIf="!showTrashTable" class="btn-create small-btn" (click)="handleCreateFormOpened()">
           ➕ Přidat
         </button>
-        
-
         <button class="btn-export small-btn" (click)="exportActiveTable()">
           📥 Export
         </button>
-<button *appHasPermission="'view-deleted'" (click)="toggleTable()" class="btn-trash small-btn">
+        <button *appHasPermission="'view-deleted'" (click)="toggleTable()" class="btn-trash small-btn">
           {{ showTrashTable ? '📋 Aktivní' : '🗑️ Smazané' }}
         </button>
-      
-
-       
       </div>
     </div>
 
@@ -81,42 +73,20 @@
           [uploadsBaseUrl]="'https://your-upload-domain.com/uploads/'"
           (itemRestored)="handleItemRestored()">
         </app-generic-trash-table>
- <label *ngIf="!showTrashTable" class="checkbox-container m-l-10 text-xs">
+
+        <label *ngIf="!showTrashTable" class="checkbox-container m-l-10 text-xs">
           <input type="checkbox" [(ngModel)]="isTableFullWidth"> Full-width
         </label>
-        <div class="pagination-controls-wrapper" *ngIf="!showTrashTable">
-          <div class="text-sm text-gray-700 p-b-10">
-            Zobrazuji {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ (currentPage - 1) * itemsPerPage + data.length }} z celkem {{ totalItems }} záznamů.
-          </div>
-          <div class="flex items-center space-x-2 pg-m p-b-10">
-            <label for="itemsPerPage" class="text-sm text-gray-700">Položek na stránku:</label>
-            <select id="itemsPerPage" (change)="onItemsPerPageChange($event)"
-                    class="items-per-page-select" [(ngModel)]="itemsPerPage">
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-            </select>
-          </div>
-          <nav class="pagination-nav" aria-label="Pagination">
-            <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" class="pagination-button">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-              </svg>
-            </button>
-            <ng-container *ngFor="let page of pagesArray">
-              <button (click)="goToPage(page)" [ngClass]="{ 'active-page': page === currentPage }" class="pagination-button">
-                {{ page }}
-              </button>
-            </ng-container>
-            <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" class="pagination-button">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-              </svg>
-            </button>
-          </nav>
-        </div>
+
+        <app-pagination-buttons
+          [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
+          [totalPages]="showTrashTable ? trashTotalPages : totalPages"
+          [totalItems]="showTrashTable ? trashTotalItems : totalItems"
+          [itemsPerPage]="showTrashTable ? trashItemsPerPage : itemsPerPage"
+          [dataLength]="showTrashTable ? trashData.length : data.length"
+          (pageChange)="onHandlePageChange($event)"
+          (itemsPerPageChange)="onHandleItemsPerPageChange($event)">
+        </app-pagination-buttons>
       </div>
     </div>
   </div>

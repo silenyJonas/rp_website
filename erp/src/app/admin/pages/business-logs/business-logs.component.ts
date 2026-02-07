@@ -9,6 +9,7 @@ import { BaseDataComponent } from '../../components/base-data/base-data.componen
 import { GenericTableComponent, Buttons } from '../../components/generic-table/generic-table.component';
 import { GenericFilterFormComponent } from '../../components/generic-filter-form/generic-filter-form.component';
 import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
+import { PaginationButtonsComponent } from '../../components/pagination-buttons/pagination-buttons.component';
 
 import { DataHandler } from '../../../core/services/data-handler.service';
 import { GenericTableService, PaginatedResponse, FilterParams } from '../../../core/services/generic-table.service';
@@ -28,7 +29,8 @@ import {
   selector: 'app-business-logs',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, GenericTableComponent, GenericFilterFormComponent, GenericDetailsComponent
+    CommonModule, FormsModule, GenericTableComponent, GenericFilterFormComponent, 
+    GenericDetailsComponent, PaginationButtonsComponent
   ],
   templateUrl: './business-logs.component.html',
   styleUrl: '../default-style.css',
@@ -39,26 +41,22 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements OnI
 
   override apiEndpoint: string = 'business_logs';
 
-  // Tlačítka z konfigurace - odfiltrujeme 'create' a 'edit' pro logy
   buttons: Buttons[] = BUTTONS.filter(b => b.action !== 'create' && b.action !== 'edit');
   
   tableColumns: ColumnDefinition[] = TABLE_COLUMNS;
   filterColumns: FilterColumns[] = FILTER_COLUMNS;
   detailsColumns: ItemDetailsColumns[] = DETAILS_COLUMNS;
 
-  // UI Stavy
   isTableFullWidth = true;
   isFilterVisible = false;
   showDetails = false;
   selectedItemForDetails: any | null = null;
 
-  // Paginace
   currentPage: number = 1;
   itemsPerPage: number = 15;
   totalItems: number = 0;
   totalPages: number = 0;
 
-  // Filtry
   filterBusinessLogId = '';
   filterCreatedAt = '';
   filterOrigin = '';
@@ -90,6 +88,17 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements OnI
     });
   }
 
+  // --- PAGINATION HANDLERS (NOVÉ) ---
+  onHandlePageChange(page: number): void {
+    this.goToPage(page);
+  }
+
+  onHandleItemsPerPageChange(value: number): void {
+    this.itemsPerPage = value;
+    this.forceFullRefresh();
+  }
+
+  // --- PŮVODNÍ LOGIKA (NEZMĚNĚNA) ---
   exportActiveTable(): void {
     if (this.activeTable) this.activeTable.exportToCSV();
   }
@@ -183,16 +192,6 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements OnI
   onItemsPerPageChange(event: Event): void {
     this.itemsPerPage = Number((event.target as HTMLSelectElement).value);
     this.forceFullRefresh();
-  }
-
-  get pagesArray(): number[] {
-    const max = 5;
-    let start = Math.max(1, this.currentPage - Math.floor(max / 2));
-    let end = Math.min(this.totalPages, start + max - 1);
-    if (end - start + 1 < max) start = Math.max(1, end - max + 1);
-    const pages = [];
-    for (let i = start; i <= end; i++) pages.push(i);
-    return pages;
   }
 
   handleItemDeleted(): void { this.forceFullRefresh(); }

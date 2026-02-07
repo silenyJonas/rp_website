@@ -11,6 +11,7 @@ import { GenericTrashTableComponent } from '../../components/generic-trash-table
 import { GenericFormComponent, InputDefinition } from '../../components/generic-form/generic-form.component';
 import { GenericFilterFormComponent } from '../../components/generic-filter-form/generic-filter-form.component';
 import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
+import { PaginationButtonsComponent } from '../../components/pagination-buttons/pagination-buttons.component';
 
 import { DataHandler } from '../../../core/services/data-handler.service';
 import { GenericTableService, PaginatedResponse, FilterParams } from '../../../core/services/generic-table.service';
@@ -31,7 +32,8 @@ import {
   standalone: true,
   imports: [
     CommonModule, FormsModule, GenericTableComponent, GenericTrashTableComponent,
-    GenericFormComponent, GenericFilterFormComponent, GenericDetailsComponent, HasPermissionDirective
+    GenericFormComponent, GenericFilterFormComponent, GenericDetailsComponent, 
+    HasPermissionDirective, PaginationButtonsComponent
   ],
   templateUrl: './job-applications.component.html',
   styleUrl: '../default-style.css',
@@ -42,7 +44,6 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
   
   override apiEndpoint: string = 'job_applications';
   
-  // Filtrujeme tlačítka pro vyloučení akce 'create'
   buttons: Buttons[] = JOB_APPLICATION_BUTTONS.filter(b => b.action !== 'create');
   
   formFields: InputDefinition[] = JOB_APPLICATION_FORM_FIELDS;
@@ -51,20 +52,17 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
   filterColumns = JOB_APPLICATION_FILTER_COLUMNS;
   detailsColumns = JOB_APPLICATION_DETAILS_COLUMNS;
 
-  // UI Stavy
   isTableFullWidth = true;
   isFilterVisible = false;
   showTrashTable = false;
   showCreateForm = false;
   showDetails = false;
   
-  // Aktivní paginace
   currentPage = 1;
   itemsPerPage = 15;
   totalItems = 0;
   totalPages = 0;
   
-  // Trash paginace
   trashCurrentPage = 1;
   trashItemsPerPage = 15;
   trashTotalItems = 0;
@@ -92,6 +90,30 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
     });
   }
 
+  // --- PAGINATION HANDLERS (NOVÉ) ---
+  onHandlePageChange(page: number): void {
+    if (this.showTrashTable) {
+      this.goToTrashPage(page);
+    } else {
+      this.goToPage(page);
+    }
+  }
+
+  onHandleItemsPerPageChange(value: number): void {
+    if (this.showTrashTable) {
+      this.trashItemsPerPage = value;
+      this.trashCurrentPage = 1;
+      this.trashCache.clear();
+      this.fetchPaginatedData(true, 1, value, this.trashCache).subscribe();
+    } else {
+      this.itemsPerPage = value;
+      this.currentPage = 1;
+      this.activeCache.clear();
+      this.fetchPaginatedData(false, 1, value, this.activeCache).subscribe();
+    }
+  }
+
+  // --- LOGIKA ZŮSTÁVÁ STEJNÁ ---
   exportActiveTable(): void {
     if (this.activeTable) this.activeTable.exportToCSV();
   }
@@ -156,19 +178,6 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
 
   onItemsPerPageChange(e: any): void { this.itemsPerPage = +e.target.value; this.forceFullRefresh(); }
   onTrashItemsPerPageChange(e: any): void { this.trashItemsPerPage = +e.target.value; this.forceFullRefresh(); }
-
-  private getPaginationArray(current: number, total: number): number[] {
-    const max = 5;
-    let start = Math.max(1, current - Math.floor(max / 2));
-    let end = Math.min(total, start + max - 1);
-    if (end - start + 1 < max) start = Math.max(1, end - max + 1);
-    const pages = [];
-    for (let i = start; i <= end; i++) pages.push(i);
-    return pages;
-  }
-
-  get pagesArray(): number[] { return this.getPaginationArray(this.currentPage, this.totalPages); }
-  get trashPagesArray(): number[] { return this.getPaginationArray(this.trashCurrentPage, this.trashTotalPages); }
 
   handleEditFormOpened(item: any): void { 
     this.selectedItemForEdit = { ...item }; 

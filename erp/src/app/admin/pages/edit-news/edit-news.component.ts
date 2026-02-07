@@ -17,6 +17,7 @@ import { GenericFilterFormComponent } from '../../components/generic-filter-form
 import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
+import { PaginationButtonsComponent } from '../../components/pagination-buttons/pagination-buttons.component';
 
 import {
   NEWS_BUTTONS,
@@ -33,7 +34,7 @@ import {
   imports: [
     CommonModule, FormsModule, GenericTableComponent, GenericTrashTableComponent,
     GenericFormComponent, GenericFilterFormComponent, GenericDetailsComponent,
-    HasPermissionDirective
+    HasPermissionDirective, PaginationButtonsComponent
   ],
   templateUrl: './edit-news.component.html',
   styleUrl: '../default-style.css',
@@ -104,6 +105,36 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
     });
   }
 
+  // --- HANDLERY PRO PAGINATION COMPONENT ---
+  onHandlePageChange(page: number): void {
+    if (this.showTrashTable) {
+      if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
+        this.trashCurrentPage = page;
+        this.loadTrashNews().subscribe();
+      }
+    } else {
+      if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+        this.currentPage = page;
+        this.loadActiveNews().subscribe();
+      }
+    }
+  }
+
+  onHandleItemsPerPageChange(value: number): void {
+    if (this.showTrashTable) {
+      this.trashItemsPerPage = value;
+      this.trashCurrentPage = 1;
+      this.trashNewsCache.clear();
+      this.loadTrashNews().subscribe();
+    } else {
+      this.itemsPerPage = value;
+      this.currentPage = 1;
+      this.activeNewsCache.clear();
+      this.loadActiveNews().subscribe();
+    }
+  }
+
+  // --- LOGIKA DAT (NEZMĚNĚNA) ---
   public refreshData(): void { this.forceFullRefresh(); }
 
   exportActiveTable(): void {
@@ -185,44 +216,7 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
   toggleFilters() { this.isFilterVisible = !this.isFilterVisible; }
   toggleTable(): void { this.showTrashTable = !this.showTrashTable; this.forceFullRefresh(); }
 
-  // Metody pro navigaci a změnu počtu položek
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
-      this.currentPage = page; this.loadActiveNews().subscribe();
-    }
-  }
-
-  goToTrashPage(page: number): void {
-    if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
-      this.trashCurrentPage = page; this.loadTrashNews().subscribe();
-    }
-  }
-
-  onItemsPerPageChange(event: Event): void {
-    this.itemsPerPage = Number((event.target as HTMLSelectElement).value);
-    this.forceFullRefresh();
-  }
-
-  onTrashItemsPerPageChange(event: Event): void {
-    this.trashItemsPerPage = Number((event.target as HTMLSelectElement).value);
-    this.forceFullRefresh();
-  }
-
-  // Pomocné funkce pro pole stránek
-  private getPaginationArray(currentPage: number, totalPages: number): number[] {
-    const max = 5;
-    let start = Math.max(1, currentPage - Math.floor(max / 2));
-    let end = Math.min(totalPages, start + max - 1);
-    if (end - start + 1 < max) start = Math.max(1, end - max + 1);
-    const pages = [];
-    for (let i = start; i <= end; i++) pages.push(i);
-    return pages;
-  }
-
-  get pagesArray(): number[] { return this.getPaginationArray(this.currentPage, this.totalPages); }
-  get trashPagesArray(): number[] { return this.getPaginationArray(this.trashCurrentPage, this.trashTotalPages); }
-
-  // Handlery formulářů a detailů
+  // Handlery formulářů
   handleCreateFormOpened(): void { this.selectedItemForEdit = null; this.showCreateForm = true; }
   handleEditFormOpened(item: any): void { this.selectedItemForEdit = item; this.showCreateForm = true; }
   onCancelForm() { this.showCreateForm = false; this.selectedItemForEdit = null; }

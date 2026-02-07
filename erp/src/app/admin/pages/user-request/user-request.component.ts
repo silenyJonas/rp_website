@@ -204,7 +204,37 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     this.itemsPerPage = value; // 'value' už je číslo díky EventEmitteru
     this.forceFullRefresh();
   }
+// Obsluha změny stránky
+onHandlePageChange(page: number): void {
+  if (this.showTrashTable) {
+    // Logika pro koš
+    if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
+      this.trashCurrentPage = page;
+      this.loadTrashRequests().subscribe();
+    }
+  } else {
+    // Logika pro aktivní data
+    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+      this.currentPage = page;
+      this.loadActiveRequests().subscribe();
+    }
+  }
+}
 
+// Obsluha změny počtu položek (vaše původní metoda, upravená na číslo)
+onHandleItemsPerPageChange(value: number): void {
+  if (this.showTrashTable) {
+    this.trashItemsPerPage = value;
+    this.trashCurrentPage = 1; // Reset na první stranu při změně limitu
+    this.trashRequestsCache.clear(); // Vymazat cache pro koš
+    this.loadTrashRequests().subscribe();
+  } else {
+    this.itemsPerPage = value;
+    this.currentPage = 1; // Reset na první stranu
+    this.activeRequestsCache.clear(); // Vymazat cache pro aktivní
+    this.loadActiveRequests().subscribe();
+  }
+}
   private forceFullRefresh(): void {
     this.activeRequestsCache.clear(); this.trashRequestsCache.clear();
     this.isLoading = true;

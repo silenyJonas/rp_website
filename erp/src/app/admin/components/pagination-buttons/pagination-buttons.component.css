@@ -1,93 +1,102 @@
+/* Kontejner paginace - nyní vycentrovaný */
 .pagination-controls-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  margin-top: 25px;
-  padding: 15px 0;
-  border-top: 1px solid #1e1e20;
+  align-items: center; /* Změna z flex-end na center */
+  width: 100%;
+}
+
+/* Upravený text "Zobrazuji..." */
+.pagination-info-text {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+.pagination-info{
+  font-size: small;
+  color: #6a6464;
+  padding-bottom: 5px;
+}
+.pagination-info-text strong {
+  color: #111827; /* Zvýraznění čísel tmavší barvou */
+  font-weight: 600;
 }
 
 .pagination-actions {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px; /* Větší mezera mezi volbou stránek a selectem */
   flex-wrap: wrap;
+  justify-content: center;
 }
 
+/* Navigace - tlačítka */
 .pagination-nav {
   display: flex;
-  gap: 6px;
+  gap: 4px;
 }
 
 .pagination-button {
   min-width: 36px;
   height: 36px;
-  padding: 0 8px;
-  border: 1px solid #27272a;
-  background: #18181b;
-  color: #a1a1aa;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid #D1D5DB;
+  background-color: #FFFFFF;
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
 }
 
 .pagination-button:hover:not(:disabled) {
-  border-color: #a67dff;
-  color: #ffffff;
-  background: #27272a;
+  background-color: #F9FAFB;
+  border-color: #9CA3AF;
+  color: #111827;
 }
 
-.pagination-button:disabled {
-  opacity: 0.25;
-  cursor: not-allowed;
-}
-
-.active-page {
-  background: #a67dff !important;
-  color: #000000 !important;
-  border-color: #a67dff !important;
+.pagination-button.active-page {
+  background-color: #EEF2FF !important;
+  border-color: #6366F1 !important;
+  color: #4F46E5 !important;
   font-weight: 700;
 }
 
+.pagination-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background-color: #F3F4F6;
+}
+
+/* Select a label pro položky na stránku */
+.items-per-page-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: #6B7280;
+}
+
 .items-per-page-select {
-  background: #18181b;
-  color: #e4e4e7;
-  border: 1px solid #27272a;
-  padding: 5px 10px;
+  height: 36px;
+  background-color: #FFFFFF;
+  border: 1px solid #D1D5DB;
   border-radius: 6px;
+  padding: 0 8px;
   outline: none;
   cursor: pointer;
-  font-size: 0.85rem;
+  color: #374151;
 }
 
 .items-per-page-select:focus {
-  border-color: #a67dff;
+  border-color: #6366F1;
 }
 
-.nav-arrow svg {
+.nav-arrow-icon {
   width: 18px;
   height: 18px;
-}
-
-/* Pomocné třídy pro zachování layoutu */
-.text-sm { font-size: 0.875rem; }
-.text-gray-700 { color: #71717a; }
-.p-b-10 { padding-bottom: 10px; }
-.flex { display: flex; }
-.items-center { align-items: center; }
-.space-x-2 > * + * { margin-left: 0.5rem; }
-
-@media (max-width: 640px) {
-  .pagination-controls-wrapper {
-    align-items: center;
-  }
-  .pagination-actions {
-    flex-direction: column;
-    gap: 15px;
-  }
 }
