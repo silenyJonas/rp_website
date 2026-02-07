@@ -5,6 +5,4 @@
 -dat full width primo do telo table komponenty
 -uzivatel ktery ma soft-delete aby se nemohl prihlasit
 --------------------------
-zivotopis a ticket doc nejde stahnout
-
 na nekterych strankach pri refresh se dotaze system na vsechny end pointy a teba u busines se system dokaze jen na busines logs

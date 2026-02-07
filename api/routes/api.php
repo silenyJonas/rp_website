@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\SalesOrderController;
 use App\Http\Controllers\Api\SupportTicketController;
 use App\Http\Controllers\Api\JobApplicationController; // Import nového controlleru
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/sanctum/csrf-cookie', function (Request $request) {
     return response()->json([], 204);
@@ -26,10 +27,18 @@ Route::post('/refresh', [AuthController::class, 'refresh']);
 Route::post('raw_request_commissions', [RawRequestCommissionController::class, 'store']);
 Route::post('sales_orders', [SalesOrderController::class, 'store']);
 Route::post('job_applications', [JobApplicationController::class, 'store']); // Veřejné podání přihlášky
+   
 
+Route::get('/download-file/{folder}/{file}', function ($folder, $file) {
+    $path = $folder . '/' . $file;
+    if (!Storage::disk('public')->exists($path)) abort(404);
+    
+    return Storage::disk('public')->download($path);
+})->where('file', '.*');
 
 // --- ROUTY VYŽADUJÍCÍ AUTENTIZACI (Protected) ---
 Route::middleware('auth:sanctum')->group(function () {
+
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
         return $request->user();

@@ -21,7 +21,9 @@
                 <div *ngIf="getValueByPath(itemData, column.key) as fileUrl; else noFile">
                   <div class="file-actions">
                     <a [href]="fileUrl" target="_blank" class="btn-action view">📄 Zobrazit</a>
-                    <a [href]="fileUrl" [download]="getFileName(fileUrl)" class="btn-action download">📥 Stáhnout</a>
+                    <button type="button" (click)="downloadFile(fileUrl)" class="btn-action download">
+                  📥 Stáhnout
+                </button>
                   </div>
                 </div>
                 <ng-template #noFile><span class="text-muted">Není přiložena</span></ng-template>

@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
-
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-generic-details',
   standalone: true,
@@ -45,6 +45,29 @@ export class GenericDetailsComponent implements OnInit, OnDestroy {
     const parts = url.split('/');
     return parts[parts.length - 1].split('?')[0] || 'soubor';
   }
+
+downloadFile(fullUrl: string): void {
+  // 1. Získáme relativní cestu ze stávající URL (např. "tickets/soubor.txt")
+  // fullUrl vypadá teď nejspíš takto: "http://127.0.0.1:8000/storage/tickets/abc.txt"
+  const pathParts = fullUrl.split('/storage/');
+  if (pathParts.length < 2) {
+    window.open(fullUrl, '_blank');
+    return;
+  }
+  
+  const storagePath = pathParts[1]; // např. "tickets/abc.txt"
+  
+  /**
+   * 2. Sestavení URL pro stahování
+   * environment.base_api_url je '/api' nebo 'https://www.rpsw.cz/api'
+   * Pokud base_api_url začíná lomítkem (relativní cesta), 
+   * prohlížeč automaticky použije aktuální doménu.
+   */
+  const downloadUrl = `${environment.base_api_url}/download-file/${storagePath}`;
+  
+  // 3. Spuštění stahování
+  window.location.href = downloadUrl;
+}
 
   getFormattedValue(obj: any, path: string, columnDef: ItemDetailsColumns): any {
     const value = this.getValueByPath(obj, path);
