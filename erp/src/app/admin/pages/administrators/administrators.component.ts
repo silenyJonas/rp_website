@@ -81,7 +81,7 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
   // Filtry
   filterUserLoginId = ''; filterFullName = ''; filterUserEmail = '';
   filterLastLoginAt = ''; filterCreatedAt = ''; filterUpdatedAt = '';
-  filterRoleName = ''; filterSortBy = ''; filterSortDirection: 'asc' | 'desc' = 'asc';
+  filterRoleName = ''; filterSortBy = ''; filterSortDirection: 'asc' | 'desc' = 'desc';
 
   private activeRequestsCache: Map<number, any[]> = new Map();
   private trashRequestsCache: Map<number, any[]> = new Map();
@@ -220,14 +220,14 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
     this.filterUpdatedAt = filters.updated_at || '';
     this.filterRoleName = filters.role_name || '';
     this.filterSortBy = filters.sort_by || '';
-    this.filterSortDirection = filters.sort_direction || 'asc';
+    this.filterSortDirection = filters.sort_direction || 'desc';
     this.forceFullRefresh();
   }
 
   clearFilters(): void {
     this.filterUserLoginId = ''; this.filterFullName = ''; this.filterUserEmail = '';
     this.filterLastLoginAt = ''; this.filterCreatedAt = ''; this.filterUpdatedAt = '';
-    this.filterRoleName = ''; this.filterSortBy = ''; this.filterSortDirection = 'asc';
+    this.filterRoleName = ''; this.filterSortBy = ''; this.filterSortDirection = 'desc';
     this.forceFullRefresh();
   }
 

@@ -170,8 +170,8 @@ export const SALES_LEAD_FORM_FIELDS: InputDefinition[] = [
     label: 'Poslední kontakt',
     type: 'date',
     required: false,
-    editable: true,
-    show_in_edit: true,
+    editable: false,
+    show_in_edit: false,
     show_in_create: false
   },
   {
@@ -253,7 +253,6 @@ export const SALES_LEAD_DETAILS_COLUMNS: ItemDetailsColumns[] = [
   { key: 'source_url', displayName: 'Odkaz (URL)', type: 'text' },
   { key: 'status', displayName: 'Stav', type: 'text' },
   { key: 'priority', displayName: 'Priorita', type: 'text' },
-  { key: 'last_contact_date', displayName: 'Poslední kontakt', type: 'date', format: 'medium' },
   { key: 'next_step', displayName: 'Následný krok', type: 'text' },
   { key: 'description', displayName: 'Popis/Poznámka', type: 'text' },
   { key: 'rejection_reason', displayName: 'Důvod zamítnutí', type: 'text' },

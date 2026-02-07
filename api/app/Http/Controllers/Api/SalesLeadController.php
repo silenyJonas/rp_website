@@ -34,6 +34,7 @@ class SalesLeadController extends Controller
         foreach (['id', 'status', 'priority'] as $f) {
             if ($request->filled($f)) $query->where($f, $request->input($f));
         }
+        
         // Individuální filtry - částečná shoda (like)
         foreach (['subject_name', 'location', 'salesman_name', 'contact_email', 'contact_phone', 'contact_other'] as $f) {
             if ($request->filled($f)) $query->where($f, 'like', '%' . $request->input($f) . '%');
@@ -71,7 +72,12 @@ class SalesLeadController extends Controller
     public function store(StoreSalesLeadRequest $request): JsonResponse
     {
         $user = $request->user();
-        $data = array_merge($request->validated(), [
+        $data = $request->validated();
+        
+        // Ignorujeme pole last_contact_date (zůstane v DB null)
+        unset($data['last_contact_date']);
+
+        $data = array_merge($data, [
             'user_login_id' => $user->user_login_id,
             'salesman_name' => $user->user_email
         ]);
@@ -93,7 +99,12 @@ class SalesLeadController extends Controller
 
     public function update(UpdateSalesLeadRequest $request, SalesLead $salesLead): JsonResponse
     {
-        $salesLead->update($request->validated());
+        $data = $request->validated();
+        
+        // Ignorujeme pole last_contact_date při aktualizaci
+        unset($data['last_contact_date']);
+
+        $salesLead->update($data);
         $this->logAction($request, 'update', 'SalesLead', "Aktualizace leadu: {$salesLead->subject_name}", $salesLead->id);
         return response()->json(new SalesLeadResource($salesLead));
     }

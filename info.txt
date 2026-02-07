@@ -3,6 +3,8 @@
 -na dashboardu budou vseobecne info a statistiky treba pocet zamestnancu nebo pocet novych veci atd
 -dat v KB footer do componenty
 -dat full width primo do telo table komponenty
+-uzivatel ktery ma soft-delete aby se nemohl prihlasit
 --------------------------
-udelat knowledge base aktualizovat
--dat paginaci tlacitka do komponentu at to neni na kazde page zvlast + lepsi UI
+zivotopis a ticket doc nejde stahnout
+
+na nekterych strankach pri refresh se dotaze system na vsechny end pointy a teba u busines se system dokaze jen na busines logs

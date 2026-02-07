@@ -80,7 +80,7 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
 
   // Filtry
   filterSearch = ''; filterThema = ''; filterAuthor = ''; filterId = '';
-  filterSortBy = 'created_at'; filterSortDirection: 'asc' | 'desc' = 'desc';
+  filterSortBy = 'id'; filterSortDirection: 'asc' | 'desc' = 'desc';
 
   private activeNewsCache: Map<number, any[]> = new Map();
   private trashNewsCache: Map<number, any[]> = new Map();

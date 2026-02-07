@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 04, 2026 at 03:07 PM
+-- Generation Time: Feb 07, 2026 at 11:39 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,6 +41,58 @@ CREATE TABLE `business_logs` (
   `user_login_id_plain` varchar(255) DEFAULT NULL,
   `user_login_email_plain` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `business_logs`
+--
+
+INSERT INTO `business_logs` (`business_log_id`, `created_at`, `origin`, `event_type`, `module`, `description`, `affected_entity_type`, `affected_entity_id`, `user_login_id`, `context_data`, `user_login_id_plain`, `user_login_email_plain`) VALUES
+(1, '2026-02-07 10:05:26', '127.0.0.1', 'soft_delete', 'SalesLead', 'Smazání leadu ID: 126', 'SalesLead', 126, 25, '[]', '25', 'joncl'),
+(2, '2026-02-07 10:05:33', '127.0.0.1', 'soft_delete', 'SalesLead', 'Smazání leadu ID: 115', 'SalesLead', 115, 25, '[]', '25', 'joncl'),
+(3, '2026-02-07 10:05:36', '127.0.0.1', 'soft_delete', 'SalesLead', 'Smazání leadu ID: 117', 'SalesLead', 117, 25, '[]', '25', 'joncl'),
+(4, '2026-02-07 10:05:39', '127.0.0.1', 'soft_delete', 'SalesLead', 'Smazání leadu ID: 118', 'SalesLead', 118, 25, '[]', '25', 'joncl'),
+(5, '2026-02-07 10:05:42', '127.0.0.1', 'soft_delete', 'SalesLead', 'Smazání leadu ID: 119', 'SalesLead', 119, 25, '[]', '25', 'joncl'),
+(6, '2026-02-07 10:06:07', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 49, 25, '[]', '25', 'joncl'),
+(7, '2026-02-07 10:06:10', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 48, 25, '[]', '25', 'joncl'),
+(8, '2026-02-07 10:06:12', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 47, 25, '[]', '25', 'joncl'),
+(9, '2026-02-07 10:06:15', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 35, 25, '[]', '25', 'joncl'),
+(10, '2026-02-07 10:06:21', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 33, 25, '[]', '25', 'joncl'),
+(11, '2026-02-07 10:06:24', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 37, 25, '[]', '25', 'joncl'),
+(12, '2026-02-07 10:06:29', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 27, 25, '[]', '25', 'joncl'),
+(13, '2026-02-07 10:06:32', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 46, 25, '[]', '25', 'joncl'),
+(14, '2026-02-07 10:06:35', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 45, 25, '[]', '25', 'joncl'),
+(15, '2026-02-07 10:06:38', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 44, 25, '[]', '25', 'joncl'),
+(16, '2026-02-07 10:06:42', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 43, 25, '[]', '25', 'joncl'),
+(17, '2026-02-07 10:06:47', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 42, 25, '[]', '25', 'joncl'),
+(18, '2026-02-07 10:06:50', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 41, 25, '[]', '25', 'joncl'),
+(19, '2026-02-07 10:06:54', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 40, 25, '[]', '25', 'joncl'),
+(20, '2026-02-07 10:06:57', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 39, 25, '[]', '25', 'joncl'),
+(21, '2026-02-07 10:07:00', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 28, 25, '[]', '25', 'joncl'),
+(22, '2026-02-07 10:07:04', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 26, 25, '[]', '25', 'joncl'),
+(23, '2026-02-07 10:07:08', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 25, 25, '[]', '25', 'joncl'),
+(24, '2026-02-07 10:07:11', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 24, 25, '[]', '25', 'joncl'),
+(25, '2026-02-07 10:07:14', '127.0.0.1', 'soft_delete', 'News', 'Smazáno do koše: adasd', 'News', 23, 25, '[]', '25', 'joncl'),
+(26, '2026-02-07 10:07:29', '127.0.0.1', 'bulk_hard_delete', 'News', 'Hromadné trvalé smazání všech položek v koši. Počet: 28', 'News', NULL, 25, '[]', '25', 'joncl'),
+(27, '2026-02-07 10:07:43', '127.0.0.1', 'force_delete_all', 'UserLogin', 'Vysypání koše: 9', 'UserLogin', NULL, 25, 'Context data vynechána', '25', 'joncl'),
+(28, '2026-02-07 10:17:40', '127.0.0.1', 'create', 'RawRequestCommission', 'Uložení nového požadavku na provizi', 'RawRequestCommission', 1, 25, '{\"thema\":\"test\",\"contact_email\":\"jonas@sdf.cz\",\"contact_phone\":\"123123123\",\"order_description\":\"sdklfdfkgj\",\"note\":null,\"status\":\"Nově zadané\",\"priority\":\"Nízká\"}', '25', 'joncl'),
+(29, '2026-02-07 10:17:46', '127.0.0.1', 'update', 'RawRequestCommission', 'Aktualizace požadavku na provizi', 'RawRequestCommission', 1, 25, '{\"id\":1,\"thema\":\"testXD\",\"contact_email\":\"jonas@sdf.cz\",\"contact_phone\":\"123123123\",\"order_description\":\"sdklfdfkgj\",\"status\":\"Nově zadané\",\"priority\":\"Nízká\",\"note\":null,\"created_at\":\"2026-02-07T09:17:40.000000Z\",\"updated_at\":\"2026-02-07T09:17:40.000000Z\",\"deleted_at\":null}', '25', 'joncl'),
+(30, '2026-02-07 10:17:50', '127.0.0.1', 'soft_delete', 'RawRequestCommission', 'Smazání požadavku', 'RawRequestCommission', 1, 25, '[]', '25', 'joncl'),
+(31, '2026-02-07 10:18:04', '127.0.0.1', 'restore', 'RawRequestCommission', 'Obnova smazaného požadavku', 'RawRequestCommission', 1, 25, '[]', '25', 'joncl'),
+(32, '2026-02-07 10:18:10', '127.0.0.1', 'soft_delete', 'RawRequestCommission', 'Smazání požadavku', 'RawRequestCommission', 1, 25, '[]', '25', 'joncl'),
+(33, '2026-02-07 10:18:15', '127.0.0.1', 'hard_delete', 'RawRequestCommission', 'Smazání požadavku', 'RawRequestCommission', 1, 25, '{\"force_delete\":\"true\"}', '25', 'joncl'),
+(34, '2026-02-07 10:19:19', '127.0.0.1', 'create', 'SalesLead', 'Vytvořen lead: test', 'SalesLead', 1, 25, '{\"subject_name\":\"test\",\"contact_person\":\"jonas\",\"contact_email\":\"jonasOdhlásit@sdf.cu\",\"contact_phone\":\"123123123\",\"contact_other\":\"test\",\"location\":\"praha\",\"source_channel\":\"LinkedIn - Direct Message\",\"source_url\":null,\"status\":\"Nové\",\"priority\":\"Nízká\",\"next_step\":null,\"description\":null}', '25', 'joncl'),
+(35, '2026-02-07 10:23:56', '127.0.0.1', 'create', 'SalesLead', 'Vytvořen lead: test2', 'SalesLead', 2, 25, '{\"subject_name\":\"test2\",\"contact_person\":null,\"contact_email\":null,\"contact_phone\":null,\"contact_other\":null,\"location\":null,\"source_channel\":\"LinkedIn - Direct Message\",\"source_url\":null,\"status\":\"Nové\",\"priority\":\"Nízká\",\"next_step\":null,\"description\":null}', '25', 'joncl'),
+(36, '2026-02-07 10:27:14', '127.0.0.1', 'update', 'SalesLead', 'Aktualizace leadu: test2XD', 'SalesLead', 2, 25, '{\"id\":2,\"user_login_id\":25,\"salesman_name\":\"joncl\",\"first_contact_date\":null,\"subject_name\":\"test2XD\",\"contact_person\":null,\"contact_email\":null,\"contact_phone\":null,\"contact_other\":null,\"location\":null,\"source_channel\":\"LinkedIn - Direct Message\",\"source_url\":null,\"description\":null,\"priority\":\"Nízká\",\"status\":\"Nové\",\"last_contact_date\":null,\"next_step\":null,\"rejection_reason\":null,\"created_at\":\"2026-02-07 10:23:56\",\"updated_at\":\"2026-02-07 10:23:56\",\"deleted_at\":null}', '25', 'joncl'),
+(37, '2026-02-07 11:33:57', '127.0.0.1', 'soft_delete', 'SalesLead', 'Smazání leadu ID: 2', 'SalesLead', 2, 25, '[]', '25', 'joncl'),
+(38, '2026-02-07 11:34:05', '127.0.0.1', 'soft_delete', 'SalesLead', 'Smazání leadu ID: 1', 'SalesLead', 1, 25, '[]', '25', 'joncl'),
+(39, '2026-02-07 11:34:10', '127.0.0.1', 'hard_delete', 'SalesLead', 'Smazání leadu ID: 2', 'SalesLead', 2, 25, '{\"force_delete\":\"true\"}', '25', 'joncl'),
+(40, '2026-02-07 11:34:13', '127.0.0.1', 'restore', 'SalesLead', 'Obnova leadu: test', 'SalesLead', 1, 25, '[]', '25', 'joncl'),
+(41, '2026-02-07 11:34:59', '127.0.0.1', 'create', 'SalesOrder', 'Vytvořena poptávka pro: test_klient', 'SalesOrder', 1, NULL, '{\"lead_id\":\"1\",\"client_name\":\"test_klient\",\"ico\":\"123123123\",\"client_address\":\"dsfds fdf,ČŠĚÚŮL§\",\"client_phone\":\"12312312312\",\"client_email\":\"FSDFSDF@SDF.CU\",\"order_description\":\"dsdfljsdfdfk\",\"dataProcessingAgreement\":\"true\",\"tosAgreement\":\"true\",\"attachment\":{}}', '0', 'Veřejný web (Anonym)'),
+(42, '2026-02-07 11:35:24', '127.0.0.1', 'update', 'SalesLead', 'Aktualizace leadu: testXD', 'SalesLead', 1, 25, '{\"id\":1,\"user_login_id\":25,\"salesman_name\":\"joncl\",\"first_contact_date\":null,\"subject_name\":\"testXD\",\"contact_person\":\"jonas\",\"contact_email\":\"jonasOdhlásit@sdf.cu\",\"contact_phone\":\"123123123\",\"contact_other\":\"test\",\"location\":\"praha\",\"source_channel\":\"LinkedIn - Direct Message\",\"source_url\":null,\"description\":null,\"priority\":\"Nízká\",\"status\":\"Nové\",\"last_contact_date\":null,\"next_step\":null,\"rejection_reason\":null,\"created_at\":\"2026-02-07 10:19:19\",\"updated_at\":\"2026-02-07 11:34:13\",\"deleted_at\":null}', '25', 'joncl'),
+(43, '2026-02-07 11:35:28', '127.0.0.1', 'soft_delete', 'SalesLead', 'Smazání leadu ID: 1', 'SalesLead', 1, 25, '[]', '25', 'joncl'),
+(44, '2026-02-07 11:35:33', '127.0.0.1', 'restore', 'SalesLead', 'Obnova leadu: testXD', 'SalesLead', 1, 25, '[]', '25', 'joncl'),
+(45, '2026-02-07 11:35:38', '127.0.0.1', 'soft_delete', 'SalesLead', 'Smazání leadu ID: 1', 'SalesLead', 1, 25, '[]', '25', 'joncl'),
+(46, '2026-02-07 11:35:42', '127.0.0.1', 'hard_delete', 'SalesLead', 'Smazání leadu ID: 1', 'SalesLead', 1, 25, '{\"force_delete\":\"true\"}', '25', 'joncl');
 
 -- --------------------------------------------------------
 
@@ -114,7 +166,8 @@ CREATE TABLE `news` (
 --
 
 INSERT INTO `news` (`id`, `title`, `message`, `author`, `thema`, `bullet_1`, `bullet_2`, `bullet_3`, `bullet_4`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(9, 'Spuštění sekce novinek', 'První spuštění sekce novinek na našem interním webu, přehled událostí, novinek, upozornění a akcí. Slouží jako informační kanál pro zaměstnance veškeré důležité události budou publikovány zejména zde.', 'Systém', 'Milník', NULL, NULL, NULL, NULL, '2026-01-29 18:44:38', '2026-01-29 18:44:38', NULL);
+(9, 'Spuštění sekce novinek', 'První spuštění sekce novinek na našem interním webu, přehled událostí, novinek, upozornění a akcí. Slouží jako informační kanál pro zaměstnance veškeré důležité události budou publikovány zejména zde.', 'Systém', 'Milník', NULL, NULL, NULL, NULL, '2026-01-29 18:44:38', '2026-01-29 18:44:38', NULL),
+(21, 'Redesing administrace', 'Celý systém administrace dostal nový vzhled, modernější, čistší a přehlednější, nové barvy vzhledy a tvary. Každé vložení záznamu je nyní příjemnější než kdy dříve.', 'Systém', 'Info', 'Nové barvy', 'Nové rozložení', NULL, NULL, '2026-02-05 23:23:51', '2026-02-05 23:23:51', NULL);
 
 -- --------------------------------------------------------
 
@@ -185,7 +238,7 @@ CREATE TABLE `personal_access_tokens` (
 INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `name`, `token`, `abilities`, `last_used_at`, `expires_at`, `created_at`, `updated_at`) VALUES
 (911, 'App\\Models\\User', 15, 'access-token', '86256cc89fb15d7cf939deff0ebbcb92a232e1cc622a1d2c9bee7283abd2aa6a', '[\"*\"]', '2025-08-19 15:08:44', '2025-08-19 15:27:52', '2025-08-19 14:57:52', '2025-08-19 15:08:44'),
 (1173, 'App\\Models\\User', 35, 'access-token', '28635d1380112b9d5dc4bf4d938099a275b094265cbc0362fed0fc78ef5d5b79', '[\"*\"]', '2026-02-01 18:34:09', '2026-02-01 18:48:28', '2026-02-01 18:18:28', '2026-02-01 18:34:09'),
-(1197, 'App\\Models\\User', 25, 'access-token', '56c85b7ccefe06284607cd18d54890d655e529c32b640153f288b448d1f1c928', '[\"*\"]', '2026-02-04 14:06:51', '2026-02-04 14:14:28', '2026-02-04 13:44:28', '2026-02-04 14:06:51');
+(1219, 'App\\Models\\User', 25, 'access-token', '31ca7f90353d62cfbe5b6a3e4b9c2a3cde1eb964a8337069bdf22515b48559b6', '[\"*\"]', '2026-02-07 10:36:42', '2026-02-07 11:03:57', '2026-02-07 10:33:57', '2026-02-07 10:36:42');
 
 -- --------------------------------------------------------
 
@@ -228,8 +281,7 @@ CREATE TABLE `refresh_tokens` (
 
 INSERT INTO `refresh_tokens` (`id`, `user_login_id`, `token`, `expires_at`, `created_at`, `updated_at`) VALUES
 (1147, 34, '59580e407f9d929a507bc6ecba23b5affdbb7b8dc529ffba0c37b302dd0a9961', '2026-02-08 17:58:16', '2026-02-01 17:58:16', '2026-02-01 17:58:16'),
-(1150, 35, 'a99226f47d7be99ae70e2696ac1960ccc812c0e60733d84656e2109031ad2976', '2026-02-08 18:18:28', '2026-02-01 18:18:28', '2026-02-01 18:18:28'),
-(1174, 25, 'c616d5a0cf1cbf5402e4cd891f44da093b0dc7cdaae360a82aa2209f93b79455', '2026-02-11 13:44:28', '2026-02-04 13:44:28', '2026-02-04 13:44:28');
+(1196, 25, 'a5728777a3273d7c375612bea36b8287f425ab2b39e1c50ee76dbed8d35c7f61', '2026-02-14 10:33:57', '2026-02-07 10:33:57', '2026-02-07 10:33:57');
 
 -- --------------------------------------------------------
 
@@ -465,10 +517,9 @@ CREATE TABLE `user_login` (
 --
 
 INSERT INTO `user_login` (`user_login_id`, `user_email`, `contact_email`, `full_name`, `birth_date`, `personal_id_num`, `address`, `bank_account`, `health_insurance`, `commission_rate`, `dpp_hours_spent`, `has_tax_declaration`, `phone_number`, `internal_note`, `user_password_hash`, `user_password_salt`, `last_login_at`, `created_at`, `updated_at`, `deleted_at`, `is_deleted`) VALUES
-(25, 'joncl', 'jonasbucina@rpsw.cz', 'Jonáš Bučina', '2003-12-04', '031204/0597', 'Kytlická 862/6', '296456145/0300', '211', 0, 0, 0, '733 188 328', 'proste joncl', '$2y$12$rV1ILe7YeW1L1XfWb5DrfuiCYTC.1FZsIU4wtNmA95GaUNwXAtYoa', NULL, '2026-02-04 13:34:42', '2026-01-15 22:31:12', '2026-02-04 13:34:42', NULL, 0),
+(25, 'joncl', 'jonasbucina@rpsw.cz', 'Jonáš Bučina', '2003-12-04', '031204/0597', 'Kytlická 862/6', '296456145/0300', '211', 0, 0, 0, '733 188 328', 'proste joncl', '$2y$12$rV1ILe7YeW1L1XfWb5DrfuiCYTC.1FZsIU4wtNmA95GaUNwXAtYoa', NULL, '2026-02-07 09:00:25', '2026-01-15 22:31:12', '2026-02-07 09:00:25', NULL, 0),
 (30, 'prime_admin', NULL, 'Prime Admin', '1950-01-01', NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, '$2y$12$NEiDrqVCChulf9S/EUPIpeOHScIM0zwswPTxIFamRDrY4XajgHQOe', NULL, '2026-01-20 19:09:59', '2026-01-20 19:04:18', '2026-01-20 19:09:59', NULL, 0),
-(34, 'lindicka', 'lindicka@mazliva.cz', 'LIndička Trýbíčková', '2025-01-31', NULL, NULL, NULL, NULL, 100, 0, 0, '123131231', NULL, '$2y$12$PJhlGzYNOhlpUiIeR/9/aOIkd/wBMrTTMbiiwbGZ24ARU7BLwXGSe', NULL, '2026-02-01 16:14:54', '2026-02-01 12:10:33', '2026-02-01 16:14:54', NULL, 0),
-(35, 'petr', NULL, 'petr', NULL, NULL, NULL, NULL, NULL, 10, 0, 0, NULL, NULL, '$2y$12$79FxU47VKdxjc7suB5X4vOAajMAl/GCEUIPNJK02uN0q4owf9BYV2', NULL, '2026-02-01 18:58:28', '2026-02-01 18:58:08', '2026-02-01 18:58:28', NULL, 0);
+(34, 'lindicka', 'lindicka@mazliva.cz', 'LIndička Trýbíčková', '2025-01-31', NULL, NULL, NULL, NULL, 100, 0, 0, '123131231', NULL, '$2y$12$PJhlGzYNOhlpUiIeR/9/aOIkd/wBMrTTMbiiwbGZ24ARU7BLwXGSe', NULL, '2026-02-01 16:14:54', '2026-02-01 12:10:33', '2026-02-01 16:14:54', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -488,8 +539,7 @@ CREATE TABLE `user_roles` (
 INSERT INTO `user_roles` (`user_login_id`, `role_id`) VALUES
 (25, 1),
 (30, 3),
-(34, 5),
-(35, 5);
+(34, 5);
 
 --
 -- Indexes for dumped tables
@@ -637,13 +687,13 @@ ALTER TABLE `user_roles`
 -- AUTO_INCREMENT for table `business_logs`
 --
 ALTER TABLE `business_logs`
-  MODIFY `business_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `business_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `job_applications`
 --
 ALTER TABLE `job_applications`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -655,7 +705,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -667,19 +717,19 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1198;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1220;
 
 --
 -- AUTO_INCREMENT for table `raw_request_commissions`
 --
 ALTER TABLE `raw_request_commissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1175;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1197;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -691,19 +741,19 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `sales_leads`
 --
 ALTER TABLE `sales_leads`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `sales_orders`
 --
 ALTER TABLE `sales_orders`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `support_tickets`
 --
 ALTER TABLE `support_tickets`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `system_logs`
@@ -721,7 +771,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_login`
 --
 ALTER TABLE `user_login`
-  MODIFY `user_login_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `user_login_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- Constraints for dumped tables

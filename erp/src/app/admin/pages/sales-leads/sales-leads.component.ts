@@ -77,7 +77,7 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
   // Filtry
   filterSearch = ''; filterStatus = ''; filterPriority = ''; filterSubjectName = '';
   filterSalesmanName = ''; filterLocation = ''; filterId = ''; filterCreatedAt = '';
-  filterUpdatedAt = ''; filterSortBy = ''; filterSortDirection: 'asc' | 'desc' = 'asc';
+  filterUpdatedAt = ''; filterSortBy = ''; filterSortDirection: 'asc' | 'desc' = 'desc';
 
   private activeRequestsCache: Map<number, any[]> = new Map();
   private trashRequestsCache: Map<number, any[]> = new Map();
@@ -215,7 +215,7 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
     this.filterSalesmanName = filters.salesman_name || ''; this.filterLocation = filters.location || '';
     this.filterId = filters.id || ''; this.filterCreatedAt = filters.created_at || '';
     this.filterUpdatedAt = filters.updated_at || ''; this.filterSortBy = filters.sort_by || '';
-    this.filterSortDirection = filters.sort_direction || 'asc';
+    this.filterSortDirection = filters.sort_direction || 'desc';
     this.forceFullRefresh();
   }
 
@@ -223,7 +223,7 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
     this.filterSearch = ''; this.filterStatus = ''; this.filterPriority = '';
     this.filterSubjectName = ''; this.filterSalesmanName = ''; this.filterLocation = '';
     this.filterId = ''; this.filterCreatedAt = ''; this.filterUpdatedAt = '';
-    this.filterSortBy = ''; this.filterSortDirection = 'asc';
+    this.filterSortBy = ''; this.filterSortDirection = 'desc';
     this.forceFullRefresh();
   }
 
