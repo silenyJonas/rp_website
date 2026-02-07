@@ -1,8 +1,7 @@
 ----NESPECHA----
 -dynamicka sprava roli-vytvorit nazev role a priradit k ni permissions v komponente se to bude delat na adminu
 -na dashboardu budou vseobecne info a statistiky treba pocet zamestnancu nebo pocet novych veci atd
--dat v KB footer do componenty
 -dat full width primo do telo table komponenty
 -uzivatel ktery ma soft-delete aby se nemohl prihlasit
 --------------------------
-na nekterych strankach pri refresh se dotaze system na vsechny end pointy a teba u busines se system dokaze jen na busines logs
+dat nacitani na dashboard

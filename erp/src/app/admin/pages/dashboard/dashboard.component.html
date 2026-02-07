@@ -1,30 +1,37 @@
 <div class="dashboard-container">
-  <div class="welcome-section">
-    <h1>Dobrý den, {{ userData?.full_name ?? 'uživateli' }}</h1>
-    <p>Vítejte v administračním systému. Zde máte přehled o svém účtu.</p>
-  </div>
+  <ng-template #loading>
+    <div class="loader-container">
+      <div class="spinner"></div>
+      <p>Načítám váš profil...</p>
+    </div>
+  </ng-template>
 
-  <div class="dashboard-grid">
-    <div class="info-card">
-      <div class="card-header">
-        <h2 class="card-title">Váš profil</h2>
-      </div>
-      <div class="card-content">
-        <div class="display-item">
-          <label>Přihlášen jako</label>
-          <div class="static-value">{{ userData?.user_email }}</div>
+  <div *ngIf="!isLoading" class="dashboard-content">
+    <div class="welcome-section">
+      <h1>Dobrý den, {{ userData?.full_name ?? 'uživateli' }}</h1>
+      <p>Vítejte v administračním systému. Zde máte přehled o svém účtu.</p>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="info-card">
+        <div class="card-header">
+          <h2 class="card-title">Váš profil</h2>
         </div>
-        <div class="display-item">
-          <label>Role systému</label>
-          <div class="static-value">{{ userData?.roles?.[0]?.role_name ?? 'Administrátor' }}</div>
+        <div class="card-content">
+          <div class="display-item">
+            <label>Přihlášen jako</label>
+            <div class="static-value">{{ userData?.user_email }}</div>
+          </div>
+          <div class="display-item">
+            <label>Role systému</label>
+            <div class="static-value">{{ userData?.roles?.[0]?.role_name ?? 'Administrátor' }}</div>
+          </div>
         </div>
       </div>
     </div>
 
-    
-  </div>
-
-  <div class="footer-notice">
-    <p>Potřebujete pomoc? Kontaktujte technickou podporu nebo svého správce systému.</p>
+    <div class="footer-notice">
+      <p>Potřebujete pomoc? Kontaktujte technickou podporu nebo svého správce systému.</p>
+    </div>
   </div>
 </div>

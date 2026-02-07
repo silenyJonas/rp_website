@@ -8,7 +8,10 @@
     </div>
 
     <div class="header-item time-hide-mobile" *ngIf="isLoggedIn && userRole">| {{ userRole }}</div>
-    <div class="header-item time-hide-mobile">| {{ currentDate | date:'HH:mm:ss d. MMMM yyyy' }}</div>
+    
+    <div class="header-item time-hide-mobile">
+      | {{ (currentDate$ | async) | date:'HH:mm:ss d. MMMM yyyy' }}
+    </div>
   </div>
 
   <div class="header-item header-right">
