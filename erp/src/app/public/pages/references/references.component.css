@@ -1,7 +1,3 @@
-/* --- Základní styly pro main-content a header-1 --- */
-/* Tyto styly by měly být buď globální nebo importovány z hlavního app.component.css. */
-/* Přidány jsou zde pro úplnost komponenty projects.component.css. */
-
 .main-content {
     position: relative;
     width: 100%;
@@ -41,23 +37,19 @@
     font-weight: 700;
     z-index: 10;
     text-shadow: 0 0 15px rgba(158, 158, 158, 0.5);
-    /* Animace pro header-1 */
     opacity: 0;
     transform: translateY(-20px);
     animation: fadeInSlideDownHeader 0.8s ease-out 0.2s forwards;
 }
 
-/* Keyframe pro header-1 */
 @keyframes fadeInSlideDownHeader {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-
-/* --- PROJECTS SPECIFIC STYLES --- */
 .projects-section {
     width: 100%;
-    max-width: 1200px; /* Širší pro tabulku */
+    max-width: 1200px;
     padding: 0 20px;
     box-sizing: border-box;
     z-index: 10;
@@ -66,15 +58,14 @@
 .projects-container {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Menší mezera mezi řádky tabulky */
+    gap: 10px;
 }
 
-/* --- Styly pro hlavičku tabulky --- */
 .projects-header {
     display: grid;
-    grid-template-columns: 2fr 1fr 1.5fr 40px; /* Rozložení sloupců: Název, Doba, Zadavatel, Místo pro šipku */
+    grid-template-columns: 2fr 1fr 1.5fr 40px;
     align-items: center;
-    background-color: rgba(107, 46, 145, 0.4); /* Tmavší fialové pozadí */
+    background-color: rgba(107, 46, 145, 0.4);
     border: 2px solid #a67dff;
     border-radius: 12px;
     padding: 15px 25px;
@@ -83,47 +74,43 @@
     color: #e0e0e0;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(5px);
-    /* Animace se aplikuje přes animated-project-item */
-    opacity: 0; /* Počáteční stav pro animaci */
-    transform: translateY(-20px); /* Počáteční stav pro animaci */
-    animation: fadeInSlideDownItem 0.6s ease-out forwards; /* Animace jako pro itemy */
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInSlideDownItem 0.6s ease-out forwards;
 }
 
 .project-title-header,
 .project-duration-header,
 .project-client-header {
     text-align: left;
-    padding-right: 10px; /* Mezera mezi sloupci */
+    padding-right: 10px;
 }
-/* Zarovnání názvu a zadavatele doleva, dobu plnění na střed */
+
 .project-duration-header {
     text-align: center;
 }
+
 .project-client-header {
     text-align: left;
 }
 
-/* --- Styly pro jednotlivé řádky projektů --- */
 .project-item {
-    background-color: rgba(26, 26, 46, 0.2); /* Průhledné pozadí */
+    background-color: rgba(26, 26, 46, 0.2);
     border: 2px solid #2f2f2f;
     border-radius: 12px;
     overflow: hidden;
-    transition: all 0.3s ease-out; /* Přechod pro background/border */
+    transition: all 0.3s ease-out;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
     position: relative;
-    /* Animace se aplikuje přes animated-project-item */
-    opacity: 0; /* Počáteční stav pro animaci */
-    transform: translateY(-20px); /* Počáteční stav pro animaci */
+    opacity: 0;
+    transform: translateY(-20px);
 }
 
-/* Animace pro postupné sjíždění (aplikuje se na hlavičku i itemy) */
 .animated-project-item {
-    animation: fadeInSlideDownItem 0.6s ease-out forwards; /* animation-delay je nastaven v HTML */
+    animation: fadeInSlideDownItem 0.6s ease-out forwards;
 }
 
-/* Keyframe animace pro jednotlivé položky a hlavičku (sdílená s FAQ a dalšími prvky) */
 @keyframes fadeInSlideDownItem {
     from {
         opacity: 0;
@@ -135,92 +122,83 @@
     }
 }
 
-
 .project-item.active {
     background-color: rgba(107, 46, 145, 0.3);
     border-color: #a67dff;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 10px rgba(166, 125, 255, 0.5);
-    
 }
 
 .project-overview {
     display: grid;
-    grid-template-columns: 2fr 1fr 1.5fr 40px; /* Stejné rozložení sloupců jako hlavička */
+    grid-template-columns: 2fr 1fr 1.5fr 40px;
     align-items: center;
     padding: 15px 25px;
-    cursor: pointer; /* Ručička na klikatelné oblasti */
-    background-color: transparent; /* Původní průhledné pozadí */
-    transition: background-color 0.3s ease-out, border-color 0.3s ease-out; /* Přidán transition pro border-color */
+    cursor: pointer;
+    background-color: transparent;
+    transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
     position: relative;
     z-index: 2;
 }
-
-/* Vylepšený hover efekt pro řádky projektů, konzistentní s FAQ */
 
 .project-overview div {
     font-family: "Source Sans Pro", sans-serif;
     color: #e0e0e0;
     font-size: 1.1em;
-    font-weight: 400; /* Mírně slabší font pro obsah než hlavičku */
-    white-space: nowrap; /* Zabrání zalomení textu */
-    overflow: hidden; /* Skryje přetékající text */
-    text-overflow: ellipsis; /* Zobrazí tři tečky, pokud text přetéká */
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Zarovnání obsahu buněk */
 .project-title {
     text-align: left;
-    font-weight: 600; /* Název projektu bude tučnější */
+    font-weight: 600;
 }
+
 .project-duration {
     text-align: center;
 }
+
 .project-client {
     text-align: left;
 }
 
-/* --- Styly pro fialové kolečko s šipkou (jako u FAQ) --- */
 .project-toggle-icon {
-    width: 40px; /* Šířka fialového kolečka */
-    height: 40px; /* Výška fialového kolečka */
-    background-color: #a67dff; /* Fialová barva pozadí */
-    border-radius: 50%; /* Kruhový tvar */
+    width: 40px;
+    height: 40px;
+    background-color: #a67dff;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: background-color 0.3s ease-out; /* Plynulý přechod barvy */
-    flex-shrink: 0; /* Zajistí, že se nezmenší v gridu */
+    transition: background-color 0.3s ease-out;
+    flex-shrink: 0;
 }
 
-/* Změna barvy kolečka, když je projekt aktivní */
 .project-item.active .project-toggle-icon {
-    background-color: #8a5acd; /* Trochu tmavší fialová, když je aktivní */
+    background-color: #8a5acd;
 }
 
 .arrow {
-    /* Styly pro samotnou šipku uvnitř kolečka */
-    font-size: 1.6em; /* Velikost šipky (jako u FAQ) */
+    font-size: 1.6em;
     font-weight: bold;
-    color: white; /* Bílá barva šipky */
-    transition: transform 0.3s ease-out; /* Animace rotace */
-    display: inline-block; /* Důležité pro transformaci */
-transform: rotate(180deg);
-
+    color: white;
+    transition: transform 0.3s ease-out;
+    display: inline-block;
+    transform: rotate(180deg);
 }
 
-/* Otočení šipky z '>' na 'v', když je projekt aktivní */
 .arrow.rotated {
     transform: rotate(90deg);
 }
 
-/* --- Rozbalovací popis projektu --- */
 .project-description {
     max-height: 0;
     overflow: hidden;
     padding-left: 25px;
     padding-right: 25px;
-    padding-top: 0; /* Začíná bez horního paddingu */
-    padding-bottom: 0; /* Začíná bez spodního paddingu */
+    padding-top: 0;
+    padding-bottom: 0;
     box-sizing: border-box;
     color: #c0c0c0;
     font-size: 0.95em;
@@ -228,10 +206,9 @@ transform: rotate(180deg);
     transition: max-height 0.4s ease-in-out,
                 padding-top 0.4s ease-in-out,
                 padding-bottom 0.4s ease-in-out,
-                border-top 0.4s ease-in-out; /* Přidáme transition pro border-top */
+                border-top 0.4s ease-in-out;
     cursor: pointer;
-
-    border-top: 1px solid transparent; /* Výchozí stav je průhledná hranice */
+    border-top: 1px solid transparent;
 }
 
 .project-description p {
@@ -240,14 +217,12 @@ transform: rotate(180deg);
 }
 
 .project-item.active .project-description {
-    max-height: 300px; /* Dostatečná výška pro zobrazení popisu */
-    padding-top: 10px; /* Padding nad textem popisu se objeví */
-    padding-bottom: 20px; /* Padding pod textem popisu se objeví */
-    border-top: 1px solid rgba(166, 125, 255, 0.2); /* Jemná dělící čára se objeví */
+    max-height: 300px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    border-top: 1px solid rgba(166, 125, 255, 0.2);
 }
 
-
-/* BUTTON ZJISTIT VICE  */
 .button-wrp{
     width: 100%;
     height: auto;
@@ -255,17 +230,18 @@ transform: rotate(180deg);
     justify-content: center;
     margin-top: 75px;
     margin-bottom: 25px;
-    /* Animation properties added below */
-    opacity: 0; /* Start invisible */
-    transform: translateY(-20px); /* Start slightly above its position */
-    animation: fadeInSlideDownItem 0.6s ease-out 1.2s forwards; /* Adjust delay as needed */
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInSlideDownItem 0.6s ease-out 1.2s forwards;
 }
+
 .button{
     display: flex;
     align-items: center;
     justify-content: space-around;
     width: 400px;
 }
+
 .references-content {
     display: flex;
     flex-wrap: wrap;
@@ -280,14 +256,16 @@ transform: rotate(180deg);
     position: relative;
     z-index: 99;
 }
+
 .ref-text {
-  font-family: "Source Sans Pro", sans-serif;
+    font-family: "Source Sans Pro", sans-serif;
     color: #9e9e9e;
     font-size: 1.2em;
     font-weight: 600;
     text-shadow: 0 0 10px rgba(158, 158, 158, 0.4);
     white-space: nowrap;
 }
+
 .ref-button {
     font-family: "Source Sans Pro", sans-serif;
     display: inline-flex;
@@ -308,13 +286,6 @@ transform: rotate(180deg);
     z-index: 50;
 }
 
-
-
-/* BUTTON ZJISTIT VICE KONEC */
-/* --- RESPONSIVE ADJUSTMENTS --- */
-
-/* Breakpoint 1375px: Jemné úpravy pro menší desktop */
-
 @media (max-width: 1375px) {
     .projects-section {
         max-width: 1100px;
@@ -322,7 +293,7 @@ transform: rotate(180deg);
 
     .projects-header,
     .project-overview {
-        grid-template-columns: 2fr 1fr 1.5fr 40px; /* Ponecháme stejné rozložení, ale zmenšíme mezery */
+        grid-template-columns: 2fr 1fr 1.5fr 40px;
         padding: 15px 20px;
         font-size: 0.95em;
     }
@@ -341,15 +312,10 @@ transform: rotate(180deg);
     }
 }
 
-/* Breakpoint 905px: Tabletový a menší desktopový layout */
-
-/* BREAKPOINT 480px */
-
-
 @media (min-width: 906px){
     .project-overview:hover {
-        background-color: rgba(107, 46, 145, 0.2); /* Trochu tmavší fialové pozadí při hoveru */
-        border-color: rgba(166, 125, 255, 0.6); /* Jemně fialový okraj */
+        background-color: rgba(107, 46, 145, 0.2);
+        border-color: rgba(166, 125, 255, 0.6);
     }
     .ref-button:hover {
         background-color: #7d35ae;
@@ -358,9 +324,9 @@ transform: rotate(180deg);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(166, 125, 255, 0.8);
     }
 }
+
 @media (max-width: 905px) {
-   
-        .project-overview:hover{
+    .project-overview:hover{
         background-color: transparent;
     }
     .header-1 {
@@ -375,7 +341,6 @@ transform: rotate(180deg);
     
     .projects-header,
     .project-overview {
-        /* grid-template-columns: 1.5fr 1fr 1fr 40px; Změna rozložení pro lepší využití místa */
         padding: 12px 18px;
     }
     
@@ -411,6 +376,7 @@ transform: rotate(180deg);
         font-size: 1em;
     }
 }
+
 @media (max-width: 480px) {
     .project-description p{
         margin-bottom: 0px;
@@ -418,7 +384,6 @@ transform: rotate(180deg);
     .project-overview:hover {
         background-color: transparent;
     }
-    /* Hlavní kontejner a hlavička */
     .header-1 {
         font-size: 2.2rem;
         padding-top: 40px;
@@ -429,49 +394,45 @@ transform: rotate(180deg);
         padding: 0 10px;
     }
 
-    /* Hlavička tabulky se na mobilu skryje */
     .projects-header {
         display: none;
     }
 
     .projects-container {
-        gap: 10px; /* Zvětšíme mezeru mezi jednotlivými projekty */
+        gap: 10px;
     }
 
-    /* Změna rozložení pro jednotlivé řádky projektů */
     .project-item {
         border-radius: 8px;
-        padding: 15px; /* Přidáme vnitřní odsazení celého bloku */
+        padding: 15px;
     }
 
     .project-overview {
         display: grid;
-        grid-template-columns: 1fr 40px; /* Název projektu zabírá většinu a šipka je vedle */
+        grid-template-columns: 1fr 40px;
         grid-template-areas:
             "title toggle"
             "duration duration"
             "client client";
-        gap: 5px; /* Mezera mezi grid prvky */
-        padding: 0; /* Zrušíme původní padding */
+        gap: 5px;
+        padding: 0;
     }
     
-    /* Vylepšení pro jednotlivé prvky uvnitř řádku */
     .project-title {
         grid-area: title;
         font-size: 1.1em;
         font-weight: 700;
-        margin-bottom: 5px; /* Mezera pod názvem */
+        margin-bottom: 5px;
     }
 
     .project-duration {
         grid-area: duration;
         font-size: 0.9em;
         color: #b0b0b0;
-        text-align: left; /* Zarovnání doleva */
+        text-align: left;
         margin-bottom: 3px;
     }
     
-    /* Přidání popisky k době plnění */
     .project-duration::before {
         content: "Doba plnění: ";
         font-weight: 600;
@@ -482,21 +443,19 @@ transform: rotate(180deg);
         grid-area: client;
         font-size: 0.9em;
         color: #b0b0b0;
-        text-align: left; /* Zarovnání doleva */
+        text-align: left;
     }
     
-    /* Přidání popisky k zadavateli */
     .project-client::before {
         content: "Zadavatel: ";
         font-weight: 600;
         color: #e0e0e0;
     }
     
-    /* Umístění šipky */
     .project-toggle-icon {
         grid-area: toggle;
-        justify-self: end; /* Zarovnáme na pravou stranu v gridu */
-        align-self: center; /* Vycentrujeme s názvem projektu */
+        justify-self: end;
+        align-self: center;
         width: 30px;
         height: 30px;
     }
@@ -505,23 +464,19 @@ transform: rotate(180deg);
         font-size: 1.1em;
     }
     
-    /* Rozbalovací popis */
     .project-description {
-        padding: 0; /* Zrušíme původní padding */
+        padding: 0;
         font-size: 0.85em;
     }
-    .project-overview{
-        
-    }
+
     .project-item.active .project-description {
-        max-height: 500px; /* Zvětšená výška pro delší popisy */
-        padding-top: 15px; /* Nové odsazení po rozbalení */
+        max-height: 500px;
+        padding-top: 15px;
         padding-bottom: 15px;
         border-top: 1px solid rgba(166, 125, 255, 0.2);
         margin-top: 15px;
     }
     
-    /* Tlačítko */
     .button-wrp {
         margin-top: 40px;
     }

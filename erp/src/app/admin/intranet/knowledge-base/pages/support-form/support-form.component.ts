@@ -14,7 +14,6 @@ import { finalize } from 'rxjs/operators';
   styleUrl: './support-form.component.css',
 })
 export class SupportFormComponent extends BaseDataComponent<any> implements OnInit {
-  // Cílíme na tabulku support_tickets přes API
   override apiEndpoint: string = 'support_tickets';
   
   supportForm!: FormGroup;
@@ -39,8 +38,8 @@ export class SupportFormComponent extends BaseDataComponent<any> implements OnIn
     this.supportForm = this.fb.group({
       category: ['it', Validators.required],
       priority: ['medium', Validators.required],
-      subject: ['', Validators.required], // Odstraněna minLength
-      description: ['', Validators.required] // Odstraněna minLength
+      subject: ['', Validators.required],
+      description: ['', Validators.required]
     });
   }
 
@@ -57,7 +56,6 @@ export class SupportFormComponent extends BaseDataComponent<any> implements OnIn
       this.cd.detectChanges();
 
       const formData = new FormData();
-      // Automatické naplnění FormData z reaktivního formuláře
       Object.keys(this.supportForm.value).forEach(key => {
         formData.append(key, this.supportForm.value[key]);
       });

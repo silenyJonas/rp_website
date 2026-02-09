@@ -42,8 +42,6 @@ const routes: Routes = [
       { path: 'job-applications', component: JobApplicationsComponent, data: { permission: 'view-job-applications' } },
     ]
   },
-
-  // SEKCE 2: Knowledge Base - Samostatná úroveň (Full-screen)
   {
     path: 'intranet',
     canActivate: [AuthGuard],

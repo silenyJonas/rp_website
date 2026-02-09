@@ -89,7 +89,6 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
     });
   }
 
-  // --- HANDLERY PRO PAGINATION COMPONENT ---
   onHandlePageChange(page: number): void {
     if (this.showTrashTable) {
       this.goToTrashPage(page);
@@ -106,7 +105,6 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
     }
   }
 
-  // --- PŮVODNÍ LOGIKA ZŮSTÁVÁ ---
   exportActiveTable(): void {
     if (this.activeTable) {
       this.activeTable.exportToCSV();

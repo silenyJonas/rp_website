@@ -6,7 +6,7 @@ import { filter } from 'rxjs/operators';
 import { Output, EventEmitter } from '@angular/core';
 
 import { LocalizationService } from '../../services/localization.service'; // Import LocalizationService
-import { Observable } from 'rxjs'; // <--- Přidáme import Observable
+import { Observable } from 'rxjs'; 
 
 @Component({
   selector: 'app-public-header',
@@ -45,11 +45,7 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly INDICATOR_ANIMATION_DURATION = 400; // ms (0.4s)
 
   private currentActiveRoute: string | null = null;
-
-  // --- ZMĚNA ZDE: Nahradíme 'currentLanguage' za 'currentLanguage$' (Observable) ---
-  // Už nebudeme přímo spravovat 'currentLanguage' zde, ale budeme naslouchat službě
   currentLanguage$: Observable<string>;
-
 
   isMobileView: boolean = false;
   isMenuOpen: boolean = false;
@@ -58,9 +54,8 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
-    public localizationService: LocalizationService // <--- Injektujeme LocalizationService
+    public localizationService: LocalizationService 
   ) {
-    // <--- NOVINKA: Připojíme se k observable currentLanguage$ ze služby ---
     this.currentLanguage$ = this.localizationService.currentLanguage$;
   }
 
@@ -77,20 +72,11 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.scheduleUpdate(false);
     this.initResizeObserver();
-
-    // --- ODSTRANĚNO: Tuto logiku nyní spravuje LocalizationService
-    // const storedLang = localStorage.getItem('selectedLanguage');
-    // if (storedLang) {
-    //   this.currentLanguage = storedLang;
-    // }
   }
 
   ngAfterViewInit(): void {
     this.scheduleUpdate(false);
-    // V této části už není potřeba `langSliderTrack`, tak jsem ji odstranil, aby to nehazelo chyby
   }
-
-  // Metoda pro kontrolu velikosti okna
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
       this.checkMobileView();
@@ -98,8 +84,6 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
           this.closeMenu();
       }
   }
-
-  // Klíčová opravená metoda, kterou jste postrádal
   private checkMobileView(): void {
       const newIsMobileView = window.innerWidth <= 768; // Používáme breakpoint z vašeho CSS
       if (this.isMobileView !== newIsMobileView) {
@@ -110,22 +94,16 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
           }
       }
   }
-
-  // Metoda, která ovládá otevírání/zavírání menu
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
     this.toggleScroll(this.isMenuOpen);
   }
-
-  // Metoda, která zavírá menu a odblokuje scroll
   closeMenu(): void {
     this.isMenuOpen = false;
     this.toggleScroll(false);
   }
-
-  // Metoda, která přidává/odebírá CSS třídu na body
   private toggleScroll(blockScroll: boolean): void {
-        const html = document.documentElement; // Cílíme na HTML element
+        const html = document.documentElement;
         if (html) {
             if (blockScroll) {
                 html.classList.add('no-scroll');
@@ -292,8 +270,7 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // --- ZMĚNA ZDE: Tato metoda nyní volá LocalizationService.setLanguage() ---
   selectLanguage(languageCode: string): void {
-      this.localizationService.setLanguage(languageCode); // <--- Klíčová změna!
+      this.localizationService.setLanguage(languageCode);
   }
 }

@@ -18,18 +18,33 @@
             <div class="grid-layout">
               <div class="form-group">
                 <label>Jméno <span class="required-asterisk">*</span></label>
-                <input type="text" formControlName="first_name">
+                <input type="text" formControlName="first_name"
+                       [class.error-input]="applicationForm.get('first_name')?.invalid && applicationForm.get('first_name')?.value">
+                <small class="error-msg" *ngIf="applicationForm.get('first_name')?.errors?.['required'] && applicationForm.get('first_name')?.touched">
+                  Jméno je povinné.
+                </small>
               </div>
               <div class="form-group">
                 <label>Příjmení <span class="required-asterisk">*</span></label>
-                <input type="text" formControlName="last_name">
+                <input type="text" formControlName="last_name"
+                       [class.error-input]="applicationForm.get('last_name')?.invalid && applicationForm.get('last_name')?.value">
+                <small class="error-msg" *ngIf="applicationForm.get('last_name')?.errors?.['required'] && applicationForm.get('last_name')?.touched">
+                  Příjmení je povinné.
+                </small>
               </div>
             </div>
 
             <div class="grid-layout mt-10">
               <div class="form-group">
                 <label>E-mail <span class="required-asterisk">*</span></label>
-                <input type="email" formControlName="email">
+                <input type="email" formControlName="email"
+                       [class.error-input]="applicationForm.get('email')?.invalid && applicationForm.get('email')?.value">
+                <small class="error-msg" *ngIf="applicationForm.get('email')?.errors?.['email']">
+                  Zadejte platnou e-mailovou adresu.
+                </small>
+                <small class="error-msg" *ngIf="applicationForm.get('email')?.errors?.['required'] && applicationForm.get('email')?.touched">
+                  E-mail je povinný.
+                </small>
               </div>
               <div class="form-group">
                 <label>Telefon</label>
@@ -53,6 +68,9 @@
                   </div>
                 </div>
               </div>
+              <small class="error-msg" *ngIf="!selectedFile && applicationForm.touched">
+                Prosím, přiložte svůj životopis.
+              </small>
             </div>
 
             <div class="checkbox-container">
@@ -62,6 +80,9 @@
                   Souhlasím se <a routerLink="/privacy-policy" target="_blank" class="gdpr-link">zpracováním osobních údajů</a> *
                 </label>
               </div>
+              <small class="error-msg" *ngIf="applicationForm.get('dataProcessingAgreement')?.invalid && applicationForm.get('dataProcessingAgreement')?.touched">
+                Musíte souhlasit se zpracováním údajů.
+              </small>
             </div>
 
             <p class="required-info">* Označuje povinné pole</p>

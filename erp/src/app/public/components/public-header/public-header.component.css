@@ -1,5 +1,4 @@
 header{
-    /* background-color: #1a1a1a; */
     background-color: rgba(26, 26, 26, 0.5);
     outline: 3px solid #2f2f2f;
     backdrop-filter: blur(8px);
@@ -38,26 +37,20 @@ header{
   } 
 } 
 
-/* --- STAV PŘI SCROLLOVÁNÍ --- */ 
 header.scrolled { 
   padding: 4px 20px; 
   box-sizing: border-box; 
-
   height: 40px; 
-
   width: auto; 
   max-width: calc(4 * 130px + 3 * 8px + 40px);
   min-width: calc(4 * 130px + 3 * 8px + 40px); 
-
   top: 0; 
-
   border-bottom-left-radius: 12px; 
   border-bottom-right-radius: 12px; 
   border-top-left-radius: 0; 
   border-top-right-radius: 0; 
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3); 
 } 
-
 
 nav { 
   display: flex; 
@@ -69,29 +62,23 @@ nav {
   box-sizing: border-box; 
 } 
 
-
 nav ul { 
   list-style: none; 
   padding: 0; 
   margin: 0; 
-
   display: grid; 
   grid-template-columns: repeat(4, 1fr); 
   grid-column-gap: 15px; 
-
   position: relative; 
   height: 100%; 
-
   place-items: center; 
   width: 100%; 
-
   transition: grid-column-gap 0.4s ease-in-out; 
 } 
 
 header.scrolled nav ul { 
   grid-column-gap: 8px; 
 } 
-
 
 nav ul li { 
   width: 100%; 
@@ -102,7 +89,7 @@ nav ul li {
 } 
 
 nav ul li a { 
-  color: #a0a0a0; /* Výchozí tmavší barva textu */
+  color: #a0a0a0; 
   text-decoration: none; 
   font-size: 1.1rem; 
   font-weight: 600; 
@@ -110,20 +97,15 @@ nav ul li a {
   align-items: center; 
   justify-content: center; 
   box-sizing: border-box; 
-
   width: 130px; 
   height: 48px; 
-
   border-radius: 24px; 
-
-  /* KLÍČOVÁ ZMĚNA ZDE: JEDNOTNÁ TRANSITION PRO VŠECHNY RELEVANTNÍ VLASTNOSTI */
   transition: color 0.3s ease,
-              transform 0.3s ease-out, /* Nastavíme delší a konzistentní transition pro transform */
-              box-shadow 0.3s ease-out, /* Zajistíme i pro box-shadow při hoveru */
+              transform 0.3s ease-out, 
+              box-shadow 0.3s ease-out, 
               font-size 0.6s ease-in-out, 
               height 0.4s ease-in-out, 
               border-radius 0.4s ease-in-out;
-              
   background-color: transparent; 
   box-shadow: none; 
   text-wrap: nowrap; 
@@ -139,53 +121,43 @@ header.scrolled nav ul li a {
 
 nav ul li a:hover { 
   color: #9b59b6; 
-  transform: translateY(-2px); /* This is the "lift" effect */
+  transform: translateY(-2px); 
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
 } 
 
-/* *** MODIFIKOVÁNO: ODSTRANĚNA SAMOSTATNÁ TRANSITION, POUZE APLIKUJEME VLASTNOST *** */
 nav ul li a.is-clicked-animating {
   transform: translateY(0px); 
-  /* transition: transform 0.3s ease-out; -- TATO LINIE JE NYNÍ ODSTRANĚNA, BERE SE Z NAV UL LI A */
 }
 
-/* *** TŘÍDA PRO ZVÝRAZNĚNÍ TEXTU BĚHEM ANIMACE INDIKÁTORU *** */
 nav ul li a.highlight-text {
-  color: #e0e0e0; /* Světlá barva textu */
-  font-weight: 700; /* Zvýrazněný font */
+  color: #e0e0e0; 
+  font-weight: 700; 
 }
 
-
-/* *** STYL AKTIVNÍHO ODKAZU (PO ANIMACI) *** */
 nav ul li a.active { 
-  color: #e0e0e0; /* Světlá barva textu */
+  color: #e0e0e0; 
   font-weight: 700; 
   background-color: #8e44ad; 
   border-radius: 24px; 
   box-shadow: 0 4px 20px rgba(142, 68, 173, 0.6); 
-  transform: translateY(0px); /* Stále platí pro konečný aktivní stav */
+  transform: translateY(0px); 
 } 
 
 header.scrolled nav ul li a.active {
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(142, 68, 173, 0.4);
-    transform: translateY(0px); /* Zruší hover efekt i pro scrollovaný stav */
+    transform: translateY(0px); 
 }
 
-
-/* *** POHYBLIVÝ INDIKÁTOR *** */ 
 .active-indicator { 
   position: absolute; 
   top: 50%; 
   transform: translateY(-50%); 
-  
   left: 0; 
-
   background-color: #8e44ad; 
   border-radius: 24px; 
   box-shadow: 0 4px 20px rgba(142, 68, 173, 0.6); 
   z-index: 1; 
-
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
               border-radius 0.4s ease-in-out, 
               height 0.4s ease-in-out, 
@@ -198,43 +170,39 @@ header.scrolled .active-indicator {
   box-shadow: 0 2px 10px rgba(142, 68, 173, 0.4); 
 }
 
-/* PREPINAC JAZYKU */
-/* Umístění wrapperu v pravém horním rohu */
 .lang-wrp {
-    position: fixed; /* Zůstane na místě při scrollu */
-    right: 10px; /* Odsazení od pravého okraje */
-    top: 10px; /* Odsazení od horního okraje */
-    z-index: 99999; /* Zajistí, že bude nad ostatním obsahem */
+    position: fixed; 
+    right: 10px; 
+    top: 10px; 
+    z-index: 99999; 
     display: flex;
-    justify-content: flex-end; /* Zarovnání obsahu doprava */
-    align-items: center; /* Vertikálně zarovná položky ve středu */
-    gap: 15px; /* Mezera mezi odkazy a jazykovým formulářem */
+    justify-content: flex-end; 
+    align-items: center; 
+    gap: 15px; 
 }
 
-/* Styly pro navigační odkazy "Realizované projekty" a "FAQ" */
 .lang-wrp .nav-link {
     color: #a0a0a0;
-    text-decoration: none; /* Odstraní podtržení */
-    font-size: 0.85em; /* Velikost písma */
+    text-decoration: none; 
+    font-size: 0.85em; 
     font-weight: 600;
-    padding: 8px 15px; /* Odsazení kolem textu */
-    border-radius: 20px; /* Zaoblené rohy */
-    transition: all 0.3s ease; /* Plynulé animace */
-    white-space: nowrap; /* Zabrání zalamování textu odkazu */
-    background-color: rgba(26, 26, 26, 0.5); /* Původní tmavé pozadí */
-    outline: 3px solid #2f2f2f; /* Původní tmavý rámeček (outline) */
+    padding: 8px 15px; 
+    border-radius: 20px; 
+    transition: all 0.3s ease; 
+    white-space: nowrap; 
+    background-color: rgba(26, 26, 26, 0.5); 
+    outline: 3px solid #2f2f2f; 
     backdrop-filter: blur(8px);
 }
 
 .lang-wrp .nav-link:hover {
-    outline: 3px solid #a67dff; /* KLÍČOVÁ ZMĚNA: Rámeček se zbarví do fialova */
-    background-color: rgba(107, 46, 145, 0.7); /* Fialové pozadí při najetí */
-    color: white; /* Bílý text při najetí */
-    transform: translateY(-2px); /* Mírné posunutí nahoru */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.8); /* Silnější fialová záře */
+    outline: 3px solid #a67dff; 
+    background-color: rgba(107, 46, 145, 0.7); 
+    color: white; 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 125, 255, 0.8); 
 }
 
-/* Stávající styly pro formulář a jazykový přepínač (bez změn) */
 .lang-form {
     width: auto;
     height: 40px;
@@ -251,28 +219,28 @@ header.scrolled .active-indicator {
     transition: none;
 }
 .contact-wrp{
-      pointer-events: none;
-     position: fixed; /* Zůstane na místě při scrollu */
-    right: 10px; /* Odsazení od pravého okraje */
-    top: 50px; /* Odsazení od horního okraje */
-    z-index: 99999; /* Zajistí, že bude nad ostatním obsahem */
+    pointer-events: none;
+    position: fixed; 
+    right: 10px; 
+    top: 50px; 
+    z-index: 99999; 
     display: flex;
-    justify-content: flex-end; /* Zarovnání obsahu doprava */
-    align-items: center; /* Vertikálně zarovná položky ve středu */
-    gap: 15px; /* Mezera mezi odkazy a jazykovým formulářem */
+    justify-content: flex-end; 
+    align-items: center; 
+    gap: 15px; 
     margin-top: 10px;
 }
 .contact-link{
     color: #a0a0a0;
-    text-decoration: none; /* Odstraní podtržení */
-    font-size: 0.85em; /* Velikost písma */
+    text-decoration: none; 
+    font-size: 0.85em; 
     font-weight: 600;
-    padding: 8px 15px; /* Odsazení kolem textu */
-    border-radius: 20px; /* Zaoblené rohy */
-    transition: all 0.3s ease; /* Plynulé animace */
-    white-space: nowrap; /* Zabrání zalamování textu odkazu */
-    background-color: rgba(26, 26, 26, 0.5); /* Původní tmavé pozadí */
-    border: 3px solid #2f2f2f; /* Původní tmavý rámeček (outline) */
+    padding: 8px 15px; 
+    border-radius: 20px; 
+    transition: all 0.3s ease; 
+    white-space: nowrap; 
+    background-color: rgba(26, 26, 26, 0.5); 
+    border: 3px solid #2f2f2f; 
     backdrop-filter: blur(8px);
     font-family: "Source Sans Pro", sans-serif;
     display: flex;
@@ -304,7 +272,6 @@ header.scrolled .active-indicator {
     flex-grow: 1;
     height: 100%;
     cursor: pointer;
-    /* transition: transform 0.2s ease-out; */
     position: relative;
     z-index: 2;
     padding: 0 5px;
@@ -329,13 +296,13 @@ header.scrolled .active-indicator {
 }
 
 .logo-wrp{
-    position: fixed; /* Zůstane na místě při scrollu */
-    left: 10px; /* Odsazení od pravého okraje */
-    top: 10px; /* Odsazení od horního okraje */
+    position: fixed; 
+    left: 10px; 
+    top: 10px; 
     height: 80px;
     width: 80px;
     border-radius: 50%;
-    z-index: 99999; /* Zajistí, že bude nad ostatním obsahem */
+    z-index: 99999; 
     background-color: rgba(26, 26, 26, 0.5);
     outline: 3px solid #2f2f2f;
     -webkit-backdrop-filter: blur(8px);
@@ -348,8 +315,6 @@ header.scrolled .active-indicator {
   width: 80%;
   height: 80%;
 }
-
-/* PŮVODNÍ STYLY PRO MOBILE HEADER ZŮSTANOU ZDE */
 
 .mobile-header {
   width: 100%;
@@ -398,10 +363,9 @@ header.scrolled .active-indicator {
   padding: 10px;
   gap: 6px;
   transition: all 0.3s ease;
-      backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
-/* Styly pro čáry v hamburgeru */
 .hamburger-line {
   width: 25px;
   height: 3px;
@@ -409,7 +373,6 @@ header.scrolled .active-indicator {
   transition: all 0.3s ease;
 }
 
-/* Stav otevřeného hamburgeru - animace */
 .hamburger-line:nth-child(1).open {
   transform: translateY(9px) rotate(45deg);
 }
@@ -422,7 +385,6 @@ header.scrolled .active-indicator {
   transform: translateY(-9px) rotate(-45deg);
 }
 
-/* Styl pro mobilní menu */
 .mobile-menu-wrapper {
   position: fixed;
   top: 0;
@@ -435,10 +397,9 @@ header.scrolled .active-indicator {
   transform: translateX(-100%);
   transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
   display: flex;
-  align-items: center; /* Vycentrování menu vertikálně */
+  align-items: center; 
 }
 
-/* Otevřený stav menu */
 .mobile-menu-wrapper.open {
   transform: translateX(0);
 }
@@ -464,9 +425,9 @@ header.scrolled .active-indicator {
   display: block;
   padding: 10px;
   transition: color 0.3s ease;
-  text-align: center; /* Centrování textu odkazu */
+  text-align: center; 
   color: #a0a0a0;
-font-family: "Inter", sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .mobile-nav a:hover {
@@ -475,7 +436,7 @@ font-family: "Inter", sans-serif;
 html.no-scroll {
     overflow: hidden !important;
 }
-/* NOVÉ STYLY PRO DOLNÍ SEKCI MENU */
+
 .mobile-menu-bottom {
     position: absolute;
     bottom: 20px;
@@ -538,15 +499,10 @@ html.no-scroll {
     width: 18px;
 }
 
-
-
 .main-links{
   padding-top: 75px;
-
 }
-/* ----------MEDIA QUERIES PRO UPRAVU VZHLEDU MENU ---------- */
 
-/* Na tabletech a menších obrazovkách (do 768px) */
 @media (max-width: 1375px) {
   .lang-wrp{
     flex-direction: column;
@@ -559,7 +515,6 @@ html.no-scroll {
     justify-content: start;
   }
   .mail-icon, .tel-icon{
-    /* display: none; */
     height: 12.5px;
     width: 12.5px;
   }
@@ -611,7 +566,6 @@ html.no-scroll {
     }
 }
 
-/* Na mobilních telefonech (do 480px) */
 @media (max-width: 480px) {
     .mobile-nav ul.main-links {
         flex-direction: column;

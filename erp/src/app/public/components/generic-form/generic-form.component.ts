@@ -9,7 +9,7 @@ import { FormFieldConfig, FormFieldOption } from '../../../shared/interfaces/for
 import { LocalizationService } from '../../services/localization.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { RouterModule } from '@angular/router'; // Důležité: Přidán import RouterModule
+import { RouterModule } from '@angular/router'; 
 
 @Component({
   selector: 'app-generic-form',
@@ -17,7 +17,7 @@ import { RouterModule } from '@angular/router'; // Důležité: Přidán import 
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule // Důležité: Přidán RouterModule do imports
+    RouterModule 
   ],
   templateUrl: './generic-form.component.html',
   styleUrl: './generic-form.component.css',
@@ -164,8 +164,6 @@ export class GenericFormComponent implements OnInit, OnDestroy, OnChanges {
       this.errorMessage = null;
       this.successMessage = null;
 
-      // console.log('Odesílám data formuláře:', this.formData);
-
       setTimeout(() => {
         this.isLoading = false;
         const success = Math.random() > 0.2;
@@ -226,4 +224,3 @@ export class GenericFormComponent implements OnInit, OnDestroy, OnChanges {
     return null;
   }
 }
-// }

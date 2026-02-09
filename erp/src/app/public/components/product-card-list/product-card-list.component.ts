@@ -12,7 +12,7 @@ import { Product } from '../../../shared/interfaces/product';
   styleUrls: ['./product-card-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProductCardListComponent implements OnInit {
+export class ProductCardListComponent {
 
   @Input() products: Product[] = [];
   selectedProduct: Product | null = null;
@@ -20,24 +20,18 @@ export class ProductCardListComponent implements OnInit {
 
   constructor(private cdr: ChangeDetectorRef) { }
 
-  ngOnInit(): void {
-    // Inicializační logika, pokud je potřeba
-  }
-
   openPopup(product: Product): void {
     this.selectedProduct = product;
     this.isPopupOpen = true;
-    // TOTO JE JIŽ SPRÁVNĚ - PŘIDÁVÁ TŘÍDU
     document.body.classList.add('no-scroll');
-    this.cdr.detectChanges(); // Vynutí detekci změn, aby se popup zobrazil okamžitě
+    this.cdr.detectChanges(); 
   }
 
   closePopup(): void {
     this.isPopupOpen = false;
     this.selectedProduct = null;
-    // TOTO JE JIŽ SPRÁVNĚ - ODEBÍRÁ TŘÍDU
     document.body.classList.remove('no-scroll');
-    this.cdr.detectChanges(); // Vynutí detekci změn, aby se popup skryl okamžitě
+    this.cdr.detectChanges(); 
   }
 
   onOverlayClick(event: MouseEvent): void {

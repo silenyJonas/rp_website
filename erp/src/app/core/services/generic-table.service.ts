@@ -5,8 +5,6 @@ import { Observable, tap } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { DataHandler } from './data-handler.service';
 
-// Rozhraní FilterParams je nyní univerzální, bez explicitně definovaných klíčů.
-// Přijme jakýkoliv klíč (string) s hodnotou, která může být string, číslo, boolean atd.
 export interface FilterParams {
   [key: string]: string | number | boolean | undefined | null;
 }
@@ -42,7 +40,6 @@ export class GenericTableService {
     perPage: number = 15,
     filters: FilterParams = {}
   ): Observable<PaginatedResponse<T>> {
-    // Kód pro správu cache je perfektní, funguje jak má
     if (JSON.stringify(filters) !== JSON.stringify(this.lastFilterParams)) {
       this.clearCache();
       this.lastFilterParams = { ...filters };
@@ -56,11 +53,8 @@ export class GenericTableService {
     let params = new HttpParams();
     params = params.append('page', page.toString());
     params = params.append('per_page', perPage.toString());
-
-    // Klíčová část, která dynamicky přidává jakékoliv filtry
     for (const key in filters) {
       const value = filters[key];
-      // Kontrolujeme, zda hodnota existuje
       if (value !== undefined && value !== null && value !== '') {
         params = params.append(key, value.toString());
       }

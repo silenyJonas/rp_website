@@ -88,7 +88,6 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements OnI
     });
   }
 
-  // --- PAGINATION HANDLERS (NOVÉ) ---
   onHandlePageChange(page: number): void {
     this.goToPage(page);
   }
@@ -98,7 +97,6 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements OnI
     this.forceFullRefresh();
   }
 
-  // --- PŮVODNÍ LOGIKA (NEZMĚNĚNA) ---
   exportActiveTable(): void {
     if (this.activeTable) this.activeTable.exportToCSV();
   }

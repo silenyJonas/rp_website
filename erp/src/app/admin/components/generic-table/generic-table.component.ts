@@ -9,9 +9,6 @@ import { ConfirmDialogService } from '../../../core/services/confirm-dialog.serv
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
 import { AuthService } from '../../../core/auth/auth.service';
 
-/**
- * Rozhraní Buttons rozšířené o generate_form.
- */
 export interface Buttons {
   display_name: string;
   header_name: string;
@@ -41,7 +38,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   @Input() buttons: Buttons[] = [];
   @Input() isLogsTable: boolean = false;
   @Input() isAdminTable: boolean = false;
-  @Input() isFullWidth: boolean = true; // Přesunuto na Input pro ovládání zvenčí
+  @Input() isFullWidth: boolean = true;
   
   @Output() itemDeleted = new EventEmitter<any>();
   @Output() createFormOpened = new EventEmitter<void>();
@@ -92,9 +89,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     return typeof value === 'object' && value !== null && !Array.isArray(value);
   }
 
-  /**
-   * Sestaví odkaz s parametrem sales_lead_id a zkopíruje jej do schránky
-   */
+
   getFormLink(item: any): void {
     const baseUrl = window.location.origin;
     const url = `${baseUrl}/order_form/sales_lead_id=${item.id}`;
@@ -111,9 +106,6 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     });
   }
   
-  /**
-   * Rozcestník pro akce tlačítek
-   */
   handleAction(item: any, buttonType: string): void {
     switch (buttonType) {
       case 'generate_form':
@@ -139,9 +131,6 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     }
   }
 
-  /**
-   * Samostatná funkce pro smazání položky
-   */
   public onDeleteAction(item: any): void {
     this.confirmDialogService.open(
       'Potvrzení smazání', 
@@ -152,7 +141,6 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
           next: () => {
             this.alertDialogService.open('Úspěch', 'Položka byla úspěšně smazána.', 'success');
             
-            // Odstranění z lokálního zobrazení
             const index = this.data.findIndex(dataItem => dataItem.id === item.id);
             if (index > -1) {
               this.data.splice(index, 1);
@@ -178,9 +166,6 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     return this.columnDefinitions.length + (activeButtonsCount > 0 ? 1 : 0);
   }
 
-  /**
-   * Veřejná metoda pro export, kterou lze volat z rodiče
-   */
   async exportToCSV() {
     try {
       this.isLoading = true;

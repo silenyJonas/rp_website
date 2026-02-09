@@ -1,3 +1,4 @@
+//rozhraní pro jeden input u filter formu
 export interface FilterColumns {
     key: string,
     header: string,

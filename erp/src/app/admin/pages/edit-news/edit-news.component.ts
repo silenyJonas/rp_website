@@ -48,14 +48,12 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
   override isLoading: boolean = false;
   isTrashTableLoading: boolean = false;
 
-  // Nastavení zobrazení
   isTableFullWidth: boolean = true;
   isFilterVisible: boolean = false;
   showTrashTable: boolean = false;
   showCreateForm: boolean = false;
   showDetails: boolean = false;
 
-  // Konfigurace
   buttons: Buttons[] = NEWS_BUTTONS;
   formFields: InputDefinition[] = NEWS_FORM_FIELDS;
   newsColumns: ColumnDefinition[] = NEWS_COLUMNS;
@@ -63,13 +61,11 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
   filterColumns: FilterColumns[] = NEWS_FILTER_COLUMNS;
   detailsColumns: ItemDetailsColumns[] = NEWS_DETAILS_COLUMNS;
   
-  // Stránkování aktivní
   currentPage: number = 1;
   itemsPerPage: number = 15;
   totalItems: number = 0;
   totalPages: number = 0;
 
-  // Stránkování koš
   trashCurrentPage: number = 1;
   trashItemsPerPage: number = 15;
   trashTotalItems: number = 0;
@@ -78,7 +74,6 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
   selectedItemForDetails: any | null = null;
   selectedItemForEdit: any | null = null;
 
-  // Filtry
   filterSearch = ''; filterThema = ''; filterAuthor = ''; filterId = '';
   filterSortBy = 'id'; filterSortDirection: 'asc' | 'desc' = 'desc';
 
@@ -105,7 +100,6 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
     });
   }
 
-  // --- HANDLERY PRO PAGINATION COMPONENT ---
   onHandlePageChange(page: number): void {
     if (this.showTrashTable) {
       if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
@@ -134,7 +128,6 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
     }
   }
 
-  // --- LOGIKA DAT (NEZMĚNĚNA) ---
   public refreshData(): void { this.forceFullRefresh(); }
 
   exportActiveTable(): void {
@@ -216,7 +209,6 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
   toggleFilters() { this.isFilterVisible = !this.isFilterVisible; }
   toggleTable(): void { this.showTrashTable = !this.showTrashTable; this.forceFullRefresh(); }
 
-  // Handlery formulářů
   handleCreateFormOpened(): void { this.selectedItemForEdit = null; this.showCreateForm = true; }
   handleEditFormOpened(item: any): void { this.selectedItemForEdit = item; this.showCreateForm = true; }
   onCancelForm() { this.showCreateForm = false; this.selectedItemForEdit = null; }

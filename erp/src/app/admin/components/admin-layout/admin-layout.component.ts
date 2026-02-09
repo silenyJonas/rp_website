@@ -19,7 +19,6 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   userRole: string | null = null;
   isLoggedIn: boolean = false;
   
-  // Hodiny jako stream - Angular se o ně postará sám
   currentDate$: Observable<Date> = interval(1000).pipe(
     startWith(0),
     map(() => new Date())
@@ -58,7 +57,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(loggedIn => {
       this.isLoggedIn = loggedIn;
       this.userRole = loggedIn ? this.authService.getUserRole() : null;
-      this.cdr.markForCheck(); // Šetrnější než detectChanges()
+      this.cdr.markForCheck(); 
     });
 
     this.userEmailSubscription = this.authService.userEmail$.subscribe(email => {

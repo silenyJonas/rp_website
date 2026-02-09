@@ -1,12 +1,10 @@
-/* Kontejner paginace - nyní vycentrovaný */
 .pagination-controls-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Změna z flex-end na center */
+  align-items: center; 
   width: 100%;
 }
 
-/* Upravený text "Zobrazuji..." */
 .pagination-info-text {
   font-size: 0.875rem;
   color: #6B7280;
@@ -19,19 +17,18 @@
   padding-bottom: 5px;
 }
 .pagination-info-text strong {
-  color: #111827; /* Zvýraznění čísel tmavší barvou */
+  color: #111827; 
   font-weight: 600;
 }
 
 .pagination-actions {
   display: flex;
   align-items: center;
-  gap: 24px; /* Větší mezera mezi volbou stránek a selectem */
+  gap: 24px; 
   flex-wrap: wrap;
   justify-content: center;
 }
 
-/* Navigace - tlačítka */
 .pagination-nav {
   display: flex;
   gap: 4px;
@@ -72,7 +69,6 @@
   background-color: #F3F4F6;
 }
 
-/* Select a label pro položky na stránku */
 .items-per-page-container {
   display: flex;
   align-items: center;

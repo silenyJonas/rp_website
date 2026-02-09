@@ -43,21 +43,18 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserRequestComponent extends BaseDataComponent<RawRequestCommission> implements OnInit {
-  // Reference na tabulku pro volání exportu
   @ViewChild('activeTable') activeTable!: GenericTableComponent;
 
   override apiEndpoint: string = 'raw_request_commissions';
   override trashData: RawRequestCommission[] = [];
   override isLoading: boolean = false;
   
-  // UI stavy
   isTableFullWidth: boolean = true;
   isFilterVisible: boolean = false;
   showTrashTable: boolean = false;
   showCreateForm: boolean = false;
   showDetails: boolean = false;
 
-  // Konfigurace z config souboru
   buttons: Buttons[] = USER_REQUEST_BUTTONS;
   formFields: InputDefinition[] = USER_REQUEST_FORM_FIELDS;
   userRequestColumns: ColumnDefinition[] = USER_REQUEST_COLUMNS;
@@ -65,19 +62,16 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   filterColumns: FilterColumns[] = USER_REQUEST_FILTER_COLUMNS;
   detailsColumns: ItemDetailsColumns[] = USER_REQUEST_DETAILS_COLUMNS;
 
-  // Stránkování - Aktivní
   currentPage: number = 1;
   itemsPerPage: number = 15;
   totalItems: number = 0;
   totalPages: number = 0;
 
-  // Stránkování - Koš
   trashCurrentPage: number = 1;
   trashItemsPerPage: number = 15;
   trashTotalItems: number = 0;
   trashTotalPages: number = 0;
 
-  // Filtry
   filterSearch = ''; filterStatus = ''; filterPriority = ''; filterEmail = '';
   filterPhone = ''; filterThema = ''; filterDescription = ''; filterCreatedAt = '';
   filterUpdatedAt = ''; filterId = ''; filterSortBy = '';
@@ -199,21 +193,17 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     }
   }
 
-  // Původní: onItemsPerPageChange(event: Event): void { ... }
   onItemsPerPageChange(value: number): void {
     this.itemsPerPage = value; // 'value' už je číslo díky EventEmitteru
     this.forceFullRefresh();
   }
-// Obsluha změny stránky
 onHandlePageChange(page: number): void {
   if (this.showTrashTable) {
-    // Logika pro koš
     if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
       this.trashCurrentPage = page;
       this.loadTrashRequests().subscribe();
     }
   } else {
-    // Logika pro aktivní data
     if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
       this.currentPage = page;
       this.loadActiveRequests().subscribe();
@@ -221,17 +211,16 @@ onHandlePageChange(page: number): void {
   }
 }
 
-// Obsluha změny počtu položek (vaše původní metoda, upravená na číslo)
 onHandleItemsPerPageChange(value: number): void {
   if (this.showTrashTable) {
     this.trashItemsPerPage = value;
-    this.trashCurrentPage = 1; // Reset na první stranu při změně limitu
-    this.trashRequestsCache.clear(); // Vymazat cache pro koš
+    this.trashCurrentPage = 1;
+    this.trashRequestsCache.clear(); 
     this.loadTrashRequests().subscribe();
   } else {
     this.itemsPerPage = value;
-    this.currentPage = 1; // Reset na první stranu
-    this.activeRequestsCache.clear(); // Vymazat cache pro aktivní
+    this.currentPage = 1; 
+    this.activeRequestsCache.clear(); 
     this.loadActiveRequests().subscribe();
   }
 }

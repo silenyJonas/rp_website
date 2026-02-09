@@ -5,7 +5,6 @@
   margin: 0 auto;
 }
 
-/* UVÍTÁNÍ */
 .welcome-section {
   margin-bottom: 3rem;
   border-left: 4px solid #1e88e5;
@@ -23,14 +22,12 @@
   margin-top: 0.5rem;
 }
 
-/* MŘÍŽKA KARET */
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
 }
 
-/* KARTY (stejné jako v personal-info) */
 .info-card {
   background-color: #ffffff;
   border-radius: 8px;
@@ -53,7 +50,6 @@
   letter-spacing: 1px;
 }
 
-/* PRVKY UVNITŘ KARET */
 .display-item {
   margin-bottom: 1rem;
 }
@@ -71,7 +67,6 @@
   color: #333;
 }
 
-/* TLAČÍTKA NAVIGACE */
 .action-links {
   display: flex;
   flex-direction: column;
@@ -95,7 +90,6 @@
   color: #1e88e5;
 }
 
-/* FOOTER */
 .footer-notice {
   margin-top: 4rem;
   padding-top: 1rem;
@@ -108,7 +102,7 @@
   .dashboard-container { padding: 1rem; }
   .welcome-section h1 { font-size: 1.5rem; }
 }
-/* STYLY PRO LOADER */
+
 .loader-container {
   display: flex;
   flex-direction: column;
@@ -133,7 +127,6 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Jemné prolnutí obsahu při zobrazení */
 .dashboard-content {
   animation: fadeIn 0.5s ease-in;
 }

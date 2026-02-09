@@ -49,7 +49,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
   override trashData: any[] = [];
   override isLoading: boolean = false;
   
-  // UI stavy
   isTableFullWidth: boolean = true;
   isFilterVisible: boolean = false;
   showTrashTable: boolean = false;
@@ -63,7 +62,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
   filterColumns: FilterColumns[] = SALES_LEAD_FILTER_COLUMNS;
   detailsColumns: ItemDetailsColumns[] = SALES_LEAD_DETAILS_COLUMNS;
   
-  // Stránkování
   currentPage: number = 1;
   itemsPerPage: number = 15;
   totalItems: number = 0;
@@ -74,7 +72,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
   trashTotalItems: number = 0;
   trashTotalPages: number = 0;
 
-  // Filtry
   filterSearch = ''; filterStatus = ''; filterPriority = ''; filterSubjectName = '';
   filterSalesmanName = ''; filterLocation = ''; filterId = ''; filterCreatedAt = '';
   filterUpdatedAt = ''; filterSortBy = ''; filterSortDirection: 'asc' | 'desc' = 'desc';
@@ -105,7 +102,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
     });
   }
 
-  // --- HANDLERY PRO PAGINATION COMPONENT ---
   onHandlePageChange(page: number): void {
     if (this.showTrashTable) {
       if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
@@ -134,7 +130,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
     }
   }
 
-  // --- LOGIKA DAT ---
   public refreshData(): void {
     this.forceFullRefresh();
   }
@@ -202,7 +197,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
     ).subscribe();
   }
 
-  // --- UI HANDLERY ---
   toggleFilters() { this.isFilterVisible = !this.isFilterVisible; }
   toggleTable(): void {
     this.showTrashTable = !this.showTrashTable;

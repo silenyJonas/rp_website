@@ -21,12 +21,10 @@ export class GenericDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Zablokování scrollu pozadí
     document.body.style.overflow = 'hidden';
   }
 
   ngOnDestroy(): void {
-    // Obnovení scrollu při zavření
     document.body.style.overflow = 'auto';
   }
 
@@ -46,28 +44,17 @@ export class GenericDetailsComponent implements OnInit, OnDestroy {
     return parts[parts.length - 1].split('?')[0] || 'soubor';
   }
 
-downloadFile(fullUrl: string): void {
-  // 1. Získáme relativní cestu ze stávající URL (např. "tickets/soubor.txt")
-  // fullUrl vypadá teď nejspíš takto: "http://127.0.0.1:8000/storage/tickets/abc.txt"
-  const pathParts = fullUrl.split('/storage/');
-  if (pathParts.length < 2) {
-    window.open(fullUrl, '_blank');
-    return;
+  downloadFile(fullUrl: string): void {
+    const pathParts = fullUrl.split('/storage/');
+    if (pathParts.length < 2) {
+      window.open(fullUrl, '_blank');
+      return;
+    }
+    
+    const storagePath = pathParts[1];
+    const downloadUrl = `${environment.base_api_url}/download-file/${storagePath}`;
+    window.location.href = downloadUrl;
   }
-  
-  const storagePath = pathParts[1]; // např. "tickets/abc.txt"
-  
-  /**
-   * 2. Sestavení URL pro stahování
-   * environment.base_api_url je '/api' nebo 'https://www.rpsw.cz/api'
-   * Pokud base_api_url začíná lomítkem (relativní cesta), 
-   * prohlížeč automaticky použije aktuální doménu.
-   */
-  const downloadUrl = `${environment.base_api_url}/download-file/${storagePath}`;
-  
-  // 3. Spuštění stahování
-  window.location.href = downloadUrl;
-}
 
   getFormattedValue(obj: any, path: string, columnDef: ItemDetailsColumns): any {
     const value = this.getValueByPath(obj, path);
@@ -94,6 +81,7 @@ downloadFile(fullUrl: string): void {
       if (current === null || current === undefined) return '';
       current = current[key];
     }
+    console.log(current);
     return current;
   }
 }

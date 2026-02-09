@@ -1,4 +1,3 @@
-/* --- ZÁKLADNÍ WRAPPER --- */
 .kb-fullscreen-wrapper {
   position: fixed;
   top: 0;
@@ -14,7 +13,6 @@
   overflow: hidden;
 }
 
-/* --- TOP NAVIGATION BAR --- */
 .kb-top-bar {
   height: 48px;
   padding: 0 20px;
@@ -33,9 +31,8 @@
   gap: 12px;
 }
 
-/* --- HAMBURGER BUTTON --- */
 .menu-toggle {
-  display: none; /* Skryté na desktopu */
+  display: none;
   flex-direction: column;
   justify-content: space-between;
   width: 20px;
@@ -80,7 +77,6 @@
   text-decoration: none;
 }
 
-/* --- HLAVNÍ KONTEJNER --- */
 .kb-container {
   display: flex;
   flex: 1;
@@ -89,7 +85,6 @@
   position: relative;
 }
 
-/* --- SIDEBAR --- */
 .kb-sidebar {
   width: 220px;
   flex-shrink: 0;
@@ -140,7 +135,6 @@
 
 .kb-nav a.active-kb .num { color: #a67dff; }
 
-/* --- MAIN CONTENT --- */
 .kb-main-content {
   flex: 1;
   overflow-y: auto;
@@ -153,11 +147,9 @@
   padding: 20px 40px;
 }
 
-/* --- MOBILNÍ SPECIFIKA (POPUP MENU) --- */
 @media (max-width: 768px) {
   .menu-toggle { display: flex; }
 
-  /* Animace hamburgeru při otevření */
   .menu-open .menu-toggle .bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
   .menu-open .menu-toggle .bar:nth-child(2) { opacity: 0; }
   .menu-open .menu-toggle .bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
@@ -167,15 +159,15 @@
     top: 0;
     left: 0;
     bottom: 0;
-    width: 280px; /* Šířka popupu */
+    width: 280px;
     z-index: 10010;
-    transform: translateX(-100%); /* Schovaný vlevo */
+    transform: translateX(-100%);
     box-shadow: 20px 0 50px rgba(0,0,0,0.5);
     border-right: 1px solid #a67dff33;
   }
 
   .kb-sidebar.open {
-    transform: translateX(0); /* Vysunutí */
+    transform: translateX(0);
   }
 
   .kb-overlay {
@@ -192,7 +184,6 @@
   .content-wrapper { padding: 20px; }
 }
 
-/* --- WELCOME VIEW --- */
 .welcome-view {
   height: 80%;
   display: flex;

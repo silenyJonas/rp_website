@@ -1,4 +1,3 @@
-/* Overlay - zatemnění bez bluru */
 .dialog-overlay {
   position: fixed;
   top: 0;
@@ -9,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 30000; /* Nejvyšší priorita */
+  z-index: 30000; 
 }
 
 .dialog-container {
@@ -17,7 +16,7 @@
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   width: 450px;
-  max-width: 90%; /* Zajišťuje, že na mobilu neuteče z obrazovky */
+  max-width: 90%; 
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -64,7 +63,6 @@
   background-color: #222;
 }
 
-/* Barevné varianty */
 .info-dialog .dialog-header { background-color: #eef6ff; color: #0056b3; }
 .warning-dialog .dialog-header { background-color: #fff8e6; color: #856404; }
 .danger-dialog .dialog-header { background-color: #fff0f0; color: #721c24; }

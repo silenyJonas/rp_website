@@ -19,20 +19,14 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> {
-    // Místo isLoggedIn$ použijeme přímo checkAuth(), který se ptá serveru
     return this.authService.checkAuth().pipe(
       take(1),
       map(isLoggedIn => {
         if (!isLoggedIn) {
-          // Pokud server řekne, že token neplatí, smažeme data a jdeme na login
           return this.router.createUrlTree(['/auth/login']);
         }
-
-        // --- KONTROLA OPRÁVNĚNÍ ---
         const requiredPermission = route.data['permission'] as string;
-        
         if (requiredPermission) {
-          // checkAuth už v tap() metodě v AuthService naplnil PermissionService čerstvými daty
           if (this.permissionService.hasPermission(requiredPermission)) {
             return true;
           } else {
@@ -40,7 +34,6 @@ export class AuthGuard implements CanActivate {
             return this.router.createUrlTree(['/admin/dashboard']);
           }
         }
-        
         return true;
       })
     );

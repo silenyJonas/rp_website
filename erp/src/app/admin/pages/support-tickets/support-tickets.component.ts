@@ -51,20 +51,17 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
   filterColumns = SUPPORT_TICKET_FILTER_COLUMNS;
   detailsColumns = SUPPORT_TICKET_DETAILS_COLUMNS;
 
-  // UI Stavy
   isTableFullWidth = true;
   showTrashTable = false;
   showCreateForm = false;
   showDetails = false;
   isFilterVisible = false;
   
-  // Paginace Aktivní
   currentPage = 1;
   itemsPerPage = 15;
   totalItems = 0;
   totalPages = 0;
   
-  // Paginace Koš
   trashCurrentPage = 1;
   trashItemsPerPage = 15;
   trashTotalItems = 0;
@@ -92,7 +89,6 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
     });
   }
 
-  // --- HANDLERY PRO PAGINATION COMPONENT (NOVÉ) ---
   onHandlePageChange(page: number): void {
     if (this.showTrashTable) {
       this.goToTrashPage(page);
@@ -115,7 +111,6 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
     }
   }
 
-  // --- PŮVODNÍ LOGIKA (NEZMĚNĚNA) ---
   exportActiveTable(): void {
     if (this.activeTable) this.activeTable.exportToCSV();
   }

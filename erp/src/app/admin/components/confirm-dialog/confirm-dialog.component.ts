@@ -29,12 +29,12 @@ export class ConfirmDialogComponent {
 
   confirm(): void {
     this.onConfirm.emit();
-    this.hide(); // Automaticky schovat po potvrzení
+    this.hide(); 
   }
 
   cancel(): void {
     this.onCancel.emit();
-    this.hide(); // Automaticky schovat po zrušení
+    this.hide(); 
   }
 
   private blockBackgroundScroll(): void {

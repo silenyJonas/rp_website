@@ -26,9 +26,7 @@ export class AppComponent implements OnInit {
     private router: Router, 
     private authService: AuthService
   ) {
-    // OKAMŽITÁ SYNCHRONNÍ KONTROLA PŘI STARTU
     const path = window.location.pathname;
-    
     // Zakázané oblasti, kde se layout NESMÍ zobrazit (včetně 404)
     const isHiddenArea = 
       path.includes('/admin') || 
@@ -40,13 +38,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.checkAuth().subscribe();
-    
-    // Sledujeme změny navigace (např. když uživatel klikne na špatný odkaz)
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
       const url = event.urlAfterRedirects;
-      
       this.showPublicLayout = 
         !url.includes('/admin') && 
         !url.includes('/auth/login') && 

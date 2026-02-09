@@ -50,7 +50,6 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
   override isLoading: boolean = false;
   isAdminTable: boolean = true;
   
-  // UI stavy
   isTableFullWidth: boolean = true;
   isFilterVisible: boolean = false;
   showTrashTable: boolean = false;
@@ -66,19 +65,16 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
   filterColumns: FilterColumns[] = FILTER_COLUMNS;
   detailsColumns: ItemDetailsColumns[] = DETAILS_COLUMNS;
 
-  // Stránkování - Aktivní
   currentPage: number = 1;
   itemsPerPage: number = 15;
   totalItems: number = 0;
   totalPages: number = 0;
 
-  // Stránkování - Koš
   trashCurrentPage: number = 1;
   trashItemsPerPage: number = 15;
   trashTotalItems: number = 0;
   trashTotalPages: number = 0;
 
-  // Filtry
   filterUserLoginId = ''; filterFullName = ''; filterUserEmail = '';
   filterLastLoginAt = ''; filterCreatedAt = ''; filterUpdatedAt = '';
   filterRoleName = ''; filterSortBy = ''; filterSortDirection: 'asc' | 'desc' = 'desc';
@@ -110,7 +106,6 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
     });
   }
 
-  // --- HANDLERY PRO PAGINATION COMPONENT ---
   onHandlePageChange(page: number): void {
     if (this.showTrashTable) {
       if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
@@ -139,7 +134,6 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
     }
   }
 
-  // --- PŮVODNÍ LOGIKA ZŮSTÁVÁ ---
   public refreshData(): void {
     this.forceFullRefresh();
   }
@@ -291,7 +285,6 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
   handleItemRestored() { this.forceFullRefresh(); }
   handleItemDeleted() { this.forceFullRefresh(); }
 
-  // Pomocné metody pro starou paginaci v šabloně již nebudou potřeba, ale ponecháme goToPage pro vnitřní kompatibilitu
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
       this.currentPage = page; this.loadActiveRequests().subscribe();

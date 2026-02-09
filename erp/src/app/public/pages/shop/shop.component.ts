@@ -1,8 +1,7 @@
-
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http'; // HttpClient je zde ponechán, pokud ho potřebujete pro jiné účely, jinak ho můžete odebrat.
+import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -33,7 +32,7 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
 
   currentCurrency: 'czk' | 'eur' = 'czk';
 
-  shopProducts: Product[] = []; // Produkty budou načteny z JSONu
+  shopProducts: Product[] = [];
   allFilteredAndSortedProducts: Product[] = [];
   paginatedProducts: Product[] = [];
 
@@ -47,7 +46,6 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     'eur': { toCZK: 24.5, symbol: ' €' }
   };
 
-  // Proměnné pro texty, které se budou plnit z LocalizationService
   header1: string = '';
   header02T: string = '';
   searchPlaceholder: string = '';
@@ -68,32 +66,22 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private localizationService: LocalizationService,
-    private http: HttpClient // Zde už se přímo nepoužívá pro načítání produktů, ale může být potřeba pro jiné HTTP requesty.
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
-    // Přihlásíme se k odběru CELÝCH překladů z LocalizationService
-    // Stejný vzor jako v ReferencesComponent
     this.localizationService.currentTranslations$
-      .pipe(takeUntil(this.destroy$)) // Automatické odhlášení při zničení komponenty
+      .pipe(takeUntil(this.destroy$))
       .subscribe(translations => {
-        // Zkontrolujeme, zda jsou překlady k dispozici a obsahují sekci 'shop'
         if (translations && translations.shop) {
-          // Naplnění proměnných s přeloženými texty
           this.loadLocalizedContent();
-
-          // Načtení a naplnění pole produktů s přeloženými texty
-          // Produkty jsou nyní přímo v objektu translations.shop.products_data
           this.shopProducts = translations.shop.products_data || [];
-          
-          // Aplikujeme filtry a aktualizujeme zobrazení po načtení dat
           this.applyFilters();
-          this.cdr.detectChanges(); // Vynutit detekci změn pro aktualizaci UI
+          this.cdr.detectChanges();
         } else {
-          // Pokud sekce 'shop' nebo 'products_data' chybí, nastavíme prázdné pole produktů
           console.warn('ShopComponent: Objekt "shop" nebo "products_data" nebyl nalezen v překladech.');
           this.shopProducts = [];
-          this.loadLocalizedContent(); // Načteme texty, které by měly být buď klíče, nebo fallback
+          this.loadLocalizedContent();
           this.applyFilters();
           this.cdr.detectChanges();
         }
@@ -105,10 +93,6 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  /**
-   * Načte lokalizované texty pro komponentu Shop z LocalizationService.
-   * Tato metoda se volá POKAŽDÉ, když se změní jazyk a LocalizationService vydá nové překlady.
-   */
   private loadLocalizedContent(): void {
     this.header1 = this.localizationService.getText('shop.header1');
     this.header02T = this.localizationService.getText('shop.header02T');
@@ -130,22 +114,15 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     this.updateSliderPosition();
   }
 
-  /**
-   * Změní aktuální měnu a aktualizuje zobrazení.
-   * @param currency Nová měna ('czk' nebo 'eur').
-   */
   selectCurrency(currency: 'czk' | 'eur'): void {
     if (this.currentCurrency !== currency) {
       this.currentCurrency = currency;
       this.updateSliderPosition();
-      this.currentPage = 1; // Resetovat stránku při změně měny
+      this.currentPage = 1;
       this.applyFilters();
     }
   }
 
-  /**
-   * Aktualizuje pozici posuvníku měny v UI.
-   */
   private updateSliderPosition(): void {
     if (!this.currencySliderTrack || !this.currencySlider) {
       console.error('updateSliderPosition: Currency switcher elements are unavailable.');
@@ -176,12 +153,6 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  /**
-   * Formátuje cenu podle vybrané měny.
-   * @param price Číselná hodnota ceny.
-   * @param currency Měna ('czk' nebo 'eur').
-   * @returns Formátovaný řetězec ceny.
-   */
   private formatPrice(price: number, currency: 'czk' | 'eur'): string {
     const symbol = this.exchangeRates[currency].symbol;
     const options: Intl.NumberFormatOptions = {
@@ -198,13 +169,9 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     return `${formattedValue}${symbol}`;
   }
 
-  /**
-   * Aplikuje filtry a řazení na produkty a aktualizuje paginaci.
-   */
   applyFilters(): void {
     let tempProducts = [...this.shopProducts];
 
-    // Filtrace podle vyhledávacího dotazu
     if (this.searchQuery) {
       const lowerCaseQuery = this.searchQuery.toLowerCase();
       tempProducts = tempProducts.filter(product =>
@@ -213,7 +180,6 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
 
-    // Řazení produktů
     if (this.selectedSortOrder) {
       tempProducts.sort((a, b) => {
         const priceA = (this.currentCurrency === 'czk' ? a.priceCZK : a.priceEUR) || 0;
@@ -229,7 +195,6 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
 
-    // Formátování ceny pro zobrazení
     this.allFilteredAndSortedProducts = tempProducts.map(product => {
       const displayPrice = (this.currentCurrency === 'czk') ? product.priceCZK : product.priceEUR;
       return {
@@ -238,7 +203,6 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
       };
     });
 
-    // Aktualizace paginace
     this.totalPages = Math.ceil(this.allFilteredAndSortedProducts.length / this.itemsPerPage);
     if (this.currentPage > this.totalPages && this.totalPages > 0) {
         this.currentPage = this.totalPages;
@@ -251,18 +215,12 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  /**
-   * Aktualizuje produkty zobrazené na aktuální stránce.
-   */
   private updatePaginatedProducts(): void {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     this.paginatedProducts = this.allFilteredAndSortedProducts.slice(startIndex, endIndex);
   }
 
-  /**
-   * Generuje pole čísel stránek pro paginaci.
-   */
   private generatePageNumbers(): void {
     this.pagesToShow = [];
     for (let i = 1; i <= this.totalPages; i++) {
@@ -270,10 +228,6 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  /**
-   * Přejde na zadanou stránku.
-   * @param page Číslo stránky, na kterou se má přejít.
-   */
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
       this.currentPage = page;
@@ -283,9 +237,6 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  /**
-   * Přejde na další stránku.
-   */
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
@@ -295,9 +246,6 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  /**
-   * Přejde na předchozí stránku.
-   */
   prevPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
@@ -306,7 +254,6 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
       this.scrollToProdWrp();
     }
   }
-
 
   private scrollToProdWrp(): void {
     if (window.innerWidth < 1375 && this.prodWrp) {
@@ -326,7 +273,6 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     this.applyFilters();
   }
 
-
   onReset(): void {
     this.searchQuery = '';
     this.selectedSortOrder = '';
@@ -334,6 +280,5 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currentPage = 1;
     this.updateSliderPosition();
     this.applyFilters();
-    console.log('Filtry a vyhledávání byly resetovány.');
   }
 }

@@ -1,4 +1,3 @@
-/* Overlay - zatemnění celé obrazovky */
 .dialog-overlay {
   position: fixed;
   top: 0;
@@ -9,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 30000; /* Maximální priorita nad vším ostatním */
+  z-index: 30000; 
 }
 
 .dialog-container {
@@ -17,11 +16,11 @@
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   width: 450px;
-  max-width: 90%; /* Responzivita pro mobily */
+  max-width: 90%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: popIn 0.2s ease-out; /* Animace při otevření */
+  animation: popIn 0.2s ease-out; 
 }
 
 .dialog-header {
@@ -56,7 +55,6 @@
   gap: 12px;
 }
 
-/* Styly tlačítek */
 .confirm_button {
   padding: 8px 24px;
   background-color: #222;
@@ -89,7 +87,6 @@
   border-color: #ccc;
 }
 
-/* Animace popIn */
 @keyframes popIn {
   from { 
     opacity: 0; 
@@ -101,7 +98,6 @@
   }
 }
 
-/* Globální pravidlo pro zablokování scrollu (přidává se na body) */
 :host-context(body.no-scroll) {
   overflow: hidden;
 }

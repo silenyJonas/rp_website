@@ -90,7 +90,6 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
     });
   }
 
-  // --- PAGINATION HANDLERS (NOVÉ) ---
   onHandlePageChange(page: number): void {
     if (this.showTrashTable) {
       this.goToTrashPage(page);
@@ -113,7 +112,6 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
     }
   }
 
-  // --- LOGIKA ZŮSTÁVÁ STEJNÁ ---
   exportActiveTable(): void {
     if (this.activeTable) this.activeTable.exportToCSV();
   }

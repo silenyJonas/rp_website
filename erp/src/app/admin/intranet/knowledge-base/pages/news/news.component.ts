@@ -18,8 +18,8 @@ export class NewsComponent extends BaseDataComponent<any> implements OnInit {
   override apiEndpoint: string = 'news';
   
   currentPage: number = 1;
-  itemsPerPage: number = 5; // Nastaveno na 5 dle požadavku
-  totalPages: number = 0;   // Výchozí 0, aby prošla první podmínka
+  itemsPerPage: number = 5; 
+  totalPages: number = 0; 
   totalItems: number = 0;
   
   accumulatedNews: any[] = [];
@@ -37,7 +37,6 @@ export class NewsComponent extends BaseDataComponent<any> implements OnInit {
   }
 
   loadMore(): void {
-    // Podmínka pro zastavení: Pokud už načítáme, nebo nejsme na první straně a aktuální strana překročila totál
     if (this.isLoading || (this.currentPage > this.totalPages && this.totalPages !== 0)) {
       return;
     }
@@ -57,7 +56,6 @@ export class NewsComponent extends BaseDataComponent<any> implements OnInit {
       })
     ).subscribe({
       next: (response: PaginatedResponse<any>) => {
-        // Laravel vrací data v poli 'data'
         if (response && response.data) {
           this.accumulatedNews = [...this.accumulatedNews, ...response.data];
           this.totalPages = response.last_page;
@@ -74,8 +72,6 @@ export class NewsComponent extends BaseDataComponent<any> implements OnInit {
   }
 
   get hasMore(): boolean {
-    // Tlačítko zobrazíme jen pokud máme co načítat
-    // return this.currentPage <= this.totalPages;
     return true;
   }
 }

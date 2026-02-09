@@ -67,7 +67,7 @@ export class AuthService {
         const serverId = (user.id || user.user_login_id).toString();
         
         if (user.user_email !== this.getUserEmail() || serverId !== this.getUserId()) {
-          this.setUserEmail(user.user_email); // Použití sjednocené metody
+          this.setUserEmail(user.user_email);
           sessionStorage.setItem('userId', serverId);
         }
 
@@ -109,29 +109,20 @@ export class AuthService {
     this._userEmailSubject.next(null);
     this.stopTokenRefreshTimer();
   }
-
-  // --- POMOCNÉ METODY (PŮVODNÍ POJMENOVÁNÍ ZACHOVÁNO) ---
   public getUserId(): string | null { return sessionStorage.getItem('userId'); }
-  
   public getUserEmail(): string | null { return sessionStorage.getItem('userEmail'); }
-  
   public setUserEmail(email: string): void {
     sessionStorage.setItem('userEmail', email);
     this._userEmailSubject.next(email);
   }
 
   public getUserRole(): string | null { return sessionStorage.getItem('userRole'); }
-  
   public getAccessToken(): string | null { return sessionStorage.getItem('accessToken'); }
-  
   public getRefreshToken(): string | null { return sessionStorage.getItem('refreshToken'); }
-  
   public getUserPermissions(): string[] {
     const perms = sessionStorage.getItem('userPermissions');
     return perms ? JSON.parse(perms) : [];
   }
-
-  // --- OSTATNÍ LOGIKA ---
   logout(): Observable<any> {
     const body = { refreshToken: this.getRefreshToken() };
     return this.http.post<any>(`${this.baseUrl}/logout`, body).pipe(

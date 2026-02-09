@@ -8,7 +8,6 @@ export class PermissionService {
   private userPermissions$ = new BehaviorSubject<string[]>([]);
 
   constructor() {
-    // Načtení při F5
     const savedPermissions = localStorage.getItem('userPermissions');
     if (savedPermissions) {
       try {

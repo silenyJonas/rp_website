@@ -1,5 +1,3 @@
-// src/app/academy/academy.component.ts
-
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PublicDataService } from '../../services/public-data.service';
@@ -11,7 +9,6 @@ import { takeUntil } from 'rxjs/operators';
 import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
 import { FormFieldConfig } from '../../../shared/interfaces/form-field-config';
 
-// Rozhraní pro položku timeline před překladem (s klíči)
 interface TimelineItemKeys {
   id: number;
   titleKey: string;
@@ -21,14 +18,13 @@ interface TimelineItemKeys {
   isActive: boolean;
 }
 
-// Rozhraní pro přeloženou položku timeline
 interface TimelineItem {
   id: number;
   title: string;
   content: string;
   isActive: boolean;
-  themes: string[]; // Již přeložené texty
-  newThings: string[][]; // [přeložený text, cesta k ikoně]
+  themes: string[]; 
+  newThings: string[][]; 
 }
 
 @Component({
@@ -44,7 +40,6 @@ interface TimelineItem {
 })
 export class AcademyComponent implements OnInit, OnDestroy {
 
-  // --- Proměnné pro texty formuláře (budou naplněny z lokalizace) ---
   form_header: string = '';
   form_description: string = '';
   form_button: string = '';
@@ -54,9 +49,6 @@ export class AcademyComponent implements OnInit, OnDestroy {
   
   second_header: string = '';
 
-  
-
-  // --- Obecné texty pro sekci kroužků (budou naplněny z lokalizace) ---
   academyHeader: string = '';
   introText: string = '';
   timeHeader: string = '';
@@ -76,7 +68,6 @@ export class AcademyComponent implements OnInit, OnDestroy {
   yearlyPaymentAmount: string = '';
   yearlyPaymentNote: string = '';
 
-  // Konfigurace formuláře pro GenericFormComponent s klíči pro lokalizaci
   private initialContactFormConfig: FormFieldConfig[] = [
     {
       label: 'academy.consultation_form.fields.theme_label',
@@ -84,7 +75,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
       name: 'theme',
       type: 'select',
       required: true,
-      value: 'desktop-development', // Výchozí hodnota
+      value: 'desktop-development', 
       options: [
         { value: 'desktop-development', label: 'academy.consultation_form.fields.theme_option_desktop', isLocalizedLabel: true },
         { value: 'web-development', label: 'academy.consultation_form.fields.theme_option_web', isLocalizedLabel: true }
@@ -96,7 +87,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
       name: 'diff',
       type: 'select',
       required: true,
-      value: 'begginer', // Výchozí hodnota
+      value: 'begginer', 
       options: [
         { value: 'begginer', label: 'academy.consultation_form.fields.diff_option_begginer', isLocalizedLabel: true },
         { value: 'advanced', label: 'academy.consultation_form.fields.diff_option_advanced', isLocalizedLabel: true },
@@ -127,7 +118,6 @@ export class AcademyComponent implements OnInit, OnDestroy {
 
   contactFormConfig: FormFieldConfig[] = [];
 
-  // Statické cesty k ikonám
   timeIcon: string = 'assets/images/icons/curses/time.png';
   calendarIcon: string = 'assets/images/icons/curses/calendar.png';
   onlineIcon: string = 'assets/images/icons/curses/online.png';
@@ -139,7 +129,6 @@ export class AcademyComponent implements OnInit, OnDestroy {
   cmdIcon: string = 'assets/images/icons/curses/cmd.png';
   guiIcon: string = 'assets/images/icons/curses/gui.png';
 
-  // --- Interní proměnné pro timeline před překladem (s klíči) ---
   private initialWebTimelineItems: TimelineItemKeys[] = [
     {
       id: 1,
@@ -253,16 +242,13 @@ export class AcademyComponent implements OnInit, OnDestroy {
     },
   ];
 
-  // --- Přeložené proměnné pro timeline (pro HTML) ---
   webTimelineItems: TimelineItem[] = [];
   desktopTimelineItems: TimelineItem[] = [];
 
-  // --- Texty hlaviček sekcí ---
   webDevSectionTitle: string = '';
   desktopDevSectionTitle: string = '';
   webDevSectionDescription: string = '';
   desktopDevSectionDescription: string = '';
-
 
   private destroy$ = new Subject<void>();
 
@@ -287,7 +273,6 @@ export class AcademyComponent implements OnInit, OnDestroy {
   }
 
   private loadLocalizedContent(): void {
-    // Načtení obecných textů
     this.academyHeader = this.localizationService.getText('academy.header');
     this.second_header = this.localizationService.getText('academy.second_header');
 
@@ -296,23 +281,20 @@ export class AcademyComponent implements OnInit, OnDestroy {
     this.introText = this.localizationService.getText('academy.intro_text');
     this.timeHeader = this.localizationService.getText('academy.icons.time');
     this.onlineHeader = this.localizationService.getText('academy.icons.online');
-    this.whatHeader = this.localizationService.getText('academy.icons.what'); // Nový klíč
+    this.whatHeader = this.localizationService.getText('academy.icons.what'); 
     this.commonDurationHeader = this.localizationService.getText('academy.common.duration_header');
     this.commonThemesHeader = this.localizationService.getText('academy.common.themes_header');
     this.commonNewThingsHeader = this.localizationService.getText('academy.common.new_things_header');
 
-    // Načtení textů pro formulář
     this.form_header = this.localizationService.getText('academy.consultation_form.header');
     this.form_description = this.localizationService.getText('academy.consultation_form.description');
     this.form_button = this.localizationService.getText('academy.consultation_form.button');
 
-    // Načtení textů pro hlavičky sekcí
     this.webDevSectionTitle = this.localizationService.getText('academy.web_development.title');
     this.webDevSectionDescription = this.localizationService.getText('academy.web_development.description');
     this.desktopDevSectionTitle = this.localizationService.getText('academy.desktop_development.title');
     this.desktopDevSectionDescription = this.localizationService.getText('academy.desktop_development.description');
 
-    // Načtení textů pro ceny
     this.priceHeader = this.localizationService.getText('academy.prices.header');
     this.monthlyPaymentHeader = this.localizationService.getText('academy.prices.monthly.header');
     this.monthlyPaymentAmount = this.localizationService.getText('academy.prices.monthly.amount');
@@ -324,8 +306,6 @@ export class AcademyComponent implements OnInit, OnDestroy {
     this.yearlyPaymentAmount = this.localizationService.getText('academy.prices.yearly.amount');
     this.yearlyPaymentNote = this.localizationService.getText('academy.prices.yearly.note');
 
-
-    // Překlad a nastavení contactFormConfig pro GenericFormComponent
     this.contactFormConfig = this.initialContactFormConfig.map(field => {
       const translatedField: FormFieldConfig = { ...field };
 
@@ -365,7 +345,6 @@ export class AcademyComponent implements OnInit, OnDestroy {
       return translatedField;
     });
 
-    // Překlad a nastavení timeline items
     this.webTimelineItems = this.initialWebTimelineItems.map(item => this.translateTimelineItem(item));
     this.desktopTimelineItems = this.initialDesktopTimelineItems.map(item => this.translateTimelineItem(item));
   }

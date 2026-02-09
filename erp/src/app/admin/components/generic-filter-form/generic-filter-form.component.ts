@@ -53,7 +53,6 @@ export class GenericFilterFormComponent implements OnChanges {
   applyFilters(): void {
     const filters = {
       ...this.filterForm,
-      // Přejmenování klíčů, aby odpovídaly backendu a user-request komponentě
       sort_by: this.sortBy,
       sort_direction: this.sortDirection
     };

@@ -1,4 +1,3 @@
-/* 1. HLAVNÍ KONTEJNER */
 .form-wrp {
     display: flex;
     justify-content: center;
@@ -22,7 +21,6 @@
     z-index: 0;
 }
 
-/* 2. KARTA FORMULÁŘE */
 .contact-form {
     position: relative;
     z-index: 10;
@@ -45,7 +43,6 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* 3. TYPOGRAFIE */
 .contact-form h2 {
     font-family: "Source Sans Pro", sans-serif;
     font-size: 3rem;
@@ -79,7 +76,6 @@
     margin-top: 15px;
 }
 
-/* 4. INPUTY */
 .form-group input, .form-group textarea {
     width: 100%;
     padding: 10px 15px;
@@ -98,7 +94,6 @@
     box-shadow: 0 0 12px rgba(166, 125, 255, 0.2);
 }
 
-/* 5. CHECKBOX */
 .checkbox-container {
     margin-top: 25px;
     font-family: "Source Sans Pro", sans-serif;
@@ -132,7 +127,6 @@
 
 .privacy-policy-link:hover { color: #fff; text-decoration: underline; }
 
-/* 6. TLAČÍTKO */
 .submit-btn {
     width: 100%;
     height: 60px;
@@ -161,7 +155,6 @@
 
 .submit-btn:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(1); }
 
-/* 7. ÚSPĚŠNÝ STAV */
 .success-container { text-align: center; animation: fadeIn 0.5s ease-out; }
 
 .success-icon { font-size: 4rem; color: #a67dff; margin-bottom: 20px; text-shadow: 0 0 20px rgba(166, 125, 255, 0.4); }
@@ -170,12 +163,11 @@
 
 @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-/* 8. RESPONZIVITA */
 @media (max-width: 480px) {
     .mobile-flex-stack { flex-direction: column; gap: 0 !important; }
     .contact-form h2 { font-size: 1.8rem; }
 }
-/* --- NOVÉ STYLY PRO FILE DROP AREA --- */
+
 .file-drop-area {
   position: relative;
   display: flex;
@@ -184,7 +176,7 @@
   width: 100%;
   min-height: 80px;
   padding: 20px;
-  border: 2px dashed rgba(116, 68, 128, 0.4); /* Stejná barva jako tvoje bordery */
+  border: 2px dashed rgba(116, 68, 128, 0.4);
   border-radius: 8px;
   background-color: #131325;
   transition: all 0.3s ease;
@@ -193,7 +185,6 @@
   overflow: hidden;
 }
 
-/* Skrytý skutečný input, který ale pokrývá celou plochu */
 .file-input {
   position: absolute;
   left: 0;
@@ -205,12 +196,11 @@
   z-index: 2;
 }
 
-/* Obsah uvnitř drop zóny */
 .file-msg {
   display: flex;
   align-items: center;
   gap: 15px;
-  pointer-events: none; /* Kliknutí propadne na input pod tím */
+  pointer-events: none;
 }
 
 .upload-icon {
@@ -234,7 +224,6 @@
   font-family: "Source Sans Pro", sans-serif;
 }
 
-/* Hover efekty */
 .file-drop-area:hover {
   border-color: #a67dff;
   background-color: rgba(116, 68, 128, 0.1);
@@ -246,10 +235,9 @@
   color: #131325;
 }
 
-/* Stav po vybrání souboru */
 .file-drop-area.has-file {
   border-style: solid;
-  border-color: #44cc88; /* Zelená pro signalizaci úspěchu */
+  border-color: #44cc88;
   background-color: rgba(68, 204, 136, 0.05);
 }
 
@@ -263,7 +251,7 @@
   color: #e0e0e0;
   font-weight: 600;
 }
-/* Real-time validace - styly */
+
 .error-msg {
     color: #ff4d4d;
     font-size: 0.75rem;
@@ -278,7 +266,6 @@
     box-shadow: 0 0 8px rgba(255, 77, 77, 0.2) !important;
 }
 
-/* Odsazení pro linky pod checkboxy */
 .checkbox-container a {
     display: block;
     margin-bottom: 5px;

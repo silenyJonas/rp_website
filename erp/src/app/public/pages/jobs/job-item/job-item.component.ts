@@ -74,10 +74,7 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
     if (this.applicationForm.valid && this.selectedFile) {
       this.isLoading = true;
       this.cd.detectChanges();
-
       const formData = new FormData();
-      
-      // Textová pole
       Object.keys(this.applicationForm.value).forEach(key => {
         const value = this.applicationForm.value[key];
         if (value !== null && value !== undefined) {
@@ -86,12 +83,10 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
         }
       });
 
-      // Pozice a soubor
       if (this.job) {
         formData.append('position_name', this.job.title);
       }
       formData.append('cv_file', this.selectedFile, this.selectedFile.name);
-
       this.uploadData<any>(formData).pipe(
         finalize(() => {
           this.isLoading = false;

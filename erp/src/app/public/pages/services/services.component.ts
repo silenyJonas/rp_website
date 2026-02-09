@@ -32,7 +32,6 @@ interface Item {
 })
 export class ServicesComponent implements OnInit, OnDestroy {
 
-    // Localization keys for form headers and descriptions
     form_description: string = '';
     form_button: string = '';
     form_header: string = '';
@@ -40,7 +39,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
     contactFormConfig: FormFieldConfig[] = [];
     private destroy$ = new Subject<void>();
 
-    // Localization keys for main section headers
     header_1_text: string = '';
     web_dev_header: string = '';
     desktop_dev_header: string = '';
@@ -106,45 +104,35 @@ export class ServicesComponent implements OnInit, OnDestroy {
     service_main_text_4_html: string = '';
 
     currentTech: string = 'web-dev';
-    technologies: Technology[] = []; // Initialized as empty, populated after translations load
+    technologies: Technology[] = [];
 
     webServices: Item[] = [];
     desktopServices: Item[] = [];
     mobileServices: Item[] = [];
     aiServices: Item[] = [];
 
-    // Technology images paths - these are fixed and not localized
     webTechImages: any[] = [
         { name: 'C#', path: 'assets/images/services-img/csharp.png' },
         { name: 'TypeScript', path: 'assets/images/services-img/ts.png' },
-        // { name: 'Java', path: 'assets/images/services-img/java.png' },
-        // { name: 'Python', path: 'assets/images/services-img/py.png' },
         { name: 'PHP', path: 'assets/images/services-img/php.png' },
         { name: 'PostgreSQL', path: 'assets/images/services-img/postgresql.png' },
     ];
     desktopTechImages: any[] = [
         { name: 'C#', path: 'assets/images/services-img/csharp.png' },
         { name: 'C++', path: 'assets/images/services-img/cpp.png' },
-        // { name: 'Java', path: 'assets/images/services-img/java.png' },
         { name: 'Python', path: 'assets/images/services-img/py.png' },
         { name: 'SQLite', path: 'assets/images/services-img/sqlite.png' },
-        // { name: 'PostgreSQL', path: 'assets/images/services-img/postgresql.png' },
     ];
     mobileTechImages: any[] = [
         { name: 'C#', path: 'assets/images/services-img/csharp.png' },
         { name: 'TypeScript', path: 'assets/images/services-img/ts.png' },
-        // { name: 'Swift', path: 'assets/images/services-img/swift.png' },
         { name: 'Kotlin', path: 'assets/images/services-img/kotlin.png' },
         { name: 'SQLite', path: 'assets/images/services-img/sqlite.png' },
-        // { name: 'PostgreSQL', path: 'assets/images/services-img/postgresql.png' },
     ];
     aiTechImages: any[] = [
         { name: 'C++', path: 'assets/images/services-img/cpp.png' },
         { name: 'Python', path: 'assets/images/services-img/py.png' },
-        // { name: 'Java', path: 'assets/images/services-img/java.png' },
-        // { name: 'JavaScript', path: 'assets/images/services-img/js.png' },
         { name: 'Rust', path: 'assets/images/services-img/rust.png' },
-        // { name: 'Go', path: 'assets/images/services-img/go.png' },
     ];
 
 
@@ -156,13 +144,11 @@ export class ServicesComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        // Subscribe to translations to populate all localized texts
         this.localizationService.currentTranslations$
             .pipe(takeUntil(this.destroy$))
             .subscribe(translations => {
                 if (translations) {
                     
-                      // NEW: Populate main service texts with HTML
                     this.service_main_text_1_html = this.localizationService.getText('services.service_main_text_1');
                     this.service_main_text_2_html = this.localizationService.getText('services.service_main_text_2');
                     this.service_main_text_3_html = this.localizationService.getText('services.service_main_text_3');
@@ -204,12 +190,10 @@ export class ServicesComponent implements OnInit, OnDestroy {
                     this.service_header_6 = this.localizationService.getText('services.services.item_6.header');
                     this.service_price_6 = this.localizationService.getText('services.services.item_6.price');
 
-                    // Update form headers and descriptions
                     this.form_description = this.localizationService.getText('services.form_description');
                     this.form_button = this.localizationService.getText('services.form_button');
                     this.form_header = this.localizationService.getText('services.form_header');
 
-                    // Update main section headers
                     this.header_1_text = this.localizationService.getText('services.header_1_text');
                     this.web_dev_header = this.localizationService.getText('services.web_dev_header');
                     this.desktop_dev_header = this.localizationService.getText('services.desktop_dev_header');
@@ -232,7 +216,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
                     this.colab_header_4 = this.localizationService.getText('services.colab.item_4.header')
                     this.colab_text_4 = this.localizationService.getText('services.colab.item_4.text')
 
-                    // Populate technologies array with localized names
                     this.technologies = [
                         { id: 'web-dev', name: this.web_dev_header },
                         { id: 'desktop-dev', name: this.desktop_dev_header },
@@ -240,14 +223,13 @@ export class ServicesComponent implements OnInit, OnDestroy {
                         { id: 'ai-dev', name: this.ai_dev_header }
                     ];
 
-                    // Populate form configuration with localized labels and placeholders
                     this.contactFormConfig = [
                         {
                             label: this.localizationService.getText('services.contact_form.thema_label'),
                             name: 'thema',
                             type: 'select',
                             required: true,
-                            value: 'Webový vývoj', // Default value
+                            value: 'Webový vývoj',
                             options: [
                                 { value: 'Webový vývoj', label: this.localizationService.getText('services.contact_form.web_development_label') },
                                 { value: 'Desktopový vývoj', label: this.localizationService.getText('services.contact_form.desktop_development_label') },
@@ -282,7 +264,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
                         }
                     ];
 
-                    // Populate FAQ sections with localized questions and answers
                     this.webServices = [
                         { id: 1, question: this.localizationService.getText('services.webServices.item1.question'), answer: this.localizationService.getText('services.webServices.item1.answer'), isActive: false },
                         { id: 2, question: this.localizationService.getText('services.webServices.item2.question'), answer: this.localizationService.getText('services.webServices.item2.answer'), isActive: false },
@@ -333,19 +314,14 @@ export class ServicesComponent implements OnInit, OnDestroy {
                         { id: 10, question: this.localizationService.getText('services.aiServices.item10.question'), answer: this.localizationService.getText('services.aiServices.item10.answer'), isActive: false }
                     ];
 
-                    // Trigger change detection after all localized texts are set
                     this.cdr.detectChanges();
                 }
             });
 
-        // Query params logic depends on `technologies` array, so it should be processed
-        // *after* the `technologies` array is populated by the localization subscription.
-        // The `queryParams` observable will still emit if URL changes later.
         this.route.queryParams.pipe(
-            takeUntil(this.destroy$) // Ensure unsubscription
+            takeUntil(this.destroy$)
         ).subscribe(params => {
             const techIdFromUrl = params['tech'];
-            // Check if technologies array is populated before checking for existence
             if (techIdFromUrl && this.technologies.length > 0 && this.technologies.some(t => t.id === techIdFromUrl)) {
                 this.currentTech = techIdFromUrl;
                 const themaField = this.contactFormConfig.find(field => field.name === 'thema');
@@ -358,7 +334,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
             } else {
                 this.currentTech = 'web-dev';
             }
-            this.cdr.detectChanges(); // Trigger change detection for currentTech updates
+            this.cdr.detectChanges();
         });
     }
 
@@ -368,19 +344,15 @@ export class ServicesComponent implements OnInit, OnDestroy {
     }
 
     handleFormSubmission(formData: any): void {
-        // console.log('Data přijata z generického formuláře k odeslání do PublicDataService:', formData);
         this.publicDataService.submitContactForm(formData).subscribe({
             next: (response) => {
-                // console.log('Formulář odeslán úspěšně přes PublicDataService!', response);
             },
             error: (error: HttpErrorResponse) => {
-                // console.error('Chyba při odesílání formuláře přes PublicDataService:', error);
             }
         });
     }
 
     handleFormReset(): void {
-        // console.log('Generický formulář byl resetován.');
     }
 
     private mapTechIdToFormValue(techId: string): string | undefined {

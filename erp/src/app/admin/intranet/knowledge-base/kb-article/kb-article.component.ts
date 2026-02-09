@@ -24,7 +24,6 @@ import { CommonModule } from '@angular/common';
 export class KbArticleComponent implements OnInit {
   article: any;
 
-  // Simulace databáze/JSONu
   private kbData: any = {
     'uvod-pro-zamestnance': {
       title: 'Vítejte v týmu',

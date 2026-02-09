@@ -100,14 +100,12 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
             this.restoreDataFromApi(item.id).subscribe({
               next: () => {
                 this.alertDialogService.open('Úspěch', 'Položka byla úspěšně obnovena.', 'success');
-                // Odebereme položku z tabulky, protože už není smazaná
                 const index = this.data.findIndex(dataItem => dataItem.id === item.id);
                 if (index > -1) {
                   this.data.splice(index, 1);
                   this.cd.markForCheck();
                   console.log('Stav pole data po odstranění obnovené položky:');
                   console.table(this.data);
-                  // 🆕 Vyšle událost po úspěšné obnově, aby rodič mohl data znovu načíst
                   this.itemRestored.emit();
                 }
               },
@@ -130,7 +128,6 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
             this.hardDeleteDataFromApi(item.id).subscribe({
               next: () => {
                 this.alertDialogService.open('Úspěch', 'Položka byla trvale smazána.', 'success');
-                // Odebereme položku z tabulky
                 const index = this.data.findIndex(dataItem => dataItem.id === item.id);
                 if (index > -1) {
                   this.data.splice(index, 1);
@@ -153,27 +150,22 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
         });
         break;
       default:
-        // Ostatní typy tlačítek (pokud by se v budoucnu přidaly)
         break;
     }
   }
 
   deleteAll(): void {
-    // Ověření, zda existují nějaká data ke smazání
     if (this.data.length === 0) {
       this.alertDialogService.open('Upozornění', 'Nejsou k dispozici žádné položky ke smazání.', 'warning');
       return;
     }
     
-    // Zobrazení potvrzovacího dialogu
     this.confirmDialogService.open('Trvalé smazání všech položek', 'Opravdu si přejete TRVALE smazat VŠECHNY položky? Tato akce je nevratná!')
       .then(result => {
         if (result) {
-          // Pokud uživatel potvrdí, zavoláme metodu pro smazání
           this.hardDeleteAllTrashedDataFromApi().subscribe({
             next: () => {
               this.alertDialogService.open('Úspěch', 'Všechny položky byly trvale smazány.', 'success');
-              // Vyprázdníme lokální pole s daty, protože byly smazány
               this.data = [];
               this.cd.markForCheck();
             },

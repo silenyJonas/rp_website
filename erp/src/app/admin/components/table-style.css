@@ -1,18 +1,16 @@
-/* Responsive table container */
 .table-responsive {
   overflow-x: auto;
   border: 1px solid #dee2e6;
   border-radius: 6px;
-  background-color: #fff; /* Čisté pozadí */
+  background-color: #fff;
 }
 
-/* Compact table styling */
 table {
   width: 100%;
   border-collapse: collapse;
   font-family: Arial, sans-serif;
   font-size: 0.85rem;
-  table-layout: fixed; /* Zajišťuje, že sloupce dodrží šířku */
+  table-layout: fixed;
 }
 
 table.fit-content-table {
@@ -20,41 +18,36 @@ table.fit-content-table {
   table-layout: auto;
 }
 
-/* Odstranění caption (pokud ho v HTML nechceš vidět) */
 caption {
   display: none;
 }
 
-/* Úprava buněk pro lepší čitelnost a zamezení přetékání */
 th, td {
-  padding: 6px 8px; /* Mírně větší padding pro "smooth" look */
+  padding: 6px 8px;
   text-align: left;
-  border-bottom: 1px solid #dee2e6; /* Pouze horizontální linky pro moderní vzhled */
+  border-bottom: 1px solid #dee2e6;
   vertical-align: middle;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* FIX: Hlavičky s tlačítky - zmenšeno na minimum */
 th.button-header {
   text-align: center;
-  width: 48px !important; /* Opravdu malé pro jedno tlačítko */
+  width: 48px !important;
   padding: 4px 2px;
   font-size: 0.75rem;
   color: #6c757d;
   white-space: nowrap;
 }
 
-/* FIX: Buňky s tlačítky - zmenšeno na minimum */
 td.action-button-cell {
   text-align: center;
-  width: 40px !important; /* Zarovnáno s hlavičkou */
+  width: 40px !important;
   min-width: 40px !important;
   padding: 2px !important;
 }
 
-/* Styl tlačítek uvnitř tabulky */
 .action-button-cell button {
   padding: 4px;
   border: none;
@@ -69,7 +62,7 @@ td.action-button-cell {
 }
 
 thead {
-  background-color: #f8f9fa; /* Světlejší šedá */
+  background-color: #f8f9fa;
 }
 
 tr:nth-child(even) {
@@ -77,10 +70,9 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-  background-color: #f1f5f9; /* Jemnější modrá při hoveru */
+  background-color: #f1f5f9;
 }
 
-/* Obrázky v buňce */
 .table-cell-image {
   width: 28px;
   height: 28px;
@@ -90,7 +82,6 @@ tr:hover {
   margin: 0 auto;
 }
 
-/* Odkazy v tabulce */
 td a {
   color: #007bff;
   text-decoration: none;
@@ -99,7 +90,6 @@ td a:hover {
   text-decoration: underline;
 }
 
-/* "Žádná data" zpráva */
 .no-data-msg {
   color: #adb5bd;
   padding: 20px !important;

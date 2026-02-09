@@ -16,26 +16,15 @@ export class ConfirmDialogService {
 
   open(title: string, message: string): Promise<boolean> {
     this.closeDialog();
-
-    // Dynamically create the component using EnvironmentInjector
     this.componentRef = createComponent(ConfirmDialogComponent, {
       environmentInjector: this.environmentInjector
     });
-    
-    // Get the DOM element from the component
     const domElem = (this.componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
-
-    // Attach the component to the application's view
     this.appRef.attachView(this.componentRef.hostView);
-
-    // Append the component element to the document body
     document.body.appendChild(domElem);
-    
-    // Set input properties on the component instance
     this.componentRef.instance.title = title;
     this.componentRef.instance.message = message;
     this.componentRef.instance.show();
-
     return new Promise<boolean>((resolve) => {
       this.componentRef?.instance.onConfirm.pipe(first()).subscribe(() => {
         this.closeDialog();

@@ -4,4 +4,5 @@
 -dat full width primo do telo table komponenty
 -uzivatel ktery ma soft-delete aby se nemohl prihlasit
 --------------------------
-dat nacitani na dashboard
+
+cistim kod od komentaru zbytecnych skoncil jsem u pages routing module

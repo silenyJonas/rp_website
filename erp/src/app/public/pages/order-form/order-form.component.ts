@@ -45,7 +45,6 @@ export class OrderFormComponent extends BaseDataComponent<any> implements OnInit
       client_name: ['', Validators.required],
       ico: ['', [Validators.pattern('^[0-9]*$')]],
       client_address: [''],
-      // Telefon: max 20 znaků, povoleny jen číslice a volitelné "+"
       client_phone: ['', [
         Validators.pattern('^\\+?[0-9]*$'), 
         Validators.maxLength(20)

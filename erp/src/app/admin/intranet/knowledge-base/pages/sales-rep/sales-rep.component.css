@@ -1,4 +1,3 @@
-/* --- ZÁKLADNÍ KONTEJNER --- */
 .kb-article-container {
   max-width: 1000px;
   margin: 0 auto;
@@ -9,7 +8,6 @@
   background-color: transparent;
 }
 
-/* --- HLAVIČKA --- */
 .article-header {
   margin-bottom: 30px;
 }
@@ -43,7 +41,6 @@ h1 {
   margin: 40px 0;
 }
 
-/* --- SEKCE A NADPISY --- */
 .kb-section {
   margin-bottom: 60px;
 }
@@ -59,7 +56,6 @@ h2 {
   padding-left: 15px;
 }
 
-/* --- WORKFLOW (KROKY) --- */
 .process-flow {
   display: flex;
   gap: 20px;
@@ -96,7 +92,6 @@ h2 {
   margin: 0; 
 }
 
-/* --- GRID PRO EVIDENCE (LEADS) --- */
 .leads-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -146,7 +141,6 @@ h2 {
   color: #71717a; 
 }
 
-/* --- KARTY (INFO & WARNING) --- */
 .grid-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -195,7 +189,6 @@ h2 {
   color: #a1a1aa; 
 }
 
-/* --- TABULKY --- */
 .data-table {
   width: 100%;
   border-collapse: collapse;
@@ -230,7 +223,6 @@ h2 {
   font-weight: 700; 
 }
 
-/* --- BOXY A POZNÁMKY --- */
 .alert-box {
   background: rgba(166, 125, 255, 0.08);
   border: 1px solid #a67dff;
@@ -257,7 +249,6 @@ h2 {
 .m-t-20{
   margin-top: 20px;
 }
-/* --- RESPONZIVITA --- */
 
 @media (max-width: 850px) {
   .leads-grid, .grid-layout, .process-flow { 
@@ -278,7 +269,6 @@ h2 {
     overflow-x: auto;
   }
 }
-/* --- DECISION CARDS (Kdy poslat) --- */
 .decision-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -323,7 +313,6 @@ h2 {
 
 .decision-card.positive h3 { color: #22c55e; }
 
-/* --- ACTION BLOCK --- */
 .action-block {
   border: 1px solid #a67dff !important;
   background: linear-gradient(145deg, #09090b, #111113) !important;

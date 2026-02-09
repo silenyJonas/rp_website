@@ -4,7 +4,6 @@ import { LocalizationService } from '../../services/localization.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-// Rozhraní pro definici struktury jednoho projektu (s klíči pro lokalizaci)
 interface ProjectItemConfig {
   id: number;
   nameKey: string;
@@ -12,8 +11,6 @@ interface ProjectItemConfig {
   clientKey: string;
   descriptionKey: string;
 }
-
-// Rozhraní pro projektovou položku s přeloženými texty
 interface ProjectItem {
   id: number;
   name: string;
@@ -29,61 +26,45 @@ interface ProjectItem {
   imports: [CommonModule],
   templateUrl: './references.component.html',
   styleUrl: './references.component.css',
-  // Nastavení OnPush pro konzistentní chování s ostatními opravenými stránkami
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReferencesComponent implements OnInit, OnDestroy {
 
-  // Proměnné pro statické texty v HTML
   header_1_text: string = '';
   table_header_title_text: string = '';
   table_header_duration_text: string = '';
   table_header_client_text: string = '';
   more_button_prompt_text: string = '';
   more_button_link_text: string = '';
-
-  // Konfigurace projektů s klíči pro lokalizaci
   projectsConfig: ProjectItemConfig[] = [
     { id: 1, nameKey: 'projects.project_1.name', durationKey: 'projects.project_1.duration', clientKey: 'projects.project_1.client', descriptionKey: 'projects.project_1.description' },
     { id: 2, nameKey: 'projects.project_2.name', durationKey: 'projects.project_2.duration', clientKey: 'projects.project_2.client', descriptionKey: 'projects.project_2.description' },
   ];
-
-  // Pole projektů s přeloženými texty
   projects: ProjectItem[] = [];
-
   private destroy$ = new Subject<void>();
-
   constructor(
     private localizationService: LocalizationService,
-    private cdr: ChangeDetectorRef // Přidáno pro manuální detekci změn
+    private cdr: ChangeDetectorRef 
   ) { }
 
   ngOnInit(): void {
     this.localizationService.currentTranslations$
       .pipe(takeUntil(this.destroy$))
       .subscribe(translations => {
-        // Kontrola, zda máme reálná data
         if (translations && Object.keys(translations).length > 0) {
-          
-          // Naplnění statických textů
           this.header_1_text = this.localizationService.getText('projects.header_1');
           this.table_header_title_text = this.localizationService.getText('projects.table_header_title');
           this.table_header_duration_text = this.localizationService.getText('projects.table_header_duration');
           this.table_header_client_text = this.localizationService.getText('projects.table_header_client');
           this.more_button_prompt_text = this.localizationService.getText('projects.more_button_prompt');
           this.more_button_link_text = this.localizationService.getText('projects.more_button_link_text');
-
-          // Načtení projektů
           this.loadProjects();
-
-          // Aktualizace UI
           this.cdr.detectChanges();
         }
       });
   }
 
   private loadProjects(): void {
-    // Použití .map() vytvoří nové pole (novou referenci), což je pro OnPush ideální
     this.projects = this.projectsConfig.map(config => ({
       id: config.id,
       name: this.localizationService.getText(config.nameKey),
@@ -96,7 +77,6 @@ export class ReferencesComponent implements OnInit, OnDestroy {
 
   toggleProject(clickedProject: ProjectItem): void {
     clickedProject.isActive = !clickedProject.isActive;
-    // Musíme zavolat i zde, aby se projevilo rozbalení řádku v OnPush módu
     this.cdr.detectChanges();
   }
 

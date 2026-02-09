@@ -38,13 +38,9 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
 
   override ngOnInit(): void {
     super.ngOnInit();
-    // Načte data z assets pouze při prvním vstupu
     this.forceFullRefresh();
   }
 
-  /**
-   * Načte data z fyzického souboru (pouze start nebo změna jazyka)
-   */
   public forceFullRefresh(): void {
     this.isLoading = true;
     this.cd.detectChanges();
@@ -125,9 +121,6 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
     });
   }
 
-  /**
-   * Klíčová metoda: Udržuje data v "cache" (this.translations) neustále aktuální
-   */
   updateValue(path: string, newValue: string): void {
     const keys = path.split('.');
     let temp = this.translations;
@@ -140,10 +133,6 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
     if (item) item.value = newValue;
   }
 
-  /**
-   * Odešle data na server a po úspěchu pouze oznámí výsledek
-   * BEZ reloadu stránky nebo nového stahování JSONu
-   */
   onSubmit(): void {
     this.isLoading = true;
     this.cd.detectChanges();
@@ -164,7 +153,6 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
       .subscribe({
         next: () => {
           this.alertDialogService.open('Administrace', `Změny uloženy v paměti i na serveru.`, 'success');
-          // Zde záměrně nevoláme forceFullRefresh(), aby se tabulka neztratila a nenačítala znovu
         },
         error: (err) => {
           this.alertDialogService.open('Chyba', 'Uložení na server selhalo.', 'danger');

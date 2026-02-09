@@ -1,4 +1,3 @@
-/* OVERLAY & KONTEJNER */
 .popup-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -24,7 +23,6 @@
     position: relative;
 }
 
-/* HLAVIČKA A KŘÍŽEK */
 .form-header {
     display: flex;
     justify-content: space-between;
@@ -46,7 +44,7 @@
     background: transparent;
     border: none;
     color: #999;
-    font-size: 2.5rem; /* Zvětšeno pro lepší viditelnost */
+    font-size: 2.5rem;
     line-height: 1;
     cursor: pointer;
     padding: 0 10px;
@@ -62,7 +60,6 @@
     color: #ff4d4d;
 }
 
-/* OBSAH A GRID */
 .details-content {
     padding: 25px;
     overflow-y: auto;
@@ -86,7 +83,6 @@
     color: #111;
 }
 
-/* AKCE A TLAČÍTKA */
 .file-actions { display: flex; gap: 10px; margin-top: 5px; }
 .btn-action { padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; border: 1px solid #ddd; }
 .btn-action.view { background: #eef6ff; color: #007bff; }
@@ -110,7 +106,6 @@
     font-weight: 500;
 }
 
-/* MOBILNÍ RESPONSIVITA */
 @media (max-width: 768px) {
     .form-container.wide-style {
         width: 100%; height: 100%;

@@ -17,7 +17,6 @@ interface JobItem {
   imports: [CommonModule, RouterModule],
   templateUrl: './jobs-list.component.html',
   styleUrls: ['./jobs-list.component.css'],
-  // Přidáno OnPush pro garantovanou synchronizaci překladů
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JobsListComponent implements OnInit, OnDestroy {
@@ -26,7 +25,6 @@ export class JobsListComponent implements OnInit, OnDestroy {
   write_us_prompt_text: string = '';
   availableJobs: JobItem[] = [];
 
-  // Ikonky (cesty zůstávají, jen zajistíme jejich zobrazení)
   ig_icon: string = 'assets/images/icons/ig.png';
   in_icon: string = 'assets/images/icons/fb.png';
   email_icon: string = 'assets/images/icons/email.png';
@@ -35,23 +33,17 @@ export class JobsListComponent implements OnInit, OnDestroy {
 
   constructor(
     private localizationService: LocalizationService,
-    private cdr: ChangeDetectorRef // Klíčové pro opravu bugu
+    private cdr: ChangeDetectorRef 
   ) {}
 
   ngOnInit(): void {
     this.localizationService.currentTranslations$
       .pipe(takeUntil(this.destroy$))
       .subscribe(translations => {
-        // Kontrola, zda už máme načtený JSON
         if (translations && Object.keys(translations).length > 0) {
-          
           this.header_1_text = this.localizationService.getText('careers.header_1');
           this.write_us_prompt_text = this.localizationService.getText('careers.write_us_prompt');
-
-          // Dynamické načtení pozic z JSONu
           this.loadJobs();
-
-          // Okamžité překreslení s novým jazykem
           this.cdr.detectChanges();
         }
       });
@@ -59,7 +51,6 @@ export class JobsListComponent implements OnInit, OnDestroy {
 
   private loadJobs(): void {
     const jobs: JobItem[] = [];
-    // Cyklus projde pozice v JSONu (např. job_1 až job_5)
     for (let i = 1; i <= 2; i++) {
       const id = this.localizationService.getText(`careers.job_${i}_id`);
       const title = this.localizationService.getText(`careers.job_${i}_title`);
@@ -73,7 +64,6 @@ export class JobsListComponent implements OnInit, OnDestroy {
         });
       }
     }
-    // Přiřazení nového pole (imutabilita)
     this.availableJobs = jobs;
   }
 

@@ -1,34 +1,35 @@
-/* --- FOOTER SEKCE --- */
 .public-footer {
-    background-color: #1a1a2e; /* Tmavé fialové pozadí, ladí s formulářem */
-    color: #e0e0e0; /* Světlá barva textu pro kontrast */
-    padding: 60px 40px 20px; /* Více paddingu nahoře a po stranách, méně dole */
-    border-top: 3px solid rgba(116, 068, 128, 0.4); /* Jemný oddělovač nahoře */
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+    padding: 60px 40px 20px;
+    border-top: 3px solid rgba(116, 068, 128, 0.4);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     position: relative;
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5); /* Jemný stín nahoru */
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
 }
-a{
+
+a {
     text-decoration: none;
     color: #b39ddb;
 }
+
 .footer-content {
     display: flex;
-    flex-wrap: wrap; /* Umožní zalomení sekcí na menších obrazovkách */
-    justify-content: space-between; /* Rozprostře sekce rovnoměrně */
-    max-width: 1200px; /* Maximální šířka obsahu footeru */
-    margin: 0 auto; /* Centrování obsahu */
-    gap: 30px; /* Mezera mezi sekcemi */
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 30px;
 }
 
 .footer-section {
-    flex: 1; /* Každá sekce zaujme stejný prostor */
-    min-width: 220px; /* Minimální šířka před zalomením */
-    margin-bottom: 30px; /* Mezera pod sekcemi na menších obrazovkách */
+    flex: 1;
+    min-width: 220px;
+    margin-bottom: 30px;
 }
 
 .footer-section h3 {
-    color: #a67dff; /* Jasnější fialová pro nadpisy sekcí */
+    color: #a67dff;
     font-size: 1.5em;
     margin-bottom: 20px;
     font-weight: 600;
@@ -39,7 +40,7 @@ a{
     font-size: 0.95em;
     line-height: 1.6;
     margin-bottom: 10px;
-    color: #c5aaff; /* Světlejší fialová pro běžný text */
+    color: #c5aaff;
 }
 
 .footer-section ul {
@@ -52,56 +53,47 @@ a{
     margin-bottom: 10px;
 }
 
-/* Styly pro VŠECHNY odkazy v seznamech */
 .footer-section ul li a {
-    color: #b39ddb; /* Tmavší fialová pro všechny odkazy v seznamech */
+    color: #b39ddb;
     text-decoration: none;
     font-size: 0.95em;
     transition: color 0.3s ease, transform 0.3s ease;
-    display: inline-block; /* Pro transformaci */
-    font-weight: normal; /* Zruší případné tučné písmo */
-    text-shadow: none; /* Zruší případný text-shadow */
+    display: inline-block;
+    font-weight: normal;
+    text-shadow: none;
 }
 
-
-
-/* --- Styly pro OBRÁZKOVÉ sociální ikony --- */
 .social-links {
     margin-top: 15px;
     display: flex;
-    gap: 15px; /* Mezera mezi ikonami */
+    gap: 15px;
 }
 
 .social-links a {
-    display: inline-block; /* Důležité pro efekty na img */
-    line-height: 1; /* Pomáhá zarovnání */
+    display: inline-block;
+    line-height: 1;
 }
 
 .social-links img {
-    width: 32px; /* Pevná velikost ikon */
+    width: 32px;
     height: 32px;
-    vertical-align: middle; /* Pro lepší zarovnání */
-    transition: filter 0.3s ease; /* Plynulá animace záře a jasu */
-    /* FILTRY ÚPLNĚ ODSTRANĚNY - ikony budou mít původní barvu */
+    vertical-align: middle;
+    transition: filter 0.3s ease;
 }
 
-
-
-/* Spodní část footeru s copyrightem */
 .footer-bottom {
     text-align: center;
     margin-top: 40px;
     padding-top: 20px;
-    border-top: 1px solid rgba(47, 47, 47, 0.5); /* Jemnější oddělovač */
+    border-top: 1px solid rgba(47, 47, 47, 0.5);
     font-size: 0.85em;
-    color: #9a9a9b; /* Jemnější šedá pro copyright text */
+    color: #9a9a9b;
 }
 
-/* --- Responzivní úpravy --- */
 @media (max-width: 768px) {
     .footer-content {
-        flex-direction: column; /* Sekce se stackují vertikálně */
-        align-items: center; /* Centrování obsahu */
+        flex-direction: column;
+        align-items: center;
         text-align: center;
     }
 
@@ -112,11 +104,11 @@ a{
     .footer-section ul {
         display: flex;
         flex-direction: column;
-        align-items: center; /* Centrování odkazů */
+        align-items: center;
     }
 
     .social-links {
-        justify-content: center; /* Centrování sociálních ikon */
+        justify-content: center;
     }
 }
 
@@ -135,19 +127,17 @@ a{
     }
 
     .social-links img {
-        width: 28px; /* Mírně menší ikony na mobilu */
+        width: 28px;
         height: 28px;
     }
 }
 
-@media (min-width: 906px){
+@media (min-width: 906px) {
     .footer-section ul li a:hover {
-    color: #a67dff; /* Změna barvy na světlejší fialovou při najetí */
-    transform: translateX(5px); /* Jemný posun doprava */
-}
-.social-links a:hover img {
-    /* Zvýraznění při najetí: jen zesvětlení a fialová záře */
-    filter: brightness(1.2) drop-shadow(0 0 10px rgba(166, 125, 255, 0.8)); /* Zesvětlení a výraznější fialová záře */
-}
-
+        color: #a67dff;
+        transform: translateX(5px);
+    }
+    .social-links a:hover img {
+        filter: brightness(1.2) drop-shadow(0 0 10px rgba(166, 125, 255, 0.8));
+    }
 }

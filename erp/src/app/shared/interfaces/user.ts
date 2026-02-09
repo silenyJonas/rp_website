@@ -1,4 +1,4 @@
-// Rozhraní pro data role z API
+//interface pro uživatelskou roli z API
 export interface UserRole {
   role_id: number;
   role_name: string;
@@ -8,23 +8,22 @@ export interface UserRole {
   deleted_at: string | null;
 }
 
-// Rozhraní pro data administrátora z API
+//interface pro uživatelský účet z API
 export interface UserLogin {
   user_login_id: number;
   user_email: string;
   contact_email?: string | null;       
   full_name?: string | null;          
   birth_date?: string | null;         
-  personal_id_num?: string | null;    // NOVÉ
-  address?: string | null;            // NOVÉ
-  bank_account?: string | null;       // NOVÉ
-  health_insurance?: string | null;   // NOVÉ
-  commission_rate?: number;           // NOVÉ
-  dpp_hours_spent?: number;           // NOVÉ
-  has_tax_declaration?: boolean;      // NOVÉ
-  phone_number?: string | null;       // NOVÉ
-  internal_note?: string | null;      // NOVÉ (Zde byla ta chyba)
-  
+  personal_id_num?: string | null;
+  address?: string | null;            
+  bank_account?: string | null;       
+  health_insurance?: string | null;   
+  commission_rate?: number;           
+  dpp_hours_spent?: number;           
+  has_tax_declaration?: boolean;      
+  phone_number?: string | null;       
+  internal_note?: string | null;
   last_login_at: string | null;
   is_deleted: boolean;
   created_at: string;

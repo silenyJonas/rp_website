@@ -1,4 +1,3 @@
-/* Kontejner formuláře uvnitř Wiki */
 .kb-form-container {
   max-width: 800px;
   animation: fadeIn 0.3s ease-out;
@@ -19,7 +18,6 @@
   font-size: 0.9rem;
 }
 
-/* Layout */
 .kb-form-row {
   display: flex;
   gap: 20px;
@@ -45,7 +43,6 @@
 
 .req { color: #a67dff; margin-left: 2px; }
 
-/* Prvky formuláře */
 input[type="text"], 
 select, 
 textarea {
@@ -64,7 +61,6 @@ input:focus, select:focus, textarea:focus {
   background: #111114;
 }
 
-/* File Upload */
 .kb-file-upload {
   position: relative;
   border: 1px dashed #1e1e20;
@@ -109,7 +105,6 @@ input:focus, select:focus, textarea:focus {
   background: rgba(166, 125, 255, 0.02);
 }
 
-/* Tlačítka */
 .kb-btn-primary {
   background: #a67dff;
   color: #fff;
@@ -134,7 +129,6 @@ input:focus, select:focus, textarea:focus {
   cursor: pointer;
 }
 
-/* Success State */
 .kb-success-state {
   padding: 40px 0;
 }

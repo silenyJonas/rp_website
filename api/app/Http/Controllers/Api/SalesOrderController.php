@@ -69,29 +69,6 @@ class SalesOrderController extends Controller
         ]);
     }
 
-    /**
-     * Vytvoření nové poptávky/objednávky.
-     */
-    // public function store(StoreSalesOrderRequest $request): JsonResponse
-    // {
-    //     $validatedData = $request->validated();
-
-    //     // ZPRACOVÁNÍ SOUBORU
-    //     if ($request->hasFile('attachment')) {
-    //         $validatedData['attachment_path'] = $request->file('attachment')->store('orders', 'public');
-    //     }
-
-    //     // Automatické dohledání obchodníka podle lead_id
-    //     $lead = SalesLead::find($validatedData['lead_id']);
-    //     $validatedData['salesman_name'] = $lead ? $lead->salesman_name : 'Neznámý obchodník';
-
-    //     $order = SalesOrder::create($validatedData);
-
-    //     $this->logAction($request, 'create', 'SalesOrder', "Vytvořena poptávka pro: {$order->client_name}", $order->id);
-        
-    //     return response()->json(new SalesOrderResource($order), 201);
-    // }
-
     public function store(StoreSalesOrderRequest $request): JsonResponse
     {
         $validatedData = $request->validated();

@@ -75,7 +75,6 @@ header {
   background-color: #bbdefb; color: #1e88e5; font-weight: 600; border-left-color: #1e88e5;
 }
 
-/* Speciální barva pro logout v seznamu */
 .admin-nav li a.logout-nav-item { color: #d32f2f; }
 .admin-nav li a.logout-nav-item:hover { background-color: #ffebee; }
 
