@@ -16,9 +16,6 @@ use Illuminate\Support\Facades\Storage;
 
 class SalesOrderController extends Controller
 {
-    /**
-     * Seznam objednávek s filtrováním a stránkováním.
-     */
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 15);
@@ -27,7 +24,6 @@ class SalesOrderController extends Controller
         $query = SalesOrder::query()->with('lead');
         if ($onlyTrashed) $query->onlyTrashed();
 
-        // Globální vyhledávání
         if ($s = $request->input('search')) {
             $query->where(fn($q) => $q->where('client_name', 'like', "%$s%")
                 ->orWhere('salesman_name', 'like', "%$s%")
@@ -35,12 +31,10 @@ class SalesOrderController extends Controller
                 ->orWhere('client_email', 'like', "%$s%"));
         }
 
-        // Přesné filtry
         foreach (['id', 'lead_id', 'ico'] as $f) {
             if ($request->filled($f)) $query->where($f, $request->input($f));
         }
         
-        // Like filtry
         foreach (['client_name', 'salesman_name', 'client_email'] as $f) {
             if ($request->filled($f)) $query->where($f, 'like', '%' . $request->input($f) . '%');
         }
@@ -77,7 +71,6 @@ class SalesOrderController extends Controller
             $validatedData['attachment_path'] = $request->file('attachment')->store('orders', 'public');
         }
 
-        // ÚPRAVA: Bezpečné dohledání obchodníka (předcházíme chybě, pokud lead_id není v requestu)
         $validatedData['salesman_name'] = 'Neznámý obchodník';
         if (!empty($validatedData['lead_id'])) {
             $lead = SalesLead::find($validatedData['lead_id']);

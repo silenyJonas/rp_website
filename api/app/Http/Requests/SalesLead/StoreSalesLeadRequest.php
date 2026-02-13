@@ -11,7 +11,7 @@ class StoreSalesLeadRequest extends FormRequest
     {
         return [
             'subject_name'       => ['required', 'string', 'max:255'],
-            'first_contact_date' => ['nullable'], // Změněno na nullable bez 'date' pro stabilitu
+            'first_contact_date' => ['nullable'],
             'source_channel'     => ['required', 'string', 'max:255'],
             'user_login_id'      => ['nullable', 'integer'],
             'salesman_name'      => ['nullable', 'string', 'max:255'],
@@ -24,7 +24,7 @@ class StoreSalesLeadRequest extends FormRequest
             'description'        => ['nullable', 'string'],
             'priority'           => ['nullable', 'string', 'max:255'],
             'status'             => ['nullable', 'string', 'max:255'],
-            'last_contact_date'  => ['nullable'], // Sjednoceno
+            'last_contact_date'  => ['nullable'],
             'next_step'          => ['nullable', 'string', 'max:255'],
             'rejection_reason'   => ['nullable', 'string'],
         ];

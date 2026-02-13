@@ -22,7 +22,6 @@ class SalesLeadController extends Controller
         $query = SalesLead::query();
         if ($onlyTrashed) $query->onlyTrashed();
 
-        // Hromadné vyhledávání
         if ($s = $request->input('search')) {
             $query->where(fn($q) => $q->where('subject_name', 'like', "%$s%")
                 ->orWhere('contact_email', 'like', "%$s%")
@@ -30,12 +29,10 @@ class SalesLeadController extends Controller
                 ->orWhere('description', 'like', "%$s%"));
         }
 
-        // Individuální filtry - přesná shoda
         foreach (['id', 'status', 'priority'] as $f) {
             if ($request->filled($f)) $query->where($f, $request->input($f));
         }
         
-        // Individuální filtry - částečná shoda (like)
         foreach (['subject_name', 'location', 'salesman_name', 'contact_email', 'contact_phone', 'contact_other'] as $f) {
             if ($request->filled($f)) $query->where($f, 'like', '%' . $request->input($f) . '%');
         }
@@ -43,7 +40,6 @@ class SalesLeadController extends Controller
         if ($request->filled('created_at')) $query->whereDate('created_at', $request->created_at);
         if ($request->filled('updated_at')) $query->whereDate('updated_at', $request->updated_at);
 
-        // --- ŘAZENÍ: Defaultně nejnovější ID nahoře ---
         $sortBy = $request->filled('sort_by') ? $request->input('sort_by') : 'id';
         $sortDirection = $request->filled('sort_direction') ? $request->input('sort_direction') : 'desc';
         $query->orderBy($sortBy, $sortDirection);
@@ -52,12 +48,10 @@ class SalesLeadController extends Controller
             ? $query->get() 
             : $query->paginate($perPage);
 
-        // Pokud není paginace, vrátíme prostou kolekci přes Resource
         if (filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN)) {
             return SalesLeadResource::collection($data);
         }
 
-        // --- RUČNÍ FORMÁTOVÁNÍ PRO KOMPATIBILITU S ANGULAR PAGINACÍ ---
         return response()->json([
             'data'         => SalesLeadResource::collection($data->items()),
             'total'        => $data->total(),
@@ -74,7 +68,6 @@ class SalesLeadController extends Controller
         $user = $request->user();
         $data = $request->validated();
         
-        // Ignorujeme pole last_contact_date (zůstane v DB null)
         unset($data['last_contact_date']);
 
         $data = array_merge($data, [
@@ -101,7 +94,6 @@ class SalesLeadController extends Controller
     {
         $data = $request->validated();
         
-        // Ignorujeme pole last_contact_date při aktualizaci
         unset($data['last_contact_date']);
 
         $salesLead->update($data);

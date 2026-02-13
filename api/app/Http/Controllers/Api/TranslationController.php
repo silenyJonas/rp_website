@@ -11,9 +11,6 @@ use Illuminate\Http\JsonResponse;
 
 class TranslationController extends Controller
 {
-    /**
-     * Uložení překladů s hloubkovou detekcí změn a logováním.
-     */
     public function save(Request $request): JsonResponse
     {
         $request->validate([
@@ -29,23 +26,19 @@ class TranslationController extends Controller
         $filePath = $directory . '/' . $lang . '.json';
 
         try {
-            // 1. Načtení starých dat pro porovnání
             $oldData = [];
             if (File::exists($filePath)) {
                 $oldData = json_decode(File::get($filePath), true) ?? [];
             }
 
-            // 2. Rekurzivní detekce změn (včetně všech úrovní zanoření)
             $changes = $this->getDeepDiff($oldData, $newData);
 
-            // 3. Zápis do JSON souboru
             if (!File::isDirectory($directory)) {
                 File::makeDirectory($directory, 0755, true, true);
             }
             $jsonContent = json_encode($newData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             File::put($filePath, $jsonContent);
 
-            // 4. Logování změn
             $this->logAction(
                 $request, 
                 'update', 
@@ -66,27 +59,19 @@ class TranslationController extends Controller
         }
     }
 
-    /**
-     * HLOUBKOVÁ DETEKCE ZMĚN
-     * Prochází JSON do libovolné úrovně a vrací lidsky čitelný rozdíl.
-     */
     private function getDeepDiff(array $old, array $new, string $path = ''): array
     {
         $diff = [];
         
-        // Projdeme všechna nová data
         foreach ($new as $key => $value) {
             $currentPath = $path ? "{$path}.{$key}" : $key;
 
             if (!isset($old[$key])) {
-                // NOVÝ KLÍČ
                 $displayVal = is_array($value) ? '[Array]' : mb_substr((string)$value, 0, 15);
                 $diff[] = "NEW:{$currentPath}({$displayVal})";
             } elseif (is_array($value) && is_array($old[$key])) {
-                // REKURZE (jdeme hlouběji)
                 $diff = array_merge($diff, $this->getDeepDiff($old[$key], $value, $currentPath));
             } elseif ($old[$key] !== $value) {
-                // ZMĚNA HODNOTY
                 $oldVal = mb_substr((string)$old[$key], 0, 10);
                 $newVal = mb_substr((string)$value, 0, 10);
                 $diff[] = "CHNG:{$currentPath}({$oldVal}->{$newVal})";
@@ -95,18 +80,13 @@ class TranslationController extends Controller
         return $diff;
     }
 
-    /**
-     * BEZPEČNÉ LOGOVÁNÍ PRO VARCHAR(255)
-     */
     protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedEntityId = null, array $changes = [])
     {
         try {
             $user = $request->user();
             
-            // Sestavení řetězce změn s oddělovačem
             $diffString = implode(' | ', $changes);
             
-            // Ořezání na 200 znaků, aby zbyl prostor pro JSON strukturu ve VARCHAR(255)
             if (mb_strlen($diffString) > 200) {
                 $diffString = mb_substr($diffString, 0, 197) . '...';
             }

@@ -10,7 +10,7 @@ class BusinessLog extends Model
     use HasFactory;
 
     protected $primaryKey = 'business_log_id';
-    public $timestamps = false; // V tabulce je jen created_at, spravovaný DB
+    public $timestamps = false;
 
     protected $fillable = [
         'origin', 'event_type', 'module', 'description', 

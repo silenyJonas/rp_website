@@ -9,10 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class News extends Model
 {
     use HasFactory, SoftDeletes;
-
-    // Explicitní název tabulky
     protected $table = 'news';
-
     protected $fillable = [
         'title',
         'message',

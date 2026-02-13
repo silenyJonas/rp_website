@@ -17,21 +17,14 @@ class BusinessLogResource extends JsonResource
             'description'            => $this->description,
             'affected_entity_type'   => $this->affected_entity_type,
             'affected_entity_id'     => $this->affected_entity_id,
-            
-            // Relace user
             'user' => [
                 'user_login_id' => $this->user_login_id,
                 'user_email'    => $this->user ? $this->user->user_email : 'Neznámý uživatel'
             ],
-            
             'context_data'           => $this->context_data,
             'created_at'             => $this->created_at?->format('Y-m-d H:i:s'),
-            
-            // ZDE JSOU TA POLE - zkontroluj přesně názvy (case-sensitive)
             'user_login_id_plain'    => $this->user_login_id_plain,
             'user_login_email_plain' => $this->user_login_email_plain,
-
-            // Pokud by Angular vyžadoval i tato pole v "ploché" struktuře mimo objekt user:
             'user_login_id'          => $this->user_login_id,
         ];
     }

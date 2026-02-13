@@ -27,7 +27,6 @@ class StoreUserLoginRequest extends FormRequest
             'commission_rate' => ['integer', 'min:0', 'max:100'],
             'user_password_hash' => ['required', 'string', 'min:8'],
             'role_id' => ['required', 'numeric', 'exists:roles,role_id'],
-            
             'birth_date' => ['nullable', 'date'],
             'phone_number' => ['nullable', 'string'],
         ];

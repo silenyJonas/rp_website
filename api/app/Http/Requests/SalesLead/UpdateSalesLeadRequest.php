@@ -11,7 +11,7 @@ class UpdateSalesLeadRequest extends FormRequest
     {
         return [
             'subject_name'       => ['sometimes', 'string', 'max:255'],
-            'user_login_id'      => ['nullable', 'integer'], // Přidáno pro podporu SET NULL
+            'user_login_id'      => ['nullable', 'integer'],
             'first_contact_date' => ['nullable'], 
             'source_channel'     => ['sometimes', 'string', 'max:255'],
             'contact_person'     => ['nullable', 'string', 'max:255'],

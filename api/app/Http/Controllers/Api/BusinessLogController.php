@@ -21,7 +21,6 @@ class BusinessLogController extends Controller
 
         $query = BusinessLog::query()->with('user');
 
-        // Filtrování
         if ($request->filled('business_log_id')) $query->where('business_log_id', $request->business_log_id);
         
         if ($createdAt = $request->input('created_at')) {
@@ -46,7 +45,6 @@ class BusinessLogController extends Controller
         if ($request->filled('user_login_id_plain')) $query->where('user_login_id_plain', 'like', '%' . $request->user_login_id_plain . '%');
         if ($request->filled('user_login_email_plain')) $query->where('user_login_email_plain', 'like', '%' . $request->user_login_email_plain . '%');
 
-        // --- ŘAZENÍ ---
         $sortBy = $request->input('sort_by');
         $sortDirection = in_array(strtolower($request->input('sort_direction', 'desc')), ['asc', 'desc']) ? $request->sort_direction : 'desc';
 
@@ -57,18 +55,15 @@ class BusinessLogController extends Controller
         } elseif ($sortBy) {
             $query->orderBy($sortBy, $sortDirection);
         } else {
-            // Defaultně nejnovější logy jako první
             $query->orderBy('business_log_id', 'desc');
         }
 
         $logs = $noPagination ? $query->get() : $query->paginate($perPage, ['*'], 'page', $page);
 
-        // Pokud není paginace, vrátíme prostou kolekci
         if ($noPagination) {
             return response()->json(BusinessLogResource::collection($logs));
         }
 
-        // --- RUČNÍ PLOCHÁ STRUKTURA (Fix pro Angular NaN) ---
         return response()->json([
             'data'         => BusinessLogResource::collection($logs->items()),
             'total'        => $logs->total(),

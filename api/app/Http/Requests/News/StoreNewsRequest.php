@@ -8,7 +8,7 @@ class StoreNewsRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Povoleno pro všechny (nebo uprav dle práv)
+        return true;
     }
 
     public function rules(): array

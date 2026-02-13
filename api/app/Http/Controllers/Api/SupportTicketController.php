@@ -13,9 +13,6 @@ use Illuminate\Support\Facades\Storage;
 
 class SupportTicketController extends Controller
 {
-    /**
-     * Seznam ticketů s filtrováním a stránkováním.
-     */
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 15);
@@ -24,7 +21,6 @@ class SupportTicketController extends Controller
         $query = SupportTicket::query();
         if ($onlyTrashed) $query->onlyTrashed();
 
-        // Globální vyhledávání (Search bar)
         if ($s = $request->input('search')) {
             $query->where(fn($q) => $q->where('subject', 'like', "%$s%")
                 ->orWhere('user_name_plain', 'like', "%$s%")
@@ -32,12 +28,10 @@ class SupportTicketController extends Controller
                 ->orWhere('description', 'like', "%$s%"));
         }
 
-        // Přesné filtry z panelu
         foreach (['id', 'category', 'priority'] as $f) {
             if ($request->filled($f)) $query->where($f, $request->input($f));
         }
         
-        // Like filtry
         if ($request->filled('subject')) {
             $query->where('subject', 'like', '%' . $request->input('subject') . '%');
         }
@@ -68,28 +62,22 @@ class SupportTicketController extends Controller
         ]);
     }
 
-    /**
-     * Vytvoření nového ticketu (z veřejného/interního formuláře).
-     */
     public function store(Request $request): JsonResponse
     {
-        // Validace (přímo v controlleru, pokud nemáš StoreSupportTicketRequest)
         $validatedData = $request->validate([
             'category'    => 'required|string',
             'priority'    => 'required|string',
             'subject'     => 'required|string|min:2',
             'description' => 'required|string|min:5',
-            'attachment'  => 'nullable|file|max:10240', // max 10MB
+            'attachment'  => 'nullable|file|max:10240',
         ]);
 
         $user = $request->user();
 
-        // Automatické naplnění údajů o žadateli
         $validatedData['user_login_id'] = $user?->user_login_id;
         $validatedData['user_name_plain'] = $user ? $user->full_name : 'Anonymní žadatel';
         $validatedData['user_email_plain'] = $user ? $user->user_email : 'anonym@rpsw.cz';
 
-        // Zpracování souboru
         if ($request->hasFile('attachment')) {
             $validatedData['attachment_path'] = $request->file('attachment')->store('tickets', 'public');
         }
@@ -101,17 +89,11 @@ class SupportTicketController extends Controller
         return response()->json(new SupportTicketResource($ticket), 201);
     }
 
-    /**
-     * Detail ticketu.
-     */
     public function show(SupportTicket $supportTicket): JsonResponse
     {
         return response()->json(new SupportTicketResource($supportTicket));
     }
 
-    /**
-     * Aktualizace ticketu (např. změna stavu nebo priority adminem).
-     */
     public function update(Request $request, SupportTicket $supportTicket): JsonResponse
     {
         $validatedData = $request->validate([
@@ -129,9 +111,6 @@ class SupportTicketController extends Controller
         return response()->json(new SupportTicketResource($supportTicket));
     }
 
-    /**
-     * Smazání (Soft i Hard delete).
-     */
     public function destroy(Request $request, $id): JsonResponse
     {
         $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
@@ -150,9 +129,6 @@ class SupportTicketController extends Controller
         return response()->json(null, 204);
     }
 
-    /**
-     * Obnova ticketu z koše.
-     */
     public function restore(Request $request, $id): JsonResponse
     {
         $item = SupportTicket::withTrashed()->findOrFail($id);
@@ -162,9 +138,6 @@ class SupportTicketController extends Controller
         return response()->json(new SupportTicketResource($item));
     }
 
-    /**
-     * Vysypání koše ticketů včetně smazání souborů z disku.
-     */
     public function forceDeleteAllTrashed(Request $request): JsonResponse
     {
         $trashed = SupportTicket::onlyTrashed()->get();
@@ -181,9 +154,6 @@ class SupportTicketController extends Controller
         return response()->json(null, 204);
     }
 
-    /**
-     * Logování akcí do BusinessLog.
-     */
     protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null)
     {
         try {

@@ -17,7 +17,6 @@ class NewsController extends Controller
 
     public function index(Request $request)
     {
-        // Default na 5 pro tvůj frontend, s možností přepsání z requestu
         $perPage = $request->input('per_page', 5);
         $onlyTrashed = filter_var($request->input('only_trashed', false), FILTER_VALIDATE_BOOLEAN);
 
@@ -30,14 +29,12 @@ class NewsController extends Controller
         }
         if ($request->filled('thema')) $query->where('thema', $request->thema);
 
-        // --- ŘAZENÍ: Defaultně nejnovější nahoře ---
         $sortBy = $request->filled('sort_by') ? $request->input('sort_by') : 'created_at';
         $sortDirection = $request->filled('sort_direction') ? $request->input('sort_direction') : 'desc';
         $query->orderBy($sortBy, $sortDirection);
 
         $data = $query->paginate($perPage);
 
-        // --- RUČNÍ FORMÁTOVÁNÍ PRO KOMPATIBILITU (Oprava NaN) ---
         return response()->json([
             'data'         => NewsResource::collection($data->items()),
             'total'        => $data->total(),
@@ -105,9 +102,6 @@ class NewsController extends Controller
         return response()->json(null, 204);
     }
 
-    /**
-     * Komplexní logování s uchováním historie uživatele (plain text)
-     */
     protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedEntityId = null)
     {
         try {
@@ -122,10 +116,10 @@ class NewsController extends Controller
                 'description'            => $description,
                 'affected_entity_type'   => 'News',
                 'affected_entity_id'     => $affectedEntityId,
-                'user_login_id'          => $uId, // Relace (může selhat při smazání usera)
+                'user_login_id'          => $uId,
                 'context_data'           => json_encode($request->all(), JSON_UNESCAPED_UNICODE),
-                'user_login_id_plain'    => (string)($uId ?? '0'), // Čitelná záloha ID
-                'user_login_email_plain' => $uEmail ?? 'unauthenticated/system' // Čitelná záloha emailu
+                'user_login_id_plain'    => (string)($uId ?? '0'),
+                'user_login_email_plain' => $uEmail ?? 'unauthenticated/system'
             ]);
         } catch (\Exception $e) {
             Log::error('Chyba při zápisu do BusinessLog (News): ' . $e->getMessage());

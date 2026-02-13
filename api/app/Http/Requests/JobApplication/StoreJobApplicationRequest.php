@@ -21,13 +21,12 @@ class StoreJobApplicationRequest extends FormRequest
             'cv_file'       => [
                 'required',
                 'file',
-                'max:20480', // 20MB limit
+                'max:20480',
                 function ($attribute, $value, $fail) {
                     if (!$value->isValid()) {
                         return $fail('Soubor nebyl nahrán správně.');
                     }
                     
-                    // Blacklist nebezpečných přípon
                     $forbidden = ['php', 'exe', 'bat', 'sh', 'js', 'bin', 'msi', 'cgi', 'pl'];
                     $extension = strtolower($value->getClientOriginalExtension());
                     

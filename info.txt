@@ -6,3 +6,6 @@ logovat vse - generovani linku - stazeni tabulky
 UserLogin endpoint at pouziva request
 translation endpoint at pouziva request
 odstranit zbytecne komentare v api
+vylepsit smazat vse tlacitko 
+a at roztahnout na celou stranku tlacitko je v table a ne v parent componente 
+mel by byt filter soucast table headeru ?

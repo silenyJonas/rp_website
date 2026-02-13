@@ -23,7 +23,6 @@ class JobApplicationController extends Controller
         $query = JobApplication::query();
         if ($onlyTrashed) $query->onlyTrashed();
 
-        // Vyhledávání (Jméno, Příjmení, Email, Pozice)
         if ($s = $request->input('search')) {
             $query->where(fn($q) => $q->where('first_name', 'like', "%$s%")
                 ->orWhere('last_name', 'like', "%$s%")
@@ -31,7 +30,6 @@ class JobApplicationController extends Controller
                 ->orWhere('position_name', 'like', "%$s%"));
         }
 
-        // Like filtry
         foreach (['first_name', 'last_name', 'email', 'position_name', 'state'] as $f) {
             if ($request->filled($f)) $query->where($f, 'like', '%' . $request->input($f) . '%');
         }
@@ -62,7 +60,6 @@ class JobApplicationController extends Controller
     {
         $validatedData = $request->validated();
 
-        // Zpracování životopisu (CV)
         if ($request->hasFile('cv_file')) {
             $validatedData['cv_path'] = $request->file('cv_file')->store('cv_files', 'public');
         }

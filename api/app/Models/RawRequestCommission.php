@@ -14,11 +14,6 @@ class RawRequestCommission extends Model
 
     public $timestamps = true;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'thema',
         'contact_email',
@@ -26,19 +21,12 @@ class RawRequestCommission extends Model
         'order_description',
         'status',
         'priority',
-        'note', // Přidán sloupec 'note'
+        'note', 
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
-
-    // ... (další kód modelu) ...
 }

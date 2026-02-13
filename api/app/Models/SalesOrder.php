@@ -22,7 +22,7 @@ class SalesOrder extends Model
         'client_email',
         'order_description',
         'salesman_name',
-        'attachment_path' // Přidáno pro uložení cesty k souboru
+        'attachment_path' 
     ];
 
     public function lead(): BelongsTo

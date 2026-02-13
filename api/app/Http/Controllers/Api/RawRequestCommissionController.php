@@ -22,7 +22,6 @@ class RawRequestCommissionController extends Controller
         $query = RawRequestCommission::query();
         if ($onlyTrashed) $query->onlyTrashed();
 
-        // Hromadné vyhledávání
         if ($s = $request->input('search')) {
             $query->where(fn($q) => $q->where('thema', 'like', "%$s%")
                 ->orWhere('order_description', 'like', "%$s%")
@@ -30,7 +29,6 @@ class RawRequestCommissionController extends Controller
                 ->orWhere('contact_phone', 'like', "%$s%"));
         }
 
-        // Filtry
         foreach (['id', 'status', 'priority'] as $f) {
             if ($request->filled($f)) $query->where($f, $request->input($f));
         }
@@ -40,7 +38,6 @@ class RawRequestCommissionController extends Controller
         if ($request->filled('created_at')) $query->whereDate('created_at', $request->created_at);
         if ($request->filled('updated_at')) $query->whereDate('updated_at', $request->updated_at);
 
-        // --- ŘAZENÍ: Defaultně nejnovější ID nahoře ---
         $sortBy = $request->filled('sort_by') ? $request->input('sort_by') : 'id';
         $sortDirection = $request->filled('sort_direction') ? $request->input('sort_direction') : 'desc';
         $query->orderBy($sortBy, $sortDirection);
@@ -49,12 +46,10 @@ class RawRequestCommissionController extends Controller
             ? $query->get() 
             : $query->paginate($perPage);
 
-        // Pokud není paginace, vrátíme prostou kolekci
         if (filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN)) {
             return RawRequestCommissionResource::collection($data);
         }
 
-        // --- RUČNÍ FORMÁTOVÁNÍ PRO ANGULAR (Eliminace NaN) ---
         return response()->json([
             'data'         => RawRequestCommissionResource::collection($data->items()),
             'total'        => $data->total(),

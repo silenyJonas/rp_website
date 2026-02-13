@@ -14,31 +14,24 @@ class UserLogin extends Model
     
     protected $primaryKey = 'user_login_id';
     protected $table = 'user_login';
-
-    /**
-     * Pole, která lze hromadně přiřazovat.
-     */
     protected $fillable = [
         'user_email',
-        'contact_email',      // NOVÉ
+        'contact_email',    
         'user_password_hash',
-        'full_name',          // NOVÉ
-        'birth_date',         // NOVÉ
-        'personal_id_num',    // NOVÉ
-        'address',            // NOVÉ
-        'bank_account',       // NOVÉ
-        'health_insurance',   // NOVÉ
-        'commission_rate',    // NOVÉ
-        'dpp_hours_spent',    // NOVÉ
-        'has_tax_declaration',// NOVÉ
-        'phone_number',       // NOVÉ
-        'internal_note',      // NOVÉ
+        'full_name',        
+        'birth_date',       
+        'personal_id_num',    
+        'address',            
+        'bank_account',       
+        'health_insurance',   
+        'commission_rate',    
+        'dpp_hours_spent',    
+        'has_tax_declaration',
+        'phone_number',       
+        'internal_note',      
         'last_login_at',
     ];
 
-    /**
-     * Přetypování atributů.
-     */
     protected $casts = [
         'last_login_at' => 'datetime',
         'created_at' => 'datetime',

@@ -11,7 +11,6 @@ class UpdateSalesOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Změněno na nullable, aby prošla validace i bez lead_id
             'lead_id'           => 'sometimes|nullable|exists:sales_leads,id',
             'salesman_name'     => 'sometimes|required|string|max:255',
             'ico'               => 'nullable|string|max:20',

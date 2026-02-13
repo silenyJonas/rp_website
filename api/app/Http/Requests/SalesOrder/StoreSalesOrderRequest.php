@@ -11,7 +11,6 @@ class StoreSalesOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Změněno na nullable pro flexibilitu
             'lead_id'           => 'nullable|exists:sales_leads,id',
             'client_name'       => 'required|string|max:255',
             'client_email'      => 'required|email|max:255',

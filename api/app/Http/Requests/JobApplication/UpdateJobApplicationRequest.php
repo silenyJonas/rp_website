@@ -8,17 +8,14 @@ class UpdateJobApplicationRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Autorizaci řeší middleware v route
+        return true;
     }
 
     public function rules(): array
     {
         return [
-            // Hlavní pole pro správu náboru
             'state'         => 'sometimes|required|string|max:50',
             'internal_note' => 'nullable|string',
-            
-            // Možnost opravit údaje (použito 'sometimes', aby se nemuselo posílat vše)
             'first_name'    => 'sometimes|required|string|max:100',
             'last_name'     => 'sometimes|required|string|max:100',
             'email'         => 'sometimes|required|email|max:150',
