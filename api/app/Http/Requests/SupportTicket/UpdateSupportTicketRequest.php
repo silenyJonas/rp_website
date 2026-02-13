@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\SupportTicket;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -16,7 +16,6 @@ class UpdateSupportTicketRequest extends FormRequest
             'state'       => 'sometimes|required|string|max:50',
             'subject'     => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
-            // Pokud bys chtěl měnit i přílohu při updatu:
             'attachment'  => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png,zip|max:10240',
         ];
     }

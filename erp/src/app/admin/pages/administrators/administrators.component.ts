@@ -1,24 +1,23 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { GenericTableComponent, Buttons } from '../../components/generic-table/generic-table.component';
-import { BaseDataComponent } from '../../components/base-data/base-data.component';
-import { DataHandler } from '../../../core/services/data-handler.service';
-import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
-import { GenericTableService, PaginatedResponse, FilterParams } from '../../../core/services/generic-table.service';
-import { AuthService } from '../../../core/auth/auth.service';
 import { Router } from '@angular/router';
+import { finalize, takeUntil } from 'rxjs/operators';
+
+import { BaseDataComponent } from '../../components/base-data/base-data.component';
+import { GenericTableComponent, Buttons } from '../../components/generic-table/generic-table.component';
 import { GenericTrashTableComponent } from '../../components/generic-trash-table/generic-trash-table.component';
 import { GenericFormComponent, InputDefinition } from '../../components/generic-form/generic-form.component';
-import { Observable, of, forkJoin } from 'rxjs';
-import { tap, retry, finalize } from 'rxjs/operators';
-import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { GenericFilterFormComponent } from '../../components/generic-filter-form/generic-filter-form.component';
 import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
-import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
+import { PaginationButtonsComponent } from '../../components/pagination-buttons/pagination-buttons.component';
+
+import { DataHandler } from '../../../core/services/data-handler.service';
+import { GenericTableService, FilterParams } from '../../../core/services/generic-table.service';
+import { AuthService } from '../../../core/auth/auth.service';
 import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
-import { PaginationButtonsComponent } from '../../components/pagination-buttons/pagination-buttons.component';
+import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
 
 import {
   BUTTONS,
@@ -46,248 +45,147 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
   @ViewChild('activeTable') activeTable!: GenericTableComponent;
 
   override apiEndpoint: string = 'user_login';
-  override trashData: any[] = [];
-  override isLoading: boolean = false;
-  isAdminTable: boolean = true;
   
-  isTableFullWidth: boolean = true;
-  isFilterVisible: boolean = false;
-  showTrashTable: boolean = false;
-  showCreateForm: boolean = false;
-  showDetails: boolean = false;
-  showResetPasswordForm: boolean = false;
-
+  // Konfigurace ze souboru .config.ts
   buttons: Buttons[] = BUTTONS;
   formFields: InputDefinition[] = FORM_FIELDS;
   resetPasswordFormFields: InputDefinition[] = RESET_PASSWORD_FORM_FIELDS;
   tableColumns: ColumnDefinition[] = TABLE_COLUMNS;
   trashTableColumns: ColumnDefinition[] = TRASH_TABLE_COLUMNS;
-  filterColumns: FilterColumns[] = FILTER_COLUMNS;
-  detailsColumns: ItemDetailsColumns[] = DETAILS_COLUMNS;
+  filterColumns = FILTER_COLUMNS;
+  detailsColumns = DETAILS_COLUMNS;
 
-  currentPage: number = 1;
-  itemsPerPage: number = 15;
-  totalItems: number = 0;
-  totalPages: number = 0;
-
-  trashCurrentPage: number = 1;
-  trashItemsPerPage: number = 15;
-  trashTotalItems: number = 0;
-  trashTotalPages: number = 0;
-
-  filterUserLoginId = ''; filterFullName = ''; filterUserEmail = '';
-  filterLastLoginAt = ''; filterCreatedAt = ''; filterUpdatedAt = '';
-  filterRoleName = ''; filterSortBy = ''; filterSortDirection: 'asc' | 'desc' = 'desc';
-
-  private activeRequestsCache: Map<number, any[]> = new Map();
-  private trashRequestsCache: Map<number, any[]> = new Map();
-  private currentActiveFilters: FilterParams = {};
-  private currentTrashFilters: FilterParams = {};
-
+  // Stavy formulářů
+  showResetPasswordForm: boolean = false;
   selectedItemForEdit: any | null = null;
   selectedItemForDetails: any | null = null;
+
+  // Definice filtrů (vždy v souladu s backendem)
+  filters: FilterParams = {
+    sort_by: 'id',
+    sort_direction: 'desc'
+  };
 
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
-    private genericTableService: GenericTableService,
+    protected override genericTableService: GenericTableService,
     private alertDialogService: AlertDialogService,
     private authService: AuthService,
     private router: Router
   ) {
-    super(dataHandler, cd);
+    super(dataHandler, cd, genericTableService);
   }
 
   override ngOnInit(): void {
-    super.ngOnInit();
-    this.authService.isLoggedIn$.subscribe(loggedIn => {
-      if (loggedIn) this.forceFullRefresh();
-      else this.router.navigate(['/auth/login']);
-    });
+    // Sledujeme stav přihlášení
+    this.authService.isLoggedIn$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(loggedIn => {
+        if (loggedIn) {
+          this.refreshData();
+        } else {
+          this.router.navigate(['/auth/login']);
+        }
+      });
   }
 
-  onHandlePageChange(page: number): void {
-    if (this.showTrashTable) {
-      if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
-        this.trashCurrentPage = page;
-        this.loadTrashRequests().subscribe();
-      }
-    } else {
-      if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
-        this.currentPage = page;
-        this.loadActiveRequests().subscribe();
-      }
-    }
-  }
-
-  onHandleItemsPerPageChange(value: number): void {
-    if (this.showTrashTable) {
-      this.trashItemsPerPage = value;
-      this.trashCurrentPage = 1;
-      this.trashRequestsCache.clear();
-      this.loadTrashRequests().subscribe();
-    } else {
-      this.itemsPerPage = value;
-      this.currentPage = 1;
-      this.activeRequestsCache.clear();
-      this.loadActiveRequests().subscribe();
-    }
-  }
+  // --- UI Handlery ---
 
   public refreshData(): void {
-    this.forceFullRefresh();
+    this.forceFullRefresh(this.filters);
   }
 
-  exportActiveTable(): void {
-    if (this.activeTable) {
-      this.activeTable.exportToCSV();
-    }
+  handlePageChange(page: number): void {
+    this.onHandlePageChange(page, this.filters);
   }
 
-  private getBaseFilters(): FilterParams {
-    const filters: FilterParams = {
-      user_login_id: this.filterUserLoginId,
-      full_name: this.filterFullName,
-      user_email: this.filterUserEmail,
-      last_login_at: this.filterLastLoginAt,
-      created_at: this.filterCreatedAt,
-      updated_at: this.filterUpdatedAt,
-      sort_by: this.filterSortBy,
-      sort_direction: this.filterSortDirection
-    };
-    if (this.filterRoleName) filters['role_name'] = this.filterRoleName;
-    return filters;
+  handleItemsPerPageChange(value: number): void {
+    this.onHandleItemsPerPageChange(value, this.filters);
   }
 
-  private fetchPaginatedData(
-    isTrash: boolean, page: number, itemsPerPage: number,
-    cache: Map<number, any[]>, currentFilters: FilterParams
-  ): Observable<PaginatedResponse<any>> {
-    const newFilters = this.getBaseFilters();
-    isTrash ? newFilters['only_trashed'] = 'true' : newFilters['is_deleted'] = 'false';
-
-    if (JSON.stringify(newFilters) !== JSON.stringify(currentFilters)) {
-      cache.clear();
-      if (isTrash) { this.trashCurrentPage = 1; this.currentTrashFilters = newFilters; }
-      else { this.currentPage = 1; this.currentActiveFilters = newFilters; }
-    }
-
-    if (cache.has(page)) {
-      const cachedData = cache.get(page)!;
-      isTrash ? this.trashData = cachedData : this.data = cachedData;
-      this.cd.detectChanges();
-      return of({ data: cachedData, current_page: page, last_page: isTrash ? this.trashTotalPages : this.totalPages, total: isTrash ? this.trashTotalItems : this.totalItems } as PaginatedResponse<any>);
-    }
-
-    return this.genericTableService.getPaginatedData<any>(this.apiEndpoint, page, itemsPerPage, newFilters).pipe(
-      retry(1),
-      tap(response => {
-        if (isTrash) {
-          this.trashData = response.data; this.trashTotalItems = response.total;
-          this.trashTotalPages = response.last_page; this.trashCurrentPage = response.current_page;
-        } else {
-          this.data = response.data; this.totalItems = response.total;
-          this.totalPages = response.last_page; this.currentPage = response.current_page;
-        }
-        cache.set(page, response.data);
-        this.cd.detectChanges();
-      })
-    );
-  }
-
-  loadActiveRequests() { return this.fetchPaginatedData(false, this.currentPage, this.itemsPerPage, this.activeRequestsCache, this.currentActiveFilters); }
-  loadTrashRequests() { return this.fetchPaginatedData(true, this.trashCurrentPage, this.trashItemsPerPage, this.trashRequestsCache, this.currentTrashFilters); }
-
-  toggleTable(): void {
-    this.showTrashTable = !this.showTrashTable;
-    this.forceFullRefresh();
-  }
-
-  toggleFilters() { this.isFilterVisible = !this.isFilterVisible; }
-
-  applyFilters(filters: any): void {
-    this.filterUserLoginId = filters.user_login_id || '';
-    this.filterFullName = filters.full_name || '';
-    this.filterUserEmail = filters.user_email || '';
-    this.filterLastLoginAt = filters.last_login_at || '';
-    this.filterCreatedAt = filters.created_at || '';
-    this.filterUpdatedAt = filters.updated_at || '';
-    this.filterRoleName = filters.role_name || '';
-    this.filterSortBy = filters.sort_by || '';
-    this.filterSortDirection = filters.sort_direction || 'desc';
-    this.forceFullRefresh();
+  applyFilters(newFilters: any): void {
+    this.filters = { ...newFilters }; // Sjednotíme filtry
+    this.refreshData();
   }
 
   clearFilters(): void {
-    this.filterUserLoginId = ''; this.filterFullName = ''; this.filterUserEmail = '';
-    this.filterLastLoginAt = ''; this.filterCreatedAt = ''; this.filterUpdatedAt = '';
-    this.filterRoleName = ''; this.filterSortBy = ''; this.filterSortDirection = 'desc';
-    this.forceFullRefresh();
+    this.filters = { sort_by: 'id', sort_direction: 'desc' };
+    this.refreshData();
   }
 
-  public forceFullRefresh(): void {
-    this.activeRequestsCache.clear(); this.trashRequestsCache.clear();
-    this.isLoading = true;
-    this.cd.detectChanges();
-    forkJoin([this.loadActiveRequests(), this.loadTrashRequests()]).pipe(
-      finalize(() => { this.isLoading = false; this.cd.detectChanges(); })
-    ).subscribe();
+  exportActiveTable(): void {
+    if (this.activeTable) this.activeTable.exportToCSV();
   }
 
-  handleCreateFormOpened() { this.selectedItemForEdit = null; this.showCreateForm = true; }
+  // --- CRUD Akce ---
+
+  handleCreateFormOpened() {
+    this.selectedItemForEdit = null;
+    this.showCreateForm = true;
+  }
   
   handleEditFormOpened(item: any) {
     const itemToEdit = { ...item };
-    if (itemToEdit.roles?.length > 0) itemToEdit.role_id = itemToEdit.roles[0].role_id;
+    // Normalizace rolí pro dropdown ve formuláři
+    if (itemToEdit.roles?.length > 0) {
+      itemToEdit.role_id = itemToEdit.roles[0].role_id;
+    }
     this.selectedItemForEdit = itemToEdit;
     this.showCreateForm = true;
   }
 
   handleFormSubmitted(formData: any) {
-    this.showCreateForm = false;
     this.isLoading = true;
     const request$ = formData.id ? this.updateData(formData.id, formData) : this.postData(formData);
-    request$.pipe(finalize(() => { this.isLoading = false; this.cd.detectChanges(); }))
-      .subscribe(() => this.forceFullRefresh());
+    
+    request$.pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.showCreateForm = false;
+        this.cd.markForCheck();
+      })
+    ).subscribe(() => this.refreshData());
   }
 
-  onCancelForm() { this.showCreateForm = false; this.selectedItemForEdit = null; }
-
-  handleViewDetails(item: any) {
-    if (!item.id) return;
-    this.isLoading = true;
-    this.getItemDetails(item.id).subscribe({
-      next: (details) => { this.selectedItemForDetails = details; this.showDetails = true; this.isLoading = false; this.cd.markForCheck(); },
-      error: () => { this.isLoading = false; this.cd.markForCheck(); }
-    });
-  }
+  // --- Reset Hesla ---
 
   handleResetPasswordFormOpened(item: any) {
     this.showResetPasswordForm = true;
-    this.selectedItemForEdit = { ...item, target_user_id: item.id, current_user_id: this.authService.getUserId() };
+    this.selectedItemForEdit = { 
+      ...item, 
+      target_user_id: item.id, 
+      current_user_id: this.authService.getUserId() 
+    };
   }
 
   handleResetPasswordFormSubmitted(formData: any) {
-    const passwordData = { ...formData, current_user_id: parseInt(formData.current_user_id, 10) };
-    this.updatePassword(passwordData.target_user_id, passwordData)
-      .pipe(finalize(() => this.handleResetPasswordFormClosed()))
+    this.isLoading = true;
+    this.updatePassword(formData.target_user_id, formData)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.showResetPasswordForm = false;
+          this.cd.markForCheck();
+        })
+      )
       .subscribe({
-        next: () => {
-          this.alertDialogService.open('Úspěch', 'Heslo bylo úspěšně změněno.', 'success');
-          this.forceFullRefresh();
-        },
-        error: () => this.alertDialogService.open('Chyba', 'Chyba při změně hesla.', 'danger')
+        next: () => this.alertDialogService.open('Úspěch', 'Heslo bylo změněno.', 'success'),
+        error: () => this.alertDialogService.open('Chyba', 'Heslo se nepodařilo změnit.', 'danger')
       });
   }
 
-  handleResetPasswordFormClosed() { this.showResetPasswordForm = false; }
-  handleCloseDetails() { this.showDetails = false; }
-  handleItemRestored() { this.forceFullRefresh(); }
-  handleItemDeleted() { this.forceFullRefresh(); }
+  // --- Detaily ---
 
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
-      this.currentPage = page; this.loadActiveRequests().subscribe();
-    }
+  handleViewDetails(item: any) {
+    if (!item.id) return;
+    this.getItemDetails(item.id).subscribe(details => {
+      this.selectedItemForDetails = details;
+      this.showDetails = true;
+      this.cd.markForCheck();
+    });
   }
+
+  handleItemRestored() { this.refreshData(); }
+  handleItemDeleted() { this.refreshData(); }
 }

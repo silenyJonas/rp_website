@@ -1,20 +1,20 @@
 <div class="user-request-container container mx-auto p-4">
-  <div *ngIf="isLoading" class="text-center text-blue-500">Načítání událostí...</div>
+  <div *ngIf="isLoading" class="text-center text-blue-500 p-4">Načítání systémových logů...</div>
   
-  <div *ngIf="errorMessage" class="text-center text-red-500">{{ errorMessage }}</div>
-  <div *ngIf="errorMessage" class="text-center text-red-500">
-    <button class="neutral_button" style="margin-top: 15px;" (click)="refreshData()">Znovu načíst data</button>
+  <div *ngIf="errorMessage" class="text-center text-red-500 p-4">
+    {{ errorMessage }}
+    <button class="neutral_button ml-4" (click)="refreshData()">Zkusit znovu</button>
   </div>
 
-  <div *ngIf="!isLoading && !errorMessage">
+  <div *ngIf="!errorMessage">
      <div class="toolbar-actions m-b-t-5">
-      <div class="table-header">Serverové logy</div>
+      <div class="table-header">Auditní záznamy (Business Logs)</div>
       <div class="toolbar-actions-in">
         <button (click)="toggleFilters()" class="btn-filter small-btn">
           {{ isFilterVisible ? '✕ Skrýt' : '🔍 Filtry' }}
         </button>
         <button class="btn-export small-btn" (click)="exportActiveTable()">
-          📥 Export
+          📥 Export CSV
         </button>
       </div>
     </div>
@@ -23,21 +23,7 @@
       <div class="filter-side-panel" [class.active]="isFilterVisible">
         <app-generic-filter-form
           [filterColumns]="filterColumns"
-          [initialFilters]="{ 
-            business_log_id: filterBusinessLogId,
-            created_at: filterCreatedAt,
-            origin: filterOrigin,
-            event_type: filterEventType,
-            module: filterModule,
-            description: filterDescription,
-            affected_entity_type: filterAffectedEntityType,
-            affected_entity_id: filterAffectedEntityId,
-            user_login_id: filterUserLoginId, 
-            'user.user_email': filterUserEmail, 
-            context_data: filterContextData
-          }"
-          [initialSortBy]="filterSortBy"
-          [initialSortDirection]="filterSortDirection"
+          [initialFilters]="filters"
           (filtersApplied)="applyFilters($event)"
           (filtersCleared)="clearFilters()">
         </app-generic-filter-form>
@@ -52,24 +38,24 @@
           [tableCaption]="'Seznam událostí systému'"
           [apiEndpoint]="apiEndpoint"
           [isLogsTable]="true"
-          (itemDeleted)="handleItemDeleted()"
           (viewDetailsOpened)="handleViewDetails($event)">
         </app-generic-table>
 
-        <label class="checkbox-container m-l-10 text-xs">
-          <input type="checkbox" [(ngModel)]="isTableFullWidth"> Full-width
-        </label>
+        <div class="flex justify-between items-center mt-4">
+          <label class="checkbox-container text-xs">
+            <input type="checkbox" [(ngModel)]="isTableFullWidth"> Full-width zobrazení
+          </label>
 
-        <app-pagination-buttons
-          [currentPage]="currentPage"
-          [totalPages]="totalPages"
-          [totalItems]="totalItems"
-          [itemsPerPage]="itemsPerPage"
-          [dataLength]="data.length"
-          (pageChange)="onHandlePageChange($event)"
-          (itemsPerPageChange)="onHandleItemsPerPageChange($event)">
-        </app-pagination-buttons>
-
+          <app-pagination-buttons
+            [currentPage]="currentPage"
+            [totalPages]="totalPages"
+            [totalItems]="totalItems"
+            [itemsPerPage]="itemsPerPage"
+            [dataLength]="data.length"
+            (pageChange)="handlePageChange($event)"
+            (itemsPerPageChange)="handleItemsPerPageChange($event)">
+          </app-pagination-buttons>
+        </div>
       </div>
     </div>
   </div>

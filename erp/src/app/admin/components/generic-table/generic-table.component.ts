@@ -8,6 +8,7 @@ import { DataHandler } from '../../../core/services/data-handler.service';
 import { ConfirmDialogService } from '../../../core/services/confirm-dialog.service';
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { GenericTableService } from '../../../core/services/generic-table.service'; // Import přidán
 
 export interface Buttons {
   display_name: string;
@@ -49,11 +50,13 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
+    protected override genericTableService: GenericTableService, // Přidáno pro rodiče
     private confirmDialogService: ConfirmDialogService,
     private alertDialogService: AlertDialogService,
     public authService: AuthService
   ) {
-    super(dataHandler, cd);
+    // Předání 3 parametrů do super konstruktoru
+    super(dataHandler, cd, genericTableService);
   }
 
   override ngOnChanges(changes: SimpleChanges): void {
@@ -89,7 +92,6 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     return typeof value === 'object' && value !== null && !Array.isArray(value);
   }
 
-
   getFormLink(item: any): void {
     const baseUrl = window.location.origin;
     const url = `${baseUrl}/order_form/sales_lead_id=${item.id}`;
@@ -100,7 +102,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
         `Odkaz pro lead s id: ${item.id} byl uložen do schránky.`, 
         'success'
       );
-    }).catch(err => {
+    }).catch((err: any) => { // Oprava implicit any
       console.error('Chyba při kopírování:', err);
       this.alertDialogService.open('Chyba', 'Nepodařilo se zkopírovat odkaz.', 'danger');
     });
@@ -148,7 +150,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
               this.itemDeleted.emit(item);
             }
           },
-          error: (err) => {
+          error: (err: any) => { // Oprava implicit any
             console.error('Delete error:', err);
             this.alertDialogService.open('Chyba', 'Smazání se nezdařilo.', 'danger');
           }
@@ -156,7 +158,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
       } else {
         this.alertDialogService.open('Zrušeno', 'Smazání položky bylo zrušeno.', 'warning');
       }
-    }).catch(error => {
+    }).catch((error: any) => { // Oprava implicit any
       console.error('Dialog error:', error);
     });
   }
@@ -171,7 +173,8 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
       this.isLoading = true;
       this.cd.markForCheck();
       
-      const responseData = await firstValueFrom(this.loadAllData());
+      // loadAllData je nyní v rodiči
+      const responseData = await firstValueFrom(this.loadDataAsCollection());
       const allData: any[] = Array.isArray(responseData) ? responseData : [];
       
       if (allData.length > 0) {
@@ -209,6 +212,11 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
       this.isLoading = false;
       this.cd.markForCheck();
     }
+  }
+
+  // Pomocná metoda pro export - v rodiči se loadData často vrací jako Observable<T[]>
+  private loadDataAsCollection() {
+    return this.dataHandler.getCollection<any>(this.apiEndpoint + '?no_pagination=true');
   }
 
   openCreateForm(){

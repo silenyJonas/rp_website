@@ -1,9 +1,12 @@
 <div class="user-request-container container mx-auto p-4">
-  <div *ngIf="isLoading" class="text-center text-blue-500">Načítání novinek...</div>
+  <div *ngIf="isLoading" class="text-center text-blue-500 p-4">Načítání novinek...</div>
   
-  <div *ngIf="errorMessage" class="text-center text-red-500">{{ errorMessage }}</div>
+  <div *ngIf="errorMessage" class="text-center text-red-500 p-4">
+    {{ errorMessage }}
+    <button class="neutral_button ml-4" (click)="refreshData()">Zkusit znovu</button>
+  </div>
   
-  <div *ngIf="!isLoading && !errorMessage">
+  <div *ngIf="!errorMessage">
     <div class="toolbar-actions m-b-t-5">
       <div class="table-header">Správa sekce novinek</div>
       <div class="toolbar-actions-in">
@@ -11,7 +14,7 @@
           {{ isFilterVisible ? '✕ Skrýt' : '🔍 Filtry' }}
         </button>
         <button *ngIf="!showTrashTable" class="btn-create small-btn" (click)="handleCreateFormOpened()">
-          ➕ Přidat
+          ➕ Přidat novinku
         </button>
         <button class="btn-export small-btn" (click)="exportActiveTable()">
           📥 Export
@@ -26,14 +29,7 @@
       <div class="filter-side-panel" [class.active]="isFilterVisible">
         <app-generic-filter-form
           [filterColumns]="filterColumns"
-          [initialFilters]="{ 
-            search: filterSearch, 
-            thema: filterThema, 
-            author: filterAuthor,
-            id: filterId
-          }"
-          [initialSortBy]="filterSortBy"
-          [initialSortDirection]="filterSortDirection"
+          [initialFilters]="filters"
           (filtersApplied)="applyFilters($event)"
           (filtersCleared)="clearFilters()">
         </app-generic-filter-form>
@@ -48,7 +44,7 @@
           [tableCaption]="'Seznam aktualit a novinek'"
           [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
-          (itemDeleted)="handleItemDeleted()"
+          (itemDeleted)="refreshData()"
           (createFormOpened)="handleCreateFormOpened()"
           (editFormOpened)="handleEditFormOpened($event)"
           (viewDetailsOpened)="handleViewDetails($event)">
@@ -58,24 +54,26 @@
           [data]="trashData"
           [columns]="trashNewsColumns"
           [tableCaption]="'Archiv smazaných novinek'"
-          [isLoading]="isTrashTableLoading"
+          [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
-          (itemRestored)="handleItemRestored()">
+          (itemRestored)="refreshData()">
         </app-generic-trash-table>
 
-        <label *ngIf="!showTrashTable" class="checkbox-container m-l-10 text-xs">
-          <input type="checkbox" [(ngModel)]="isTableFullWidth"> Full-width
-        </label>
+        <div class="flex justify-between items-center mt-4">
+          <label *ngIf="!showTrashTable" class="checkbox-container text-xs">
+            <input type="checkbox" [(ngModel)]="isTableFullWidth"> Full-width zobrazení
+          </label>
 
-        <app-pagination-buttons
-          [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
-          [totalPages]="showTrashTable ? trashTotalPages : totalPages"
-          [totalItems]="showTrashTable ? trashTotalItems : totalItems"
-          [itemsPerPage]="showTrashTable ? trashItemsPerPage : itemsPerPage"
-          [dataLength]="showTrashTable ? trashData.length : data.length"
-          (pageChange)="onHandlePageChange($event)"
-          (itemsPerPageChange)="onHandleItemsPerPageChange($event)">
-        </app-pagination-buttons>
+          <app-pagination-buttons
+            [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
+            [totalPages]="showTrashTable ? trashTotalPages : totalPages"
+            [totalItems]="showTrashTable ? trashTotalItems : totalItems"
+            [itemsPerPage]="showTrashTable ? trashItemsPerPage : itemsPerPage"
+            [dataLength]="showTrashTable ? trashData.length : data.length"
+            (pageChange)="handlePageChange($event)"
+            (itemsPerPageChange)="handleItemsPerPageChange($event)">
+          </app-pagination-buttons>
+        </div>
       </div>
     </div>
   </div>

@@ -5,6 +5,7 @@ import { BaseDataComponent } from '../../../../components/base-data/base-data.co
 import { DataHandler } from '../../../../../core/services/data-handler.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
+import { GenericTableService } from '../../../../../core/services/generic-table.service'; // Import přidán
 
 @Component({
   selector: 'app-support-form',
@@ -24,9 +25,11 @@ export class SupportFormComponent extends BaseDataComponent<any> implements OnIn
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
+    protected override genericTableService: GenericTableService, // Přidáno pro rodičovskou třídu
     private fb: FormBuilder
   ) {
-    super(dataHandler, cd);
+    // Předáváme všechny 3 parametry do super konstruktoru
+    super(dataHandler, cd, genericTableService);
   }
 
   override ngOnInit(): void {
@@ -64,18 +67,19 @@ export class SupportFormComponent extends BaseDataComponent<any> implements OnIn
         formData.append('attachment', this.selectedFile, this.selectedFile.name);
       }
 
+      // Využíváme metodu uploadData z BaseDataComponent
       this.uploadData<any>(formData).pipe(
         finalize(() => {
           this.isLoading = false;
           this.cd.detectChanges();
         })
       ).subscribe({
-        next: (response) => {
+        next: (response: any) => { // Přidáno :any pro opravu Implicit Any
           this.isSubmitted = true;
           this.lastTicketId = response.id;
           this.cd.markForCheck();
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Chyba při odesílání ticketu:', err);
         }
       });

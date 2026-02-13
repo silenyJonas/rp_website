@@ -2,10 +2,12 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrateg
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { takeUntil, finalize } from 'rxjs/operators';
+
 import { DataHandler } from '../../../core/services/data-handler.service';
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
+import { GenericTableService } from '../../../core/services/generic-table.service';
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
-import { takeUntil, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-edit-website',
@@ -17,6 +19,7 @@ import { takeUntil, finalize } from 'rxjs/operators';
 })
 export class EditWebsiteComponent extends BaseDataComponent<any> implements OnInit, OnDestroy {
   
+  // Endpoint pro uložení změn na backend
   override apiEndpoint = 'save-translations'; 
 
   currentLang: string = 'cz';
@@ -25,34 +28,41 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
   filteredKeys: { path: string, value: string }[] = [];
   
   searchQuery: string = '';
-  override isLoading: boolean = false;
 
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
+    protected override genericTableService: GenericTableService, // Vyžadováno bází
     private http: HttpClient,
     private alertDialogService: AlertDialogService
   ) {
-    super(dataHandler, cd);
+    // Předání závislostí do BaseDataComponent
+    super(dataHandler, cd, genericTableService);
   }
 
   override ngOnInit(): void {
-    super.ngOnInit();
-    this.forceFullRefresh();
+    // Nepoužíváme super.ngOnInit(), protože nechceme volat automatické refreshData
+    this.refreshTranslations();
   }
 
-  public forceFullRefresh(): void {
+  /**
+   * Načtení JSON souboru z assets (překlady)
+   */
+  public refreshTranslations(): void {
     this.isLoading = true;
-    this.cd.detectChanges();
+    this.errorMessage = null;
+    this.cd.markForCheck();
 
+    // Cache busting pomocí timestampu
     const url = `assets/i18n/${this.currentLang}.json?t=${new Date().getTime()}`;
     
     this.http.get(url).pipe(
       takeUntil(this.destroy$),
       finalize(() => {
         this.isLoading = false;
-        this.cd.detectChanges();
-        setTimeout(() => this.resizeAllTextareas(), 10);
+        this.cd.markForCheck();
+        // Malý timeout pro renderování, abyscrollHeight v textareách byl správný
+        setTimeout(() => this.resizeAllTextareas(), 50);
       })
     ).subscribe({
       next: (data) => {
@@ -61,7 +71,8 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
         this.applyFilter();
       },
       error: () => {
-        this.alertDialogService.open('Chyba', `Nepodařilo se načíst překlady.`, 'danger');
+        this.errorMessage = 'Nepodařilo se načíst soubor překladů.';
+        this.alertDialogService.open('Chyba', `Nepodařilo se načíst ${this.currentLang}.json`, 'danger');
       }
     });
   }
@@ -69,15 +80,17 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
   loadLang(lang: string): void {
     if (this.currentLang === lang) return;
     this.currentLang = lang;
-    this.forceFullRefresh();
+    this.refreshTranslations();
   }
+
+  // --- Logika zpracování objektu ---
 
   refreshFlattenedList(): void {
     this.flattenedKeys = [];
     this.flattenObject(this.translations);
   }
 
-  flattenObject(obj: any, path: string = ''): void {
+  private flattenObject(obj: any, path: string = ''): void {
     for (const key in obj) {
       const newPath = path ? `${path}.${key}` : key;
       if (typeof obj[key] === 'object' && obj[key] !== null) {
@@ -107,6 +120,8 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
     setTimeout(() => this.resizeAllTextareas(), 10);
   }
 
+  // --- UI a Eventy ---
+
   adjustHeight(event: any): void {
     const element = event.target;
     element.style.height = 'auto';
@@ -133,29 +148,33 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
     if (item) item.value = newValue;
   }
 
+  /**
+   * Odeslání upraveného JSONu na server
+   */
   onSubmit(): void {
     this.isLoading = true;
-    this.cd.detectChanges();
+    this.cd.markForCheck();
 
     const payload = {
       lang: this.currentLang,
       data: this.translations
     };
 
+    // Využíváme zděděnou metodu postData nebo přímý post přes dataHandler
     this.dataHandler.post(this.apiEndpoint, payload)
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => {
           this.isLoading = false;
-          this.cd.detectChanges();
+          this.cd.markForCheck();
         })
       )
       .subscribe({
         next: () => {
-          this.alertDialogService.open('Administrace', `Změny uloženy v paměti i na serveru.`, 'success');
+          this.alertDialogService.open('Administrace', `Web byl úspěšně aktualizován (${this.currentLang}).`, 'success');
         },
         error: (err) => {
-          this.alertDialogService.open('Chyba', 'Uložení na server selhalo.', 'danger');
+          this.alertDialogService.open('Chyba', 'Uložení na server selhalo. Zkontrolujte práva k zápisu.', 'danger');
         }
       });
   }

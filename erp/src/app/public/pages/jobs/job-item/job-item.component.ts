@@ -1,11 +1,13 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { finalize, takeUntil } from 'rxjs/operators';
+
 import { BaseDataComponent } from '../../../../admin/components/base-data/base-data.component';
 import { DataHandler } from '../../../../core/services/data-handler.service';
+import { GenericTableService } from '../../../../core/services/generic-table.service';
 import { LocalizationService } from '../../../services/localization.service';
-import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-job-item',
@@ -13,8 +15,10 @@ import { finalize, takeUntil } from 'rxjs/operators';
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './job-item.component.html',
   styleUrl: './job-item.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JobItemComponent extends BaseDataComponent<any> implements OnInit, OnDestroy {
+  // API endpoint pro odesílání přihlášek
   override apiEndpoint: string = 'job_applications';
   
   applicationForm!: FormGroup;
@@ -26,28 +30,30 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
+    protected override genericTableService: GenericTableService, // Přidáno pro bázi
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private localizationService: LocalizationService
   ) {
-    super(dataHandler, cd);
+    super(dataHandler, cd, genericTableService);
   }
 
   override ngOnInit(): void {
-    super.ngOnInit();
+    // Nepoužíváme super.ngOnInit(), protože zde nepotřebujeme automatický refresh tabulky
     this.initForm();
     
+    // Sledujeme překlady - až jsou načteny, naplníme detail pracovní pozice
     this.localizationService.currentTranslations$
       .pipe(takeUntil(this.destroy$))
       .subscribe(translations => {
         if (translations && Object.keys(translations).length > 0) {
           this.loadJobData();
-          this.cd.detectChanges();
+          this.cd.markForCheck();
         }
       });
   }
 
-  initForm(): void {
+  private initForm(): void {
     this.applicationForm = this.fb.group({
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
@@ -58,52 +64,68 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
     });
   }
 
+  // --- UI Gettery ---
+
   get btnText(): string {
-    return this.isLoading ? 'Odesílám...' : 'Odeslat přihlášku';
+    if (this.isLoading) return 'Odesílám...';
+    return this.localizationService.getText('job_detail.form.submit_btn') || 'Odeslat přihlášku';
   }
+
+  // --- Handlery ---
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
-      this.cd.detectChanges();
+      this.cd.markForCheck();
     }
   }
 
   onSubmit(): void {
-    if (this.applicationForm.valid && this.selectedFile) {
-      this.isLoading = true;
-      this.cd.detectChanges();
-      const formData = new FormData();
-      Object.keys(this.applicationForm.value).forEach(key => {
-        const value = this.applicationForm.value[key];
-        if (value !== null && value !== undefined) {
-          const finalValue = key === 'dataProcessingAgreement' ? (value ? '1' : '0') : value;
-          formData.append(key, finalValue);
-        }
-      });
-
-      if (this.job) {
-        formData.append('position_name', this.job.title);
-      }
-      formData.append('cv_file', this.selectedFile, this.selectedFile.name);
-      this.uploadData<any>(formData).pipe(
-        finalize(() => {
-          this.isLoading = false;
-          this.cd.detectChanges();
-        }),
-        takeUntil(this.destroy$)
-      ).subscribe({
-        next: () => {
-          this.isSubmitted = true;
-          this.cd.markForCheck();
-        },
-        error: (err) => {
-          console.error('Chyba při odesílání:', err);
-          this.cd.detectChanges();
-        }
-      });
+    if (this.applicationForm.invalid || !this.selectedFile) {
+      this.applicationForm.markAllAsTouched();
+      return;
     }
+
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.cd.markForCheck();
+
+    const formData = new FormData();
+    
+    // Namapování hodnot z formuláře
+    Object.keys(this.applicationForm.value).forEach(key => {
+      const value = this.applicationForm.value[key];
+      if (value !== null && value !== undefined) {
+        // Převod boolean na string pro PHP/Backend
+        const finalValue = key === 'dataProcessingAgreement' ? (value ? '1' : '0') : value;
+        formData.append(key, finalValue);
+      }
+    });
+
+    // Přidání kontextových informací
+    if (this.job) {
+      formData.append('position_name', this.job.title);
+    }
+    formData.append('cv_file', this.selectedFile, this.selectedFile.name);
+
+    // Využití zděděné metody uploadData
+    this.uploadData<any>(formData).pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.cd.markForCheck();
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: () => {
+        this.isSubmitted = true;
+        this.cd.markForCheck();
+      },
+      error: (err) => {
+        this.errorMessage = 'Omlouváme se, přihlášku se nepodařilo odeslat. Zkuste to prosím později.';
+        console.error('Chyba při odesílání přihlášky:', err);
+      }
+    });
   }
 
   private loadJobData(): void {
@@ -117,9 +139,5 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
         this.job = { title, fullContent: content };
       }
     }
-  }
-
-  override ngOnDestroy(): void {
-    super.ngOnDestroy();
   }
 }

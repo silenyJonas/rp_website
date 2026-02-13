@@ -1,18 +1,17 @@
-
 import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { CommonModule, CurrencyPipe, KeyValuePipe, DatePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { firstValueFrom } from 'rxjs';
 import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
 import { BaseDataComponent } from '../base-data/base-data.component';
 import { DataHandler } from '../../../core/services/data-handler.service';
 import { ConfirmDialogService } from '../../../core/services/confirm-dialog.service';
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
+import { GenericTableService } from '../../../core/services/generic-table.service'; // Import přidán
 
 export interface Buttons {
   display_name: string;
   isActive: boolean;
-  type: 'confirm_button' | 'delete_button' | 'info_button' | 'create_button' | 'delete_button' | 'neutral_button';
+  type: 'confirm_button' | 'delete_button' | 'info_button' | 'create_button' | 'neutral_button';
   header_name: string;
 }
 
@@ -22,7 +21,7 @@ export interface Buttons {
   imports: [
     CommonModule,
     FormsModule,
-],
+  ],
   templateUrl: './generic-trash-table.component.html',
   styleUrls: ['../table-style.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -36,35 +35,32 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
   @Input() uploadsBaseUrl: string = '';
   
   buttons: Buttons[] = [
-    {display_name: '♻️', header_name: "Obnovit", isActive: true, type: 'confirm_button'},
-    {display_name: '🧨', header_name: "Trvale smazat", isActive: true, type: 'delete_button'},
+    { display_name: '♻️', header_name: "Obnovit", isActive: true, type: 'confirm_button' },
+    { display_name: '🧨', header_name: "Trvale smazat", isActive: true, type: 'delete_button' },
   ];
 
   public isFullWidth: boolean = true;
 
   @Output() itemRestored = new EventEmitter<void>();
+  @Output() itemDeletedPermanently = new EventEmitter<void>(); // Přidán výstup pro smazání
 
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
+    protected override genericTableService: GenericTableService, // Přidáno pro BaseDataComponent
     private confirmDialogService: ConfirmDialogService,
     private alertDialogService: AlertDialogService
   ) {
-    super(dataHandler, cd);
+    // Předáváme 3 parametry do super
+    super(dataHandler, cd, genericTableService);
   }
 
   override ngOnChanges(changes: SimpleChanges): void {
-    if (changes['data']) {
-      console.log('Stav pole data v GenericTrashTableComponent po ngOnChanges:');
-      console.table(this.data);
-    }
     super.ngOnChanges(changes);
   }
 
   override ngOnInit(): void {
     super.ngOnInit();
-    console.log('Stav pole data po ngOnInit:');
-    console.table(this.data);
   }
 
   getCellValue(item: any, column: ColumnDefinition): any {
@@ -93,6 +89,8 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
   }
   
   handleAction(item: any, buttonType: string): void {
+    if (!item.id) return;
+
     switch (buttonType) {
       case 'confirm_button':
         this.confirmDialogService.open('Potvrzení obnovení', 'Opravdu chcete obnovit tuto položku?').then(result => {
@@ -100,57 +98,44 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
             this.restoreDataFromApi(item.id).subscribe({
               next: () => {
                 this.alertDialogService.open('Úspěch', 'Položka byla úspěšně obnovena.', 'success');
-                const index = this.data.findIndex(dataItem => dataItem.id === item.id);
-                if (index > -1) {
-                  this.data.splice(index, 1);
-                  this.cd.markForCheck();
-                  console.log('Stav pole data po odstranění obnovené položky:');
-                  console.table(this.data);
-                  this.itemRestored.emit();
-                }
+                this.removeItemFromLocalData(item.id);
+                this.itemRestored.emit();
               },
-              error: (err) => {
+              error: (err: any) => {
                 this.alertDialogService.open('Chyba', 'Při obnovení položky nastala chyba.', 'danger');
                 console.error('Restore error:', err);
               }
             });
-          } else {
-            this.alertDialogService.open('Zrušeno', 'Obnovení položky bylo zrušeno.', 'warning');
           }
-        }).catch(error => {
-          this.alertDialogService.open('Chyba', 'Při pokusu o obnovení nastala chyba.', 'danger');
-          console.error('Dialog error:', error);
         });
         break;
+
       case 'delete_button':
         this.confirmDialogService.open('Potvrzení trvalého smazání', 'Opravdu si přejete TRVALE smazat tuto položku? Tato akce je nevratná!').then(result => {
           if (result) {
-            this.hardDeleteDataFromApi(item.id).subscribe({
+            // hardDeleteDataFromApi používá deleteData(id, true)
+            this.deleteData(item.id, true).subscribe({
               next: () => {
                 this.alertDialogService.open('Úspěch', 'Položka byla trvale smazána.', 'success');
-                const index = this.data.findIndex(dataItem => dataItem.id === item.id);
-                if (index > -1) {
-                  this.data.splice(index, 1);
-                  this.cd.markForCheck();
-                  console.log('Stav pole data po trvalém odstranění položky:');
-                  console.table(this.data);
-                }
+                this.removeItemFromLocalData(item.id);
+                this.itemDeletedPermanently.emit();
               },
-              error: (err) => {
+              error: (err: any) => {
                 this.alertDialogService.open('Chyba', 'Při trvalém mazání položky nastala chyba.', 'danger');
                 console.error('Hard delete error:', err);
               }
             });
-          } else {
-            this.alertDialogService.open('Zrušeno', 'Trvalé smazání položky bylo zrušeno.', 'warning');
           }
-        }).catch(error => {
-          this.alertDialogService.open('Chyba', 'Při pokusu o smazání nastala chyba.', 'danger');
-          console.error('Dialog error:', error);
         });
         break;
-      default:
-        break;
+    }
+  }
+
+  private removeItemFromLocalData(id: number): void {
+    const index = this.data.findIndex(dataItem => dataItem.id === id);
+    if (index > -1) {
+      this.data.splice(index, 1);
+      this.cd.markForCheck();
     }
   }
 
@@ -163,23 +148,19 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
     this.confirmDialogService.open('Trvalé smazání všech položek', 'Opravdu si přejete TRVALE smazat VŠECHNY položky? Tato akce je nevratná!')
       .then(result => {
         if (result) {
+          // Metoda z BaseDataComponent
           this.hardDeleteAllTrashedDataFromApi().subscribe({
             next: () => {
               this.alertDialogService.open('Úspěch', 'Všechny položky byly trvale smazány.', 'success');
               this.data = [];
+              this.itemDeletedPermanently.emit();
               this.cd.markForCheck();
             },
-            error: (err) => {
+            error: (err: any) => {
               this.alertDialogService.open('Chyba', 'Při trvalém mazání položek nastala chyba.', 'danger');
-              console.error('Hard delete all error:', err);
             }
           });
-        } else {
-          this.alertDialogService.open('Zrušeno', 'Trvalé smazání položek bylo zrušeno.', 'warning');
         }
-      }).catch(error => {
-        this.alertDialogService.open('Chyba', 'Při pokusu o smazání nastala chyba.', 'danger');
-        console.error('Dialog error:', error);
       });
   }
 

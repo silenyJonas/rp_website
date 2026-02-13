@@ -1,31 +1,27 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { GenericTableComponent, Buttons } from '../../components/generic-table/generic-table.component';
-import { BaseDataComponent } from '../../components/base-data/base-data.component';
-import { DataHandler } from '../../../core/services/data-handler.service';
-import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
-import { GenericTableService, PaginatedResponse, FilterParams } from '../../../core/services/generic-table.service';
-import { AuthService } from '../../../core/auth/auth.service';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
+
+import { BaseDataComponent } from '../../components/base-data/base-data.component';
+import { GenericTableComponent, Buttons } from '../../components/generic-table/generic-table.component';
 import { GenericTrashTableComponent } from '../../components/generic-trash-table/generic-trash-table.component';
 import { GenericFormComponent, InputDefinition } from '../../components/generic-form/generic-form.component';
-import { Observable, of, forkJoin } from 'rxjs';
-import { tap, retry, finalize } from 'rxjs/operators';
-import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { GenericFilterFormComponent } from '../../components/generic-filter-form/generic-filter-form.component';
 import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
-import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
-import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
 import { PaginationButtonsComponent } from '../../components/pagination-buttons/pagination-buttons.component';
+
+import { DataHandler } from '../../../core/services/data-handler.service';
+import { GenericTableService, FilterParams } from '../../../core/services/generic-table.service';
+import { AuthService } from '../../../core/auth/auth.service';
+import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
 
 import {
   SALES_LEAD_BUTTONS,
   SALES_LEAD_FORM_FIELDS,
   SALES_LEAD_COLUMNS,
   SALES_LEAD_TRASH_COLUMNS,
-  SALES_LEAD_STATUS_OPTIONS,
-  SALES_LEAD_PRIORITY_OPTIONS,
   SALES_LEAD_FILTER_COLUMNS,
   SALES_LEAD_DETAILS_COLUMNS
 } from './sales-leads.config';
@@ -46,204 +42,121 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
   @ViewChild('activeTable') activeTable!: GenericTableComponent;
 
   override apiEndpoint: string = 'sales_leads';
-  override trashData: any[] = [];
-  override isLoading: boolean = false;
   
-  isTableFullWidth: boolean = true;
-  isFilterVisible: boolean = false;
-  showTrashTable: boolean = false;
-  showCreateForm: boolean = false;
-  showDetails: boolean = false;
-
-  buttons: Buttons[] = SALES_LEAD_BUTTONS;
-  formFields: InputDefinition[] = SALES_LEAD_FORM_FIELDS;
-  salesLeadColumns: ColumnDefinition[] = SALES_LEAD_COLUMNS;
-  trashSalesLeadColumns: ColumnDefinition[] = SALES_LEAD_TRASH_COLUMNS;
-  filterColumns: FilterColumns[] = SALES_LEAD_FILTER_COLUMNS;
-  detailsColumns: ItemDetailsColumns[] = SALES_LEAD_DETAILS_COLUMNS;
-  
-  currentPage: number = 1;
-  itemsPerPage: number = 15;
-  totalItems: number = 0;
-  totalPages: number = 0;
-  
-  trashCurrentPage: number = 1;
-  trashItemsPerPage: number = 15;
-  trashTotalItems: number = 0;
-  trashTotalPages: number = 0;
-
-  filterSearch = ''; filterStatus = ''; filterPriority = ''; filterSubjectName = '';
-  filterSalesmanName = ''; filterLocation = ''; filterId = ''; filterCreatedAt = '';
-  filterUpdatedAt = ''; filterSortBy = ''; filterSortDirection: 'asc' | 'desc' = 'desc';
-
-  private activeRequestsCache: Map<number, any[]> = new Map();
-  private trashRequestsCache: Map<number, any[]> = new Map();
-  private currentActiveFilters: FilterParams = {};
-  private currentTrashFilters: FilterParams = {};
+  // Konfigurace
+  buttons = SALES_LEAD_BUTTONS;
+  formFields = SALES_LEAD_FORM_FIELDS;
+  salesLeadColumns = SALES_LEAD_COLUMNS;
+  trashSalesLeadColumns = SALES_LEAD_TRASH_COLUMNS;
+  filterColumns = SALES_LEAD_FILTER_COLUMNS;
+  detailsColumns = SALES_LEAD_DETAILS_COLUMNS;
 
   selectedItemForEdit: any | null = null;
   selectedItemForDetails: any | null = null;
 
+  // Sjednocené filtry
+  filters: FilterParams = {
+    sort_by: 'id',
+    sort_direction: 'desc'
+  };
+
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
-    private genericTableService: GenericTableService,
+    protected override genericTableService: GenericTableService,
     private authService: AuthService,
     private router: Router
   ) {
-    super(dataHandler, cd);
+    super(dataHandler, cd, genericTableService);
   }
 
   override ngOnInit(): void {
     super.ngOnInit();
     this.authService.isLoggedIn$.subscribe(loggedIn => {
-      if (loggedIn) this.forceFullRefresh();
-      else this.router.navigate(['/auth/login']);
+      if (loggedIn) {
+        this.refreshData();
+      } else {
+        this.router.navigate(['/auth/login']);
+      }
     });
   }
 
-  onHandlePageChange(page: number): void {
-    if (this.showTrashTable) {
-      if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
-        this.trashCurrentPage = page;
-        this.loadTrashRequests().subscribe();
-      }
-    } else {
-      if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
-        this.currentPage = page;
-        this.loadActiveRequests().subscribe();
-      }
-    }
-  }
-
-  onHandleItemsPerPageChange(value: number): void {
-    if (this.showTrashTable) {
-      this.trashItemsPerPage = value;
-      this.trashCurrentPage = 1;
-      this.trashRequestsCache.clear();
-      this.loadTrashRequests().subscribe();
-    } else {
-      this.itemsPerPage = value;
-      this.currentPage = 1;
-      this.activeRequestsCache.clear();
-      this.loadActiveRequests().subscribe();
-    }
-  }
+  // --- Logika dat ---
 
   public refreshData(): void {
-    this.forceFullRefresh();
+    this.forceFullRefresh(this.filters);
   }
 
-  exportActiveTable(): void {
-    if (this.activeTable) {
-      this.activeTable.exportToCSV();
-    }
-  }
-
-  private getBaseFilters(): FilterParams {
-    return {
-      search: this.filterSearch, status: this.filterStatus, priority: this.filterPriority,
-      subject_name: this.filterSubjectName, salesman_name: this.filterSalesmanName,
-      location: this.filterLocation, id: this.filterId, created_at: this.filterCreatedAt,
-      updated_at: this.filterUpdatedAt, sort_by: this.filterSortBy, sort_direction: this.filterSortDirection
-    };
-  }
-
-  private fetchPaginatedData(
-    isTrash: boolean, page: number, itemsPerPage: number,
-    cache: Map<number, any[]>, currentFilters: FilterParams
-  ): Observable<PaginatedResponse<any>> {
-    const newFilters = this.getBaseFilters();
-    if (isTrash) newFilters['only_trashed'] = 'true';
-
-    if (JSON.stringify(newFilters) !== JSON.stringify(currentFilters)) {
-      cache.clear();
-      if (isTrash) { this.trashCurrentPage = 1; this.currentTrashFilters = newFilters; }
-      else { this.currentPage = 1; this.currentActiveFilters = newFilters; }
-    }
-
-    if (cache.has(page)) {
-      const cachedData = cache.get(page)!;
-      isTrash ? this.trashData = cachedData : this.data = cachedData;
-      this.cd.detectChanges();
-      return of({ data: cachedData, current_page: page, last_page: isTrash ? this.trashTotalPages : this.totalPages, total: isTrash ? this.trashTotalItems : this.totalItems } as PaginatedResponse<any>);
-    }
-
-    return this.genericTableService.getPaginatedData<any>(this.apiEndpoint, page, itemsPerPage, newFilters).pipe(
-      retry(1),
-      tap(response => {
-        if (isTrash) {
-          this.trashData = response.data; this.trashTotalItems = response.total;
-          this.trashTotalPages = response.last_page; this.trashCurrentPage = response.current_page;
-        } else {
-          this.data = response.data; this.totalItems = response.total;
-          this.totalPages = response.last_page; this.currentPage = response.current_page;
-        }
-        cache.set(page, response.data);
-        this.cd.detectChanges();
-      })
-    );
-  }
-
-  loadActiveRequests() { return this.fetchPaginatedData(false, this.currentPage, this.itemsPerPage, this.activeRequestsCache, this.currentActiveFilters); }
-  loadTrashRequests() { return this.fetchPaginatedData(true, this.trashCurrentPage, this.trashItemsPerPage, this.trashRequestsCache, this.currentTrashFilters); }
-
-  forceFullRefresh(): void {
-    this.activeRequestsCache.clear(); this.trashRequestsCache.clear();
-    this.isLoading = true;
-    this.cd.detectChanges();
-    forkJoin([this.loadActiveRequests(), this.loadTrashRequests()]).pipe(
-      finalize(() => { this.isLoading = false; this.cd.detectChanges(); })
-    ).subscribe();
-  }
-
-  toggleFilters() { this.isFilterVisible = !this.isFilterVisible; }
-  toggleTable(): void {
-    this.showTrashTable = !this.showTrashTable;
-    this.forceFullRefresh();
-  }
-
-  applyFilters(filters: any): void {
-    this.filterSearch = filters.search || ''; this.filterStatus = filters.status || '';
-    this.filterPriority = filters.priority || ''; this.filterSubjectName = filters.subject_name || '';
-    this.filterSalesmanName = filters.salesman_name || ''; this.filterLocation = filters.location || '';
-    this.filterId = filters.id || ''; this.filterCreatedAt = filters.created_at || '';
-    this.filterUpdatedAt = filters.updated_at || ''; this.filterSortBy = filters.sort_by || '';
-    this.filterSortDirection = filters.sort_direction || 'desc';
-    this.forceFullRefresh();
+  applyFilters(newFilters: FilterParams): void {
+    this.filters = { ...this.filters, ...newFilters };
+    this.currentPage = 1;
+    this.refreshData();
   }
 
   clearFilters(): void {
-    this.filterSearch = ''; this.filterStatus = ''; this.filterPriority = '';
-    this.filterSubjectName = ''; this.filterSalesmanName = ''; this.filterLocation = '';
-    this.filterId = ''; this.filterCreatedAt = ''; this.filterUpdatedAt = '';
-    this.filterSortBy = ''; this.filterSortDirection = 'desc';
-    this.forceFullRefresh();
+    this.filters = { sort_by: 'id', sort_direction: 'desc' };
+    this.currentPage = 1;
+    this.refreshData();
   }
 
-  handleCreateFormOpened() { this.selectedItemForEdit = null; this.showCreateForm = !this.showCreateForm; }
-  handleEditFormOpened(item: any) { this.selectedItemForEdit = item; this.showCreateForm = true; }
+  handlePageChange(page: number): void {
+    this.onHandlePageChange(page, this.filters);
+  }
 
-  handleFormSubmitted(formData: any) {
-    this.showCreateForm = false;
+  handleItemsPerPageChange(value: number): void {
+    this.onHandleItemsPerPageChange(value, this.filters);
+  }
+
+  exportActiveTable(): void {
+    if (this.activeTable) this.activeTable.exportToCSV();
+  }
+
+  // --- Formuláře a detaily ---
+
+  handleCreateFormOpened(): void {
+    this.selectedItemForEdit = null;
+    this.showCreateForm = true;
+  }
+
+  handleEditFormOpened(item: any): void {
+    this.selectedItemForEdit = { ...item };
+    this.showCreateForm = true;
+  }
+
+  handleFormSubmitted(formData: any): void {
     this.isLoading = true;
-    const request$ = formData.id ? this.updateData(formData.id, formData) : this.postData(formData);
-    request$.pipe(finalize(() => { this.isLoading = false; this.cd.detectChanges(); }))
-      .subscribe(() => this.forceFullRefresh());
+    const request$ = formData.id 
+      ? this.updateData(formData.id, formData) 
+      : this.postData(formData);
+
+    request$.pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.showCreateForm = false;
+        this.cd.markForCheck();
+      })
+    ).subscribe(() => this.refreshData());
   }
 
-  onCancelForm() { this.showCreateForm = false; this.selectedItemForEdit = null; }
-
-  handleViewDetails(item: any) {
+  handleViewDetails(item: any): void {
     if (!item.id) return;
     this.isLoading = true;
     this.getItemDetails(item.id).subscribe({
-      next: (details) => { this.selectedItemForDetails = details; this.showDetails = true; this.isLoading = false; this.cd.markForCheck(); },
-      error: () => { this.isLoading = false; this.cd.markForCheck(); }
+      next: (details) => {
+        this.selectedItemForDetails = details;
+        this.showDetails = true;
+        this.cd.markForCheck();
+      }
     });
   }
 
-  handleCloseDetails() { this.selectedItemForDetails = null; this.showDetails = false; }
-  handleItemRestored() { this.forceFullRefresh(); }
-  handleItemDeleted() { this.forceFullRefresh(); }
+  handleCloseDetails() {
+    this.selectedItemForDetails = null;
+    this.showDetails = false;
+  }
+
+  onCancelForm() {
+    this.showCreateForm = false;
+    this.selectedItemForEdit = null;
+  }
 }

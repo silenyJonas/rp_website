@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessLog;
 use App\Http\Resources\BusinessLogResource;
-use App\Http\Requests\StoreBusinessLogRequest;
+use App\Http\Requests\BusinessLog\StoreBusinessLogRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;

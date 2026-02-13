@@ -1,20 +1,19 @@
 <?php
-namespace App\Http\Requests;
+namespace App\Http\Requests\SalesLead;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSalesLeadRequest extends FormRequest
+class UpdateSalesLeadRequest extends FormRequest
 {
     public function authorize(): bool { return true; }
 
     public function rules(): array
     {
         return [
-            'subject_name'       => ['required', 'string', 'max:255'],
-            'first_contact_date' => ['nullable'], // Změněno na nullable bez 'date' pro stabilitu
-            'source_channel'     => ['required', 'string', 'max:255'],
-            'user_login_id'      => ['nullable', 'integer'],
-            'salesman_name'      => ['nullable', 'string', 'max:255'],
+            'subject_name'       => ['sometimes', 'string', 'max:255'],
+            'user_login_id'      => ['nullable', 'integer'], // Přidáno pro podporu SET NULL
+            'first_contact_date' => ['nullable'], 
+            'source_channel'     => ['sometimes', 'string', 'max:255'],
             'contact_person'     => ['nullable', 'string', 'max:255'],
             'contact_email'      => ['nullable', 'string', 'max:255'],
             'contact_phone'      => ['nullable', 'string', 'max:255'],
@@ -24,7 +23,7 @@ class StoreSalesLeadRequest extends FormRequest
             'description'        => ['nullable', 'string'],
             'priority'           => ['nullable', 'string', 'max:255'],
             'status'             => ['nullable', 'string', 'max:255'],
-            'last_contact_date'  => ['nullable'], // Sjednoceno
+            'last_contact_date'  => ['nullable'], 
             'next_step'          => ['nullable', 'string', 'max:255'],
             'rejection_reason'   => ['nullable', 'string'],
         ];

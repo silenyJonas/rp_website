@@ -1,8 +1,8 @@
 ----NESPECHA----
--dynamicka sprava roli-vytvorit nazev role a priradit k ni permissions v komponente se to bude delat na adminu
--na dashboardu budou vseobecne info a statistiky treba pocet zamestnancu nebo pocet novych veci atd
 -dat full width primo do telo table komponenty
 -uzivatel ktery ma soft-delete aby se nemohl prihlasit
 --------------------------
-
-cistim kod od komentaru zbytecnych skoncil jsem u pages routing module
+logovat vse - generovani linku - stazeni tabulky
+UserLogin endpoint at pouziva request
+translation endpoint at pouziva request
+odstranit zbytecne komentare v api

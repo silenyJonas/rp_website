@@ -1,11 +1,13 @@
 <div class="user-request-container container mx-auto p-4">
-  <div *ngIf="isLoading" class="text-center text-blue-500">Načítání dat...</div>
-  
-  <div *ngIf="errorMessage" class="text-center text-red-500">{{ errorMessage }}</div>
+  <div *ngIf="isLoading" class="text-center text-blue-500 p-4">Načítání uchazečů...</div>
+  <div *ngIf="errorMessage" class="text-center text-red-500 p-4">
+    {{ errorMessage }}
+    <button class="neutral_button ml-4" (click)="refreshData()">Zkusit znovu</button>
+  </div>
 
-  <div *ngIf="!isLoading && !errorMessage">
+  <div *ngIf="!errorMessage">
     <div class="toolbar-actions m-b-t-5">
-      <div class="table-header">Pracovní nabídky</div>
+      <div class="table-header">Nábor: Pracovní nabídky</div>
       <div class="toolbar-actions-in">
         <button (click)="toggleFilters()" class="btn-filter small-btn">
           {{ isFilterVisible ? '✕ Skrýt' : '🔍 Filtry' }}
@@ -24,8 +26,6 @@
         <app-generic-filter-form
           [filterColumns]="filterColumns"
           [initialFilters]="filters"
-          [initialSortBy]="filters.sort_by"
-          [initialSortDirection]="filters.sort_direction"
           (filtersApplied)="applyFilters($event)"
           (filtersCleared)="clearFilters()">
         </app-generic-filter-form>
@@ -33,8 +33,7 @@
 
       <div class="table-and-pagination-container">
          <div class="info-banner m-b-15">
-            <strong>Tip:</strong> Reakce na pracovní pozice jsou generovány z veřejného webu. 
-            Zde můžete spravovat jejich stav, přidávat interní poznámky a exportovat data.
+            <strong>HR Tip:</strong> Zde spravujete příchozí reakce. Změnou <strong>Stavu</strong> informujete interní tým o postupu náboru.
           </div>
 
         <app-generic-table #activeTable *ngIf="!showTrashTable"
@@ -42,9 +41,9 @@
           [data]="data"
           [columns]="columns"
           [isFullWidth]="isTableFullWidth"
-          [tableCaption]="'Seznam uchazečů o zaměstnání'"
+          [tableCaption]="'Seznam aktivních uchazečů'"
           [apiEndpoint]="apiEndpoint"
-          (itemDeleted)="forceFullRefresh()"
+          (itemDeleted)="refreshData()"
           (editFormOpened)="handleEditFormOpened($event)"
           (viewDetailsOpened)="handleViewDetails($event)">
         </app-generic-table>
@@ -52,25 +51,26 @@
         <app-generic-trash-table *ngIf="showTrashTable"
           [data]="trashData"
           [columns]="trashColumns"
-          [tableCaption]="'Koš smazaných uchazečů'"
+          [tableCaption]="'Koš smazaných žádostí'"
           [apiEndpoint]="apiEndpoint"
-          (itemRestored)="forceFullRefresh()">
+          (itemRestored)="refreshData()">
         </app-generic-trash-table>
 
-        <label *ngIf="!showTrashTable" class="checkbox-container m-l-10 text-xs">
-          <input type="checkbox" [(ngModel)]="isTableFullWidth"> Full-width
-        </label>
+        <div class="flex justify-between items-center mt-4">
+          <label class="checkbox-container text-xs">
+            <input type="checkbox" [(ngModel)]="isTableFullWidth"> Full-width zobrazení
+          </label>
 
-        <app-pagination-buttons
-          [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
-          [totalPages]="showTrashTable ? trashTotalPages : totalPages"
-          [totalItems]="showTrashTable ? trashTotalItems : totalItems"
-          [itemsPerPage]="showTrashTable ? trashItemsPerPage : itemsPerPage"
-          [dataLength]="showTrashTable ? trashData.length : data.length"
-          (pageChange)="onHandlePageChange($event)"
-          (itemsPerPageChange)="onHandleItemsPerPageChange($event)">
-        </app-pagination-buttons>
-
+          <app-pagination-buttons
+            [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
+            [totalPages]="showTrashTable ? trashTotalPages : totalPages"
+            [totalItems]="showTrashTable ? trashTotalItems : totalItems"
+            [itemsPerPage]="showTrashTable ? trashItemsPerPage : itemsPerPage"
+            [dataLength]="showTrashTable ? trashData.length : data.length"
+            (pageChange)="handlePageChange($event)"
+            (itemsPerPageChange)="handleItemsPerPageChange($event)">
+          </app-pagination-buttons>
+        </div>
       </div>
     </div>
   </div>
@@ -81,7 +81,7 @@
   [inputDefinitions]="formFields" 
   [formDataToEdit]="selectedItemForEdit"
   (formSubmitted)="handleFormSubmitted($event)"
-  (formCanceled)="showCreateForm = false">
+  (formCanceled)="onCancelForm()">
 </app-generic-form>
 
 <app-generic-details 

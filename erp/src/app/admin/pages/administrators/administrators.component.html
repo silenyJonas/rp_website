@@ -1,28 +1,30 @@
 <div class="user-request-container container mx-auto p-4">
-  <div *ngIf="isLoading" class="text-center text-blue-500">Načítání dat...</div>
-  <div *ngIf="isLoading" class="text-center text-blue-500">
-    <button class="neutral_button" style="margin-top: 15px;" (click)="refreshData()">
-      Znovu načíst data
-    </button>
+  
+  <div *ngIf="isLoading && data.length === 0" class="text-center p-10">
+    <div class="spinner"></div>
+    <p class="text-blue-500">Načítání administrátorů...</p>
   </div>
   
-  <div *ngIf="errorMessage" class="text-center text-red-500">{{ errorMessage }}</div>
+  <div *ngIf="errorMessage" class="bg-red-100 text-red-700 p-4 rounded mb-4 flex justify-between">
+    <span>{{ errorMessage }}</span>
+    <button (click)="refreshData()" class="underline">Zkusit znovu</button>
+  </div>
   
-  <div *ngIf="!isLoading && !errorMessage">
+  <div *ngIf="!errorMessage">
     <div class="toolbar-actions m-b-t-5">
-      <div class="table-header">Správa účtů</div>
+      <div class="table-header">Správa uživatelských účtů</div>
       <div class="toolbar-actions-in">
-        <button (click)="toggleFilters()" class="btn-filter small-btn">
-          {{ isFilterVisible ? '✕ Skrýt' : '🔍 Filtry' }}
+        <button (click)="toggleFilters()" class="btn-filter small-btn" [class.active]="isFilterVisible">
+          {{ isFilterVisible ? '✕ Zavřít' : '🔍 Filtrovat' }}
         </button>
         <button *ngIf="!showTrashTable" class="btn-create small-btn" (click)="handleCreateFormOpened()">
-          ➕ Přidat
+          ➕ Nový uživatel
         </button>
         <button class="btn-export small-btn" (click)="exportActiveTable()">
-          📥 Export
+          📥 Export CSV
         </button>
         <button *appHasPermission="'view-deleted'" (click)="toggleTable()" class="btn-trash small-btn">
-          {{ showTrashTable ? '📋 Aktivní' : '🗑️ Smazané' }}
+          {{ showTrashTable ? '📋 Aktivní záznamy' : '🗑️ Koš' }}
         </button>
       </div>
     </div>
@@ -31,16 +33,7 @@
       <div class="filter-side-panel" [class.active]="isFilterVisible">
         <app-generic-filter-form
           [filterColumns]="filterColumns"
-          [initialFilters]="{ 
-            user_login_id: filterUserLoginId, 
-            user_email: filterUserEmail, 
-            last_login_at: filterLastLoginAt,
-            created_at: filterCreatedAt,
-            updated_at: filterUpdatedAt,
-            role_name: filterRoleName
-          }"
-          [initialSortBy]="filterSortBy"
-          [initialSortDirection]="filterSortDirection"
+          [initialFilters]="filters"
           (filtersApplied)="applyFilters($event)"
           (filtersCleared)="clearFilters()">
         </app-generic-filter-form>
@@ -52,13 +45,9 @@
           [data]="data"
           [columns]="tableColumns"
           [isFullWidth]="isTableFullWidth"
-          [tableCaption]="'Seznam administrátorů'"
           [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
-          [uploadsBaseUrl]="'https://your-upload-domain.com/uploads/'"
-          [isAdminTable]="isAdminTable"
           (itemDeleted)="handleItemDeleted()"
-          (createFormOpened)="handleCreateFormOpened()"
           (editFormOpened)="handleEditFormOpened($event)"
           (viewDetailsOpened)="handleViewDetails($event)"
           (resetPasswordFormOpened)="handleResetPasswordFormOpened($event)">
@@ -67,26 +56,25 @@
         <app-generic-trash-table *ngIf="showTrashTable"
           [data]="trashData"
           [columns]="trashTableColumns"
-          [tableCaption]="'Obnova smazaných dat'"
           [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
-          [uploadsBaseUrl]="'https://your-upload-domain.com/uploads/'"
           (itemRestored)="handleItemRestored()">
         </app-generic-trash-table>
 
-        <label *ngIf="!showTrashTable" class="checkbox-container m-l-10 text-xs">
-          <input type="checkbox" [(ngModel)]="isTableFullWidth"> Full-width
-        </label>
+        <div class="footer-controls flex justify-between items-center mt-4">
+          <label class="checkbox-container text-xs">
+            <input type="checkbox" [(ngModel)]="isTableFullWidth"> Roztažení tabulky
+          </label>
 
-        <app-pagination-buttons
-          [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
-          [totalPages]="showTrashTable ? trashTotalPages : totalPages"
-          [totalItems]="showTrashTable ? trashTotalItems : totalItems"
-          [itemsPerPage]="showTrashTable ? trashItemsPerPage : itemsPerPage"
-          [dataLength]="showTrashTable ? trashData.length : data.length"
-          (pageChange)="onHandlePageChange($event)"
-          (itemsPerPageChange)="onHandleItemsPerPageChange($event)">
-        </app-pagination-buttons>
+          <app-pagination-buttons
+            [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
+            [totalPages]="showTrashTable ? trashTotalPages : totalPages"
+            [totalItems]="showTrashTable ? trashTotalItems : totalItems"
+            [itemsPerPage]="showTrashTable ? trashItemsPerPage : itemsPerPage"
+            (pageChange)="handlePageChange($event)"
+            (itemsPerPageChange)="handleItemsPerPageChange($event)">
+          </app-pagination-buttons>
+        </div>
       </div>
     </div>
   </div>
@@ -97,7 +85,7 @@
   [inputDefinitions]="formFields" 
   [formDataToEdit]="selectedItemForEdit"
   (formSubmitted)="handleFormSubmitted($event)"
-  (formCanceled)="onCancelForm()">
+  (formCanceled)="showCreateForm = false">
 </app-generic-form>
 
 <app-generic-form
@@ -106,12 +94,12 @@
   [formDataToEdit]="selectedItemForEdit"
   [passwordReset]="true"
   (formSubmitted)="handleResetPasswordFormSubmitted($event)"
-  (formCanceled)="handleResetPasswordFormClosed()"
+  (formCanceled)="showResetPasswordForm = false"
 ></app-generic-form>
 
 <app-generic-details 
   *ngIf="showDetails" 
   [itemDetailColumns]="detailsColumns"
   [itemData]="selectedItemForDetails"
-  (closeDetails)="handleCloseDetails()">
+  (closeDetails)="showDetails = false">
 </app-generic-details>
