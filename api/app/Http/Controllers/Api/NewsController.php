@@ -14,26 +14,44 @@ use Illuminate\Support\Facades\Log;
 
 class NewsController extends Controller
 {
-
+    /**
+     * Seznam novinek se stránkováním pro GenericTable.
+     */
     public function index(Request $request)
     {
-        $perPage = $request->input('per_page', 5);
+        $perPage = $request->input('per_page', 15); // Změněno na standardních 15
         $onlyTrashed = filter_var($request->input('only_trashed', false), FILTER_VALIDATE_BOOLEAN);
 
         $query = News::query();
-        if ($onlyTrashed) $query->onlyTrashed();
+        $onlyTrashed ? $query->onlyTrashed() : $query->withoutTrashed();
 
-        if ($request->filled('search')) {
-            $s = $request->input('search');
-            $query->where(fn($q) => $q->where('title', 'like', "%$s%")->orWhere('author', 'like', "%$s%"));
+        // Vyhledávání (Title, Author, Message)
+        if ($s = $request->input('search')) {
+            $query->where(fn($q) => $q->where('title', 'like', "%$s%")
+                ->orWhere('author', 'like', "%$s%")
+                ->orWhere('message', 'like', "%$s%"));
         }
-        if ($request->filled('thema')) $query->where('thema', $request->thema);
 
-        $sortBy = $request->filled('sort_by') ? $request->input('sort_by') : 'created_at';
-        $sortDirection = $request->filled('sort_direction') ? $request->input('sort_direction') : 'desc';
+        // Filtry na přesnou shodu
+        if ($request->filled('thema')) {
+            $query->where('thema', $request->thema);
+        }
+
+        if ($request->filled('author')) {
+            $query->where('author', 'like', '%' . $request->author . '%');
+        }
+
+        // Řazení
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDirection = $request->input('sort_direction', 'desc');
         $query->orderBy($sortBy, $sortDirection);
 
-        $data = $query->paginate($perPage);
+        $noPagination = filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN);
+        $data = $noPagination ? $query->get() : $query->paginate($perPage);
+
+        if ($noPagination) {
+            return NewsResource::collection($data);
+        }
 
         return response()->json([
             'data'         => NewsResource::collection($data->items()),
@@ -41,88 +59,104 @@ class NewsController extends Controller
             'per_page'     => $data->perPage(),
             'current_page' => $data->currentPage(),
             'last_page'    => $data->lastPage(),
-            'from'         => $data->firstItem(),
-            'to'           => $data->lastItem(),
         ]);
     }
+
+    /**
+     * Vytvoření novinky.
+     */
     public function store(StoreNewsRequest $request): JsonResponse
     {
         $news = News::create($request->validated());
+        
         $this->logAction($request, 'create', 'News', "Vytvořena novinka: {$news->title}", $news->id);
+        
         return response()->json(new NewsResource($news), 201);
     }
 
+    /**
+     * Detail novinky.
+     */
     public function show(News $news): JsonResponse
     {
         return response()->json(new NewsResource($news));
     }
 
+    /**
+     * Aktualizace novinky.
+     */
     public function update(UpdateNewsRequest $request, News $news): JsonResponse
     {
         $news->update($request->validated());
+        
         $this->logAction($request, 'update', 'News', "Aktualizace novinky: {$news->title}", $news->id);
+        
         return response()->json(new NewsResource($news));
     }
 
+    /**
+     * Smazání (Soft/Hard).
+     */
     public function destroy(Request $request, $id): JsonResponse
     {
         $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
         $news = News::withTrashed()->findOrFail($id);
         $title = $news->title;
 
-        if ($forceDelete) {
-            $news->forceDelete();
-            $this->logAction($request, 'hard_delete', 'News', "Trvalé smazání novinky ID: {$id} (původní název: {$title})", $id);
-        } else {
-            $news->delete();
-            $this->logAction($request, 'soft_delete', 'News', "Smazáno do koše: {$title}", $id);
-        }
+        $forceDelete ? $news->forceDelete() : $news->delete();
+        
+        $this->logAction($request, $forceDelete ? 'hard_delete' : 'soft_delete', 'News', "Smazání novinky: $title", $id);
 
         return response()->json(null, 204);
     }
 
+    /**
+     * Obnova z koše.
+     */
     public function restore(Request $request, $id): JsonResponse
     {
         $news = News::withTrashed()->findOrFail($id);
         $news->restore();
-        $this->logAction($request, 'restore', 'News', "Obnovení novinky z koše: {$news->title}", $news->id);
+        
+        $this->logAction($request, 'restore', 'News', "Obnovení novinky: {$news->title}", $news->id);
+        
         return response()->json(new NewsResource($news));
     }
 
     /**
-     * Hromadné smazání (např. vysypání koše)
+     * Vyprázdnění koše novinek.
      */
     public function forceDeleteAllTrashed(Request $request): JsonResponse
     {
         $count = News::onlyTrashed()->count();
         News::onlyTrashed()->forceDelete();
         
-        $this->logAction($request, 'bulk_hard_delete', 'News', "Hromadné trvalé smazání všech položek v koši. Počet: {$count}");
+        $this->logAction($request, 'force_delete_all', 'News', "Hromadné smazání koše novinek. Počet: $count");
         
         return response()->json(null, 204);
     }
 
-    protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedEntityId = null)
+    /**
+     * Sjednocené logování akcí.
+     */
+    protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null)
     {
         try {
             $user = $request->user();
-            $uId = $user?->user_login_id;
-            $uEmail = $user?->user_email;
-
             BusinessLog::create([
-                'origin'                 => $request->ip(),
-                'event_type'             => $eventType,
-                'module'                 => $module,
-                'description'            => $description,
-                'affected_entity_type'   => 'News',
-                'affected_entity_id'     => $affectedEntityId,
-                'user_login_id'          => $uId,
-                'context_data'           => json_encode($request->all(), JSON_UNESCAPED_UNICODE),
-                'user_login_id_plain'    => (string)($uId ?? '0'),
-                'user_login_email_plain' => $uEmail ?? 'unauthenticated/system'
+                'origin'               => $request->ip(),
+                'event_type'           => $eventType,
+                'module'               => $module,
+                'description'          => $description,
+                'affected_entity_type' => 'News',
+                'affected_entity_id'   => $affectedId,
+                'user_id'              => $user?->id,
+                'context_data'         => json_encode($request->all(), JSON_UNESCAPED_UNICODE),
+                'user_id_plain'        => (string)($user?->id ?? '0'),
+                'user_email_plain'     => $user?->user_email ?? 'system'
             ]);
         } catch (\Exception $e) {
-            Log::error('Chyba při zápisu do BusinessLog (News): ' . $e->getMessage());
+            Log::error("Log error (News): " . $e->getMessage());
         }
     }
 }

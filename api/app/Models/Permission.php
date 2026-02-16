@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Permission extends Model
 {
     protected $table = 'permissions';
-    protected $primaryKey = 'permission_id';
+    // protected $primaryKey = 'permission_id'; // <--- TOTO JSME ODSTRANILI
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -18,6 +19,9 @@ class Permission extends Model
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'role_permissions', 'permission_id', 'role_id');
+        // Definice relace:
+        // 'permission_id' je sloupec v pivot tabulce role_permissions
+        // 'id' je primární klíč v tabulce permissions
+        return $this->belongsToMany(Role::class, 'role_permissions', 'permission_id', 'role_id', 'id', 'id');
     }
 }

@@ -5,33 +5,44 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany; // <--- Přidán import pro typování
 
 class Role extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $table = 'roles';
-    protected $primaryKey = 'role_id';
+
+    // Pokud se sloupec v migraci jmenuje 'id', primaryKey definovat nemusíš.
+    // Pokud se jmenuje 'role_id', odkomentuj toto:
+    // protected $primaryKey = 'role_id';
 
     protected $fillable = [
-        'role_name',
-        'description',
+        'role_name', 
+        'description'
     ];
 
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
-    ];
-
+    /**
+     * Vztah k uživatelům (M:N)
+     */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(UserLogin::class, 'user_roles', 'role_id', 'user_login_id');
+        // Předpokládám tabulku user_roles jako propojovací
+        return $this->belongsToMany(User::class, 'user_roles', 'role_id', 'user_id');
     }
 
+    /**
+     * Vztah k oprávněním (M:N) - pokud jej používáš
+     */
     public function permissions(): BelongsToMany
     {
-        return $this->belongsToMany(Permission::class, 'role_permissions', 'role_id', 'permission_id');
+        // Přidáváme pátý parametr 'id', což je název klíče v tabulce permissions
+        return $this->belongsToMany(
+            Permission::class, 
+            'role_permissions', 
+            'role_id', 
+            'permission_id', 
+            'id' 
+        );
     }
 }

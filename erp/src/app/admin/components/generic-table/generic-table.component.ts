@@ -74,7 +74,9 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
       case 'currency':
         return value ? (new CurrencyPipe('cs-CZ')).transform(value, 'CZK', 'symbol-narrow', '1.2-2') : '';
       case 'date':
-        return value ? (new DatePipe('cs-CZ')).transform(value, column.format || 'shortDate') : '';
+        // return value ? (new DatePipe('cs-CZ')).transform(value, column.format || 'shortDate') : '';
+        const dateFormat = column.format || 'd.M.yyyy'; 
+        return value ? (new DatePipe('cs-CZ')).transform(value, dateFormat) : '';
       case 'boolean':
         return value ? 'Ano' : 'Ne';
       case 'image':
@@ -94,7 +96,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
 
   getFormLink(item: any): void {
     const baseUrl = window.location.origin;
-    const url = `${baseUrl}/order_form/sales_lead_id=${item.id}`;
+    const url = `${baseUrl}/order_form/lead_id=${item.id}`;
 
     navigator.clipboard.writeText(url).then(() => {
       this.alertDialogService.open(

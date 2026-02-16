@@ -1,0 +1,329 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+-- --------------------------------------------------------
+-- 1. SYSTÉMOVÉ TABULKY LARAVELU
+-- --------------------------------------------------------
+
+CREATE TABLE `migrations` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) NOT NULL,
+  `batch` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(1, '0001_01_01_000000_create_users_table', 1),
+(2, '0001_01_01_000001_create_cache_table', 1),
+(3, '0001_01_01_000002_create_jobs_table', 1),
+(10, '2025_07_10_155210_create_personal_access_tokens_table', 3),
+(11, '2025_07_15_101409_create_refresh_tokens_table', 3),
+(12, '2025_07_10_075603_create_raw_request_commissions_table', 4);
+
+CREATE TABLE `cache` (
+  `key` varchar(255) NOT NULL,
+  `value` mediumtext NOT NULL,
+  `expiration` int(11) NOT NULL,
+  PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `password_reset_tokens` (
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- 2. HLAVNÍ TABULKA UŽIVATELŮ (Přejmenováno z user_login)
+-- --------------------------------------------------------
+
+CREATE TABLE `users` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_email` varchar(255) NOT NULL,
+  `contact_email` varchar(255) DEFAULT NULL,
+  `full_name` varchar(255) NOT NULL,
+  `birth_date` date DEFAULT NULL,
+  `personal_id_num` varchar(20) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `bank_account` varchar(50) DEFAULT NULL,
+  `health_insurance` varchar(10) DEFAULT NULL,
+  `commission_rate` int(3) DEFAULT 10,
+  `dpp_hours_spent` int(5) NOT NULL DEFAULT 0,
+  `has_tax_declaration` tinyint(1) NOT NULL DEFAULT 0,
+  `phone_number` varchar(20) DEFAULT NULL,
+  `internal_note` text DEFAULT NULL,
+  `user_password_hash` varchar(255) NOT NULL,
+  `user_password_salt` varchar(255) DEFAULT NULL,
+  `last_login_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` datetime DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_email` (`user_email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `users` (`id`, `user_email`, `contact_email`, `full_name`, `user_password_hash`) VALUES
+(25, 'joncl', 'jonasbucina@rpsw.cz', 'Jonáš Bučina', '$2y$12$rV1ILe7YeW1L1XfWb5DrfuiCYTC.1FZsIU4wtNmA95GaUNwXAtYoa'),
+(30, 'prime_admin', NULL, 'Prime Admin', '$2y$12$NEiDrqVCChulf9S/EUPIpeOHScIM0zwswPTxIFamRDrY4XajgHQOe'),
+(34, 'lindicka', 'lindicka@mazliva.cz', 'Lindička Trýbíčková', '$2y$12$PJhlGzYNOhlpUiIeR/9/aOIkd/wBMrTTMbiiwbGZ24ARU7BLwXGSe'),
+(57, 'test', NULL, 'test', '$2y$12$o84gNWNVcR9z5ejxMaW1kuVJswM26gPR2W4xwYAYATcEQPhE2SXoq');
+
+-- --------------------------------------------------------
+-- 3. ROLE A PERMISSIONS (Sjednoceno na 'id')
+-- --------------------------------------------------------
+
+CREATE TABLE `roles` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(50) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `role_name` (`role_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `roles` (`id`, `role_name`) VALUES (1, 'sysadmin'), (2, 'admin'), (3, 'primeadmin'), (4, 'UI/UX Designer'), (5, 'Salesman');
+
+CREATE TABLE `permissions` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `permission_key` varchar(100) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_permission_key` (`permission_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `permissions` (`id`, `permission_key`, `description`) VALUES (1, 'manage-administrators', 'Správa administrátorských účtů'), (2, 'view-business-logs', 'Prohlížení business logů'), (3, 'view-personal-info', 'Zobrazení osobních údajů'), (4, 'view-user-requests', 'Zobrazení uživatelských požadavků'), (5, 'view-dashboard', 'Přístup k nástěnce'), (6, 'view-edit-website', 'Možnost editovat web'), (7, 'view-deleted', 'Zobrazit softdeleted záznamy.'), (8, 'view-sales-leads', 'Zobrazit Sales Leads'), (9, 'view-news', 'Může vidět a editovat News.'), (10, 'view-sales-orders', 'Vidí poptávkové listy od klientů.'), (11, 'view-support-tickets', 'Může zobrazit tikety zaslané na podporu.'), (12, 'view-job-applications', 'Může zobrazit seznam uchazečů.');
+
+-- --------------------------------------------------------
+-- 4. PIVOT TABULKY (Vazby)
+-- --------------------------------------------------------
+
+CREATE TABLE `user_roles` (
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `role_id` int(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`user_id`,`role_id`),
+  CONSTRAINT `fk_ur_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_ur_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `user_roles` (`user_id`, `role_id`) VALUES (25, 1), (30, 3), (34, 5), (57, 2);
+
+CREATE TABLE `role_permissions` (
+  `role_id` int(10) UNSIGNED NOT NULL,
+  `permission_id` int(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`role_id`,`permission_id`),
+  CONSTRAINT `fk_rp_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_rp_permission_id` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `role_permissions` (`role_id`, `permission_id`) VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11),(1,12),(2,3),(2,4),(2,5),(2,7),(2,8),(3,1),(3,2),(3,5),(4,3),(4,5),(5,3),(5,5),(5,8);
+
+-- --------------------------------------------------------
+-- 5. SESSIONS (BigInt user_id pro Laravel)
+-- --------------------------------------------------------
+
+CREATE TABLE `sessions` (
+  `id` varchar(255) NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `payload` longtext NOT NULL,
+  `last_activity` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sessions_user_id_index` (`user_id`),
+  KEY `sessions_last_activity_index` (`last_activity`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- 6. LOGY (Business & System)
+-- --------------------------------------------------------
+
+CREATE TABLE `business_logs` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `origin` varchar(255) DEFAULT NULL,
+  `event_type` varchar(50) NOT NULL,
+  `module` varchar(100) NOT NULL,
+  `description` varchar(1000) NOT NULL,
+  `affected_entity_type` varchar(50) DEFAULT NULL,
+  `affected_entity_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `user_id` int(10) UNSIGNED DEFAULT NULL,
+  `context_data` text DEFAULT NULL,
+  `user_id_plain` varchar(255) DEFAULT NULL,
+  `user_email_plain` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_business_logs_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `system_logs` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `origin` varchar(255) DEFAULT NULL,
+  `event_type` varchar(50) NOT NULL,
+  `module` varchar(100) NOT NULL,
+  `description` varchar(1000) NOT NULL,
+  `context_data` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+-- 7. TOKENY (Sanctum & Refresh)
+-- --------------------------------------------------------
+
+CREATE TABLE `personal_access_tokens` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `tokenable_type` varchar(255) NOT NULL,
+  `tokenable_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `abilities` text DEFAULT NULL,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `token_unique` (`token`),
+  KEY `tokenable_index` (`tokenable_type`,`tokenable_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `refresh_tokens` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `token_unique` (`token`),
+  CONSTRAINT `fk_refresh_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- 8. BYZNYSOVÉ TABULKY (News, Leads, Orders, Tickets, Jobs)
+-- --------------------------------------------------------
+
+CREATE TABLE `news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `message` varchar(255) NOT NULL,
+  `author` varchar(255) NOT NULL,
+  `thema` varchar(255) NOT NULL,
+  `bullet_1` varchar(255) DEFAULT NULL,
+  `bullet_2` varchar(255) DEFAULT NULL,
+  `bullet_3` varchar(255) DEFAULT NULL,
+  `bullet_4` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `news` (`id`, `title`, `message`, `author`, `thema`, `created_at`) VALUES
+(9, 'Spuštění sekce novinek', 'První spuštění sekce novinek...', 'Systém', 'Milník', '2026-01-29 18:44:38'),
+(53, 'Redesing administrace', 'Celý systém administrace...', 'Systém', 'Novinka', '2026-02-07 13:20:21');
+
+CREATE TABLE `job_applications` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `phone` varchar(30) DEFAULT NULL,
+  `position_name` varchar(150) NOT NULL,
+  `message` text DEFAULT NULL,
+  `cv_path` varchar(255) DEFAULT NULL,
+  `state` varchar(50) DEFAULT 'Nový',
+  `internal_note` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `raw_request_commissions` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `thema` varchar(255) NOT NULL,
+  `contact_email` varchar(255) NOT NULL,
+  `contact_phone` varchar(255) DEFAULT NULL,
+  `order_description` text NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'Nově zadané',
+  `priority` varchar(255) NOT NULL DEFAULT 'Neutrální',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `raw_request_commissions` (`id`, `thema`, `contact_email`, `order_description`) VALUES 
+(5, 'Web na míru', 'majitel@restaurace.cz', 'Poptávám webové stránky...'),
+(6, 'Marketing', 'marketer@startup.cz', 'Potřebujeme pomoci se SEO...'),
+(7, 'Bezpečnost', 'it@banka.cz', 'Poptávka na penetrační testování...');
+
+CREATE TABLE `sales_leads` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) UNSIGNED DEFAULT NULL,
+  `salesman_name` varchar(255) NOT NULL,
+  `first_contact_date` date DEFAULT NULL,
+  `subject_name` varchar(255) NOT NULL,
+  `contact_person` varchar(255) DEFAULT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  `source_channel` varchar(255) NOT NULL,
+  `source_url` varchar(500) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `priority` varchar(255) DEFAULT 'Neutrální',
+  `status` varchar(255) DEFAULT 'nové',
+  `last_contact_date` date DEFAULT NULL,
+  `next_step` varchar(255) DEFAULT NULL,
+  `rejection_reason` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `contact_email` varchar(255) DEFAULT NULL,
+  `contact_phone` varchar(255) DEFAULT NULL,
+  `contact_other` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_sales_leads_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `sales_orders` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `lead_id` int(10) UNSIGNED DEFAULT NULL,
+  `salesman_name` varchar(255) NOT NULL,
+  `ico` varchar(20) DEFAULT NULL,
+  `client_name` varchar(255) NOT NULL,
+  `client_address` varchar(500) DEFAULT NULL,
+  `client_phone` varchar(255) DEFAULT NULL,
+  `client_email` varchar(255) DEFAULT NULL,
+  `order_description` text DEFAULT NULL,
+  `attachment_path` varchar(512) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_sales_orders_lead_id` FOREIGN KEY (`lead_id`) REFERENCES `sales_leads` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `support_tickets` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) UNSIGNED DEFAULT NULL,
+  `user_name_plain` varchar(255) NOT NULL,
+  `user_email_plain` varchar(255) NOT NULL,
+  `category` varchar(100) NOT NULL,
+  `priority` varchar(50) DEFAULT 'medium',
+  `state` varchar(50) DEFAULT 'new',
+  `subject` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `attachment_path` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_support_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+COMMIT;

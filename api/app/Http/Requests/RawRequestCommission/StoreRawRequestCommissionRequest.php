@@ -18,7 +18,7 @@ class StoreRawRequestCommissionRequest extends FormRequest
             'thema'             => ['required', 'string', 'max:255'],
             'contact_email'     => ['required', 'email', 'max:255'],
             'contact_phone'     => ['nullable', 'string', 'max:255'],
-            'order_description' => ['required', 'string', 'max:255'],
+            'order_description' => ['required', 'string', 'max:10000'],
             'status'            => ['sometimes', 'string', 'in:Nově zadané,Zpracovává se,Dokončeno,Zrušeno'],
             'priority'          => ['sometimes', 'string', 'in:Nízká,Neutrální,Vysoká'],
             'note'              => ['nullable', 'string'],

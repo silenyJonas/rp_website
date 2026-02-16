@@ -1,11 +1,11 @@
-----NESPECHA----
--dat full width primo do telo table komponenty
--uzivatel ktery ma soft-delete aby se nemohl prihlasit
---------------------------
-logovat vse - generovani linku - stazeni tabulky
-UserLogin endpoint at pouziva request
-translation endpoint at pouziva request
-odstranit zbytecne komentare v api
-vylepsit smazat vse tlacitko 
-a at roztahnout na celou stranku tlacitko je v table a ne v parent componente 
-mel by byt filter soucast table headeru ?
+-logovat vse - generovani linku - stazeni tabulky + vice logu v api chci vedet vse
+-vylepsit smazat vse tlacitko (ui)
+-a at "roztahnout na celou stranku" tlacitko je v table a ne v parent componente 
+-udelat migrace
+-udelat .env united aby sel lehce prekopirovat a hodit treba na disk nebo .env.example vyresit
+-udelat aby generic form mohl odesilat i files
+-zkusit aby pri loginu se zase vse nenacetlo
+__
+-helpdesk ticket form musi mit file input
+-kdyz bude aktivni trashtable export tlacitko nebude videt
+-tlacitko export vyexportuje vyfiltrovanou tabulku a ne celou tabulku

@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-  HttpErrorResponse
-} from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, filter, take, switchMap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
@@ -26,6 +20,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
+        // Pokud dostaneme 401 a nejde o login nebo samotný refresh
         if (error.status === 401 && !request.url.includes('/login') && !request.url.includes('/refresh')) {
           return this.handle401Error(request, next);
         }
@@ -36,9 +31,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
 
   private addToken(request: HttpRequest<unknown>, token: string): HttpRequest<unknown> {
     return request.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
+      setHeaders: { Authorization: `Bearer ${token}` }
     });
   }
 
@@ -50,19 +43,21 @@ export class AuthTokenInterceptor implements HttpInterceptor {
       return this.authService.refreshAccessToken().pipe(
         switchMap((response: any) => {
           this.isRefreshing = false;
+          // Předpokládáme, že backend vrací { token: '...', refreshToken: '...' }
           this.refreshTokenSubject.next(response.token);
           return next.handle(this.addToken(request, response.token));
         }),
         catchError((err: any) => {
           this.isRefreshing = false;
-          this.authService.logout().subscribe({
-            next: () => this.router.navigate(['/auth/login']),
-            error: () => this.router.navigate(['/auth/login'])
-          });
+          // Pokud refresh selže (např. i refresh token je po smrti),
+          // vyčistíme data lokálně a jdeme na login.
+          this.authService.clearAuthData();
+          this.router.navigate(['/auth/login']);
           return throwError(() => err);
         })
       );
     } else {
+      // Pokud už se jeden refresh provádí, ostatní požadavky čekají na jeho výsledek
       return this.refreshTokenSubject.pipe(
         filter(token => token !== null),
         take(1),

@@ -41,7 +41,7 @@ export const SALES_ORDER_FORM_FIELDS: InputDefinition[] = [
     label: 'E-mail klienta',
     placeholder: 'email@klient.cz',
     type: 'email',
-    required: false,
+    required: true, // Změněno na true, protože v StoreSalesOrderRequest je 'required'
     pattern: '[^@]+@[^@]+\\.[^@]+',
     errorMessage: 'Neplatný formát e-mailu.',
     editable: true, show_in_edit: true, show_in_create: true
@@ -70,11 +70,26 @@ export const SALES_ORDER_FORM_FIELDS: InputDefinition[] = [
     required: true,
     errorMessage: 'Popis realizace je povinný.',
     editable: true, show_in_edit: true, show_in_create: true
+  },
+  {
+    column_name: 'attachment', // Změněno z attachment_path pro upload souboru
+    label: 'Příloha / Smlouva',
+    type: 'file',
+    required: false,
+    editable: true, show_in_edit: true, show_in_create: true
+  },
+  {
+    column_name: 'dataProcessingAgreement', // PŘIDÁNO: Povinné pro validaci v Laravelu
+    label: 'Souhlas se zpracováním údajů',
+    type: 'checkbox',
+    required: true,
+    errorMessage: 'Souhlas je povinný.',
+    editable: true, show_in_edit: false, show_in_create: true
   }
 ];
 
 /**
- * HLAVNÍ TABULKA - ČISTÝ PŘEHLED
+ * HLAVNÍ TABULKA
  */
 export const SALES_ORDER_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
@@ -85,7 +100,7 @@ export const SALES_ORDER_COLUMNS: ColumnDefinition[] = [
 ];
 
 /**
- * TRASH TABULKA - KDO, KOMU A KDY SMAZÁNO
+ * TRASH TABULKA
  */
 export const SALES_ORDER_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
@@ -105,7 +120,7 @@ export const SALES_ORDER_FILTER_COLUMNS: FilterColumns[] = [
 ];
 
 /**
- * DETAIL OBJEDNÁVKY - KOMPLETNÍ ÚDAJE VČETNĚ ADRESY A POPISU
+ * DETAIL OBJEDNÁVKY
  */
 export const SALES_ORDER_DETAILS_COLUMNS: ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID Objednávky', type: 'text' },
@@ -116,7 +131,7 @@ export const SALES_ORDER_DETAILS_COLUMNS: ItemDetailsColumns[] = [
   { key: 'client_phone', displayName: 'Telefon', type: 'text' },
   { key: 'client_address', displayName: 'Adresa', type: 'text' },
   { key: 'order_description', displayName: 'Popis realizace', type: 'text' },
-  { key: 'attachment_url', displayName: 'Smlouva / Příloha', type: 'file' }, 
+  { key: 'attachment_url', displayName: 'Smlouva / Příloha', type: 'file' }, // Změněno na link pro stažení
   { key: 'created_at', displayName: 'Datum vytvoření', type: 'date', format: 'medium' },
   { key: 'updated_at', displayName: 'Poslední změna', type: 'date', format: 'medium' }
 ];

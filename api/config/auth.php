@@ -62,13 +62,9 @@ return [
     'providers' => [
     'users' => [
         'driver' => 'eloquent',
-        'model' => App\Models\User::class, // <-- ZDE JE POTENCIÁLNÍ PROBLÉM
+        'model' => App\Models\User::class,
     ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        
     ],
 
     /*

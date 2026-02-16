@@ -44,7 +44,7 @@ import {
 export class AdministratorsComponent extends BaseDataComponent<any> implements OnInit {
   @ViewChild('activeTable') activeTable!: GenericTableComponent;
 
-  override apiEndpoint: string = 'user_login';
+  override apiEndpoint: string = 'users';
   
   // Konfigurace ze souboru .config.ts
   buttons: Buttons[] = BUTTONS;
@@ -125,28 +125,50 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
     this.showCreateForm = true;
   }
   
-  handleEditFormOpened(item: any) {
-    const itemToEdit = { ...item };
-    // Normalizace rolí pro dropdown ve formuláři
-    if (itemToEdit.roles?.length > 0) {
-      itemToEdit.role_id = itemToEdit.roles[0].role_id;
-    }
-    this.selectedItemForEdit = itemToEdit;
-    this.showCreateForm = true;
+// administrators.component.ts
+
+handleEditFormOpened(item: any) {
+  const itemToEdit = { ...item };
+  
+  // Kontrola: Pokud má uživatel role, musíme vzít ID té první
+  if (itemToEdit.roles && itemToEdit.roles.length > 0) {
+    // POZOR: v RoleResource vracíš 'id', ne 'role_id'
+    // Musí to odpovídat column_name v administrators.config.ts
+    itemToEdit.role_id = itemToEdit.roles[0].id; 
+  }
+  
+  console.log('Předávám do formu:', itemToEdit); // Tady v konzoli musíte vidět role_id: X
+  this.selectedItemForEdit = itemToEdit;
+  this.showCreateForm = true;
+}
+
+// administrators.component.ts
+
+handleFormSubmitted(formData: any) {
+  this.isLoading = true;
+  const payload = { ...formData };
+
+  // Pokud je role_id string z dropdownu, převedeme na číslo pro backend
+  if (payload.role_id) {
+    payload.role_id = parseInt(payload.role_id, 10);
   }
 
-  handleFormSubmitted(formData: any) {
-    this.isLoading = true;
-    const request$ = formData.id ? this.updateData(formData.id, formData) : this.postData(formData);
-    
-    request$.pipe(
-      finalize(() => {
-        this.isLoading = false;
-        this.showCreateForm = false;
-        this.cd.markForCheck();
-      })
-    ).subscribe(() => this.refreshData());
-  }
+  const request$ = payload.id ? this.updateData(payload.id, payload) : this.postData(payload);
+  
+  request$.pipe(
+    finalize(() => {
+      this.isLoading = false;
+      this.showCreateForm = false;
+      this.cd.markForCheck();
+    })
+  ).subscribe({
+    next: () => this.refreshData(),
+    error: (err) => {
+      // Pokud to znovu hodí 422, uvidíš to tady v konzoli
+      console.error('Ukládání selhalo:', err);
+    }
+  });
+}
 
   // --- Reset Hesla ---
 

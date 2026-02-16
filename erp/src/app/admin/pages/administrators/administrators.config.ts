@@ -7,6 +7,16 @@ import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 
 /**
+ * MOŽNOSTI ROLÍ - vytaženo do konstanty pro znovupoužitelnost
+ */
+export const ROLE_OPTIONS = [
+  { value: '1', label: 'sysadmin' },
+  { value: '2', label: 'admin' },
+  { value: '4', label: 'UI/UX Designer' },
+  { value: '5', label: 'Salesman' },
+];
+
+/**
  * TLAČÍTKA AKCÍ
  */
 export const BUTTONS: Buttons[] = [
@@ -20,36 +30,9 @@ export const BUTTONS: Buttons[] = [
  * FORMULÁŘ PRO RESET HESLA
  */
 export const RESET_PASSWORD_FORM_FIELDS: InputDefinition[] = [
-  { column_name: 'current_user_id', label: '', type: 'hidden', required: false, editable: false, show_in_edit: true, show_in_create: false },
-  { column_name: 'target_user_id', label: '', type: 'hidden', required: false, editable: false, show_in_edit: true, show_in_create: false },
-  {
-    column_name: 'old_password',
-    label: 'Vaše aktuální heslo (potvrzení)',
-    placeholder: 'Zadejte své heslo',
-    type: 'password',
-    required: true,
-    editable: true, show_in_edit: true, show_in_create: true
-  },
-  {
-    column_name: 'new_password',
-    label: 'Nové heslo uživatele',
-    placeholder: 'Minimálně 8 znaků',
-    type: 'password',
-    required: true,
-    pattern: '^.{8,}$',
-    errorMessage: 'Heslo musí mít 8 a více znaků',
-    editable: true, show_in_edit: true, show_in_create: true
-  },
-  {
-    column_name: 'new_password_confirmation',
-    label: 'Potvrzení nového hesla',
-    placeholder: 'Zadejte znovu nové heslo',
-    type: 'password',
-    required: true,
-    pattern: '^.{8,}$',
-    errorMessage: 'Heslo musí mít 8 a více znaků',
-    editable: true, show_in_edit: true, show_in_create: true
-  },
+  { column_name: 'old_password', label: 'Vaše aktuální heslo (potvrzení)', placeholder: 'Zadejte své heslo', type: 'password', required: true, editable: true, show_in_edit: true, show_in_create: true },
+  { column_name: 'new_password', label: 'Nové heslo uživatele', placeholder: 'Minimálně 8 znaků', type: 'password', required: true, pattern: '^.{8,}$', errorMessage: 'Heslo musí mít 8 a více znaků', editable: true, show_in_edit: true, show_in_create: true },
+  { column_name: 'new_password_confirmation', label: 'Potvrzení nového hesla', placeholder: 'Zadejte znovu nové heslo', type: 'password', required: true, pattern: '^.{8,}$', errorMessage: 'Heslo musí mít 8 a více znaků', editable: true, show_in_edit: true, show_in_create: true },
 ];
 
 /**
@@ -99,12 +82,7 @@ export const FORM_FIELDS: InputDefinition[] = [
     column_name: 'role_id',
     label: 'Role',
     type: 'select',
-    options: [
-      { value: '1', label: 'sysadmin' },
-      { value: '2', label: 'admin' },
-      { value: '4', label: 'UI/UX Designer' },
-      { value: '5', label: 'Salesman' },
-    ],
+    options: ROLE_OPTIONS,
     required: true,
     editable: true, show_in_edit: true, show_in_create: true
   },
@@ -119,7 +97,7 @@ export const FORM_FIELDS: InputDefinition[] = [
 ];
 
 /**
- * HLAVNÍ TABULKA - ČISTÝ PŘEHLED
+ * HLAVNÍ TABULKA
  */
 export const TABLE_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
@@ -140,17 +118,24 @@ export const TRASH_TABLE_COLUMNS: ColumnDefinition[] = [
 ];
 
 /**
- * FILTRY
+ * FILTRY - PŘIDÁN DROPDOWN PRO ROLE
  */
 export const FILTER_COLUMNS: FilterColumns[] = [
-  { key: 'user_login_id', header: 'ID', type: 'text', placeholder: 'ID', canSort: true },
+  { key: 'id', header: 'ID', type: 'text', placeholder: 'ID', canSort: true },
   { key: 'full_name', header: 'Jméno', type: 'text', placeholder: 'Hledat jméno', canSort: true },
   { key: 'user_email', header: 'Login', type: 'text', placeholder: 'Hledat login', canSort: true },
-  { key: 'role_name', header: 'Role', type: 'text', placeholder: 'Hledat roli', canSort: true }
+  { 
+    key: 'role_id', // Změněno na role_id pro přesnější filtrování na backendu
+    header: 'Role', 
+    type: 'select', 
+    placeholder: '-- Vyberte roli --', 
+    canSort: true,
+    options: ROLE_OPTIONS.map(opt => opt.label) // Předáváme jen pole stringů pro FilterColumns rozhraní
+  }
 ];
 
 /**
- * DETAIL UŽIVATELE - KOMPLETNÍ HR SLOŽKA
+ * DETAIL UŽIVATELE
  */
 export const DETAILS_COLUMNS: ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID uživatele', type: 'text' },

@@ -14,7 +14,7 @@ class SupportTicket extends Model
     protected $table = 'support_tickets';
 
     protected $fillable = [
-        'user_login_id',
+        'user_id',
         'user_name_plain',
         'user_email_plain',
         'category',
@@ -25,8 +25,26 @@ class SupportTicket extends Model
         'attachment_path'
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
+
+    /**
+     * Automatické nastavení výchozího stavu při vytvoření.
+     */
+    protected static function booted()
+    {
+        static::creating(function ($ticket) {
+            if (empty($ticket->state)) {
+                $ticket->state = 'new';
+            }
+        });
+    }
+
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_login_id', 'user_login_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

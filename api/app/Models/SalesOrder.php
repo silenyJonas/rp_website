@@ -25,6 +25,12 @@ class SalesOrder extends Model
         'attachment_path' 
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
+
     public function lead(): BelongsTo
     {
         return $this->belongsTo(SalesLead::class, 'lead_id');

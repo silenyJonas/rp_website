@@ -11,7 +11,7 @@ class SupportTicketResource extends JsonResource
     {
         return [
             'id'                => $this->id,
-            'user_login_id'     => $this->user_login_id,
+            'user_id'           => $this->user_id, // Opraveno
             'user_name_plain'   => $this->user_name_plain,
             'user_email_plain'  => $this->user_email_plain,
             'category'          => $this->category,

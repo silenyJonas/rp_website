@@ -4,123 +4,102 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\UserLogin;
-use App\Models\RefreshToken;
+use Illuminate\Support\Facades\{Auth, Log};
+use App\Models\{User, RefreshToken};
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
+use App\Http\Resources\UserResource;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
-        // 1. ÚPRAVA: Změna validace - odstraněno 'email', povolujeme string (login)
         $request->validate([
-            'email' => 'required|string', // Ponecháváme klíč 'email' pokud ho posílá Angular, ale validujeme jako string
+            'email' => 'required|string',
             'password' => 'required',
         ]);
 
-        // 2. ÚPRAVA: Auth::attempt mapuje tvůj vstup na databázový sloupec 'user_email'
-        // 'user_email' je název sloupce v DB, $request->email je hodnota z formuláře (tvůj login)
         if (Auth::attempt(['user_email' => $request->email, 'password' => $request->password])) {
+            /** @var \App\Models\User $user */
             $user = Auth::user();
-            Log::info('Login attempt successful for: ' . $user->user_email);
-
             $user->update(['last_login_at' => now()]);
-
-            // NAČTENÍ DAT (Role + Oprávnění)
             $user->load('roles.permissions');
-            $userRoles = $user->roles->pluck('role_name');
-            $userPermissions = $user->roles->flatMap(function ($role) {
-                return $role->permissions->pluck('permission_key');
-            })->unique()->values();
 
-            // TOKENY
-            $accessToken = $user->createToken('access-token', ['*'], now()->addMinutes(30))->plainTextToken;
+            // Vygenerování tokenů
+            $accessToken = $user->createToken('access-token', ['*'], now()->addMinutes(60))->plainTextToken;
             $refreshToken = Str::random(60);
             
-            RefreshToken::where('user_login_id', $user->user_login_id)->delete();
+            // Vyčištění starých a vytvoření nového refresh tokenu
+            RefreshToken::where('user_id', $user->id)->delete();
             RefreshToken::create([
-                'user_login_id' => $user->user_login_id,
-                'token' => hash('sha256', $refreshToken),
+                'user_id'    => $user->id,
+                'token'      => hash('sha256', $refreshToken),
                 'expires_at' => now()->addDays(7),
             ]);
             
             return response()->json([
-                'message' => 'Přihlášení úspěšné!',
-                'user' => $user,
-                'user_roles' => $userRoles,
-                'user_permissions' => $userPermissions, 
-                'token' => $accessToken,
-                'refreshToken' => $refreshToken,
+                'message'          => 'Přihlášení úspěšné!',
+                'user'             => new UserResource($user),
+                'user_roles'       => $user->roles->pluck('role_name'),
+                'user_permissions' => method_exists($user, 'getPermissionsAttribute') ? $user->getPermissionsAttribute() : [], 
+                'token'            => $accessToken,
+                'refreshToken'     => $refreshToken,
             ], 200);
         }
 
         return response()->json(['message' => 'Neplatné přihlašovací údaje.'], 401);
     }
 
-    // Ostatní metody refresh, logout a user zůstávají stejné, protože už pracují s objektem $user
-    public function refresh(Request $request)
+    public function refresh(Request $request): JsonResponse
     {
         $refreshToken = $request->input('refreshToken');
-        if (!$refreshToken) return response()->json(['message' => 'Refresh token chybí.'], 401);
+        if (!$refreshToken) {
+            return response()->json(['message' => 'Refresh token chybí.'], 401);
+        }
 
         $hashedRefreshToken = hash('sha256', $refreshToken);
-        $dbRefreshToken = RefreshToken::where('token', $hashedRefreshToken)
+        $dbRefreshToken = RefreshToken::with('user')
+                                     ->where('token', $hashedRefreshToken)
                                      ->where('expires_at', '>', now())
                                      ->first();
 
         if (!$dbRefreshToken || !$dbRefreshToken->user) {
-            Log::warning('Invalid refresh token attempt.');
-            return response()->json(['message' => 'Neplatný obnovovací token.'], 401);
+            return response()->json(['message' => 'Neplatný nebo expirovaný token.'], 401);
         }
 
         $user = $dbRefreshToken->user;
-        $user->tokens()->delete();
-        $dbRefreshToken->delete();
 
-        $newAccessToken = $user->createToken('access-token', ['*'], now()->addMinutes(30))->plainTextToken;
+        // DŮLEŽITÉ: Smazat starý token až těsně před vytvořením nového
+        $dbRefreshToken->delete();
+        // Volitelně: Smazat staré Access Tokeny pro čistotu DB
+        $user->tokens()->delete();
+
+        $newAccessToken = $user->createToken('access-token', ['*'], now()->addMinutes(60))->plainTextToken;
         $newRefreshToken = Str::random(60);
 
         RefreshToken::create([
-            'user_login_id' => $user->user_login_id,
-            'token' => hash('sha256', $newRefreshToken),
+            'user_id'    => $user->id,
+            'token'      => hash('sha256', $newRefreshToken),
             'expires_at' => now()->addDays(7),
         ]);
 
         return response()->json([
-            'token' => $newAccessToken,
+            'token'        => $newAccessToken,
             'refreshToken' => $newRefreshToken,
         ], 200);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         if ($request->user()) {
-            $request->user()->tokens()->delete();
+            $request->user()->currentAccessToken()->delete();
         }
-
+        
         $refreshToken = $request->input('refreshToken');
         if ($refreshToken) {
             RefreshToken::where('token', hash('sha256', $refreshToken))->delete();
         }
-
-        Log::info('User logged out.');
+        
         return response()->json(['message' => 'Odhlášení úspěšné!'], 200);
-    }
-
-    public function user(Request $request)
-    {
-        $user = $request->user();
-        if (!$user) return response()->json(['message' => 'Neautorizováno.'], 401);
-
-        $user->load('roles.permissions');
-        return response()->json([
-            'user' => $user,
-            'user_roles' => $user->roles->pluck('role_name'),
-            'user_permissions' => $user->roles->flatMap(function ($role) {
-                return $role->permissions->pluck('permission_key');
-            })->unique()->values(),
-        ]);
     }
 }

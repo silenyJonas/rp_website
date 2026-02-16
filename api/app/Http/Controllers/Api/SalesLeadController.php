@@ -5,51 +5,68 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\SalesLead;
 use App\Models\BusinessLog;
-use App\Http\Resources\SalesLeadResource;
-use App\Http\Requests\SalesLead\StoreSalesLeadRequest;
-use App\Http\Requests\SalesLead\UpdateSalesLeadRequest;
+use App\Http\Resources\SalesLeadResource; // Předpokládám existenci Resource
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
 class SalesLeadController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Seznam obchodních leadů s filtrací.
+     */
+    public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page', 15);
         $onlyTrashed = filter_var($request->input('only_trashed', false), FILTER_VALIDATE_BOOLEAN);
 
         $query = SalesLead::query();
-        if ($onlyTrashed) $query->onlyTrashed();
+        
+        // Zpracování koše
+        $onlyTrashed ? $query->onlyTrashed() : $query->withoutTrashed();
 
+        // --- FILTRACE ---
+
+        // Fulltextové vyhledávání (napříč klíčovými poli)
         if ($s = $request->input('search')) {
             $query->where(fn($q) => $q->where('subject_name', 'like', "%$s%")
-                ->orWhere('contact_email', 'like', "%$s%")
                 ->orWhere('contact_person', 'like', "%$s%")
+                ->orWhere('contact_email', 'like', "%$s%")
                 ->orWhere('description', 'like', "%$s%"));
         }
 
-        foreach (['id', 'status', 'priority'] as $f) {
-            if ($request->filled($f)) $query->where($f, $request->input($f));
-        }
-        
-        foreach (['subject_name', 'location', 'salesman_name', 'contact_email', 'contact_phone', 'contact_other'] as $f) {
-            if ($request->filled($f)) $query->where($f, 'like', '%' . $request->input($f) . '%');
+        // Filtry na přesnou shodu (Selecty z tvého Angular configu)
+        foreach (['id', 'status', 'priority', 'source_channel'] as $f) {
+            if ($request->filled($f)) {
+                $query->where($f, $request->input($f));
+            }
         }
 
+        // Filtry na LIKE vyhledávání (Textová pole)
+        foreach (['subject_name', 'contact_person', 'contact_email', 'contact_phone', 'location', 'salesman_name'] as $f) {
+            if ($request->filled($f)) {
+                $query->where($f, 'like', '%' . $request->input($f) . '%');
+            }
+        }
+
+        // Filtry na datum
         if ($request->filled('created_at')) $query->whereDate('created_at', $request->created_at);
-        if ($request->filled('updated_at')) $query->whereDate('updated_at', $request->updated_at);
+        if ($request->filled('last_contact_date')) $query->whereDate('last_contact_date', $request->last_contact_date);
 
-        $sortBy = $request->filled('sort_by') ? $request->input('sort_by') : 'id';
-        $sortDirection = $request->filled('sort_direction') ? $request->input('sort_direction') : 'desc';
+        // --- ŘAZENÍ ---
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDirection = in_array(strtolower($request->input('sort_direction')), ['asc', 'desc']) 
+            ? $request->input('sort_direction') 
+            : 'desc';
+        
         $query->orderBy($sortBy, $sortDirection);
 
-        $data = filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN) 
-            ? $query->get() 
-            : $query->paginate($perPage);
+        // --- EXEKUCE ---
+        $noPagination = filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN);
+        $data = $noPagination ? $query->get() : $query->paginate($perPage);
 
-        if (filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN)) {
-            return SalesLeadResource::collection($data);
+        if ($noPagination) {
+            return response()->json(SalesLeadResource::collection($data));
         }
 
         return response()->json([
@@ -58,91 +75,112 @@ class SalesLeadController extends Controller
             'per_page'     => $data->perPage(),
             'current_page' => $data->currentPage(),
             'last_page'    => $data->lastPage(),
-            'from'         => $data->firstItem(),
-            'to'           => $data->lastItem(),
         ]);
     }
 
-    public function store(StoreSalesLeadRequest $request): JsonResponse
+    /**
+     * Uložení nového leadu.
+     */
+    public function store(Request $request): JsonResponse
     {
-        $user = $request->user();
-        $data = $request->validated();
-        
-        unset($data['last_contact_date']);
-
-        $data = array_merge($data, [
-            'user_login_id' => $user->user_login_id,
-            'salesman_name' => $user->user_email
+        // Poznámka: Zde můžeš použít StoreSalesLeadRequest pro validaci
+        $validated = $request->validate([
+            'subject_name' => 'required|string|max:255',
+            'status'       => 'required|string',
+            'priority'     => 'required|string',
+            'source_channel' => 'required|string',
+            // ... další pole dle potřeby
         ]);
         
-        $lead = SalesLead::create($data);
-        $this->logAction($request, 'create', 'SalesLead', "Vytvořen lead: {$lead->subject_name}", $lead->id);
+        $lead = SalesLead::create($validated);
+        
+        $this->logAction($request, 'create', 'SalesLead', "Vytvořen nový lead: {$lead->subject_name}", $lead->id);
+        
         return response()->json(new SalesLeadResource($lead), 201);
     }
 
-    public function show(SalesLead $salesLead): JsonResponse
+    /**
+     * Detail leadu.
+     */
+    public function show($id): JsonResponse
     {
-        return response()->json(new SalesLeadResource($salesLead));
+        $lead = SalesLead::withTrashed()->findOrFail($id);
+        return response()->json(new SalesLeadResource($lead));
     }
 
-    public function showDetails(SalesLead $salesLead): JsonResponse
+    /**
+     * Aktualizace leadu.
+     */
+    public function update(Request $request, $id): JsonResponse
     {
-        return $this->show($salesLead);
-    }
-
-    public function update(UpdateSalesLeadRequest $request, SalesLead $salesLead): JsonResponse
-    {
-        $data = $request->validated();
+        $lead = SalesLead::findOrFail($id);
+        $lead->update($request->all());
         
-        unset($data['last_contact_date']);
-
-        $salesLead->update($data);
-        $this->logAction($request, 'update', 'SalesLead', "Aktualizace leadu: {$salesLead->subject_name}", $salesLead->id);
-        return response()->json(new SalesLeadResource($salesLead));
+        $this->logAction($request, 'update', 'SalesLead', "Aktualizace leadu ID: {$lead->id} ({$lead->subject_name})", $lead->id);
+        
+        return response()->json(new SalesLeadResource($lead));
     }
 
+    /**
+     * Smazání (Soft / Hard).
+     */
     public function destroy(Request $request, $id): JsonResponse
     {
         $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
-        $lead = SalesLead::withTrashed()->findOrFail($id);
+        $item = SalesLead::withTrashed()->findOrFail($id);
         
-        $forceDelete ? $lead->forceDelete() : $lead->delete();
+        $forceDelete ? $item->forceDelete() : $item->delete();
+        
         $this->logAction($request, $forceDelete ? 'hard_delete' : 'soft_delete', 'SalesLead', "Smazání leadu ID: $id", $id);
 
         return response()->json(null, 204);
     }
 
+    /**
+     * Obnova z koše.
+     */
     public function restore(Request $request, $id): JsonResponse
     {
-        $lead = SalesLead::withTrashed()->findOrFail($id);
-        $lead->restore();
-        $this->logAction($request, 'restore', 'SalesLead', "Obnova leadu: {$lead->subject_name}", $lead->id);
-        return response()->json(new SalesLeadResource($lead));
+        $item = SalesLead::withTrashed()->findOrFail($id);
+        $item->restore();
+        
+        $this->logAction($request, 'restore', 'SalesLead', "Obnova leadu ID: $id", $id);
+        
+        return response()->json(new SalesLeadResource($item));
     }
 
+    /**
+     * Vyprázdnění koše (Vysypat koš).
+     */
     public function forceDeleteAllTrashed(Request $request): JsonResponse
     {
         $count = SalesLead::onlyTrashed()->count();
         SalesLead::onlyTrashed()->forceDelete();
-        $this->logAction($request, 'force_delete_all', 'SalesLead', "Smazání koše leadů. Počet: $count");
+        
+        $this->logAction($request, 'force_delete_all', 'SalesLead', "Hromadné smazání koše leadů. Počet: $count");
+        
         return response()->json(null, 204);
     }
 
+    /**
+     * Sjednocené logování (BusinessLog).
+     */
     protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null)
     {
         try {
             $user = $request->user();
+
             BusinessLog::create([
-                'origin' => $request->ip(),
-                'event_type' => $eventType,
-                'module' => $module,
-                'description' => $description,
+                'origin'               => $request->ip(),
+                'event_type'           => $eventType,
+                'module'               => $module,
+                'description'          => $description,
                 'affected_entity_type' => 'SalesLead',
-                'affected_entity_id' => $affectedId,
-                'user_login_id' => $user?->user_login_id,
-                'context_data' => json_encode($request->all(), JSON_UNESCAPED_UNICODE),
-                'user_login_id_plain' => (string)($user?->user_login_id ?? '0'),
-                'user_login_email_plain' => $user?->user_email ?? 'system'
+                'affected_entity_id'   => $affectedId,
+                'user_id'              => $user?->id,
+                'context_data'         => json_encode($request->all(), JSON_UNESCAPED_UNICODE),
+                'user_id_plain'        => (string)($user?->id ?? '0'),
+                'user_email_plain'     => $user?->user_email ?? 'System/Automated'
             ]);
         } catch (\Exception $e) {
             Log::error("Log error (SalesLead): " . $e->getMessage());

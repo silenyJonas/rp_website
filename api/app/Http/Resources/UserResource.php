@@ -5,16 +5,19 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserLoginResource extends JsonResource
+class UserResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        // Použijeme accessor definovaný v modelu User
+        $perms = $this->permissions;
+
         return [
-            'id'                    => $this->user_login_id,
+            'id'                    => $this->id,
             'user_email'            => $this->user_email,
             'contact_email'         => $this->contact_email,
             'full_name'             => $this->full_name,
-            'birth_date'            => $this->birth_date,
+            'birth_date'            => $this->birth_date?->format('Y-m-d'),
             'personal_id_num'       => $this->personal_id_num,
             'address'               => $this->address,
             'bank_account'          => $this->bank_account,
@@ -24,17 +27,19 @@ class UserLoginResource extends JsonResource
             'has_tax_declaration'   => (bool) $this->has_tax_declaration,
             'phone_number'          => $this->phone_number,
             'internal_note'         => $this->internal_note,
-            'last_login_at'         => $this->last_login_at,
-            'is_deleted'            => (bool) $this->is_deleted,
-            'created_at'            => $this->created_at,
-            'updated_at'            => $this->updated_at,
-            'deleted_at'            => $this->deleted_at,
+            'last_login_at'         => $this->last_login_at?->format('Y-m-d H:i:s'),
+            'created_at'            => $this->created_at?->format('Y-m-d H:i:s'),
+            'updated_at'            => $this->updated_at?->format('Y-m-d H:i:s'),
+            'deleted_at'            => $this->deleted_at?->format('Y-m-d H:i:s'),
+            
+            'role_id'               => $this->roles->first()?->id,
+            
+            // Relace (pouze pokud jsou načtené)
             'roles'                 => RoleResource::collection($this->whenLoaded('roles')),
-            'user_permissions'      => $this->whenLoaded('roles', function() {
-                return $this->roles->flatMap(function ($role) {
-                    return $role->permissions ? $role->permissions->pluck('permission_key') : collect();
-                })->unique()->values();
-            }),
+            
+            // Pro Angular AuthService a PermissionService
+            'user_permissions'      => $perms,
+            'permissions'           => $perms,
         ];
     }
 }

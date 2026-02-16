@@ -18,8 +18,8 @@ class StoreBusinessLogRequest extends FormRequest
             'affected_entity_type'   => 'nullable|string|max:50',
             'affected_entity_id'     => 'nullable|integer',
             'context_data'           => 'nullable|string',
-            'user_login_id_plain'    => 'nullable|string|max:255',
-            'user_login_email_plain' => 'nullable|string|max:255',
+            'user_id_plain'    => 'nullable|string|max:255',
+            'user_email_plain' => 'nullable|string|max:255',
         ];
     }
 }

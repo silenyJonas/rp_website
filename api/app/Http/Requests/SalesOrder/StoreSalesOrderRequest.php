@@ -10,8 +10,27 @@ class StoreSalesOrderRequest extends FormRequest
 
     public function rules(): array
     {
+        // Rozsáhlý whitelist bezpečných souborů
+        $safeExtensions = [
+            // Dokumenty
+            'pdf', 'doc', 'docx', 'dotx', 'odt', 'pages', 'rtf', 'txt', 'csv',
+            // Tabulky a Prezentace
+            'xls', 'xlsx', 'xlsm', 'xltx', 'ods', 'numbers', 'ppt', 'pptx', 'key',
+            // Obrázky
+            'jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg', 'tiff', 'tif', 'heic', 'heif', 'psd', 'ai', 'eps',
+            // Archivy (bezpečné, pokud neobsahují exe uvnitř - co kontroluje AV)
+            'zip', 'rar', '7z', 'tar', 'gz',
+            // Audio
+            'mp3', 'wav', 'ogg', 'm4a', 'flac', 'aac',
+            // Video
+            'mp4', 'mov', 'avi', 'wmv', 'mkv', 'webm',
+            // CAD a technické
+            'dwg', 'dxf', 'stp', 'step', 'stl', 'obj'
+        ];
+
         return [
             'lead_id'           => 'nullable|exists:sales_leads,id',
+            'salesman_name'     => 'sometimes|nullable|string|max:255',
             'client_name'       => 'required|string|max:255',
             'client_email'      => 'required|email|max:255',
             'order_description' => 'required|string',
@@ -22,20 +41,21 @@ class StoreSalesOrderRequest extends FormRequest
             'attachment'        => [
                 'nullable',
                 'file',
-                'max:20480',
-                function ($attribute, $value, $fail) {
-                    if ($this->hasFile('attachment')) {
-                        $file = $this->file('attachment');
-                        if (!$file->isValid()) return $fail('Chyba nahrávání souboru.');
-                        $forbidden = ['php', 'exe', 'bat', 'sh', 'js', 'bin', 'msi', 'cgi', 'pl'];
-                        $extension = strtolower($file->getClientOriginalExtension());
-                        if (in_array($extension, $forbidden)) {
-                            $fail('Soubor .' . $extension . ' je zakázán.');
-                        }
-                    }
-                },
+                'max:20480', // 20MB
+                'mimes:' . implode(',', $safeExtensions),
             ],
             'dataProcessingAgreement' => 'required|accepted',
+            'tosAgreement'            => 'required|accepted',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'attachment.mimes' => 'Tento typ souboru není povolen. Nahrajte prosím běžný dokument, obrázek, video nebo archiv.',
+            'attachment.max' => 'Maximální velikost souboru je 20 MB.',
+            'dataProcessingAgreement.accepted' => 'Pro odeslání musíte souhlasit se zpracováním údajů.',
+            'tosAgreement.accepted' => 'Pro odeslání musíte souhlasit s obchodními podmínkami.',
         ];
     }
 }

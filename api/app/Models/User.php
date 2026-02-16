@@ -1,68 +1,52 @@
 <?php
 
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
-    protected $table = 'user_login';
-    protected $primaryKey = 'user_login_id';
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+
+    protected $table = 'users';
+
     protected $fillable = [
-        'user_email',
-        'user_password_hash',
-        'user_password_salt',
-        'last_login_at',
+        'user_email', 'contact_email', 'user_password_hash', 'full_name',
+        'birth_date', 'personal_id_num', 'address', 'bank_account',
+        'health_insurance', 'commission_rate', 'dpp_hours_spent',
+        'has_tax_declaration', 'phone_number', 'internal_note', 'last_login_at',
     ];
 
-    protected $hidden = [
-        'user_password_hash',
-        'user_password_salt',
-    ];
+    protected $hidden = ['user_password_hash'];
+
+    // Toto zajistí, že permissions budou součástí modelu i při převodu na pole/JSON
+    protected $appends = ['permissions'];
 
     protected $casts = [
         'last_login_at' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'last_changed_at' => 'datetime',
-        'deleted_at' => 'datetime',
-        'is_deleted' => 'boolean',
+        'birth_date' => 'date',
+        'has_tax_declaration' => 'boolean',
     ];
+
+    public function getAuthPassword() { return $this->user_password_hash; }
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'user_roles', 'user_login_id', 'role_id');
+        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
     }
 
-    public function getAuthIdentifierName()
+    /**
+     * Získá unikátní seznam klíčů oprávnění přes všechny role uživatele.
+     */
+    public function getPermissionsAttribute(): array
     {
-        return 'user_email';
-    }
-
-    public function getAuthIdentifier()
-    {
-        return $this->user_email;
-    }
-
-    public function getAuthPassword()
-    {
-        return $this->user_password_hash;
-    }
-
-    public function getRememberTokenName()
-    {
-        return null;
-    }
-
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['user_password_hash'] = \Illuminate\Support\Facades\Hash::make($value);
+        return $this->roles->flatMap(function ($role) {
+            return $role->permissions;
+        })->pluck('permission_key')->unique()->values()->toArray();
     }
 }

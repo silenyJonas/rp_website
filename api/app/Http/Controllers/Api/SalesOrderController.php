@@ -3,27 +3,26 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\SalesOrder;
-use App\Models\SalesLead;
-use App\Models\BusinessLog;
+use App\Models\{SalesOrder, SalesLead, BusinessLog};
 use App\Http\Resources\SalesOrderResource;
-use App\Http\Requests\SalesOrder\StoreSalesOrderRequest;
-use App\Http\Requests\SalesOrder\UpdateSalesOrderRequest;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\SalesOrder\{StoreSalesOrderRequest, UpdateSalesOrderRequest};
+use Illuminate\Http\{Request, JsonResponse};
+use Illuminate\Support\Facades\{Log, Storage};
 
 class SalesOrderController extends Controller
 {
+    /**
+     * Seznam realizací (objednávek).
+     */
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 15);
         $onlyTrashed = filter_var($request->input('only_trashed', false), FILTER_VALIDATE_BOOLEAN);
 
         $query = SalesOrder::query()->with('lead');
-        if ($onlyTrashed) $query->onlyTrashed();
+        $onlyTrashed ? $query->onlyTrashed() : $query->withoutTrashed();
 
+        // Fulltextové vyhledávání
         if ($s = $request->input('search')) {
             $query->where(fn($q) => $q->where('client_name', 'like', "%$s%")
                 ->orWhere('salesman_name', 'like', "%$s%")
@@ -31,16 +30,19 @@ class SalesOrderController extends Controller
                 ->orWhere('client_email', 'like', "%$s%"));
         }
 
+        // Filtry na přesnou shodu
         foreach (['id', 'lead_id', 'ico'] as $f) {
             if ($request->filled($f)) $query->where($f, $request->input($f));
         }
         
+        // Filtry na částečnou shodu
         foreach (['client_name', 'salesman_name', 'client_email'] as $f) {
             if ($request->filled($f)) $query->where($f, 'like', '%' . $request->input($f) . '%');
         }
 
         if ($request->filled('created_at')) $query->whereDate('created_at', $request->created_at);
 
+        // Řazení
         $sortBy = $request->input('sort_by', 'id');
         $sortDirection = $request->input('sort_direction', 'desc');
         $query->orderBy($sortBy, $sortDirection);
@@ -58,35 +60,67 @@ class SalesOrderController extends Controller
             'per_page'     => $data->perPage(),
             'current_page' => $data->currentPage(),
             'last_page'    => $data->lastPage(),
-            'from'         => $data->firstItem(),
-            'to'           => $data->lastItem(),
         ]);
     }
 
+    /**
+     * Vytvoření realizace.
+     */
+    // public function store(StoreSalesOrderRequest $request): JsonResponse
+    // {
+    //     $validated = $request->validated();
+
+    //     // 1. Zpracování přílohy
+    //     if ($request->hasFile('attachment')) {
+    //         $validated['attachment_path'] = $request->file('attachment')->store('orders', 'public');
+    //     }
+
+    //     // 2. Logika pro salesman_name (pokud není v requestu, zkusíme Lead)
+    //     if (empty($validated['salesman_name']) && !empty($validated['lead_id'])) {
+    //         $lead = SalesLead::find($validated['lead_id']);
+    //         $validated['salesman_name'] = $lead ? $lead->salesman_name : 'Neznámý obchodník';
+    //     }
+
+    //     $order = SalesOrder::create($validated);
+        
+    //     $this->logAction($request, 'create', 'SalesOrder', "Vytvořena realizace pro: {$order->client_name}", $order->id);
+        
+    //     return response()->json(new SalesOrderResource($order->load('lead')), 201);
+    // }
+    // app/Http/Controllers/Api/SalesOrderController.php
+
     public function store(StoreSalesOrderRequest $request): JsonResponse
     {
-        $validatedData = $request->validated();
+        $validated = $request->validated();
 
+        // 1. Zpracování přílohy
         if ($request->hasFile('attachment')) {
-            $validatedData['attachment_path'] = $request->file('attachment')->store('orders', 'public');
+            $validated['attachment_path'] = $request->file('attachment')->store('orders', 'public');
         }
 
-        $validatedData['salesman_name'] = 'Neznámý obchodník';
-        if (!empty($validatedData['lead_id'])) {
-            $lead = SalesLead::find($validatedData['lead_id']);
+        // 2. Automatické přiřazení obchodníka z Leadu
+        if (!empty($validated['lead_id'])) {
+            $lead = SalesLead::find($validated['lead_id']);
             if ($lead) {
-                $validatedData['salesman_name'] = $lead->salesman_name;
+                $validated['salesman_name'] = $lead->salesman_name;
+                // Volitelně: Můžeme rovnou aktualizovat stav Leadu, že byla podána objednávka
+                $lead->update(['status' => 'Poptávkový formulář odeslán']);
             }
         }
 
-        $order = SalesOrder::create($validatedData);
-        $this->logAction($request, 'create', 'SalesOrder', "Vytvořena poptávka pro: {$order->client_name}", $order->id);
-        
-        return response()->json(new SalesOrderResource($order), 201);
-    }
+        // 3. Fallback, pokud obchodník stále chybí (povinné pole v DB)
+        if (empty($validated['salesman_name'])) {
+            $validated['salesman_name'] = 'Webová poptávka (bez leadu)';
+        }
 
+        $order = SalesOrder::create($validated);
+        
+        $this->logAction($request, 'create', 'SalesOrder', "Vytvořena realizace pro: {$order->client_name}", $order->id);
+        
+        return response()->json(new SalesOrderResource($order->load('lead')), 201);
+    }
     /**
-     * Detail objednávky.
+     * Detail realizace.
      */
     public function show(SalesOrder $salesOrder): JsonResponse
     {
@@ -94,13 +128,25 @@ class SalesOrderController extends Controller
     }
 
     /**
-     * Aktualizace objednávky.
+     * Aktualizace realizace.
      */
     public function update(UpdateSalesOrderRequest $request, SalesOrder $salesOrder): JsonResponse
     {
-        $salesOrder->update($request->validated());
+        $validated = $request->validated();
+
+        // Pokud se nahrává nový soubor, starý smažeme
+        if ($request->hasFile('attachment')) {
+            if ($salesOrder->attachment_path) {
+                Storage::disk('public')->delete($salesOrder->attachment_path);
+            }
+            $validated['attachment_path'] = $request->file('attachment')->store('orders', 'public');
+        }
+
+        $salesOrder->update($validated);
+        
         $this->logAction($request, 'update', 'SalesOrder', "Aktualizace realizace ID: {$salesOrder->id}", $salesOrder->id);
-        return response()->json(new SalesOrderResource($salesOrder));
+        
+        return response()->json(new SalesOrderResource($salesOrder->load('lead')));
     }
 
     /**
@@ -131,12 +177,14 @@ class SalesOrderController extends Controller
     {
         $item = SalesOrder::withTrashed()->findOrFail($id);
         $item->restore();
+        
         $this->logAction($request, 'restore', 'SalesOrder', "Obnova realizace ID: $id", $id);
-        return response()->json(new SalesOrderResource($item));
+        
+        return response()->json(new SalesOrderResource($item->load('lead')));
     }
 
     /**
-     * Trvalé smazání celého koše včetně souborů.
+     * Hromadné smazání koše.
      */
     public function forceDeleteAllTrashed(Request $request): JsonResponse
     {
@@ -155,24 +203,24 @@ class SalesOrderController extends Controller
     }
 
     /**
-     * Pomocná metoda pro logování akcí.
+     * Sjednocené logování do BusinessLog.
      */
     protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null)
     {
         try {
-            $user = $request->user('sanctum') ?? $request->user();
+            $user = $request->user();
 
             BusinessLog::create([
-                'origin'                 => $request->ip(),
-                'event_type'             => $eventType,
-                'module'                 => $module,
-                'description'            => $description,
-                'affected_entity_type'   => $module,
-                'affected_entity_id'     => $affectedId,
-                'user_login_id'          => $user?->user_login_id,
-                'context_data'           => json_encode($request->all(), JSON_UNESCAPED_UNICODE),
-                'user_login_id_plain'    => (string)($user?->user_login_id ?? '0'),
-                'user_login_email_plain' => $user ? $user->user_email : 'Veřejný web (Anonym)'
+                'origin'               => $request->ip(),
+                'event_type'           => $eventType,
+                'module'               => $module,
+                'description'          => $description,
+                'affected_entity_type' => 'SalesOrder',
+                'affected_entity_id'   => $affectedId,
+                'user_id'              => $user?->id,
+                'context_data'         => json_encode($request->except(['attachment']), JSON_UNESCAPED_UNICODE),
+                'user_id_plain'        => (string)($user?->id ?? '0'),
+                'user_email_plain'     => $user?->user_email ?? 'system/public'
             ]);
         } catch (\Exception $e) {
             Log::error("Log error (SalesOrder): " . $e->getMessage());

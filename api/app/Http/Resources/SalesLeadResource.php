@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -10,10 +11,14 @@ class SalesLeadResource extends JsonResource
     {
         return [
             'id'                 => $this->id,
-            'user_login_id'      => $this->user_login_id,
+            'user_id'            => $this->user_id,
             'salesman_name'      => $this->salesman_name,
-            'first_contact_date' => $this->first_contact_date,
+            'salesman'           => [
+                'id'   => $this->user_id,
+                'name' => $this->salesman_name,
+            ],
             'subject_name'       => $this->subject_name,
+            'first_contact_date' => $this->first_contact_date?->format('Y-m-d'),
             'contact_person'     => $this->contact_person,
             'contact_email'      => $this->contact_email,
             'contact_phone'      => $this->contact_phone,
@@ -24,7 +29,7 @@ class SalesLeadResource extends JsonResource
             'description'        => $this->description,
             'priority'           => $this->priority ?? 'Neutrální',
             'status'             => $this->status ?? 'nové',
-            'last_contact_date'  => $this->last_contact_date,
+            'last_contact_date'  => $this->last_contact_date?->format('Y-m-d'),
             'next_step'          => $this->next_step,
             'rejection_reason'   => $this->rejection_reason,
             'created_at'         => $this->created_at?->format('Y-m-d H:i:s'),

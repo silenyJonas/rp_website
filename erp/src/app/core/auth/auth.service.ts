@@ -9,6 +9,7 @@ import { PermissionService } from './services/permission.service';
 export class AuthService {
   private baseUrl = environment.base_api_url;
 
+  // Inicializace přímo ze sessionStorage zajistí, že stav přežije F5
   private _isLoggedIn = new BehaviorSubject<boolean>(!!sessionStorage.getItem('accessToken'));
   isLoggedIn$ = this._isLoggedIn.asObservable();
   
@@ -39,7 +40,7 @@ export class AuthService {
         sessionStorage.setItem('userEmail', response.user.user_email);
         sessionStorage.setItem('userId', userId);
         
-        if (response.user_roles && response.user_roles.length > 0) {
+        if (response.user_roles?.length > 0) {
           sessionStorage.setItem('userRole', response.user_roles[0]); 
         }
 
@@ -56,82 +57,20 @@ export class AuthService {
     );
   }
 
+  /**
+   * Klíčová metoda pro AuthGuard. 
+   * Při refreshu (F5) jen ověří lokální data. Pokud jsou neplatná, 
+   * první následný požadavek na API vyvolá 401 a Interceptor provede refresh.
+   */
   checkAuth(): Observable<boolean> {
     const token = this.getAccessToken();
-    if (!token) return of(false);
-
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    return this.http.get<any>(`${this.baseUrl}/user`, { headers }).pipe(
-      tap(user => {
-        const serverId = (user.id || user.user_login_id).toString();
-        
-        if (user.user_email !== this.getUserEmail() || serverId !== this.getUserId()) {
-          this.setUserEmail(user.user_email);
-          sessionStorage.setItem('userId', serverId);
-        }
-
-        if (user.user_permissions) {
-          sessionStorage.setItem('userPermissions', JSON.stringify(user.user_permissions));
-          this.permissionService.setPermissions(user.user_permissions);
-        }
-        
-        this._isLoggedIn.next(true);
-      }),
-      map(() => true),
-      catchError(() => {
-        return this.refreshAccessToken().pipe(
-          map(() => true),
-          catchError(() => {
-            this.clearAuthData();
-            return of(false);
-          })
-        );
-      })
-    );
-  }
-
-  private syncPermissions(): void {
-    const perms = this.getUserPermissions();
-    this.permissionService.setPermissions(perms);
-  }
-
-  private clearAuthData(): void {
-    sessionStorage.removeItem('accessToken');
-    sessionStorage.removeItem('refreshToken');
-    sessionStorage.removeItem('userEmail');
-    sessionStorage.removeItem('userId');
-    sessionStorage.removeItem('userRole');
-    sessionStorage.removeItem('userPermissions');
+    if (!token) {
+      this._isLoggedIn.next(false);
+      return of(false);
+    }
     
-    this.permissionService.clearPermissions();
-    this._isLoggedIn.next(false);
-    this._userEmailSubject.next(null);
-    this.stopTokenRefreshTimer();
-  }
-  public getUserId(): string | null { return sessionStorage.getItem('userId'); }
-  public getUserEmail(): string | null { return sessionStorage.getItem('userEmail'); }
-  public setUserEmail(email: string): void {
-    sessionStorage.setItem('userEmail', email);
-    this._userEmailSubject.next(email);
-  }
-
-  public getUserRole(): string | null { return sessionStorage.getItem('userRole'); }
-  public getAccessToken(): string | null { return sessionStorage.getItem('accessToken'); }
-  public getRefreshToken(): string | null { return sessionStorage.getItem('refreshToken'); }
-  public getUserPermissions(): string[] {
-    const perms = sessionStorage.getItem('userPermissions');
-    return perms ? JSON.parse(perms) : [];
-  }
-  logout(): Observable<any> {
-    const body = { refreshToken: this.getRefreshToken() };
-    return this.http.post<any>(`${this.baseUrl}/logout`, body).pipe(
-      tap(() => this.clearAuthData()),
-      catchError(() => {
-        this.clearAuthData();
-        return of(null);
-      })
-    );
+    this._isLoggedIn.next(true);
+    return of(true);
   }
 
   refreshAccessToken(): Observable<any> {
@@ -140,14 +79,51 @@ export class AuthService {
       this.clearAuthData();
       return throwError(() => new Error('Chybí refresh token'));
     }
+
     return this.http.post<any>(`${this.baseUrl}/refresh`, { refreshToken }).pipe(
       tap(res => {
         sessionStorage.setItem('accessToken', res.token);
         sessionStorage.setItem('refreshToken', res.refreshToken);
+        this._isLoggedIn.next(true);
       }),
       catchError(err => {
+        // Pokud refresh selže (např. 401 na refresh endpointu), okamžitě logout
         this.clearAuthData();
         return throwError(() => err);
+      })
+    );
+  }
+
+  public clearAuthData(): void {
+    sessionStorage.clear(); // Vymaže vše najednou
+    this.permissionService.clearPermissions();
+    this._isLoggedIn.next(false);
+    this._userEmailSubject.next(null);
+    this.stopTokenRefreshTimer();
+  }
+
+  // Gettery
+  public getUserId(): string | null { return sessionStorage.getItem('userId'); }
+  public getUserEmail(): string | null { return sessionStorage.getItem('userEmail'); }
+  public setUserEmail(email: string): void {
+    sessionStorage.setItem('userEmail', email);
+    this._userEmailSubject.next(email);
+  }
+  public getUserRole(): string | null { return sessionStorage.getItem('userRole'); }
+  public getAccessToken(): string | null { return sessionStorage.getItem('accessToken'); }
+  public getRefreshToken(): string | null { return sessionStorage.getItem('refreshToken'); }
+  public getUserPermissions(): string[] {
+    const perms = sessionStorage.getItem('userPermissions');
+    return perms ? JSON.parse(perms) : [];
+  }
+
+  logout(): Observable<any> {
+    const body = { refreshToken: this.getRefreshToken() };
+    return this.http.post<any>(`${this.baseUrl}/logout`, body).pipe(
+      tap(() => this.clearAuthData()),
+      catchError(() => {
+        this.clearAuthData();
+        return of(null);
       })
     );
   }
@@ -160,7 +136,14 @@ export class AuthService {
     ).subscribe();
   }
 
-  private stopTokenRefreshTimer(): void { this.stopTokenRefresh$.next(); }
+  private stopTokenRefreshTimer(): void { 
+    this.stopTokenRefresh$.next(); 
+  }
+
+  private syncPermissions(): void {
+    const perms = this.getUserPermissions();
+    this.permissionService.setPermissions(perms);
+  }
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Nastala chyba při přihlášení.';

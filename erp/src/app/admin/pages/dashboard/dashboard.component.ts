@@ -19,7 +19,7 @@ import { BaseDataComponent } from '../../components/base-data/base-data.componen
 })
 export class DashboardComponent extends BaseDataComponent<UserLogin> implements OnInit {
   // apiEndpoint je nutný pro BaseDataComponent metody
-  override apiEndpoint = 'user_login';
+  override apiEndpoint = 'users';
   
   // userData budeme držet v proměnné pro snadný přístup v šabloně
   userData: UserLogin | null = null;

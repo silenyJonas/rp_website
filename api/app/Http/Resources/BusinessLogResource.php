@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -10,7 +9,7 @@ class BusinessLogResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'business_log_id'        => $this->business_log_id,
+            'id'                     => $this->id, // Změna z business_log_id
             'origin'                 => $this->origin,
             'event_type'             => $this->event_type,
             'module'                 => $this->module,
@@ -18,14 +17,13 @@ class BusinessLogResource extends JsonResource
             'affected_entity_type'   => $this->affected_entity_type,
             'affected_entity_id'     => $this->affected_entity_id,
             'user' => [
-                'user_login_id' => $this->user_login_id,
-                'user_email'    => $this->user ? $this->user->user_email : 'Neznámý uživatel'
+                'id'         => $this->user_id,
+                'user_email' => $this->user ? $this->user->user_email : 'Neznámý uživatel'
             ],
             'context_data'           => $this->context_data,
             'created_at'             => $this->created_at?->format('Y-m-d H:i:s'),
-            'user_login_id_plain'    => $this->user_login_id_plain,
-            'user_login_email_plain' => $this->user_login_email_plain,
-            'user_login_id'          => $this->user_login_id,
+            'user_id_plain'          => $this->user_id_plain,
+            'user_email_plain'       => $this->user_email_plain,
         ];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Requests\SalesLead;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -11,20 +12,20 @@ class StoreSalesLeadRequest extends FormRequest
     {
         return [
             'subject_name'       => ['required', 'string', 'max:255'],
-            'first_contact_date' => ['nullable'],
+            'first_contact_date' => ['nullable', 'date'],
             'source_channel'     => ['required', 'string', 'max:255'],
-            'user_login_id'      => ['nullable', 'integer'],
+            'user_id'            => ['nullable', 'integer', 'exists:users,id'],
             'salesman_name'      => ['nullable', 'string', 'max:255'],
             'contact_person'     => ['nullable', 'string', 'max:255'],
-            'contact_email'      => ['nullable', 'string', 'max:255'],
+            'contact_email'      => ['nullable', 'email', 'max:255'],
             'contact_phone'      => ['nullable', 'string', 'max:255'],
             'contact_other'      => ['nullable', 'string', 'max:255'],
             'location'           => ['nullable', 'string', 'max:100'],
-            'source_url'         => ['nullable', 'string', 'max:500'],
+            'source_url'         => ['nullable', 'url', 'max:500'],
             'description'        => ['nullable', 'string'],
             'priority'           => ['nullable', 'string', 'max:255'],
             'status'             => ['nullable', 'string', 'max:255'],
-            'last_contact_date'  => ['nullable'],
+            'last_contact_date'  => ['nullable', 'date'],
             'next_step'          => ['nullable', 'string', 'max:255'],
             'rejection_reason'   => ['nullable', 'string'],
         ];

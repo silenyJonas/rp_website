@@ -15,121 +15,81 @@ export const USER_REQUEST_BUTTONS: Buttons[] = [
   { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
 ];
 
+export const USER_REQUEST_STATUS_OPTIONS: string[] = ['Nově zadané', 'Zpracovává se', 'Dokončeno', 'Zrušeno'];
+export const USER_REQUEST_PRIORITY_OPTIONS: string[] = ['Nízká', 'Neutrální', 'Vysoká'];
+export const USER_REQUEST_THEMA_OPTIONS: string[] = ['Webový vývoj', 'Desktopový vývoj', 'Mobilní vývoj', 'AI vývoj', 'Jiné'];
+
 /**
  * FORMULÁŘOVÁ POLE (PRO CREATE / EDIT)
  */
 export const USER_REQUEST_FORM_FIELDS: InputDefinition[] = [
   {
     column_name: 'thema',
-    label: 'Téma',
+    label: 'Téma / Předmět',
     placeholder: 'Zadejte téma požadavku',
     type: 'text',
     required: true,
-    pattern: '^[a-zA-Z0-9ěščřžýáíéóúůďťňĚŠČŘŽÝÁÍÉÚŮĎŤŇ\\s]{3,100}$',
-    errorMessage: 'Téma musí mít 3-100 znaků.',
-    editable: true,
-    show_in_edit: true,
-    show_in_create: true,
+    // Upraveno pro podporu diakritiky a širšího rozsahu dle Laravelu
+    pattern: '^[a-zA-Z0-9ěščřžýáíéóúůďťňĚŠČŘŽÝÁÍÉÚŮĎŤŇ\\s\\.\\-]{3,255}$',
+    errorMessage: 'Téma musí mít 3-255 znaků.',
+    editable: true, show_in_edit: true, show_in_create: true,
   },
   {
     column_name: 'contact_email',
     label: 'Kontaktní e-mail',
-    placeholder: 'Zadejte e-mail',
+    placeholder: 'priklad@email.cz',
     type: 'email',
     required: true,
     pattern: '[^@]+@[^@]+\\.[^@]+',
     errorMessage: 'Zadejte platnou e-mailovou adresu.',
-    editable: true,
-    show_in_edit: true,
-    show_in_create: true
+    editable: true, show_in_edit: true, show_in_create: true
   },
   {
     column_name: 'contact_phone',
     label: 'Telefon',
-    placeholder: 'Zadejte telefonní číslo (volitelné)',
+    placeholder: '+420 123 456 789',
     type: 'tel',
     required: false,
-    pattern: '^[0-9+\\s-]{9,20}$',
     errorMessage: 'Zadejte platné telefonní číslo.',
-    editable: true,
-    show_in_edit: true,
-    show_in_create: true
-  },
-  {
-    column_name: 'order_description',
-    label: 'Popis objednávky',
-    placeholder: 'Popište svůj požadavek',
-    type: 'textarea',
-    required: true,
-    errorMessage: 'Popis je povinný.',
-    editable: true,
-    show_in_edit: true,
-    show_in_create: true
-  },
-  {
-    column_name: 'note',
-    label: 'Poznámka',
-    placeholder: 'Napište poznámku',
-    type: 'textarea',
-    required: false,
-    errorMessage: '',
-    editable: true,
-    show_in_edit: true,
-    show_in_create: true
+    editable: true, show_in_edit: true, show_in_create: true
   },
   {
     column_name: 'status',
-    label: 'Status',
-    placeholder: '',
+    label: 'Stav zpracování',
     type: 'select',
-    options: [
-      { value: 'Nově zadané', label: 'Nově zadané' },
-      { value: 'Zpracovává se', label: 'Zpracovává se' },
-      { value: 'Dokončeno', label: 'Dokončeno' },
-      { value: 'Zrušeno', label: 'Zrušeno' },
-    ],
+    options: USER_REQUEST_STATUS_OPTIONS.map(opt => ({ value: opt, label: opt })),
     required: true,
-    errorMessage: 'Pole je povinné.',
-    editable: true,
-    show_in_edit: true,
-    show_in_create: true
+    editable: true, show_in_edit: true, show_in_create: true
   },
   {
     column_name: 'priority',
     label: 'Priorita',
-    placeholder: '',
     type: 'select',
-    options: [
-      { value: 'Nízká', label: 'Nízká' },
-      { value: 'Neutrální', label: 'Neutrální' },
-      { value: 'Vysoká', label: 'Vysoká' },
-    ],
+    options: USER_REQUEST_PRIORITY_OPTIONS.map(opt => ({ value: opt, label: opt })),
     required: true,
-    errorMessage: 'Pole je povinné.',
-    editable: true,
-    show_in_edit: true,
-    show_in_create: true
+    editable: true, show_in_edit: true, show_in_create: true
   },
   {
-    column_name: 'id',
-    label: 'ID záznamu',
-    type: 'text',
-    editable: false,
-    show_in_edit: false,
-    show_in_create: false
+    column_name: 'order_description',
+    label: 'Popis požadavku',
+    placeholder: 'Zde rozepište detaily objednávky/provize...',
+    type: 'textarea',
+    required: true,
+    errorMessage: 'Popis je povinný pro zpracování.',
+    editable: true, show_in_edit: true, show_in_create: true
   },
   {
-    column_name: 'created_at',
-    label: 'Vytvořeno',
-    type: 'text',
-    editable: false,
-    show_in_edit: false,
-    show_in_create: false
-  },
+    column_name: 'note',
+    label: 'Interní poznámka',
+    placeholder: 'Poznámka pro administrátora',
+    type: 'textarea',
+    required: false,
+    editable: true, show_in_edit: true, show_in_create: true
+  }
 ];
 
 /**
- * HLAVNÍ TABULKA - POUZE KLÍČOVÉ INFORMACE
+ * HLAVNÍ TABULKA
  */
 export const USER_REQUEST_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
@@ -141,81 +101,38 @@ export const USER_REQUEST_COLUMNS: ColumnDefinition[] = [
 ];
 
 /**
- * TRASH TABULKA - POUZE HLAVNÍ VĚCI + DATUM SMAZÁNÍ
+ * TRASH TABULKA
  */
 export const USER_REQUEST_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'thema', header: 'Téma', type: 'text' },
   { key: 'contact_email', header: 'Email', type: 'text' },
-  { key: 'status', header: 'Stav', type: 'text' },
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' }
 ];
 
-export const USER_REQUEST_STATUS_OPTIONS: string[] = ['Nově zadané', 'Zpracovává se', 'Dokončeno', 'Zrušeno'];
-export const USER_REQUEST_PRIORITY_OPTIONS: string[] = ['Nízká', 'Neutrální', 'Vysoká'];
-
 /**
- * FILTRY - MOŽNOST FILTROVAT PODLE VŠEHO DŮLEŽITÉHO
+ * FILTRY
  */
 export const USER_REQUEST_FILTER_COLUMNS: FilterColumns[] = [
-  {
-    key: 'id',
-    header: 'ID',
-    type: 'text',
-    placeholder: 'Hledat podle ID',
-    canSort: true,
-  },
-  {
-    key: 'thema',
-    header: 'Téma',
-    type: 'text',
-    placeholder: 'Hledat téma',
-    canSort: true,
-  },
-  {
-    key: 'contact_email',
-    header: 'E-mail',
-    type: 'email',
-    placeholder: 'Hledat podle e-mailu',
-    canSort: true,
-  },
-  {
-    key: 'status',
-    header: 'Stav',
-    type: 'select',
-    options: USER_REQUEST_STATUS_OPTIONS,
-    placeholder: '-- Vybrat stav --',
-    canSort: true,
-  },
-  {
-    key: 'priority',
-    header: 'Priorita',
-    type: 'select',
-    options: USER_REQUEST_PRIORITY_OPTIONS,
-    placeholder: '-- Vybrat prioritu --',
-    canSort: true,
-  },
-  {
-    key: 'created_at',
-    header: 'Datum vytvoření',
-    type: 'text',
-    placeholder: 'Hledat podle data',
-    canSort: true,
-  },
+  { key: 'id', header: 'ID', type: 'text', placeholder: 'ID...', canSort: true },
+  { key: 'thema', header: 'Téma', type: 'select', placeholder: 'Hledat téma...',options: USER_REQUEST_THEMA_OPTIONS, canSort: true },
+  { key: 'contact_email', header: 'Email', type: 'text', placeholder: 'Hledat email...', canSort: true },
+  { key: 'status', header: 'Stav', type: 'select', options: USER_REQUEST_STATUS_OPTIONS, placeholder: '-- Stav --', canSort: true },
+  { key: 'priority', header: 'Priorita', type: 'select', options: USER_REQUEST_PRIORITY_OPTIONS, placeholder: '-- Priorita --', canSort: true },
 ];
 
 /**
- * DETAIL POLOŽKY - KOMPLETNÍ DATA (VČETNĚ POPISŮ A POZNÁMEK)
+ * DETAIL POLOŽKY
  */
 export const USER_REQUEST_DETAILS_COLUMNS: ItemDetailsColumns[] = [
-  { key: 'id', displayName: 'ID položky', type: 'text' },
+  { key: 'id', displayName: 'ID požadavku', type: 'text' },
   { key: 'thema', displayName: 'Téma', type: 'text' },
-  { key: 'contact_email', displayName: 'Kontaktní Email', type: 'text' },
-  { key: 'contact_phone', displayName: 'Kontaktní Telefon', type: 'text' },
-  { key: 'order_description', displayName: 'Popis Požadavku', type: 'text' },
-  { key: 'status', displayName: 'Status', type: 'text' },
+  { key: 'contact_email', displayName: 'Email', type: 'text' },
+  { key: 'contact_phone', displayName: 'Telefon', type: 'text' },
+  { key: 'status', displayName: 'Stav', type: 'text' },
   { key: 'priority', displayName: 'Priorita', type: 'text' },
-  { key: 'note', displayName: 'Interní Poznámka', type: 'text' },
-  { key: 'created_at', displayName: 'Datum Vytvoření', type: 'date', format: 'medium' },
-  { key: 'updated_at', displayName: 'Poslední Datum Změny', type: 'date', format: 'medium' },
+  { key: 'order_description', displayName: 'Popis požadavku', type: 'text' },
+  { key: 'note', displayName: 'Poznámka', type: 'text' },
+  { key: 'created_at', displayName: 'Vytvořeno', type: 'date', format: 'medium' },
+  { key: 'updated_at', displayName: 'Naposledy změněno', type: 'date', format: 'medium' },
 ];

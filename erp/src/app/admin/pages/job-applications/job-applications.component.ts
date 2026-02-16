@@ -43,7 +43,6 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
   
   override apiEndpoint: string = 'job_applications';
   
-  // Konfigurace šablony z config souboru
   buttons: Buttons[] = JOB_APPLICATION_BUTTONS.filter(b => b.action !== 'create');
   formFields: InputDefinition[] = JOB_APPLICATION_FORM_FIELDS;
   columns = JOB_APPLICATION_COLUMNS;
@@ -54,7 +53,6 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
   selectedItemForEdit: any = null;
   selectedItemForDetails: any = null;
 
-  // Sjednocené filtry pro dynamický filter form
   filters: FilterParams = { 
     sort_by: 'id', 
     sort_direction: 'desc' 
@@ -80,8 +78,6 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
       }
     });
   }
-
-  // --- Data & Refresh Logic ---
 
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
@@ -114,8 +110,18 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
   // --- Record Actions ---
 
   handleEditFormOpened(item: any): void { 
-    this.selectedItemForEdit = { ...item }; 
-    this.showCreateForm = true; 
+    // Nejdříve vyčistíme předchozí stav pro zajištění reaktivity
+    this.selectedItemForEdit = null;
+    this.showCreateForm = false;
+    this.cd.detectChanges();
+
+    // S malým zpožděním vložíme nová data
+    setTimeout(() => {
+      // JSON hluboká kopie zruší reference, které by mohly mást dropdown
+      this.selectedItemForEdit = JSON.parse(JSON.stringify(item)); 
+      this.showCreateForm = true; 
+      this.cd.markForCheck();
+    }, 50);
   }
   
   handleViewDetails(item: any): void {
@@ -132,11 +138,11 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
 
   handleFormSubmitted(formData: any): void {
     this.isLoading = true;
-    // HR Modul: Typicky pouze update stavu uchazeče
     this.updateData(formData.id, formData).pipe(
       finalize(() => {
         this.isLoading = false;
         this.showCreateForm = false;
+        this.selectedItemForEdit = null;
         this.cd.markForCheck();
       })
     ).subscribe(() => this.refreshData());
@@ -145,5 +151,6 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
   onCancelForm() {
     this.showCreateForm = false;
     this.selectedItemForEdit = null;
+    this.cd.markForCheck();
   }
 }
