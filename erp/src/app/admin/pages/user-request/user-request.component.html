@@ -20,7 +20,7 @@
           ➕ Přidat
         </button>
 
-        <button class="btn-export small-btn" (click)="exportActiveTable()">
+        <button *ngIf="!showTrashTable" class="btn-export small-btn" (click)="exportActiveTable()">
           📥 Export
         </button>
 

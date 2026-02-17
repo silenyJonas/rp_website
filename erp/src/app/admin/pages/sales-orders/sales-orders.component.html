@@ -12,7 +12,7 @@
         <button (click)="toggleFilters()" class="btn-filter small-btn">
           {{ isFilterVisible ? '✕ Skrýt' : '🔍 Filtry' }}
         </button>
-        <button class="btn-export small-btn" (click)="exportActiveTable()">
+        <button *ngIf="!showTrashTable" class="btn-export small-btn" (click)="exportActiveTable()">
           📥 Export
         </button>
         <button *appHasPermission="'view-deleted'" (click)="toggleTable()" class="btn-trash small-btn">

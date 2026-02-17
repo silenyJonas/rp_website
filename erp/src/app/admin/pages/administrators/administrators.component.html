@@ -20,7 +20,7 @@
         <button *ngIf="!showTrashTable" class="btn-create small-btn" (click)="handleCreateFormOpened()">
           ➕ Nový uživatel
         </button>
-        <button class="btn-export small-btn" (click)="exportActiveTable()">
+        <button *ngIf="!showTrashTable" class="btn-export small-btn" (click)="exportActiveTable()">
           📥 Export CSV
         </button>
         <button *appHasPermission="'view-deleted'" (click)="toggleTable()" class="btn-trash small-btn">
