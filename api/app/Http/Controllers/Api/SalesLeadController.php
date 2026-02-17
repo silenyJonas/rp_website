@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\SalesLead;
 use App\Models\BusinessLog;
-use App\Http\Resources\SalesLeadResource; // Předpokládám existenci Resource
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\SalesLead\StoreSalesLeadRequest;
+use App\Http\Resources\SalesLeadResource;
 
 class SalesLeadController extends Controller
 {
@@ -81,21 +82,28 @@ class SalesLeadController extends Controller
     /**
      * Uložení nového leadu.
      */
-    public function store(Request $request): JsonResponse
+public function store(StoreSalesLeadRequest $request): JsonResponse
     {
-        // Poznámka: Zde můžeš použít StoreSalesLeadRequest pro validaci
-        $validated = $request->validate([
-            'subject_name' => 'required|string|max:255',
-            'status'       => 'required|string',
-            'priority'     => 'required|string',
-            'source_channel' => 'required|string',
-            // ... další pole dle potřeby
-        ]);
-        
+        // Data jsou již zvalidovaná díky StoreSalesLeadRequest
+        $validated = $request->validated();
+        $user = $request->user();
+
+        // Automatické doplnění obchodníka, pokud pole chybí v requestu
+        if (empty($validated['salesman_name']) && $user) {
+            $validated['salesman_name'] = $user->full_name ?? $user->user_email;
+        }
+
+        // Automatické doplnění user_id (pro relaci definovanou v modelu)
+        if (empty($validated['user_id']) && $user) {
+            $validated['user_id'] = $user->id;
+        }
+
+        // Vytvoření leadu skrze model (využije $fillable)
         $lead = SalesLead::create($validated);
         
         $this->logAction($request, 'create', 'SalesLead', "Vytvořen nový lead: {$lead->subject_name}", $lead->id);
         
+        // Vrácení skrze tvůj SalesLeadResource
         return response()->json(new SalesLeadResource($lead), 201);
     }
 

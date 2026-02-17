@@ -86,6 +86,15 @@ export class GenericFormComponent implements OnInit, OnDestroy {
     document.body.style.overflow = 'auto';
   }
 
+  // NOVÁ METODA PRO SOUBORY
+  onFileChange(event: any, columnName: string): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.formData[columnName] = file;
+      console.log(`Soubor vybrán pro ${columnName}:`, file.name);
+    }
+  }
+
   getControl(columnName: string): FormControl | null {
     if (!this.genericForm) {
       return null;
@@ -148,6 +157,7 @@ export class GenericFormComponent implements OnInit, OnDestroy {
     event?.preventDefault();
     if (this.isSubmitting) return;
 
+    // Označíme všechna pole jako dotčená pro zobrazení validací
     Object.keys(form.controls).forEach(field => {
       const control = form.controls[field];
       if (control) {
@@ -166,17 +176,44 @@ export class GenericFormComponent implements OnInit, OnDestroy {
 
     if (form.valid) {
       this.isSubmitting = true;
-      console.log('Odesílaná data:', this.formData);
-
-      const currentUserId = this.authService.getUserId();
-      if (this.formDataToEdit && currentUserId && this.formDataToEdit['id'] == currentUserId) {
-        if (this.formData['user_email'] && this.formData['user_email'] !== this.authService.getUserEmail()) {
-          this.authService.setUserEmail(this.formData['user_email']);
-          console.log('User Email byl úspěšně aktualizován v Local Storage.');
+      
+      // Zjistíme, zda data obsahují soubor
+      let hasFile = false;
+      Object.keys(this.formData).forEach(key => {
+        if (this.formData[key] instanceof File) {
+          hasFile = true;
         }
+      });
+
+      if (hasFile) {
+        console.log('Generuji FormData pro odeslání se souborem...');
+        const formDataPayload = new FormData();
+        
+        Object.keys(this.formData).forEach(key => {
+          const value = this.formData[key];
+
+          if (value instanceof File) {
+            // Soubor přidáme přímo
+            formDataPayload.append(key, value, value.name);
+          } else if (value !== null && value !== undefined) {
+            // VŠECHNO OSTATNÍ převedeme na string. 
+            // Toto je kritické pro Laravel validátor u multipart requestů!
+            formDataPayload.append(key, String(value));
+          }
+        });
+
+        // Debug log: uvidíš v konzoli přesně, co se balí do requestu
+        formDataPayload.forEach((val, k) => {
+          console.log(`FormData payload check: ${k} =`, val instanceof File ? `File: ${val.name}` : val);
+        });
+
+        this.formSubmitted.emit(formDataPayload);
+      } else {
+        // Pokud není soubor, pošleme čistý objekt (JSON) jako dřív
+        console.log('Odesílám čistý JSON:', this.formData);
+        this.formSubmitted.emit({ ...this.formData });
       }
 
-      this.formSubmitted.emit({ ...this.formData });
       this.onCancel();
       this.isSubmitting = false;
     } else {

@@ -69,25 +69,21 @@ class SupportTicketController extends Controller
      */
     public function store(StoreSupportTicketRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-        $user = $request->user();
+        $data = $request->all(); 
+    $user = $request->user();
 
-        if ($user) {
-            $validated['user_id'] = $user->id;
-            if (empty($validated['user_name_plain'])) {
-                $validated['user_name_plain'] = $user->full_name ?? $user->user_email;
-            }
-            if (empty($validated['user_email_plain'])) {
-                $validated['user_email_plain'] = $user->user_email;
-            }
-        }
-        
-        if ($request->hasFile('attachment')) {
-            $path = $request->file('attachment')->store('tickets', 'public');
-            $validated['attachment_path'] = $path;
-        }
+    if ($user) {
+        $data['user_id'] = $user->id;
+        $data['user_name_plain'] = $data['user_name_plain'] ?? ($user->full_name ?? $user->user_email);
+        $data['user_email_plain'] = $data['user_email_plain'] ?? $user->user_email;
+    }
+    
+    if ($request->hasFile('attachment')) {
+        $path = $request->file('attachment')->store('tickets', 'public');
+        $data['attachment_path'] = $path;
+    }
 
-        $ticket = SupportTicket::create($validated);
+    $ticket = SupportTicket::create($data);
 
         $this->logAction($request, 'create', 'SupportTicket', "Nový ticket: {$ticket->subject}", $ticket->id);
         

@@ -179,3 +179,39 @@
     from { transform: translateY(20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
+input[type="file"].custom-input {
+    padding: 8px;
+    cursor: pointer;
+    line-height: 1.2;
+}
+
+input[type="file"]::file-selector-button {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 4px 12px;
+    margin-right: 10px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background: #e0e0e0;
+}
+
+input[type="file"].custom-input:not(:placeholder-shown) {
+    background-color: #f0fdf4;
+    border-color: #86efac;
+}
+
+.form-row-item:has(input[type="file"]) {
+    grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+    .form-row-item:has(input[type="file"]) {
+        grid-column: span 1;
+    }
+}

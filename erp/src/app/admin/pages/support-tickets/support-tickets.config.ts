@@ -80,6 +80,14 @@ export const SUPPORT_TICKET_FORM_FIELDS: InputDefinition[] = [
     type: 'textarea',
     required: true,
     editable: true, show_in_edit: true, show_in_create: true
+  },
+  {
+    column_name: 'attachment',
+    label: 'Nahrát přílohu',
+    type: 'file',
+    required: false,
+    show_in_edit: false,
+    show_in_create: true,
   }
 ];
 

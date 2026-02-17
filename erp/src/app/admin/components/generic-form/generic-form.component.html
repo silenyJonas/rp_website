@@ -24,6 +24,10 @@
             <div class="field-value">
               <ng-container [ngSwitch]="input.type">
                 
+                <input *ngSwitchCase="'file'" type="file" [id]="input.column_name" 
+                  (change)="onFileChange($event, input.column_name)" 
+                  class="custom-input" [disabled]="input.editable === false" />
+
                 <input *ngSwitchCase="'text'" [type]="input.type" [id]="input.column_name" [placeholder]="input.placeholder"
                   [required]="!!input.required" [pattern]="input.pattern || ''" [name]="input.column_name"
                   [(ngModel)]="formData[input.column_name]" class="custom-input" [disabled]="input.editable === false" />

@@ -135,11 +135,27 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
     });
   }
 
-  handleFormSubmitted(formData: any): void {
+handleFormSubmitted(formData: any): void {
     this.isLoading = true;
-    const req = formData.id ? this.updateData(formData.id, formData) : this.postData(formData);
     
-    req.pipe(
+    const isFormData = formData instanceof FormData;
+    const id = isFormData ? formData.get('id') : formData.id;
+
+    let request;
+
+    if (id) {
+      if (isFormData) {
+        // Trik pro Laravel: POST s _method=PUT umožní poslat soubory i při aktualizaci
+        formData.append('_method', 'PUT');
+        request = this.dataHandler.post(`${this.apiEndpoint}/${id}`, formData);
+      } else {
+        request = this.updateData(id, formData);
+      }
+    } else {
+      request = this.postData(formData);
+    }
+    
+    request.pipe(
       finalize(() => {
         this.isLoading = false;
         this.showCreateForm = false;

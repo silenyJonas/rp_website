@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AlertDialogService } from './alert-dialog.service';
-import {environment} from '../../../environments/environment'
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -16,16 +16,22 @@ export class DataHandler {
     private alertDialogService: AlertDialogService
   ) { }
 
-  private getHeaders(contentType: string = 'application/json'): HttpHeaders {
-    if (contentType === 'application/json') {
-      return new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      });
-    }
-    return new HttpHeaders({
+  /**
+   * Upravená logika generování hlaviček.
+   * Pokud jsou data typu FormData, Content-Type se nesmí nastavit, 
+   * aby ho prohlížeč mohl nastavit sám včetně "boundary".
+   */
+  private getHeaders(data?: any): HttpHeaders {
+    let headersConfig: any = {
       'Accept': 'application/json'
-    });
+    };
+
+    // Pokud data NEJSOU FormData, přidáme Content-Type pro JSON
+    if (!(data instanceof FormData)) {
+      headersConfig['Content-Type'] = 'application/json';
+    }
+
+    return new HttpHeaders(headersConfig);
   }
 
   private handleError = (error: HttpErrorResponse): Observable<never> => {
@@ -104,22 +110,25 @@ export class DataHandler {
     );
   }
 
-  post<T>(apiUrl: string, data: T): Observable<T> {
-    return this.http.post<{ data: T }>(`${this.baseUrl}/${apiUrl}`, data, { headers: this.getHeaders() }).pipe(
+  // Změněno: Volá getHeaders(data) pro detekci FormData
+  post<T>(apiUrl: string, data: any): Observable<T> {
+    return this.http.post<{ data: T }>(`${this.baseUrl}/${apiUrl}`, data, { headers: this.getHeaders(data) }).pipe(
       map(response => response.data),
       catchError(this.handleError)
     );
   }
 
-  put<T>(apiUrl: string, data: T): Observable<T> {
-    return this.http.put<{ data: T }>(`${this.baseUrl}/${apiUrl}`, data, { headers: this.getHeaders() }).pipe(
+  // Změněno: Volá getHeaders(data) pro detekci FormData
+  put<T>(apiUrl: string, data: any): Observable<T> {
+    return this.http.put<{ data: T }>(`${this.baseUrl}/${apiUrl}`, data, { headers: this.getHeaders(data) }).pipe(
       map(response => response.data),
       catchError(this.handleError)
     );
   }
 
-  patch<T>(apiUrl: string, data: Partial<T>): Observable<T> {
-    return this.http.patch<{ data: T }>(`${this.baseUrl}/${apiUrl}`, data, { headers: this.getHeaders() }).pipe(
+  // Změněno: Volá getHeaders(data) pro detekci FormData
+  patch<T>(apiUrl: string, data: any): Observable<T> {
+    return this.http.patch<{ data: T }>(`${this.baseUrl}/${apiUrl}`, data, { headers: this.getHeaders(data) }).pipe(
       map(response => response.data),
       catchError(this.handleError)
     );
@@ -134,17 +143,8 @@ export class DataHandler {
 
   upload<T>(apiUrl: string, formData: FormData): Observable<T> {
     console.log('DataService: Odesílám FormData na', `${this.baseUrl}/${apiUrl}`);
-    const dataToSend: { [key: string]: any } = {};
-    formData.forEach((value, key) => {
-      try {
-        dataToSend[key] = JSON.parse(value as string);
-      } catch (e) {
-        dataToSend[key] = value;
-      }
-    });
-    console.log('Data formuláře k odeslání (bez souborů):', JSON.stringify(dataToSend, null, 2));
-
-    return this.http.post<T>(`${this.baseUrl}/${apiUrl}`, formData, { headers: this.getHeaders('multipart/form-data') }).pipe(
+    // Ponecháno pro zpětnou kompatibilitu, nyní využívá upravené getHeaders
+    return this.http.post<T>(`${this.baseUrl}/${apiUrl}`, formData, { headers: this.getHeaders(formData) }).pipe(
       catchError(this.handleError)
     );
   }
