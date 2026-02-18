@@ -37,6 +37,7 @@
       <div class="table-and-pagination-container">
         <app-generic-table #activeTable *ngIf="!showTrashTable"
           [buttons]="buttons"
+          [currentFilters]="filters"
           [data]="data"
           [columns]="salesLeadColumns"
           [isFullWidth]="isTableFullWidth"

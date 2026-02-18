@@ -38,6 +38,7 @@
         <app-generic-table #activeTable *ngIf="!showTrashTable"
           [buttons]="buttons"
           [data]="data"
+          [currentFilters]="filters"
           [columns]="columns"
           [isFullWidth]="isTableFullWidth"
           [tableCaption]="'Seznam Support Ticketů'"

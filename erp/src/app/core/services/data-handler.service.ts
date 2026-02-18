@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AlertDialogService } from './alert-dialog.service';
@@ -76,8 +76,22 @@ export class DataHandler {
     return throwError(() => new Error(errorMessage));
   };
 
-  getCollection<T>(apiUrl: string): Observable<T[]> {
-    return this.http.get<T[] | { data: T[] }>(`${this.baseUrl}/${apiUrl}`, { headers: this.getHeaders() }).pipe(
+  getCollection<T>(apiUrl: string, params?: any): Observable<T[]> {
+    let httpParams = new HttpParams();
+    
+    // Pokud máme parametry (filtry), přidáme je do dotazu
+    if (params) {
+      Object.keys(params).forEach(key => {
+        if (params[key] !== null && params[key] !== undefined) {
+          httpParams = httpParams.append(key, params[key]);
+        }
+      });
+    }
+
+    return this.http.get<T[] | { data: T[] }>(`${this.baseUrl}/${apiUrl}`, { 
+      headers: this.getHeaders(),
+      params: httpParams // Angular automaticky vytvoří ?key=value&key2=value2
+    }).pipe(
       map(response => {
         if (response && typeof response === 'object' && 'data' in response) {
           return (response as { data: T[] }).data;

@@ -40,7 +40,8 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   @Input() isLogsTable: boolean = false;
   @Input() isAdminTable: boolean = false;
   @Input() isFullWidth: boolean = true;
-  
+  @Input() currentFilters: any = {};
+
   @Output() itemDeleted = new EventEmitter<any>();
   @Output() createFormOpened = new EventEmitter<void>();
   @Output() editFormOpened = new EventEmitter<any>();
@@ -216,10 +217,30 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     }
   }
 
-  // Pomocná metoda pro export - v rodiči se loadData často vrací jako Observable<T[]>
-  private loadDataAsCollection() {
-    return this.dataHandler.getCollection<any>(this.apiEndpoint + '?no_pagination=true');
+private loadDataAsCollection() {
+  // 1. Vytvoříme základní parametry pro export
+  const exportParams: any = { 
+    ...this.currentFilters, 
+    no_pagination: 'true' 
+  };
+
+  /**
+   * OPRAVA SQL CHYBY: Unknown column ''
+   * Pokud uživatel nepoužil řazení v UI, currentFilters může mít sort_by prázdný.
+   * Dosadíme 'id' a 'desc' jako globální fallback.
+   */
+  if (!exportParams.sort_by || exportParams.sort_by === '') {
+    exportParams.sort_by = 'id';
   }
+  
+  if (!exportParams.sort_direction || exportParams.sort_direction === '') {
+    exportParams.sort_direction = 'desc';
+  }
+
+  // 2. Voláme tvůj upravený DataHandler
+  // Teď už to pošle např. ?status=Dokončeno&sort_by=id&sort_direction=desc&no_pagination=true
+  return this.dataHandler.getCollection<any>(this.apiEndpoint, exportParams);
+}
 
   openCreateForm(){
     this.createFormOpened.emit();
