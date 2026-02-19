@@ -107,3 +107,51 @@ td a:hover {
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+.toolbar {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  padding-top: 5px;
+}
+.small-btn {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid transparent;
+}
+.btn-trash { background-color: #fef2f2; color: #dc2626; border-color: #fecaca; }
+
+/* Kontejner pro checkbox a text */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Přesná mezera mezi checkem a textem */
+  font-size: 13px; /* Menší, elegantní písmo */
+  color: #6c757d; /* Šedivá barva (Bootstrap style), aby to nerušilo */
+  cursor: pointer;
+  user-select: none;
+  font-weight: 400;
+  transition: all 0.2s ease;
+}
+
+/* Hover efekt na celý label */
+.checkbox-container:hover {
+  color: #333;
+}
+
+/* Stylování samotného inputu */
+.checkbox-container input[type="checkbox"] {
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
+  accent-color: #2c3e50; /* Barva zaškrtnutí ladící k tvému UI */
+  margin: 0;
+  border-radius: 3px;
+}
+

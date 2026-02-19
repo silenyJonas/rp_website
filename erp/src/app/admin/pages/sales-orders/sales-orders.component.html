@@ -58,10 +58,6 @@
         </app-generic-trash-table>
 
         <div class="flex justify-between items-center mt-4">
-          <label class="checkbox-container text-xs">
-            <input type="checkbox" [(ngModel)]="isTableFullWidth"> Full-width zobrazení
-          </label>
-
           <app-pagination-buttons
             [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
             [totalPages]="showTrashTable ? trashTotalPages : totalPages"
