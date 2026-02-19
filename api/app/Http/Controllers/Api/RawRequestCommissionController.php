@@ -71,14 +71,17 @@ class RawRequestCommissionController extends Controller
      */
     public function store(StoreRawRequestCommissionRequest $request): JsonResponse
     {
-        // Výchozí hodnoty se dají definovat přímo zde, pokud nejsou v Requestu
-        $validated = $request->validated();
-        
-        $commission = RawRequestCommission::create($validated);
-        
-        $this->logAction($request, 'create', 'RawRequestCommission', "Vytvořen požadavek na provizi: {$commission->thema}", $commission->id);
-        
-        return response()->json(new RawRequestCommissionResource($commission), 201);
+        try {
+            $validated = $request->validated();
+            $commission = RawRequestCommission::create($validated);
+            
+            $this->logAction($request, 'create', 'RawRequestCommission', "Vytvořen požadavek na provizi: {$commission->thema}", $commission->id);
+            
+            return response()->json(new RawRequestCommissionResource($commission), 201);
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'RawRequestCommission', "Chyba při vytváření požadavku: " . $e->getMessage());
+            return response()->json(['message' => 'Vytvoření požadavku selhalo.'], 500);
+        }
     }
 
     /**
@@ -94,11 +97,16 @@ class RawRequestCommissionController extends Controller
      */
     public function update(UpdateRawRequestCommissionRequest $request, RawRequestCommission $rawRequestCommission): JsonResponse
     {
-        $rawRequestCommission->update($request->validated());
-        
-        $this->logAction($request, 'update', 'RawRequestCommission', "Aktualizace požadavku ID: {$rawRequestCommission->id}", $rawRequestCommission->id);
-        
-        return response()->json(new RawRequestCommissionResource($rawRequestCommission));
+        try {
+            $rawRequestCommission->update($request->validated());
+            
+            $this->logAction($request, 'update', 'RawRequestCommission', "Aktualizace požadavku ID: {$rawRequestCommission->id}", $rawRequestCommission->id);
+            
+            return response()->json(new RawRequestCommissionResource($rawRequestCommission));
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'RawRequestCommission', "Chyba při aktualizaci požadavku ID {$rawRequestCommission->id}: " . $e->getMessage(), $rawRequestCommission->id);
+            return response()->json(['message' => 'Aktualizace požadavku selhala.'], 500);
+        }
     }
 
     /**
@@ -106,14 +114,19 @@ class RawRequestCommissionController extends Controller
      */
     public function destroy(Request $request, $id): JsonResponse
     {
-        $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
-        $item = RawRequestCommission::withTrashed()->findOrFail($id);
-        
-        $forceDelete ? $item->forceDelete() : $item->delete();
-        
-        $this->logAction($request, $forceDelete ? 'hard_delete' : 'soft_delete', 'RawRequestCommission', "Smazání požadavku na provizi ID: $id", $id);
+        try {
+            $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
+            $item = RawRequestCommission::withTrashed()->findOrFail($id);
+            
+            $forceDelete ? $item->forceDelete() : $item->delete();
+            
+            $this->logAction($request, $forceDelete ? 'hard_delete' : 'soft_delete', 'RawRequestCommission', "Smazání požadavku na provizi ID: $id", $id);
 
-        return response()->json(null, 204);
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'RawRequestCommission', "Chyba při mazání požadavku ID $id: " . $e->getMessage(), $id);
+            return response()->json(['message' => 'Smazání požadavku selhalo.'], 500);
+        }
     }
 
     /**
@@ -121,12 +134,17 @@ class RawRequestCommissionController extends Controller
      */
     public function restore(Request $request, $id): JsonResponse
     {
-        $item = RawRequestCommission::withTrashed()->findOrFail($id);
-        $item->restore();
-        
-        $this->logAction($request, 'restore', 'RawRequestCommission', "Obnova požadavku ID: $id", $id);
-        
-        return response()->json(new RawRequestCommissionResource($item));
+        try {
+            $item = RawRequestCommission::withTrashed()->findOrFail($id);
+            $item->restore();
+            
+            $this->logAction($request, 'restore', 'RawRequestCommission', "Obnova požadavku ID: $id", $id);
+            
+            return response()->json(new RawRequestCommissionResource($item));
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'RawRequestCommission', "Chyba při obnově požadavku ID $id: " . $e->getMessage(), $id);
+            return response()->json(['message' => 'Obnova požadavku selhala.'], 500);
+        }
     }
 
     /**
@@ -134,21 +152,27 @@ class RawRequestCommissionController extends Controller
      */
     public function forceDeleteAllTrashed(Request $request): JsonResponse
     {
-        $count = RawRequestCommission::onlyTrashed()->count();
-        RawRequestCommission::onlyTrashed()->forceDelete();
-        
-        $this->logAction($request, 'force_delete_all', 'RawRequestCommission', "Hromadné smazání koše provizí. Počet: $count");
-        
-        return response()->json(null, 204);
+        try {
+            $count = RawRequestCommission::onlyTrashed()->count();
+            RawRequestCommission::onlyTrashed()->forceDelete();
+            
+            $this->logAction($request, 'force_delete_all', 'RawRequestCommission', "Hromadné smazání koše provizí. Počet: $count");
+            
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'RawRequestCommission', "Chyba při vyprazdňování koše provizí: " . $e->getMessage());
+            return response()->json(['message' => 'Vysypání koše selhalo.'], 500);
+        }
     }
 
     /**
      * Sjednocené logování (BusinessLog).
      */
-    protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null)
+   protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null)
     {
         try {
-            $user = $request->user();
+            // TATO ÚPRAVA: Zkusíme získat uživatele přes sanctum guard manuálně
+            $user = $request->user() ?? auth('sanctum')->user();
 
             BusinessLog::create([
                 'origin'               => $request->ip(),
@@ -160,7 +184,7 @@ class RawRequestCommissionController extends Controller
                 'user_id'              => $user?->id,
                 'context_data'         => json_encode($request->all(), JSON_UNESCAPED_UNICODE),
                 'user_id_plain'        => (string)($user?->id ?? '0'),
-                'user_email_plain'     => $user?->user_email ?? 'Veřejný formulář'
+                'user_email_plain'     => $user ? $user->user_email : 'Veřejný formulář'
             ]);
         } catch (\Exception $e) {
             Log::error("Log error (RawRequestCommission): " . $e->getMessage());

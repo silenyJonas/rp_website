@@ -11,6 +11,9 @@ use Illuminate\Http\JsonResponse;
 
 class TranslationController extends Controller
 {
+    /**
+     * Uložení překladů do JSON souboru a logování změn.
+     */
     public function save(Request $request): JsonResponse
     {
         $request->validate([
@@ -31,11 +34,13 @@ class TranslationController extends Controller
                 $oldData = json_decode(File::get($filePath), true) ?? [];
             }
 
+            // Výpočet rozdílů pro logování
             $changes = $this->getDeepDiff($oldData, $newData);
 
             if (!File::isDirectory($directory)) {
                 File::makeDirectory($directory, 0755, true, true);
             }
+
             $jsonContent = json_encode($newData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             File::put($filePath, $jsonContent);
 
@@ -54,11 +59,17 @@ class TranslationController extends Controller
             ], 200);
 
         } catch (\Exception $e) {
+            // Logování chyby do BusinessLog
+            $this->logAction($request, 'error', 'Translation', "Chyba při zápisu překladu ({$lang}): " . $e->getMessage());
+            
             Log::error('Chyba při zápisu překladu: ' . $e->getMessage());
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
 
+    /**
+     * Rekurzivní porovnání polí pro zjištění změn v překladech.
+     */
     private function getDeepDiff(array $old, array $new, string $path = ''): array
     {
         $diff = [];
@@ -80,42 +91,51 @@ class TranslationController extends Controller
         return $diff;
     }
 
+    /**
+     * Sjednocené logování akcí.
+     */
     protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedEntityId = null, array $changes = [])
     {
         try {
-            $user = $request->user();
+            $user = $request->user() ?? auth('sanctum')->user();
             
             $diffString = implode(' | ', $changes);
-            
             if (mb_strlen($diffString) > 200) {
                 $diffString = mb_substr($diffString, 0, 197) . '...';
             }
 
             BusinessLog::create([
-                'origin' => $request->ip(),
-                'event_type' => $eventType,
-                'module' => $module,
-                'description' => $description,
+                'origin'               => $request->ip(),
+                'event_type'           => $eventType,
+                'module'               => $module,
+                'description'          => $description,
                 'affected_entity_type' => 'Translation',
-                'affected_entity_id' => $affectedEntityId,
-                'user_login_id' => $user?->user_login_id,
-                'context_data' => json_encode([
+                'affected_entity_id'   => $affectedEntityId,
+                'user_id'              => $user?->id,
+                'context_data'         => json_encode([
                     'lg' => $request->input('lang'),
                     'df' => $diffString ?: 'no_val_change'
                 ], JSON_UNESCAPED_UNICODE),
-                'user_login_id_plain' => (string)$user?->user_login_id,
-                'user_login_email_plain' => $user?->user_email
+                'user_id_plain'        => (string)($user?->id ?? '0'),
+                'user_email_plain'     => $user?->user_email ?? 'system'
             ]);
         } catch (\Exception $e) {
-            Log::error('Chyba logování: ' . $e->getMessage());
+            Log::error('Chyba logování (Translation): ' . $e->getMessage());
         }
     }
 
+    /**
+     * Načtení překladů pro daný jazyk.
+     */
     public function getTranslations(string $lang): JsonResponse
     {
         $relativeDirectory = env('ANGULAR_I18N_PATH', '../erp/src/assets/i18n');
         $filePath = base_path($relativeDirectory) . '/' . $lang . '.json';
-        if (!File::exists($filePath)) return response()->json(['message' => 'Not found'], 404);
+        
+        if (!File::exists($filePath)) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+        
         return response()->json(json_decode(File::get($filePath), true));
     }
 }

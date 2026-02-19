@@ -44,6 +44,7 @@
           [tableCaption]="'Seznam obchodních příležitostí'"
           [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
+          (generateFormOpened)="handleGenerateFormLink($event)"
           (itemDeleted)="refreshData()"
           (createFormOpened)="handleCreateFormOpened()"
           (editFormOpened)="handleEditFormOpened($event)"

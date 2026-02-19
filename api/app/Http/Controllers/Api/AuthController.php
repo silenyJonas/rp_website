@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Auth, Log};
-use App\Models\{User, RefreshToken};
+use App\Models\{User, RefreshToken, BusinessLog};
 use Illuminate\Support\Str;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
@@ -36,6 +36,9 @@ class AuthController extends Controller
                 'token'      => hash('sha256', $refreshToken),
                 'expires_at' => now()->addDays(7),
             ]);
+
+            // LOGOVÁNÍ ÚSPĚCHU
+            $this->logAction($request, 'login_success', 'Auth', "Uživatel se úspěšně přihlásil: {$user->user_email}", $user->id, $user);
             
             return response()->json([
                 'message'          => 'Přihlášení úspěšné!',
@@ -46,6 +49,9 @@ class AuthController extends Controller
                 'refreshToken'     => $refreshToken,
             ], 200);
         }
+
+        // LOGOVÁNÍ NEÚSPĚCHU
+        $this->logAction($request, 'login_failed', 'Auth', "Neúspěšný pokus o přihlášení na login: {$request->email}");
 
         return response()->json(['message' => 'Neplatné přihlašovací údaje.'], 401);
     }
@@ -69,9 +75,7 @@ class AuthController extends Controller
 
         $user = $dbRefreshToken->user;
 
-        // DŮLEŽITÉ: Smazat starý token až těsně před vytvořením nového
         $dbRefreshToken->delete();
-        // Volitelně: Smazat staré Access Tokeny pro čistotu DB
         $user->tokens()->delete();
 
         $newAccessToken = $user->createToken('access-token', ['*'], now()->addMinutes(60))->plainTextToken;
@@ -91,8 +95,12 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        if ($request->user()) {
-            $request->user()->currentAccessToken()->delete();
+        $user = $request->user();
+        
+        if ($user) {
+            // LOGOVÁNÍ ODHLÁŠENÍ
+            $this->logAction($request, 'logout', 'Auth', "Uživatel se odhlásil: {$user->user_email}", $user->id, $user);
+            $user->currentAccessToken()->delete();
         }
         
         $refreshToken = $request->input('refreshToken');
@@ -101,5 +109,34 @@ class AuthController extends Controller
         }
         
         return response()->json(['message' => 'Odhlášení úspěšné!'], 200);
+    }
+
+    /**
+     * Logování akcí (Sjednocené parametry podle vzoru JobApplication).
+     */
+    protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null, ?User $user = null)
+    {
+        try {
+            // Pokud není uživatel předán (např. u login_failed), zkusíme ho vzít z requestu
+            $activeUser = $user ?? $request->user();
+
+            BusinessLog::create([
+                'origin'               => $request->ip(),
+                'event_type'           => $eventType,
+                'module'               => $module,
+                'description'          => $description,
+                'affected_entity_type' => 'User',
+                'affected_entity_id'   => $affectedId,
+                'user_id'              => $activeUser?->id,
+                'context_data'         => json_encode([
+                    'ip' => $request->ip(),
+                    'user_agent' => $request->userAgent()
+                ], JSON_UNESCAPED_UNICODE),
+                'user_id_plain'        => (string)($activeUser?->id ?? '0'),
+                'user_email_plain'     => $activeUser?->user_email ?? ($request->email ?? 'Neznámý/Nepřihlášený')
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Log error (Auth): " . $e->getMessage());
+        }
     }
 }

@@ -19,7 +19,7 @@ class NewsController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = $request->input('per_page', 15); // Změněno na standardních 15
+        $perPage = $request->input('per_page', 15);
         $onlyTrashed = filter_var($request->input('only_trashed', false), FILTER_VALIDATE_BOOLEAN);
 
         $query = News::query();
@@ -67,11 +67,16 @@ class NewsController extends Controller
      */
     public function store(StoreNewsRequest $request): JsonResponse
     {
-        $news = News::create($request->validated());
-        
-        $this->logAction($request, 'create', 'News', "Vytvořena novinka: {$news->title}", $news->id);
-        
-        return response()->json(new NewsResource($news), 201);
+        try {
+            $news = News::create($request->validated());
+            
+            $this->logAction($request, 'create', 'News', "Vytvořena novinka: {$news->title}", $news->id);
+            
+            return response()->json(new NewsResource($news), 201);
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'News', "Chyba při vytváření novinky: " . $e->getMessage());
+            return response()->json(['message' => 'Vytvoření novinky selhalo.'], 500);
+        }
     }
 
     /**
@@ -87,11 +92,16 @@ class NewsController extends Controller
      */
     public function update(UpdateNewsRequest $request, News $news): JsonResponse
     {
-        $news->update($request->validated());
-        
-        $this->logAction($request, 'update', 'News', "Aktualizace novinky: {$news->title}", $news->id);
-        
-        return response()->json(new NewsResource($news));
+        try {
+            $news->update($request->validated());
+            
+            $this->logAction($request, 'update', 'News', "Aktualizace novinky: {$news->title}", $news->id);
+            
+            return response()->json(new NewsResource($news));
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'News', "Chyba při aktualizaci novinky ID {$news->id}: " . $e->getMessage(), $news->id);
+            return response()->json(['message' => 'Aktualizace novinky selhala.'], 500);
+        }
     }
 
     /**
@@ -99,15 +109,20 @@ class NewsController extends Controller
      */
     public function destroy(Request $request, $id): JsonResponse
     {
-        $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
-        $news = News::withTrashed()->findOrFail($id);
-        $title = $news->title;
+        try {
+            $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
+            $news = News::withTrashed()->findOrFail($id);
+            $title = $news->title;
 
-        $forceDelete ? $news->forceDelete() : $news->delete();
-        
-        $this->logAction($request, $forceDelete ? 'hard_delete' : 'soft_delete', 'News', "Smazání novinky: $title", $id);
+            $forceDelete ? $news->forceDelete() : $news->delete();
+            
+            $this->logAction($request, $forceDelete ? 'hard_delete' : 'soft_delete', 'News', "Smazání novinky: $title", $id);
 
-        return response()->json(null, 204);
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'News', "Chyba při mazání novinky ID $id: " . $e->getMessage(), $id);
+            return response()->json(['message' => 'Smazání novinky selhalo.'], 500);
+        }
     }
 
     /**
@@ -115,12 +130,17 @@ class NewsController extends Controller
      */
     public function restore(Request $request, $id): JsonResponse
     {
-        $news = News::withTrashed()->findOrFail($id);
-        $news->restore();
-        
-        $this->logAction($request, 'restore', 'News', "Obnovení novinky: {$news->title}", $news->id);
-        
-        return response()->json(new NewsResource($news));
+        try {
+            $news = News::withTrashed()->findOrFail($id);
+            $news->restore();
+            
+            $this->logAction($request, 'restore', 'News', "Obnovení novinky: {$news->title}", $news->id);
+            
+            return response()->json(new NewsResource($news));
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'News', "Chyba při obnově novinky ID $id: " . $e->getMessage(), $id);
+            return response()->json(['message' => 'Obnova novinky selhala.'], 500);
+        }
     }
 
     /**
@@ -128,12 +148,17 @@ class NewsController extends Controller
      */
     public function forceDeleteAllTrashed(Request $request): JsonResponse
     {
-        $count = News::onlyTrashed()->count();
-        News::onlyTrashed()->forceDelete();
-        
-        $this->logAction($request, 'force_delete_all', 'News', "Hromadné smazání koše novinek. Počet: $count");
-        
-        return response()->json(null, 204);
+        try {
+            $count = News::onlyTrashed()->count();
+            News::onlyTrashed()->forceDelete();
+            
+            $this->logAction($request, 'force_delete_all', 'News', "Hromadné smazání koše novinek. Počet: $count");
+            
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'News', "Chyba při vyprazdňování koše novinek: " . $e->getMessage());
+            return response()->json(['message' => 'Vysypání koše selhalo.'], 500);
+        }
     }
 
     /**

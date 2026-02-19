@@ -54,6 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // BusinessLogs
     Route::prefix('business_logs')->group(function () {
         Route::get('/', [BusinessLogController::class, 'index']);
+        Route::post('/', [BusinessLogController::class, 'store']);
         Route::get('/{businessLog}/details', [BusinessLogController::class, 'show']);
     });
     

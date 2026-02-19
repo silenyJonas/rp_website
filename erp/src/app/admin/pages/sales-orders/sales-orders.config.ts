@@ -76,7 +76,7 @@ export const SALES_ORDER_FORM_FIELDS: InputDefinition[] = [
     label: 'Příloha / Smlouva',
     type: 'file',
     required: false,
-    editable: true, show_in_edit: true, show_in_create: true
+    editable: true, show_in_edit: false, show_in_create: true
   },
   {
     column_name: 'dataProcessingAgreement', // PŘIDÁNO: Povinné pro validaci v Laravelu

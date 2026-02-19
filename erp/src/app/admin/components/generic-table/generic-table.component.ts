@@ -8,7 +8,7 @@ import { DataHandler } from '../../../core/services/data-handler.service';
 import { ConfirmDialogService } from '../../../core/services/confirm-dialog.service';
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
 import { AuthService } from '../../../core/auth/auth.service';
-import { GenericTableService } from '../../../core/services/generic-table.service'; // Import přidán
+import { GenericTableService } from '../../../core/services/generic-table.service';
 
 export interface Buttons {
   display_name: string;
@@ -21,10 +21,7 @@ export interface Buttons {
 @Component({
   selector: 'app-generic-table',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './generic-table.component.html',
   styleUrls: ['../table-style.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -37,7 +34,6 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   @Input() override isLoading: boolean = false;
   @Input() uploadsBaseUrl: string = '';
   @Input() buttons: Buttons[] = [];
-  @Input() isLogsTable: boolean = false;
   @Input() isAdminTable: boolean = false;
   @Input() isFullWidth: boolean = true;
   @Input() currentFilters: any = {};
@@ -45,28 +41,22 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   @Output() itemDeleted = new EventEmitter<any>();
   @Output() createFormOpened = new EventEmitter<void>();
   @Output() editFormOpened = new EventEmitter<any>();
-  @Output() resetPasswordFormOpened = new EventEmitter<any>(); 
   @Output() viewDetailsOpened = new EventEmitter<any>();
+  @Output() generateFormOpened = new EventEmitter<any>();
 
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService, // Přidáno pro rodiče
+    protected override genericTableService: GenericTableService,
     private confirmDialogService: ConfirmDialogService,
     private alertDialogService: AlertDialogService,
-    public authService: AuthService
+    public authService: AuthService // Veřejný pro šablonu i logování
   ) {
-    // Předání 3 parametrů do super konstruktoru
     super(dataHandler, cd, genericTableService);
   }
 
-  override ngOnChanges(changes: SimpleChanges): void {
-    super.ngOnChanges(changes);
-  }
-
-  override ngOnInit(): void {
-    super.ngOnInit();
-  }
+  override ngOnInit(): void { super.ngOnInit(); }
+  override ngOnChanges(changes: SimpleChanges): void { super.ngOnChanges(changes); }
 
   getCellValue(item: any, column: ColumnDefinition): any {
     const keys = column.key.split('.');
@@ -75,140 +65,79 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
       case 'currency':
         return value ? (new CurrencyPipe('cs-CZ')).transform(value, 'CZK', 'symbol-narrow', '1.2-2') : '';
       case 'date':
-        // return value ? (new DatePipe('cs-CZ')).transform(value, column.format || 'shortDate') : '';
-        const dateFormat = column.format || 'd.M.yyyy'; 
-        return value ? (new DatePipe('cs-CZ')).transform(value, dateFormat) : '';
+        return value ? (new DatePipe('cs-CZ')).transform(value, column.format || 'd.M.yyyy') : '';
       case 'boolean':
         return value ? 'Ano' : 'Ne';
       case 'image':
         return value ? `${this.uploadsBaseUrl}${value}` : '';
-      case 'array':
-        return Array.isArray(value) ? value.join(', ') : value;
-      case 'object':
-        return this.isObject(value) ? JSON.stringify(value) : value;
       default:
         return value;
     }
   }
 
-  isObject(value: any): boolean {
-    return typeof value === 'object' && value !== null && !Array.isArray(value);
-  }
-
-  getFormLink(item: any): void {
-    const baseUrl = window.location.origin;
-    const url = `${baseUrl}/order_form/lead_id=${item.id}`;
-
-    navigator.clipboard.writeText(url).then(() => {
-      this.alertDialogService.open(
-        'Odkaz zkopírován', 
-        `Odkaz pro lead s id: ${item.id} byl uložen do schránky.`, 
-        'success'
-      );
-    }).catch((err: any) => { // Oprava implicit any
-      console.error('Chyba při kopírování:', err);
-      this.alertDialogService.open('Chyba', 'Nepodařilo se zkopírovat odkaz.', 'danger');
-    });
-  }
-  
-  handleAction(item: any, buttonType: string): void {
-    switch (buttonType) {
-      case 'generate_form':
-        this.getFormLink(item);
-        break;
-      case 'details':
-        this.viewDetailsOpened.emit(item);
-        break;
-      case 'create':
-        this.openCreateForm();
-        break;
-      case 'delete':
-        this.onDeleteAction(item);
-        break;
-      case 'edit':
-        this.editFormOpened.emit(item);
-        break;
-      case 'password_reset':
-        this.resetPasswordFormOpened.emit(item);  
-        break;
-      default:
-        console.warn('Neznámý typ tlačítka:', buttonType);
+  handleAction(item: any, buttonAction: string): void {
+    switch (buttonAction) {
+      case 'generate_form': this.generateFormOpened.emit(item); break;
+      case 'details': this.viewDetailsOpened.emit(item); break;
+      case 'edit': this.editFormOpened.emit(item); break;
+      case 'delete': this.onDeleteAction(item); break;
+      default: console.warn('Neznámý typ akce:', buttonAction);
     }
   }
 
   public onDeleteAction(item: any): void {
-    this.confirmDialogService.open(
-      'Potvrzení smazání', 
-      'Opravdu si přejete smazat tuto položku?'
-    ).then(result => {
-      if (result) {
-        this.deleteData(item.id).subscribe({
-          next: () => {
-            this.alertDialogService.open('Úspěch', 'Položka byla úspěšně smazána.', 'success');
-            
-            const index = this.data.findIndex(dataItem => dataItem.id === item.id);
-            if (index > -1) {
-              this.data.splice(index, 1);
-              this.cd.markForCheck();
+    this.confirmDialogService.open('Potvrzení smazání', 'Opravdu si přejete smazat tuto položku?')
+      .then(result => {
+        if (result) {
+          this.deleteData(item.id).subscribe({
+            next: () => {
+              this.removeItemFromLocal(item.id);
               this.itemDeleted.emit(item);
+              this.alertDialogService.open('Úspěch', 'Položka byla smazána.', 'success');
             }
-          },
-          error: (err: any) => { // Oprava implicit any
-            console.error('Delete error:', err);
-            this.alertDialogService.open('Chyba', 'Smazání se nezdařilo.', 'danger');
-          }
-        });
-      } else {
-        this.alertDialogService.open('Zrušeno', 'Smazání položky bylo zrušeno.', 'warning');
-      }
-    }).catch((error: any) => { // Oprava implicit any
-      console.error('Dialog error:', error);
-    });
+          });
+        }
+      });
   }
 
-  get colspanValue(): number {
-    const activeButtonsCount = this.buttons?.filter(b => b.isActive).length || 0;
-    return this.columnDefinitions.length + (activeButtonsCount > 0 ? 1 : 0);
+  private removeItemFromLocal(id: any): void {
+    const index = this.data.findIndex(d => d.id === id);
+    if (index > -1) {
+      this.data.splice(index, 1);
+      this.cd.markForCheck();
+    }
   }
 
+  // --- CENTRALIZOVANÝ EXPORT S LOGOVÁNÍM ---
   async exportToCSV() {
     try {
       this.isLoading = true;
       this.cd.markForCheck();
       
-      // loadAllData je nyní v rodiči
       const responseData = await firstValueFrom(this.loadDataAsCollection());
       const allData: any[] = Array.isArray(responseData) ? responseData : [];
       
       if (allData.length > 0) {
-        let csv = '';
-        const headers = this.columnDefinitions.map(col => col.header || col.key).join(';');
-        csv += headers + '\n';
-        
+        // 1. Generování CSV
+        let csv = this.columnDefinitions.map(col => col.header || col.key).join(';') + '\n';
         allData.forEach(item => {
-          const row = this.columnDefinitions.map(column => {
-            let value = this.getCellValue(item, column);
-            if (value === null || value === undefined) value = '';
-            return `"${String(value).replace(/"/g, '""')}"`;
-          }).join(';');
-          csv += row + '\n';
+          csv += this.columnDefinitions.map(col => `"${String(this.getCellValue(item, col) || '').replace(/"/g, '""')}"`).join(';') + '\n';
         });
 
+        // 2. Stažení souboru
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
-        if (link.download !== undefined) {
-          const url = URL.createObjectURL(blob);
-          link.setAttribute('href', url);
-          link.setAttribute('download', `${this.tableCaption || 'export'}.csv`);
-          link.style.visibility = 'hidden';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
+        link.href = URL.createObjectURL(blob);
+        link.download = `${this.tableCaption || 'export'}.csv`;
+        link.click();
+
+        // 3. CENTRALIZOVANÉ LOGOVÁNÍ
+        this.logExportActivity(allData.length);
+
       } else {
         this.alertDialogService.open('Export', 'Žádná data k exportu.', 'warning');
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Export error:', error);
       this.alertDialogService.open('Chyba', 'Při exportu nastala chyba.', 'danger');
     } finally {
@@ -217,32 +146,31 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     }
   }
 
-private loadDataAsCollection() {
-  // 1. Vytvoříme základní parametry pro export
-  const exportParams: any = { 
-    ...this.currentFilters, 
-    no_pagination: 'true' 
-  };
+  private logExportActivity(rowCount: number): void {
+    const logData = {
+      origin: 'GenericTable',
+      event_type: 'DATA_EXPORT',
+      module: this.apiEndpoint, // Automaticky poznáme, co se exportovalo (sales_leads, users, atd.)
+      description: `Uživatel exportoval ${rowCount} záznamů z tabulky: ${this.tableCaption || this.apiEndpoint}.`,
+      affected_entity_type: 'collection',
+      user_id_plain: this.authService.getUserId()?.toString(),
+      user_email_plain: this.authService.getUserEmail()
+    };
 
-  /**
-   * OPRAVA SQL CHYBY: Unknown column ''
-   * Pokud uživatel nepoužil řazení v UI, currentFilters může mít sort_by prázdný.
-   * Dosadíme 'id' a 'desc' jako globální fallback.
-   */
-  if (!exportParams.sort_by || exportParams.sort_by === '') {
-    exportParams.sort_by = 'id';
-  }
-  
-  if (!exportParams.sort_direction || exportParams.sort_direction === '') {
-    exportParams.sort_direction = 'desc';
+    // Odešleme log, ale nečekáme na odpověď (aby to nezdržovalo UI)
+    this.dataHandler.post('business_logs', logData).subscribe({
+      error: (err) => console.error('Nepodařilo se zalogovat export:', err)
+    });
   }
 
-  // 2. Voláme tvůj upravený DataHandler
-  // Teď už to pošle např. ?status=Dokončeno&sort_by=id&sort_direction=desc&no_pagination=true
-  return this.dataHandler.getCollection<any>(this.apiEndpoint, exportParams);
-}
+  private loadDataAsCollection() {
+    const params = { ...this.currentFilters, no_pagination: 'true' };
+    if (!params.sort_by) params.sort_by = 'id';
+    if (!params.sort_direction) params.sort_direction = 'desc';
+    return this.dataHandler.getCollection<any>(this.apiEndpoint, params);
+  }
 
-  openCreateForm(){
-    this.createFormOpened.emit();
+  get colspanValue(): number {
+    return this.columnDefinitions.length + (this.buttons?.filter(b => b.isActive).length || 0);
   }
 }

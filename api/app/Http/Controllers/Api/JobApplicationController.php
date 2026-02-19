@@ -66,24 +66,27 @@ class JobApplicationController extends Controller
     }
 
     /**
-     * Uložení nové reakce (z veřejného webu).
+     * Uložení nové reakce.
      */
     public function store(StoreJobApplicationRequest $request): JsonResponse
     {
-        $validatedData = $request->validated();
+        try {
+            $validatedData = $request->validated();
 
-        // Zpracování souboru CV
-        if ($request->hasFile('cv_file')) {
-            // Ukládáme do 'cv_files' v disku 'public'
-            $path = $request->file('cv_file')->store('cv_files', 'public');
-            $validatedData['cv_path'] = $path;
+            if ($request->hasFile('cv_file')) {
+                $path = $request->file('cv_file')->store('cv_files', 'public');
+                $validatedData['cv_path'] = $path;
+            }
+
+            $application = JobApplication::create($validatedData);
+
+            $this->logAction($request, 'create', 'JobApplication', "Nová reakce na pozici: {$application->position_name} ({$application->first_name} {$application->last_name})", $application->id);
+            
+            return response()->json(new JobApplicationResource($application), 201);
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'JobApplication', "Chyba při vytváření uchazeče: " . $e->getMessage());
+            return response()->json(['message' => 'Vytvoření se nezdařilo.'], 500);
         }
-
-        $application = JobApplication::create($validatedData);
-
-        $this->logAction($request, 'create', 'JobApplication', "Nová reakce na pozici: {$application->position_name} ({$application->first_name} {$application->last_name})", $application->id);
-        
-        return response()->json(new JobApplicationResource($application), 201);
     }
 
     /**
@@ -95,53 +98,57 @@ class JobApplicationController extends Controller
     }
 
     /**
-     * Aktualizace stavu nebo poznámky uchazeče.
+     * Aktualizace uchazeče.
      */
-// app/Http/Controllers/Api/JobApplicationController.php
+    public function update(UpdateJobApplicationRequest $request, JobApplication $jobApplication): JsonResponse
+    {
+        try {
+            $validated = $request->validated();
 
-public function update(UpdateJobApplicationRequest $request, JobApplication $jobApplication): JsonResponse
-{
-    $validated = $request->validated();
+            if ($request->hasFile('cv_file')) {
+                if ($jobApplication->cv_path) {
+                    Storage::disk('public')->delete($jobApplication->cv_path);
+                }
+                $path = $request->file('cv_file')->store('cv_files', 'public');
+                $validated['cv_path'] = $path;
+            }
 
-    // Pokud HR nahraje nové CV v rámci editace
-    if ($request->hasFile('cv_file')) {
-        // Smazat staré CV, pokud existuje
-        if ($jobApplication->cv_path) {
-            Storage::disk('public')->delete($jobApplication->cv_path);
+            $jobApplication->update($validated);
+            
+            $this->logAction($request, 'update', 'JobApplication', "Aktualizace uchazeče ID: {$jobApplication->id}. Stav: " . ($validated['state'] ?? 'beze změny'), $jobApplication->id);
+            
+            return response()->json(new JobApplicationResource($jobApplication->fresh()));
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'JobApplication', "Chyba při aktualizaci uchazeče ID: {$jobApplication->id}. Chyba: " . $e->getMessage(), $jobApplication->id);
+            return response()->json(['message' => 'Aktualizace se nezdařila.'], 500);
         }
-        $path = $request->file('cv_file')->store('cv_files', 'public');
-        $validated['cv_path'] = $path;
     }
-
-    $jobApplication->update($validated);
-    
-    $this->logAction($request, 'update', 'JobApplication', "Aktualizace uchazeče ID: {$jobApplication->id}. Nový stav: " . ($validated['state'] ?? 'nezměněn'), $jobApplication->id);
-    
-    // Vracíme čerstvá data včetně načtených atributů
-    return response()->json(new JobApplicationResource($jobApplication->fresh()));
-}
 
     /**
      * Smazání (Soft / Hard).
      */
     public function destroy(Request $request, $id): JsonResponse
     {
-        $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
-        $item = JobApplication::withTrashed()->findOrFail($id);
-        
-        if ($forceDelete) {
-            // Při trvalém smazání odstraníme i fyzický soubor CV
-            if ($item->cv_path) {
-                Storage::disk('public')->delete($item->cv_path);
+        try {
+            $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
+            $item = JobApplication::withTrashed()->findOrFail($id);
+            
+            if ($forceDelete) {
+                if ($item->cv_path) {
+                    Storage::disk('public')->delete($item->cv_path);
+                }
+                $item->forceDelete();
+            } else {
+                $item->delete();
             }
-            $item->forceDelete();
-        } else {
-            $item->delete();
-        }
 
-        $this->logAction($request, $forceDelete ? 'hard_delete' : 'soft_delete', 'JobApplication', "Smazání uchazeče ID: $id", $id);
-        
-        return response()->json(null, 204);
+            $this->logAction($request, $forceDelete ? 'hard_delete' : 'soft_delete', 'JobApplication', "Smazání uchazeče ID: $id", $id);
+            
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'JobApplication', "Chyba při mazání uchazeče ID: $id. Chyba: " . $e->getMessage(), $id);
+            return response()->json(['message' => 'Smazání se nezdařilo.'], 500);
+        }
     }
 
     /**
@@ -149,36 +156,46 @@ public function update(UpdateJobApplicationRequest $request, JobApplication $job
      */
     public function restore(Request $request, $id): JsonResponse
     {
-        $item = JobApplication::withTrashed()->findOrFail($id);
-        $item->restore();
-        
-        $this->logAction($request, 'restore', 'JobApplication', "Obnova uchazeče ID: $id", $id);
-        
-        return response()->json(new JobApplicationResource($item));
+        try {
+            $item = JobApplication::withTrashed()->findOrFail($id);
+            $item->restore();
+            
+            $this->logAction($request, 'restore', 'JobApplication', "Obnova uchazeče ID: $id", $id);
+            
+            return response()->json(new JobApplicationResource($item));
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'JobApplication', "Chyba při obnově uchazeče ID: $id. Chyba: " . $e->getMessage(), $id);
+            return response()->json(['message' => 'Obnova se nezdařila.'], 500);
+        }
     }
 
     /**
-     * Vyprázdnění koše a smazání všech souborů CV.
+     * Vyprázdnění koše.
      */
     public function forceDeleteAllTrashed(Request $request): JsonResponse
     {
-        $trashed = JobApplication::onlyTrashed()->get();
-        $count = $trashed->count();
+        try {
+            $trashed = JobApplication::onlyTrashed()->get();
+            $count = $trashed->count();
 
-        foreach ($trashed as $item) {
-            if ($item->cv_path) {
-                Storage::disk('public')->delete($item->cv_path);
+            foreach ($trashed as $item) {
+                if ($item->cv_path) {
+                    Storage::disk('public')->delete($item->cv_path);
+                }
+                $item->forceDelete();
             }
-            $item->forceDelete();
-        }
 
-        $this->logAction($request, 'force_delete_all', 'JobApplication', "Vysypání koše uchazečů. Počet: $count");
-        
-        return response()->json(null, 204);
+            $this->logAction($request, 'force_delete_all', 'JobApplication', "Vysypání koše uchazečů. Počet: $count");
+            
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            $this->logAction($request, 'error', 'JobApplication', "Chyba při vysypávání koše uchazečů. Chyba: " . $e->getMessage());
+            return response()->json(['message' => 'Vysypání koše se nezdařilo.'], 500);
+        }
     }
 
     /**
-     * Logování akcí (Sjednocené parametry).
+     * Logování akcí.
      */
     protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null)
     {
