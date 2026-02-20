@@ -97,7 +97,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Všimni si změny parametru na {user} – Laravel provede Route Model Binding na model User
         Route::get('/{user}/details', [UserController::class, 'show']);
         Route::post('/{id}/restore', [UserController::class, 'restore']);
-        Route::post('/{id}/change-password', [UserController::class, 'changePassword']);
+        Route::put('/{id}/change-password', [UserController::class, 'changePassword']);
         Route::delete('/force-delete-all', [UserController::class, 'forceDeleteAllTrashed']);
     });
     Route::apiResource('users', UserController::class)->except(['store', 'create', 'edit']);

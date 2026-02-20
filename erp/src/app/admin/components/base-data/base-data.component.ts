@@ -270,7 +270,7 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
     this.errorMessage = null;
     const url = `${this.apiEndpoint}/${id}/change-password`;
 
-    return this.dataHandler.post<any>(url, data).pipe(
+    return this.dataHandler.put<any>(url, data).pipe(
       takeUntil(this.destroy$),
       finalize(() => {
         this.isLoading = false;

@@ -46,7 +46,6 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
 
   override apiEndpoint: string = 'users';
   
-  // Konfigurace ze souboru .config.ts
   buttons: Buttons[] = BUTTONS;
   formFields: InputDefinition[] = FORM_FIELDS;
   resetPasswordFormFields: InputDefinition[] = RESET_PASSWORD_FORM_FIELDS;
@@ -55,12 +54,10 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
   filterColumns = FILTER_COLUMNS;
   detailsColumns = DETAILS_COLUMNS;
 
-  // Stavy formulářů
   showResetPasswordForm: boolean = false;
   selectedItemForEdit: any | null = null;
   selectedItemForDetails: any | null = null;
 
-  // Definice filtrů (vždy v souladu s backendem)
   filters: FilterParams = {
     sort_by: 'id',
     sort_direction: 'desc'
@@ -78,7 +75,6 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
   }
 
   override ngOnInit(): void {
-    // Sledujeme stav přihlášení
     this.authService.isLoggedIn$
       .pipe(takeUntil(this.destroy$))
       .subscribe(loggedIn => {
@@ -89,8 +85,6 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
         }
       });
   }
-
-  // --- UI Handlery ---
 
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
@@ -105,7 +99,7 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
   }
 
   applyFilters(newFilters: any): void {
-    this.filters = { ...newFilters }; // Sjednotíme filtry
+    this.filters = { ...newFilters };
     this.refreshData();
   }
 
@@ -118,72 +112,64 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
     if (this.activeTable) this.activeTable.exportToCSV();
   }
 
-  // --- CRUD Akce ---
-
   handleCreateFormOpened() {
     this.selectedItemForEdit = null;
     this.showCreateForm = true;
   }
   
-// administrators.component.ts
-
-handleEditFormOpened(item: any) {
-  const itemToEdit = { ...item };
-  
-  // Kontrola: Pokud má uživatel role, musíme vzít ID té první
-  if (itemToEdit.roles && itemToEdit.roles.length > 0) {
-    // POZOR: v RoleResource vracíš 'id', ne 'role_id'
-    // Musí to odpovídat column_name v administrators.config.ts
-    itemToEdit.role_id = itemToEdit.roles[0].id; 
-  }
-  
-  console.log('Předávám do formu:', itemToEdit); // Tady v konzoli musíte vidět role_id: X
-  this.selectedItemForEdit = itemToEdit;
-  this.showCreateForm = true;
-}
-
-// administrators.component.ts
-
-handleFormSubmitted(formData: any) {
-  this.isLoading = true;
-  const payload = { ...formData };
-
-  // Pokud je role_id string z dropdownu, převedeme na číslo pro backend
-  if (payload.role_id) {
-    payload.role_id = parseInt(payload.role_id, 10);
-  }
-
-  const request$ = payload.id ? this.updateData(payload.id, payload) : this.postData(payload);
-  
-  request$.pipe(
-    finalize(() => {
-      this.isLoading = false;
-      this.showCreateForm = false;
-      this.cd.markForCheck();
-    })
-  ).subscribe({
-    next: () => this.refreshData(),
-    error: (err) => {
-      // Pokud to znovu hodí 422, uvidíš to tady v konzoli
-      console.error('Ukládání selhalo:', err);
+  handleEditFormOpened(item: any) {
+    const itemToEdit = { ...item };
+    if (itemToEdit.roles && itemToEdit.roles.length > 0) {
+      itemToEdit.role_id = itemToEdit.roles[0].id; 
     }
-  });
-}
+    this.selectedItemForEdit = itemToEdit;
+    this.showCreateForm = true;
+  }
 
-  // --- Reset Hesla ---
+  handleFormSubmitted(formData: any) {
+    this.isLoading = true;
+    const payload = { ...formData };
+    if (payload.role_id) {
+      payload.role_id = parseInt(payload.role_id, 10);
+    }
+    const request$ = payload.id ? this.updateData(payload.id, payload) : this.postData(payload);
+    request$.pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.showCreateForm = false;
+        this.cd.markForCheck();
+      })
+    ).subscribe({
+      next: () => this.refreshData(),
+      error: (err) => console.error('Ukládání selhalo:', err)
+    });
+  }
+
+  // --- Reset Hesla (UPRAVENO) ---
 
   handleResetPasswordFormOpened(item: any) {
     this.showResetPasswordForm = true;
+    // Mapujeme na strukturu pro GenericForm s 3 poli
     this.selectedItemForEdit = { 
-      ...item, 
-      target_user_id: item.id, 
-      current_user_id: this.authService.getUserId() 
+      id: item.id, // target_user_id
+      old_password: '', // Heslo admina
+      new_password: '', // Nové heslo
+      new_password_confirmation: '' // Potvrzení
     };
+    this.cd.markForCheck();
   }
 
   handleResetPasswordFormSubmitted(formData: any) {
     this.isLoading = true;
-    this.updatePassword(formData.target_user_id, formData)
+    // Payload pro backend
+    const payload = {
+      old_password: formData.old_password,
+      new_password: formData.new_password,
+      new_password_confirmation: formData.new_password_confirmation
+    };
+
+    // Voláme users/{id}/change-password
+    this.dataHandler.put(`users/${formData.id}/change-password`, payload)
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -193,11 +179,9 @@ handleFormSubmitted(formData: any) {
       )
       .subscribe({
         next: () => this.alertDialogService.open('Úspěch', 'Heslo bylo změněno.', 'success'),
-        error: () => this.alertDialogService.open('Chyba', 'Heslo se nepodařilo změnit.', 'danger')
+        error: (err) => this.alertDialogService.open('Chyba', err.error?.message || 'Heslo se nepodařilo změnit.', 'danger')
       });
   }
-
-  // --- Detaily ---
 
   handleViewDetails(item: any) {
     if (!item.id) return;

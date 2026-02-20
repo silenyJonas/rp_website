@@ -43,6 +43,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   @Output() editFormOpened = new EventEmitter<any>();
   @Output() viewDetailsOpened = new EventEmitter<any>();
   @Output() generateFormOpened = new EventEmitter<any>();
+  @Output() resetPasswordFormOpened = new EventEmitter<any>(); // PŘIDÁNO
 
   constructor(
     protected override dataHandler: DataHandler,
@@ -50,7 +51,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     protected override genericTableService: GenericTableService,
     private confirmDialogService: ConfirmDialogService,
     private alertDialogService: AlertDialogService,
-    public authService: AuthService // Veřejný pro šablonu i logování
+    public authService: AuthService 
   ) {
     super(dataHandler, cd, genericTableService);
   }
@@ -81,6 +82,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
       case 'details': this.viewDetailsOpened.emit(item); break;
       case 'edit': this.editFormOpened.emit(item); break;
       case 'delete': this.onDeleteAction(item); break;
+      case 'password_reset': this.resetPasswordFormOpened.emit(item); break; // PŘIDÁNO
       default: console.warn('Neznámý typ akce:', buttonAction);
     }
   }
@@ -108,7 +110,6 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     }
   }
 
-  // --- CENTRALIZOVANÝ EXPORT S LOGOVÁNÍM ---
   async exportToCSV() {
     try {
       this.isLoading = true;
@@ -118,20 +119,17 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
       const allData: any[] = Array.isArray(responseData) ? responseData : [];
       
       if (allData.length > 0) {
-        // 1. Generování CSV
         let csv = this.columnDefinitions.map(col => col.header || col.key).join(';') + '\n';
         allData.forEach(item => {
           csv += this.columnDefinitions.map(col => `"${String(this.getCellValue(item, col) || '').replace(/"/g, '""')}"`).join(';') + '\n';
         });
 
-        // 2. Stažení souboru
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = `${this.tableCaption || 'export'}.csv`;
         link.click();
 
-        // 3. CENTRALIZOVANÉ LOGOVÁNÍ
         this.logExportActivity(allData.length);
 
       } else {
@@ -150,14 +148,13 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
     const logData = {
       origin: 'GenericTable',
       event_type: 'DATA_EXPORT',
-      module: this.apiEndpoint, // Automaticky poznáme, co se exportovalo (sales_leads, users, atd.)
+      module: this.apiEndpoint,
       description: `Uživatel exportoval ${rowCount} záznamů z tabulky: ${this.tableCaption || this.apiEndpoint}.`,
       affected_entity_type: 'collection',
       user_id_plain: this.authService.getUserId()?.toString(),
       user_email_plain: this.authService.getUserEmail()
     };
 
-    // Odešleme log, ale nečekáme na odpověď (aby to nezdržovalo UI)
     this.dataHandler.post('business_logs', logData).subscribe({
       error: (err) => console.error('Nepodařilo se zalogovat export:', err)
     });
