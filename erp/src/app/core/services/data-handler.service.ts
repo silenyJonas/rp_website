@@ -16,17 +16,11 @@ export class DataHandler {
     private alertDialogService: AlertDialogService
   ) { }
 
-  /**
-   * Upravená logika generování hlaviček.
-   * Pokud jsou data typu FormData, Content-Type se nesmí nastavit, 
-   * aby ho prohlížeč mohl nastavit sám včetně "boundary".
-   */
   private getHeaders(data?: any): HttpHeaders {
     let headersConfig: any = {
       'Accept': 'application/json'
     };
 
-    // Pokud data NEJSOU FormData, přidáme Content-Type pro JSON
     if (!(data instanceof FormData)) {
       headersConfig['Content-Type'] = 'application/json';
     }
@@ -79,7 +73,6 @@ export class DataHandler {
   getCollection<T>(apiUrl: string, params?: any): Observable<T[]> {
     let httpParams = new HttpParams();
     
-    // Pokud máme parametry (filtry), přidáme je do dotazu
     if (params) {
       Object.keys(params).forEach(key => {
         if (params[key] !== null && params[key] !== undefined) {
@@ -90,7 +83,7 @@ export class DataHandler {
 
     return this.http.get<T[] | { data: T[] }>(`${this.baseUrl}/${apiUrl}`, { 
       headers: this.getHeaders(),
-      params: httpParams // Angular automaticky vytvoří ?key=value&key2=value2
+      params: httpParams 
     }).pipe(
       map(response => {
         if (response && typeof response === 'object' && 'data' in response) {
@@ -124,7 +117,6 @@ export class DataHandler {
     );
   }
 
-  // Změněno: Volá getHeaders(data) pro detekci FormData
   post<T>(apiUrl: string, data: any): Observable<T> {
     return this.http.post<{ data: T }>(`${this.baseUrl}/${apiUrl}`, data, { headers: this.getHeaders(data) }).pipe(
       map(response => response.data),
@@ -132,7 +124,6 @@ export class DataHandler {
     );
   }
 
-  // Změněno: Volá getHeaders(data) pro detekci FormData
   put<T>(apiUrl: string, data: any): Observable<T> {
     return this.http.put<{ data: T }>(`${this.baseUrl}/${apiUrl}`, data, { headers: this.getHeaders(data) }).pipe(
       map(response => response.data),
@@ -140,7 +131,6 @@ export class DataHandler {
     );
   }
 
-  // Změněno: Volá getHeaders(data) pro detekci FormData
   patch<T>(apiUrl: string, data: any): Observable<T> {
     return this.http.patch<{ data: T }>(`${this.baseUrl}/${apiUrl}`, data, { headers: this.getHeaders(data) }).pipe(
       map(response => response.data),
@@ -157,7 +147,6 @@ export class DataHandler {
 
   upload<T>(apiUrl: string, formData: FormData): Observable<T> {
     console.log('DataService: Odesílám FormData na', `${this.baseUrl}/${apiUrl}`);
-    // Ponecháno pro zpětnou kompatibilitu, nyní využívá upravené getHeaders
     return this.http.post<T>(`${this.baseUrl}/${apiUrl}`, formData, { headers: this.getHeaders(formData) }).pipe(
       catchError(this.handleError)
     );

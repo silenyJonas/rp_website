@@ -4,9 +4,6 @@ import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column
 import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 
-/**
- * MOŽNOSTI STAVU (Sjednoceno pro formulář i filtry)
- */
 export const JOB_APP_STATUS_OPTIONS = [
   { value: 'Nový', label: 'Nový uchazeč' },
   { value: 'Pohovor', label: 'Pozván na pohovor' },
@@ -15,18 +12,12 @@ export const JOB_APP_STATUS_OPTIONS = [
   { value: 'Zásobník', label: 'V databázi (do budoucna)' }
 ];
 
-/**
- * TLAČÍTKA AKCÍ
- */
 export const JOB_APPLICATION_BUTTONS: Buttons[] = [
   { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Stav / Poznámka', isActive: true, type: 'neutral_button', action: 'edit' },
   { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
 ];
 
-/**
- * FORMULÁŘOVÁ POLE (PRO EDITACI V ADMINU)
- */
 export const JOB_APPLICATION_FORM_FIELDS: InputDefinition[] = [
   {
     column_name: 'state',
@@ -74,9 +65,6 @@ export const JOB_APPLICATION_FORM_FIELDS: InputDefinition[] = [
   }
 ];
 
-/**
- * HLAVNÍ TABULKA - PŘEHLED UCHAZEČŮ
- */
 export const JOB_APPLICATION_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'full_name', header: 'Uchazeč', type: 'text' },
@@ -85,9 +73,6 @@ export const JOB_APPLICATION_COLUMNS: ColumnDefinition[] = [
   { key: 'created_at', header: 'Doručeno', type: 'date', format: 'short' }
 ];
 
-/**
- * TRASH TABULKA
- */
 export const JOB_APPLICATION_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'full_name', header: 'Uchazeč', type: 'text' },
@@ -95,9 +80,6 @@ export const JOB_APPLICATION_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' }
 ];
 
-/**
- * FILTRY
- */
 export const JOB_APPLICATION_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID', canSort: true },
   { key: 'last_name', header: 'Příjmení', type: 'text', placeholder: 'Hledat příjmení...', canSort: true },
@@ -112,9 +94,6 @@ export const JOB_APPLICATION_FILTER_COLUMNS: FilterColumns[] = [
   }
 ];
 
-/**
- * DETAIL UCHAZEČE
- */
 export const JOB_APPLICATION_DETAILS_COLUMNS: ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID Žádosti', type: 'text' },
   { key: 'full_name', displayName: 'Celé jméno', type: 'text' },

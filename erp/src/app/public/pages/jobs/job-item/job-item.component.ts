@@ -18,7 +18,6 @@ import { LocalizationService } from '../../../services/localization.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JobItemComponent extends BaseDataComponent<any> implements OnInit, OnDestroy {
-  // API endpoint pro odesílání přihlášek
   override apiEndpoint: string = 'job_applications';
   
   applicationForm!: FormGroup;
@@ -30,7 +29,7 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService, // Přidáno pro bázi
+    protected override genericTableService: GenericTableService, 
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private localizationService: LocalizationService
@@ -39,10 +38,8 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
   }
 
   override ngOnInit(): void {
-    // Nepoužíváme super.ngOnInit(), protože zde nepotřebujeme automatický refresh tabulky
     this.initForm();
     
-    // Sledujeme překlady - až jsou načteny, naplníme detail pracovní pozice
     this.localizationService.currentTranslations$
       .pipe(takeUntil(this.destroy$))
       .subscribe(translations => {
@@ -64,14 +61,10 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
     });
   }
 
-  // --- UI Gettery ---
-
   get btnText(): string {
     if (this.isLoading) return 'Odesílám...';
     return this.localizationService.getText('job_detail.form.submit_btn') || 'Odeslat přihlášku';
   }
-
-  // --- Handlery ---
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
@@ -93,23 +86,19 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
 
     const formData = new FormData();
     
-    // Namapování hodnot z formuláře
     Object.keys(this.applicationForm.value).forEach(key => {
       const value = this.applicationForm.value[key];
       if (value !== null && value !== undefined) {
-        // Převod boolean na string pro PHP/Backend
         const finalValue = key === 'dataProcessingAgreement' ? (value ? '1' : '0') : value;
         formData.append(key, finalValue);
       }
     });
 
-    // Přidání kontextových informací
     if (this.job) {
       formData.append('position_name', this.job.title);
     }
     formData.append('cv_file', this.selectedFile, this.selectedFile.name);
 
-    // Využití zděděné metody uploadData
     this.uploadData<any>(formData).pipe(
       finalize(() => {
         this.isLoading = false;

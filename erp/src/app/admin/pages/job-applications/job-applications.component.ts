@@ -107,17 +107,12 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
     if (this.activeTable) this.activeTable.exportToCSV();
   }
 
-  // --- Record Actions ---
-
   handleEditFormOpened(item: any): void { 
-    // Nejdříve vyčistíme předchozí stav pro zajištění reaktivity
     this.selectedItemForEdit = null;
     this.showCreateForm = false;
     this.cd.detectChanges();
 
-    // S malým zpožděním vložíme nová data
     setTimeout(() => {
-      // JSON hluboká kopie zruší reference, které by mohly mást dropdown
       this.selectedItemForEdit = JSON.parse(JSON.stringify(item)); 
       this.showCreateForm = true; 
       this.cd.markForCheck();

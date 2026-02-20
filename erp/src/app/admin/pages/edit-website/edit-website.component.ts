@@ -19,7 +19,6 @@ import { AlertDialogService } from '../../../core/services/alert-dialog.service'
 })
 export class EditWebsiteComponent extends BaseDataComponent<any> implements OnInit, OnDestroy {
   
-  // Endpoint pro uložení změn na backend
   override apiEndpoint = 'save-translations'; 
 
   currentLang: string = 'cz';
@@ -32,28 +31,21 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService, // Vyžadováno bází
+    protected override genericTableService: GenericTableService, 
     private http: HttpClient,
     private alertDialogService: AlertDialogService
   ) {
-    // Předání závislostí do BaseDataComponent
     super(dataHandler, cd, genericTableService);
   }
 
   override ngOnInit(): void {
-    // Nepoužíváme super.ngOnInit(), protože nechceme volat automatické refreshData
     this.refreshTranslations();
   }
-
-  /**
-   * Načtení JSON souboru z assets (překlady)
-   */
   public refreshTranslations(): void {
     this.isLoading = true;
     this.errorMessage = null;
     this.cd.markForCheck();
 
-    // Cache busting pomocí timestampu
     const url = `assets/i18n/${this.currentLang}.json?t=${new Date().getTime()}`;
     
     this.http.get(url).pipe(
@@ -61,7 +53,6 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
       finalize(() => {
         this.isLoading = false;
         this.cd.markForCheck();
-        // Malý timeout pro renderování, abyscrollHeight v textareách byl správný
         setTimeout(() => this.resizeAllTextareas(), 50);
       })
     ).subscribe({
@@ -83,7 +74,6 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
     this.refreshTranslations();
   }
 
-  // --- Logika zpracování objektu ---
 
   refreshFlattenedList(): void {
     this.flattenedKeys = [];
@@ -120,8 +110,6 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
     setTimeout(() => this.resizeAllTextareas(), 10);
   }
 
-  // --- UI a Eventy ---
-
   adjustHeight(event: any): void {
     const element = event.target;
     element.style.height = 'auto';
@@ -148,9 +136,6 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
     if (item) item.value = newValue;
   }
 
-  /**
-   * Odeslání upraveného JSONu na server
-   */
   onSubmit(): void {
     this.isLoading = true;
     this.cd.markForCheck();
@@ -160,7 +145,6 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
       data: this.translations
     };
 
-    // Využíváme zděděnou metodu postData nebo přímý post přes dataHandler
     this.dataHandler.post(this.apiEndpoint, payload)
       .pipe(
         takeUntil(this.destroy$),

@@ -7,7 +7,6 @@ import { AuthTokenInterceptor } from './core/interceptors/auth-token.interceptor
 import { registerLocaleData } from '@angular/common';
 import localeCs from '@angular/common/locales/cs';
 
-// Registrace lokalizačních dat pro 'cs-CZ'
 registerLocaleData(localeCs, 'cs-CZ');
 
 export const appConfig: ApplicationConfig = {

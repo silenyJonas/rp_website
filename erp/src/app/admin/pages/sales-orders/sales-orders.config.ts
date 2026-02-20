@@ -1,23 +1,15 @@
-// src/app/pages/sales-order/sales-order.config.ts
-
 import { Buttons } from '../../components/generic-table/generic-table.component';
 import { InputDefinition } from '../../components/generic-form/generic-form.component';
 import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
 import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 
-/**
- * TLAČÍTKA AKCÍ
- */
 export const SALES_ORDER_BUTTONS: Buttons[] = [
   { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
   { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
 ];
 
-/**
- * FORMULÁŘOVÁ POLE (PRO CREATE / EDIT)
- */
 export const SALES_ORDER_FORM_FIELDS: InputDefinition[] = [
   {
     column_name: 'client_name',
@@ -41,7 +33,7 @@ export const SALES_ORDER_FORM_FIELDS: InputDefinition[] = [
     label: 'E-mail klienta',
     placeholder: 'email@klient.cz',
     type: 'email',
-    required: true, // Změněno na true, protože v StoreSalesOrderRequest je 'required'
+    required: true, 
     pattern: '[^@]+@[^@]+\\.[^@]+',
     errorMessage: 'Neplatný formát e-mailu.',
     editable: true, show_in_edit: true, show_in_create: true
@@ -72,14 +64,14 @@ export const SALES_ORDER_FORM_FIELDS: InputDefinition[] = [
     editable: true, show_in_edit: true, show_in_create: true
   },
   {
-    column_name: 'attachment', // Změněno z attachment_path pro upload souboru
+    column_name: 'attachment', 
     label: 'Příloha / Smlouva',
     type: 'file',
     required: false,
     editable: true, show_in_edit: false, show_in_create: true
   },
   {
-    column_name: 'dataProcessingAgreement', // PŘIDÁNO: Povinné pro validaci v Laravelu
+    column_name: 'dataProcessingAgreement',
     label: 'Souhlas se zpracováním údajů',
     type: 'checkbox',
     required: true,
@@ -88,9 +80,6 @@ export const SALES_ORDER_FORM_FIELDS: InputDefinition[] = [
   }
 ];
 
-/**
- * HLAVNÍ TABULKA
- */
 export const SALES_ORDER_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'client_name', header: 'Klient', type: 'text' },
@@ -99,9 +88,6 @@ export const SALES_ORDER_COLUMNS: ColumnDefinition[] = [
   { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' }
 ];
 
-/**
- * TRASH TABULKA
- */
 export const SALES_ORDER_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'client_name', header: 'Klient', type: 'text' },
@@ -109,9 +95,6 @@ export const SALES_ORDER_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' }
 ];
 
-/**
- * FILTRY
- */
 export const SALES_ORDER_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID', canSort: true },
   { key: 'client_name', header: 'Klient', type: 'text', placeholder: 'Hledat klienta', canSort: true },
@@ -119,9 +102,6 @@ export const SALES_ORDER_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'ico', header: 'IČO', type: 'text', placeholder: 'Hledat IČO', canSort: true }
 ];
 
-/**
- * DETAIL OBJEDNÁVKY
- */
 export const SALES_ORDER_DETAILS_COLUMNS: ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID Objednávky', type: 'text' },
   { key: 'client_name', displayName: 'Klient', type: 'text' },
@@ -131,7 +111,7 @@ export const SALES_ORDER_DETAILS_COLUMNS: ItemDetailsColumns[] = [
   { key: 'client_phone', displayName: 'Telefon', type: 'text' },
   { key: 'client_address', displayName: 'Adresa', type: 'text' },
   { key: 'order_description', displayName: 'Popis realizace', type: 'text' },
-  { key: 'attachment_url', displayName: 'Smlouva / Příloha', type: 'file' }, // Změněno na link pro stažení
+  { key: 'attachment_url', displayName: 'Smlouva / Příloha', type: 'file' }, 
   { key: 'created_at', displayName: 'Datum vytvoření', type: 'date', format: 'medium' },
   { key: 'updated_at', displayName: 'Poslední změna', type: 'date', format: 'medium' }
 ];

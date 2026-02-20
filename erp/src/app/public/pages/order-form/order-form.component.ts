@@ -15,7 +15,7 @@ export class OrderFormComponent implements OnInit {
   orderForm!: FormGroup;
   leadId: string | null = null;
   isSubmitted = false;
-  isLoading = false; // Teď si stav držíme sami
+  isLoading = false; 
   selectedFile: File | null = null;
   errorMessage: string | null = null;
 
@@ -23,7 +23,7 @@ export class OrderFormComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private cd: ChangeDetectorRef,
-    private publicDataService: PublicDataService // Injekce servisu
+    private publicDataService: PublicDataService 
   ) {}
 
   ngOnInit(): void {
@@ -75,7 +75,6 @@ export class OrderFormComponent implements OnInit {
       formData.append('attachment', this.selectedFile, this.selectedFile.name);
     }
 
-    // TADY: Použití PublicDataService (přidáme metodu submitOrder do servisu níže)
     this.publicDataService.submitOrder(formData).pipe(
       finalize(() => {
         this.isLoading = false;

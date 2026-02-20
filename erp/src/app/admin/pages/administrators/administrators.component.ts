@@ -145,30 +145,25 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
     });
   }
 
-  // --- Reset Hesla (UPRAVENO) ---
-
   handleResetPasswordFormOpened(item: any) {
     this.showResetPasswordForm = true;
-    // Mapujeme na strukturu pro GenericForm s 3 poli
     this.selectedItemForEdit = { 
-      id: item.id, // target_user_id
-      old_password: '', // Heslo admina
-      new_password: '', // Nové heslo
-      new_password_confirmation: '' // Potvrzení
+      id: item.id, 
+      old_password: '', 
+      new_password: '', 
+      new_password_confirmation: '' 
     };
     this.cd.markForCheck();
   }
 
   handleResetPasswordFormSubmitted(formData: any) {
     this.isLoading = true;
-    // Payload pro backend
     const payload = {
       old_password: formData.old_password,
       new_password: formData.new_password,
       new_password_confirmation: formData.new_password_confirmation
     };
 
-    // Voláme users/{id}/change-password
     this.dataHandler.put(`users/${formData.id}/change-password`, payload)
       .pipe(
         finalize(() => {

@@ -43,7 +43,6 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
 
   override apiEndpoint: string = 'support_tickets';
   
-  // Konfigurace z configu
   buttons = SUPPORT_TICKET_BUTTONS;
   formFields = SUPPORT_TICKET_FORM_FIELDS;
   columns = SUPPORT_TICKET_COLUMNS;
@@ -54,7 +53,6 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
   selectedItemForEdit: any = null;
   selectedItemForDetails: any = null;
 
-  // Sjednocené filtry
   filters: FilterParams = { 
     sort_by: 'id', 
     sort_direction: 'desc' 
@@ -80,8 +78,6 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
       }
     });
   }
-
-  // --- Data Logic ---
 
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
@@ -111,8 +107,6 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
     if (this.activeTable) this.activeTable.exportToCSV();
   }
 
-  // --- Handlery ---
-
   handleCreateFormOpened(): void { 
     this.selectedItemForEdit = null; 
     this.showCreateForm = true; 
@@ -135,7 +129,7 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
     });
   }
 
-handleFormSubmitted(formData: any): void {
+  handleFormSubmitted(formData: any): void {
     this.isLoading = true;
     
     const isFormData = formData instanceof FormData;
@@ -145,7 +139,6 @@ handleFormSubmitted(formData: any): void {
 
     if (id) {
       if (isFormData) {
-        // Trik pro Laravel: POST s _method=PUT umožní poslat soubory i při aktualizaci
         formData.append('_method', 'PUT');
         request = this.dataHandler.post(`${this.apiEndpoint}/${id}`, formData);
       } else {

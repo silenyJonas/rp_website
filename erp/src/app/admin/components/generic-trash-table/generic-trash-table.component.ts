@@ -6,7 +6,7 @@ import { BaseDataComponent } from '../base-data/base-data.component';
 import { DataHandler } from '../../../core/services/data-handler.service';
 import { ConfirmDialogService } from '../../../core/services/confirm-dialog.service';
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
-import { GenericTableService } from '../../../core/services/generic-table.service'; // Import přidán
+import { GenericTableService } from '../../../core/services/generic-table.service'; 
 
 export interface Buttons {
   display_name: string;
@@ -42,16 +42,15 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
   public isFullWidth: boolean = true;
 
   @Output() itemRestored = new EventEmitter<void>();
-  @Output() itemDeletedPermanently = new EventEmitter<void>(); // Přidán výstup pro smazání
+  @Output() itemDeletedPermanently = new EventEmitter<void>();
 
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService, // Přidáno pro BaseDataComponent
+    protected override genericTableService: GenericTableService,
     private confirmDialogService: ConfirmDialogService,
     private alertDialogService: AlertDialogService
   ) {
-    // Předáváme 3 parametry do super
     super(dataHandler, cd, genericTableService);
   }
 
@@ -113,7 +112,6 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
       case 'delete_button':
         this.confirmDialogService.open('Potvrzení trvalého smazání', 'Opravdu si přejete TRVALE smazat tuto položku? Tato akce je nevratná!').then(result => {
           if (result) {
-            // hardDeleteDataFromApi používá deleteData(id, true)
             this.deleteData(item.id, true).subscribe({
               next: () => {
                 this.alertDialogService.open('Úspěch', 'Položka byla trvale smazána.', 'success');
@@ -148,7 +146,6 @@ export class GenericTrashTableComponent extends BaseDataComponent<any> implement
     this.confirmDialogService.open('Trvalé smazání všech položek', 'Opravdu si přejete TRVALE smazat VŠECHNY položky? Tato akce je nevratná!')
       .then(result => {
         if (result) {
-          // Metoda z BaseDataComponent
           this.hardDeleteAllTrashedDataFromApi().subscribe({
             next: () => {
               this.alertDialogService.open('Úspěch', 'Všechny položky byly trvale smazány.', 'success');

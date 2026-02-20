@@ -1,5 +1,3 @@
-// src/app/pages/support-ticket/support-ticket.config.ts
-
 import { Buttons } from '../../components/generic-table/generic-table.component';
 import { InputDefinition } from '../../components/generic-form/generic-form.component';
 import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
@@ -108,7 +106,6 @@ export const SUPPORT_TICKET_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' }
 ];
 
-// OPRAVENO: Přidány dropdowny pro filtry
 export const SUPPORT_TICKET_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID', canSort: true },
   { key: 'subject', header: 'Předmět', type: 'text', placeholder: 'Hledat předmět', canSort: true },

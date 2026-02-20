@@ -1,12 +1,9 @@
-// src/app/pages/news/news.config.ts
-
 import { Buttons } from '../../components/generic-table/generic-table.component';
 import { InputDefinition } from '../../components/generic-form/generic-form.component';
 import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
 import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 
-// Seznam témat pro dropdown - sjednoceno pro formulář i filtry
 export const NEWS_THEMA_OPTIONS: string[] = [
   'Milník', 
   'Update', 
@@ -63,7 +60,7 @@ export const NEWS_FORM_FIELDS: InputDefinition[] = [
     column_name: 'message',
     label: 'Hlavní text zprávy',
     placeholder: 'Detailní popis novinky...',
-    type: 'textarea', // Změněno na textarea pro pohodlné psaní
+    type: 'textarea', 
     required: true,
     errorMessage: 'Obsah novinky nemůže být prázdný.',
     editable: true,
@@ -109,9 +106,6 @@ export const NEWS_FORM_FIELDS: InputDefinition[] = [
   }
 ];
 
-/**
- * HLAVNÍ TABULKA
- */
 export const NEWS_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'title', header: 'Titulek', type: 'text' },
@@ -120,18 +114,12 @@ export const NEWS_COLUMNS: ColumnDefinition[] = [
   { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' }
 ];
 
-/**
- * TRASH TABULKA
- */
 export const NEWS_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'title', header: 'Titulek', type: 'text' },
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' }
 ];
 
-/**
- * FILTRY
- */
 export const NEWS_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'Hledat ID', canSort: true },
   { key: 'title', header: 'Titulek', type: 'text', placeholder: 'Hledat v titulku', canSort: true },
@@ -139,9 +127,6 @@ export const NEWS_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'thema', header: 'Téma', type: 'select', options: NEWS_THEMA_OPTIONS, placeholder: '-- Vybrat téma --', canSort: true }
 ];
 
-/**
- * DETAIL NOVINKY
- */
 export const NEWS_DETAILS_COLUMNS: ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID záznamu', type: 'text' },
   { key: 'title', displayName: 'Titulek', type: 'text' },

@@ -22,7 +22,6 @@ import { SupportFormComponent } from './intranet/knowledge-base/pages/support-fo
 import { SupportTicketsComponent } from './pages/support-tickets/support-tickets.component';
 import { JobApplicationsComponent } from './pages/job-applications/job-applications.component';
 const routes: Routes = [
-  // SEKCE 1: Klasický Admin se sidebarem
   {
     path: '',
     component: AdminLayoutComponent,

@@ -40,7 +40,6 @@ export class ConfirmDialogService {
 
   private closeDialog(): void {
     if (this.componentRef) {
-      // Před zničením komponenty zavoláme metodu pro odblokování scrollu
       this.componentRef.instance.hide();
       this.appRef.detachView(this.componentRef.hostView);
       this.componentRef.destroy();

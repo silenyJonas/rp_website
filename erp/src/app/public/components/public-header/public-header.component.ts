@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { Output, EventEmitter } from '@angular/core';
 
-import { LocalizationService } from '../../services/localization.service'; // Import LocalizationService
+import { LocalizationService } from '../../services/localization.service'; 
 import { Observable } from 'rxjs'; 
 
 @Component({
@@ -42,7 +42,7 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly GAP_DEFAULT = 15;
   private readonly GAP_SCROLLED = 8;
 
-  private readonly INDICATOR_ANIMATION_DURATION = 400; // ms (0.4s)
+  private readonly INDICATOR_ANIMATION_DURATION = 400; 
 
   private currentActiveRoute: string | null = null;
   currentLanguage$: Observable<string>;
@@ -85,7 +85,7 @@ export class PublicHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       }
   }
   private checkMobileView(): void {
-      const newIsMobileView = window.innerWidth <= 768; // Používáme breakpoint z vašeho CSS
+      const newIsMobileView = window.innerWidth <= 768; 
       if (this.isMobileView !== newIsMobileView) {
           this.isMobileView = newIsMobileView;
           this.cdr.detectChanges();

@@ -43,7 +43,6 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
 
   override apiEndpoint: string = 'news';
 
-  // Konfigurace šablony
   buttons = NEWS_BUTTONS;
   formFields = NEWS_FORM_FIELDS;
   newsColumns = NEWS_COLUMNS;
@@ -54,7 +53,6 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
   selectedItemForEdit: any | null = null;
   selectedItemForDetails: any | null = null;
 
-  // Sjednocené filtry pro News
   filters: FilterParams = {
     sort_by: 'id',
     sort_direction: 'desc'
@@ -80,8 +78,6 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
       }
     });
   }
-
-  // --- Data & Refresh Logic ---
 
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
@@ -110,8 +106,6 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
   exportActiveTable(): void {
     if (this.activeTable) this.activeTable.exportToCSV();
   }
-
-  // --- Handlery pro formuláře a detaily ---
 
   handleCreateFormOpened(): void {
     this.selectedItemForEdit = null;

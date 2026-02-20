@@ -44,7 +44,6 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
 
   override apiEndpoint: string = 'raw_request_commissions';
 
-  // Konfigurace načtená z config souboru
   buttons = USER_REQUEST_BUTTONS;
   formFields = USER_REQUEST_FORM_FIELDS;
   userRequestColumns = USER_REQUEST_COLUMNS;
@@ -52,11 +51,9 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   filterColumns = USER_REQUEST_FILTER_COLUMNS;
   detailsColumns = USER_REQUEST_DETAILS_COLUMNS;
 
-  // Stavy pro UI
   selectedItemForEdit: RawRequestCommission | null = null;
   selectedItemForDetails: any | null = null;
 
-  // Filtry - inicializujeme pouze sort, zbytek se doplní z GenericFilterForm
   filters: FilterParams = {
     sort_by: 'id',
     sort_direction: 'desc'
@@ -83,15 +80,13 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     });
   }
 
-  // --- Filtrování a Refresh ---
-
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
   }
 
   applyFilters(newFilters: FilterParams): void {
     this.filters = { ...this.filters, ...newFilters };
-    this.currentPage = 1; // Při změně filtru vždy na začátek
+    this.currentPage = 1; 
     this.refreshData();
   }
 
@@ -100,8 +95,6 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     this.currentPage = 1;
     this.refreshData();
   }
-
-  // --- Handlery událostí ---
 
   handlePageChange(page: number): void {
     this.onHandlePageChange(page, this.filters);
@@ -116,8 +109,6 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
       this.activeTable.exportToCSV();
     }
   }
-
-  // --- Formularové akce ---
 
   handleCreateFormOpened(): void {
     this.selectedItemForEdit = null;

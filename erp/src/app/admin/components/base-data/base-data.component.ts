@@ -52,7 +52,7 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
   constructor(
     protected dataHandler: DataHandler, 
     protected cd: ChangeDetectorRef,
-    protected genericTableService: GenericTableService // Přidáno pro paginaci
+    protected genericTableService: GenericTableService 
   ) {}
   
   ngOnInit(): void {}
@@ -77,7 +77,6 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
     const cache = isTrash ? this.trashCache : this.activeCache;
     const currentStoredFilters = isTrash ? this.currentTrashFilters : this.currentActiveFilters;
 
-    // Pokud se změnily filtry, vymažeme cache a resetujeme stránku
     if (JSON.stringify(filters) !== JSON.stringify(currentStoredFilters)) {
       cache.clear();
       if (isTrash) {
@@ -89,7 +88,6 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
       }
     }
 
-    // Vrácení z cache, pokud existuje
     if (cache.has(page)) {
       const cachedData = cache.get(page)!;
       if (isTrash) this.trashData = cachedData; else this.data = cachedData;
@@ -102,7 +100,6 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
       } as PaginatedResponse<T>);
     }
 
-    // HTTP Požadavek
     const params: FilterParams = { ...filters };
     if (isTrash) params['only_trashed'] = 'true';
 
@@ -178,15 +175,12 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
 
   toggleTable(): void {
     this.showTrashTable = !this.showTrashTable;
-    // Při přepnutí tabulky většinou chceme čerstvá data
     this.forceFullRefresh(this.showTrashTable ? this.currentTrashFilters : this.currentActiveFilters);
   }
 
   toggleFilters(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
-
-  // --- PŮVODNÍ METODY (ZŮSTÁVAJÍ) ---
 
   loadData(): void {
     if (!this.apiEndpoint) {
@@ -258,11 +252,6 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
 
   // --- SPECIFICKÉ OPERACE ---
 
-  /**
-   * Univerzální metoda pro změnu hesla, používaná zejména v AdministratorsComponent.
-   * @param id ID uživatele
-   * @param data Objekt s hesly (new_password, current_user_id atd.)
-   */
   public updatePassword(id: number, data: any): Observable<any> {
     if (!id) return throwError(() => new Error('ID uživatele pro změnu hesla není definováno.'));
     
@@ -283,10 +272,7 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
       })
     );
   }
-  /**
-   * Trvale smaže všechny záznamy v koši pro aktuální endpoint.
-   */
-   loadAllData(filters?: FilterParams): Observable<T[]> {
+  loadAllData(filters?: FilterParams): Observable<T[]> {
     if (!this.apiEndpoint) {
       return throwError(() => new Error('Chyba: API endpoint není definován pro načtení všech dat.'));
     }

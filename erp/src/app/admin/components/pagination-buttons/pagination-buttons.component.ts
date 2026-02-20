@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Nutné pro ngModel
+import { FormsModule } from '@angular/forms'; 
 
 @Component({
   selector: 'app-pagination-buttons',

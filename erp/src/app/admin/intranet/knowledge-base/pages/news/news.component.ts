@@ -17,29 +17,24 @@ export class NewsComponent extends BaseDataComponent<any> implements OnInit {
 
   override apiEndpoint: string = 'news';
   
-  // Přepisujeme výchozí hodnotu pro tuto komponentu
   override itemsPerPage: number = 5; 
   
-  // Pro Load More si držíme vlastní pole, abychom data kumulovali
   accumulatedNews: any[] = [];
 
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService // Přidáno protected a předáno rodiči
+    protected override genericTableService: GenericTableService 
   ) {
-    // Předáváme všechny 3 parametry do super konstruktoru
     super(dataHandler, cd, genericTableService);
   }
 
   override ngOnInit(): void {
-    // Voláme super.ngOnInit() pro inicializaci základních stavů, pokud je potřeba
     super.ngOnInit();
     this.loadMore();
   }
 
   loadMore(): void {
-    // Kontrola, zda už nejsme na konci, pomocí stavů z rodiče
     if (this.isLoading || (this.currentPage > this.totalPages && this.totalPages !== 0)) {
       return;
     }
@@ -47,8 +42,6 @@ export class NewsComponent extends BaseDataComponent<any> implements OnInit {
     this.isLoading = true;
     this.cd.detectChanges();
 
-    // Využíváme metodu z rodiče pro získání dat
-    // Předáváme aktuální filtry pro řazení
     this.fetchPaginatedData(
       false, 
       this.currentPage, 
@@ -62,11 +55,7 @@ export class NewsComponent extends BaseDataComponent<any> implements OnInit {
     ).subscribe({
       next: (response: PaginatedResponse<any>) => {
         if (response && response.data) {
-          // Kumulujeme data (vlastnost 'data' v rodiči se přepisuje, 
-          // ale 'accumulatedNews' si drží vše)
           this.accumulatedNews = [...this.accumulatedNews, ...response.data];
-          
-          // Inkrementujeme stránku pro další volání
           this.currentPage++;
         }
         this.cd.markForCheck();
@@ -78,7 +67,6 @@ export class NewsComponent extends BaseDataComponent<any> implements OnInit {
   }
 
   get hasMore(): boolean {
-    // Pokud je aktuální stránka menší nebo rovna celkovému počtu stran
     return this.totalPages === 0 || this.currentPage <= this.totalPages;
   }
 }

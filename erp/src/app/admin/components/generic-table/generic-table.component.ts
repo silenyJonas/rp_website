@@ -43,7 +43,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
   @Output() editFormOpened = new EventEmitter<any>();
   @Output() viewDetailsOpened = new EventEmitter<any>();
   @Output() generateFormOpened = new EventEmitter<any>();
-  @Output() resetPasswordFormOpened = new EventEmitter<any>(); // PŘIDÁNO
+  @Output() resetPasswordFormOpened = new EventEmitter<any>(); 
 
   constructor(
     protected override dataHandler: DataHandler,
@@ -82,7 +82,7 @@ export class GenericTableComponent extends BaseDataComponent<any> implements OnI
       case 'details': this.viewDetailsOpened.emit(item); break;
       case 'edit': this.editFormOpened.emit(item); break;
       case 'delete': this.onDeleteAction(item); break;
-      case 'password_reset': this.resetPasswordFormOpened.emit(item); break; // PŘIDÁNO
+      case 'password_reset': this.resetPasswordFormOpened.emit(item); break; 
       default: console.warn('Neznámý typ akce:', buttonAction);
     }
   }

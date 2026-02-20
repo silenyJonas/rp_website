@@ -1,14 +1,9 @@
-// src/app/pages/user-request/user-request.config.ts
-
 import { Buttons } from '../../components/generic-table/generic-table.component';
 import { InputDefinition } from '../../components/generic-form/generic-form.component';
 import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
 import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 
-/**
- * DEFINICE TLAČÍTEK V TABULCE
- */
 export const USER_REQUEST_BUTTONS: Buttons[] = [
   { display_name: '🔍', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
@@ -19,9 +14,6 @@ export const USER_REQUEST_STATUS_OPTIONS: string[] = ['Nově zadané', 'Zpracov�
 export const USER_REQUEST_PRIORITY_OPTIONS: string[] = ['Nízká', 'Neutrální', 'Vysoká'];
 export const USER_REQUEST_THEMA_OPTIONS: string[] = ['Webový vývoj', 'Desktopový vývoj', 'Mobilní vývoj', 'AI vývoj', 'Jiné'];
 
-/**
- * FORMULÁŘOVÁ POLE (PRO CREATE / EDIT)
- */
 export const USER_REQUEST_FORM_FIELDS: InputDefinition[] = [
   {
     column_name: 'thema',
@@ -29,7 +21,6 @@ export const USER_REQUEST_FORM_FIELDS: InputDefinition[] = [
     placeholder: 'Zadejte téma požadavku',
     type: 'text',
     required: true,
-    // Upraveno pro podporu diakritiky a širšího rozsahu dle Laravelu
     pattern: '^[a-zA-Z0-9ěščřžýáíéóúůďťňĚŠČŘŽÝÁÍÉÚŮĎŤŇ\\s\\.\\-]{3,255}$',
     errorMessage: 'Téma musí mít 3-255 znaků.',
     editable: true, show_in_edit: true, show_in_create: true,
@@ -88,9 +79,6 @@ export const USER_REQUEST_FORM_FIELDS: InputDefinition[] = [
   }
 ];
 
-/**
- * HLAVNÍ TABULKA
- */
 export const USER_REQUEST_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'thema', header: 'Téma', type: 'text' },
@@ -100,9 +88,6 @@ export const USER_REQUEST_COLUMNS: ColumnDefinition[] = [
   { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' }
 ];
 
-/**
- * TRASH TABULKA
- */
 export const USER_REQUEST_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'thema', header: 'Téma', type: 'text' },
@@ -110,9 +95,6 @@ export const USER_REQUEST_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' }
 ];
 
-/**
- * FILTRY
- */
 export const USER_REQUEST_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID...', canSort: true },
   { key: 'thema', header: 'Téma', type: 'select', placeholder: 'Hledat téma...',options: USER_REQUEST_THEMA_OPTIONS, canSort: true },
@@ -121,9 +103,6 @@ export const USER_REQUEST_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'priority', header: 'Priorita', type: 'select', options: USER_REQUEST_PRIORITY_OPTIONS, placeholder: '-- Priorita --', canSort: true },
 ];
 
-/**
- * DETAIL POLOŽKY
- */
 export const USER_REQUEST_DETAILS_COLUMNS: ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID požadavku', type: 'text' },
   { key: 'thema', displayName: 'Téma', type: 'text' },

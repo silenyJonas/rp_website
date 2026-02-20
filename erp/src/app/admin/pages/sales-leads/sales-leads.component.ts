@@ -70,7 +70,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
     this.refreshData();
   }
 
-  // --- LOGIKA GENEROUVÁNÍ LINKU A LOGOVÁNÍ ---
   handleGenerateFormLink(item: any): void {
     const url = `${window.location.origin}/order_form/lead_id=${item.id}`;
 
@@ -96,7 +95,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
     this.dataHandler.post('business_logs', logData).subscribe();
   }
 
-  // --- DATA FLOW ---
   refreshData(): void { this.forceFullRefresh(this.filters); }
   applyFilters(f: FilterParams): void { this.filters = { ...this.filters, ...f }; this.currentPage = 1; this.refreshData(); }
   clearFilters(): void { this.filters = { sort_by: 'id', sort_direction: 'desc' }; this.refreshData(); }
@@ -104,7 +102,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
   handleItemsPerPageChange(v: number): void { this.onHandleItemsPerPageChange(v, this.filters); }
   exportActiveTable(): void { this.activeTable?.exportToCSV(); }
 
-  // --- MODÁLY ---
   handleCreateFormOpened(): void { this.selectedItemForEdit = null; this.showCreateForm = true; }
   handleEditFormOpened(item: any): void { this.selectedItemForEdit = { ...item }; this.showCreateForm = true; }
   handleFormSubmitted(formData: any): void {

@@ -37,7 +37,6 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements OnI
 
   override apiEndpoint: string = 'business_logs';
 
-  // Konfigurace (u logů filtrujeme akce create/edit)
   buttons = BUTTONS.filter(b => b.action !== 'create' && b.action !== 'edit');
   tableColumns = TABLE_COLUMNS;
   filterColumns = FILTER_COLUMNS;
@@ -45,7 +44,6 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements OnI
 
   selectedItemForDetails: any | null = null;
 
-  // Sjednocené filtry
   filters: FilterParams = {
     sort_by: 'created_at',
     sort_direction: 'desc'
@@ -71,8 +69,6 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements OnI
       }
     });
   }
-
-  // --- Data Logic ---
 
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
@@ -101,8 +97,6 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements OnI
   exportActiveTable(): void {
     if (this.activeTable) this.activeTable.exportToCSV();
   }
-
-  // --- Record Actions ---
 
   handleViewDetails(item: any): void {
     const logId = item.business_log_id || item.id;

@@ -43,7 +43,6 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
   
   override apiEndpoint: string = 'sales_orders';
   
-  // Konfigurace (Sales Orders se většinou nevytvářejí ručně, proto filtrujeme create)
   buttons: Buttons[] = SALES_ORDER_BUTTONS.filter(b => b.action !== 'create');
   formFields: InputDefinition[] = SALES_ORDER_FORM_FIELDS;
   columns = SALES_ORDER_COLUMNS;
@@ -54,7 +53,6 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
   selectedItemForEdit: any = null;
   selectedItemForDetails: any = null;
 
-  // Sjednocené filtry pro BaseDataComponent
   filters: FilterParams = { 
     sort_by: 'id', 
     sort_direction: 'desc' 
@@ -80,8 +78,6 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
       }
     });
   }
-
-  // --- Data & Filtering Logic ---
 
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
@@ -111,8 +107,6 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
     if (this.activeTable) this.activeTable.exportToCSV();
   }
 
-  // --- Handlery pro záznamy ---
-
   handleEditFormOpened(item: any): void { 
     this.selectedItemForEdit = { ...item }; 
     this.showCreateForm = true; 
@@ -132,7 +126,6 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
 
   handleFormSubmitted(formData: any): void {
     this.isLoading = true;
-    // Update existující realizace
     this.updateData(formData.id, formData).pipe(
       finalize(() => {
         this.isLoading = false;

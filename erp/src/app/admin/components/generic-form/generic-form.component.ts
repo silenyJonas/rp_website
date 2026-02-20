@@ -86,7 +86,6 @@ export class GenericFormComponent implements OnInit, OnDestroy {
     document.body.style.overflow = 'auto';
   }
 
-  // NOVÁ METODA PRO SOUBORY
   onFileChange(event: any, columnName: string): void {
     const file = event.target.files[0];
     if (file) {
@@ -157,7 +156,6 @@ export class GenericFormComponent implements OnInit, OnDestroy {
     event?.preventDefault();
     if (this.isSubmitting) return;
 
-    // Označíme všechna pole jako dotčená pro zobrazení validací
     Object.keys(form.controls).forEach(field => {
       const control = form.controls[field];
       if (control) {
@@ -177,7 +175,6 @@ export class GenericFormComponent implements OnInit, OnDestroy {
     if (form.valid) {
       this.isSubmitting = true;
       
-      // Zjistíme, zda data obsahují soubor
       let hasFile = false;
       Object.keys(this.formData).forEach(key => {
         if (this.formData[key] instanceof File) {
@@ -193,23 +190,18 @@ export class GenericFormComponent implements OnInit, OnDestroy {
           const value = this.formData[key];
 
           if (value instanceof File) {
-            // Soubor přidáme přímo
             formDataPayload.append(key, value, value.name);
           } else if (value !== null && value !== undefined) {
-            // VŠECHNO OSTATNÍ převedeme na string. 
-            // Toto je kritické pro Laravel validátor u multipart requestů!
             formDataPayload.append(key, String(value));
           }
         });
 
-        // Debug log: uvidíš v konzoli přesně, co se balí do requestu
         formDataPayload.forEach((val, k) => {
           console.log(`FormData payload check: ${k} =`, val instanceof File ? `File: ${val.name}` : val);
         });
 
         this.formSubmitted.emit(formDataPayload);
       } else {
-        // Pokud není soubor, pošleme čistý objekt (JSON) jako dřív
         console.log('Odesílám čistý JSON:', this.formData);
         this.formSubmitted.emit({ ...this.formData });
       }

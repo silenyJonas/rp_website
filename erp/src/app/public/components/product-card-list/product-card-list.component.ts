@@ -1,5 +1,3 @@
-// src/app/components/product-card-list/product-card-list.component.ts
-
 import { Component, Input, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../../shared/interfaces/product';

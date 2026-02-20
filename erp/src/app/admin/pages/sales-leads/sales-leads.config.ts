@@ -1,14 +1,9 @@
-// src/app/pages/sales-lead/sales-lead.config.ts
-
 import { Buttons } from '../../components/generic-table/generic-table.component';
 import { InputDefinition } from '../../components/generic-form/generic-form.component';
 import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
 import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
 
-/**
- * DEFINICE TLAČÍTEK V TABULCE
- */
 export const SALES_LEAD_BUTTONS: Buttons[] = [
   { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
@@ -16,9 +11,6 @@ export const SALES_LEAD_BUTTONS: Buttons[] = [
   { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
 ];
 
-/**
- * MOŽNOSTI PRO SELECTY
- */
 export const SALES_LEAD_STATUS_OPTIONS: string[] = [
   'Nové', 'Probíhá komunikace', 'Příprava nabídky', 'Nabídka odeslána', 
   'Poptávkový formulář odeslán', 'Vyjednávání', 'Pozastaveno', 'Přebírá si dev team',
@@ -40,9 +32,6 @@ export const SALES_LEAD_SOURCE_CHANNELS: string[] = [
   'Partner / Affiliate', 'Jiný online kanál', 'Jiný offline kanál'
 ];
 
-/**
- * FORMULÁŘOVÁ POLE (CREATE / EDIT)
- */
 export const SALES_LEAD_FORM_FIELDS: InputDefinition[] = [
   {
     column_name: 'subject_name',
@@ -180,9 +169,6 @@ export const SALES_LEAD_FORM_FIELDS: InputDefinition[] = [
   }
 ];
 
-/**
- * DEFINICE SLOUPCŮ HLAVNÍ TABULKY
- */
 export const SALES_LEAD_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'subject_name', header: 'Subjekt / Firma', type: 'text' },
@@ -193,18 +179,12 @@ export const SALES_LEAD_COLUMNS: ColumnDefinition[] = [
   { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'd.M.yyyy H:mm' }
 ];
 
-/**
- * DEFINICE SLOUPCŮ KOŠE
- */
 export const SALES_LEAD_TRASH_COLUMNS: ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'subject_name', header: 'Subjekt', type: 'text' },
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'd.M.yyyy H:mm' }
 ];
 
-/**
- * FILTRY
- */
 export const SALES_LEAD_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID...', canSort: true },
   { key: 'subject_name', header: 'Subjekt', type: 'text', placeholder: 'Hledat firmu...', canSort: true },
@@ -213,9 +193,6 @@ export const SALES_LEAD_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'salesman_name', header: 'Obchodník', type: 'text', placeholder: 'Jméno...', canSort: true },
 ];
 
-/**
- * DETAIL POLOŽKY
- */
 export const SALES_LEAD_DETAILS_COLUMNS: ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID Leadů', type: 'text' },
   { key: 'subject_name', displayName: 'Název subjektu', type: 'text' },

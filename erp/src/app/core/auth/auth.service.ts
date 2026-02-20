@@ -9,7 +9,6 @@ import { PermissionService } from './services/permission.service';
 export class AuthService {
   private baseUrl = environment.base_api_url;
 
-  // Inicializace přímo ze sessionStorage zajistí, že stav přežije F5
   private _isLoggedIn = new BehaviorSubject<boolean>(!!sessionStorage.getItem('accessToken'));
   isLoggedIn$ = this._isLoggedIn.asObservable();
   
@@ -57,11 +56,6 @@ export class AuthService {
     );
   }
 
-  /**
-   * Klíčová metoda pro AuthGuard. 
-   * Při refreshu (F5) jen ověří lokální data. Pokud jsou neplatná, 
-   * první následný požadavek na API vyvolá 401 a Interceptor provede refresh.
-   */
   checkAuth(): Observable<boolean> {
     const token = this.getAccessToken();
     if (!token) {
@@ -87,7 +81,6 @@ export class AuthService {
         this._isLoggedIn.next(true);
       }),
       catchError(err => {
-        // Pokud refresh selže (např. 401 na refresh endpointu), okamžitě logout
         this.clearAuthData();
         return throwError(() => err);
       })
@@ -95,14 +88,13 @@ export class AuthService {
   }
 
   public clearAuthData(): void {
-    sessionStorage.clear(); // Vymaže vše najednou
+    sessionStorage.clear();
     this.permissionService.clearPermissions();
     this._isLoggedIn.next(false);
     this._userEmailSubject.next(null);
     this.stopTokenRefreshTimer();
   }
 
-  // Gettery
   public getUserId(): string | null { return sessionStorage.getItem('userId'); }
   public getUserEmail(): string | null { return sessionStorage.getItem('userEmail'); }
   public setUserEmail(email: string): void {

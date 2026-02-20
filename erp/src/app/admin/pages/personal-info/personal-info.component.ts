@@ -8,7 +8,7 @@ import { BaseDataComponent } from '../../components/base-data/base-data.componen
 import { AuthService } from '../../../core/auth/auth.service';
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
 import { UserLogin } from '../../../shared/interfaces/user';
-import { GenericTableService } from '../../../core/services/generic-table.service'; // Import přidán
+import { GenericTableService } from '../../../core/services/generic-table.service'; 
 
 @Component({
   selector: 'app-personal-info',
@@ -22,18 +22,17 @@ import { GenericTableService } from '../../../core/services/generic-table.servic
 })
 export class PersonalInfoComponent extends BaseDataComponent<UserLogin> implements OnInit, OnDestroy {
   passwordForm: FormGroup;
-  override apiEndpoint = 'users'; // Použito override pro konzistenci
+  override apiEndpoint = 'users'; 
   userData: UserLogin | null = null;
 
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService, // Přidáno pro rodiče
+    protected override genericTableService: GenericTableService, 
     private fb: FormBuilder,
     private authService: AuthService,
     private alertDialogService: AlertDialogService
   ) {
-    // Předáme genericTableService do super()
     super(dataHandler, cd, genericTableService);
 
     this.passwordForm = this.fb.group({
@@ -46,7 +45,7 @@ export class PersonalInfoComponent extends BaseDataComponent<UserLogin> implemen
   }
 
   override ngOnInit(): void {
-    super.ngOnInit(); // Volá prázdné ngOnInit z rodiče
+    super.ngOnInit(); 
     this.loadCurrentUserData();
   }
 
@@ -54,14 +53,13 @@ export class PersonalInfoComponent extends BaseDataComponent<UserLogin> implemen
     const userId = this.authService.getUserId();
     if (userId) {
       this.isLoading = true;
-      // Používáme metodu z BaseDataComponent
       this.getItemDetails(parseInt(userId, 10))
         .pipe(finalize(() => {
           this.isLoading = false;
           this.cd.markForCheck();
         }))
         .subscribe({
-          next: (data: UserLogin) => { // Přidán typ pro opravu Implicit Any
+          next: (data: UserLogin) => { 
             this.userData = data;
           },
           error: (err) => {
@@ -97,7 +95,6 @@ export class PersonalInfoComponent extends BaseDataComponent<UserLogin> implemen
       new_password_confirmation: this.passwordForm.get('new_password_confirmation')?.value,
     };
 
-    // Využíváme metodu updatePassword, kterou jsme právě vrátili do BaseDataComponent
     this.updatePassword(parseInt(userId, 10), passwordData)
       .subscribe({
         next: () => {

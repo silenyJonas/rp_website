@@ -20,7 +20,6 @@ export class AuthTokenInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        // Pokud dostaneme 401 a nejde o login nebo samotný refresh
         if (error.status === 401 && !request.url.includes('/login') && !request.url.includes('/refresh')) {
           return this.handle401Error(request, next);
         }
@@ -43,21 +42,17 @@ export class AuthTokenInterceptor implements HttpInterceptor {
       return this.authService.refreshAccessToken().pipe(
         switchMap((response: any) => {
           this.isRefreshing = false;
-          // Předpokládáme, že backend vrací { token: '...', refreshToken: '...' }
           this.refreshTokenSubject.next(response.token);
           return next.handle(this.addToken(request, response.token));
         }),
         catchError((err: any) => {
           this.isRefreshing = false;
-          // Pokud refresh selže (např. i refresh token je po smrti),
-          // vyčistíme data lokálně a jdeme na login.
           this.authService.clearAuthData();
           this.router.navigate(['/auth/login']);
           return throwError(() => err);
         })
       );
     } else {
-      // Pokud už se jeden refresh provádí, ostatní požadavky čekají na jeho výsledek
       return this.refreshTokenSubject.pipe(
         filter(token => token !== null),
         take(1),

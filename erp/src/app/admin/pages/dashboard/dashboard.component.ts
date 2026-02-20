@@ -18,29 +18,23 @@ import { BaseDataComponent } from '../../components/base-data/base-data.componen
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent extends BaseDataComponent<UserLogin> implements OnInit {
-  // apiEndpoint je nutný pro BaseDataComponent metody
   override apiEndpoint = 'users';
   
-  // userData budeme držet v proměnné pro snadný přístup v šabloně
   userData: UserLogin | null = null;
 
   constructor(
     protected override dataHandler: DataHandler,
     protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService, // Přidáno pro BaseDataComponent
+    protected override genericTableService: GenericTableService, 
     private authService: AuthService
   ) {
     super(dataHandler, cd, genericTableService);
   }
 
   override ngOnInit(): void {
-    // Nepoužíváme super.ngOnInit(), protože dashboard nepotřebuje loadovat seznam (refreshData)
     this.loadUserProfile();
   }
 
-  /**
-   * Načte detaily přihlášeného uživatele
-   */
   private loadUserProfile(): void {
     const userId = this.authService.getUserId();
     if (!userId) return;
@@ -65,9 +59,6 @@ export class DashboardComponent extends BaseDataComponent<UserLogin> implements 
       });
   }
 
-  /**
-   * Pomocná metoda pro formátování jména
-   */
   get welcomeMessage(): string {
     return this.userData ? `Vítejte zpět, ${this.userData.user_email}!` : 'Vítejte v systému!';
   }
