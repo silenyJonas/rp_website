@@ -39,6 +39,7 @@ export class GenericFormComponent implements OnInit, OnDestroy {
   @ViewChild('genericForm') genericForm!: NgForm;
 
   formData: { [key: string]: any } = {};
+  confirmPasswordData: { [key: string]: string } = {}; // Pro pomocné potvrzovací pole
   isSubmitting = false;
   passwordsNotMatching = false;
 
@@ -46,7 +47,6 @@ export class GenericFormComponent implements OnInit, OnDestroy {
   @Input() passwordReset: boolean = false;
   
   visibleInputDefinitions: InputDefinition[] = [];
-
   isUserRoleLocked: boolean = false;
 
   constructor(private cd: ChangeDetectorRef, private authService: AuthService) {}
@@ -54,11 +54,9 @@ export class GenericFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     document.body.style.overflow = 'hidden';
 
-    console.log(this.formDataToEdit)
     const currentUserId = this.authService.getUserId();
 
     if (this.formDataToEdit) {
-      console.log('generic-form: Inicializace pro editaci s daty:', this.formDataToEdit);
       this.formData = { ...this.formDataToEdit };
       this.headerText = 'Editovat záznam';
 
@@ -68,10 +66,8 @@ export class GenericFormComponent implements OnInit, OnDestroy {
 
       if (currentUserId && this.formData['id'] == currentUserId) {
         this.isUserRoleLocked = true;
-        console.log('Uživatel se pokouší editovat vlastní záznam. Pole pro roli bude uzamčeno.');
       }
     } else {
-      console.log('generic-form: Inicializace pro vytvoření nového záznamu.');
       this.formData = {};
       this.visibleInputDefinitions = this.inputDefinitions.filter(input =>
         input.show_in_create !== false
@@ -90,24 +86,30 @@ export class GenericFormComponent implements OnInit, OnDestroy {
     const file = event.target.files[0];
     if (file) {
       this.formData[columnName] = file;
-      console.log(`Soubor vybrán pro ${columnName}:`, file.name);
     }
   }
 
   getControl(columnName: string): FormControl | null {
-    if (!this.genericForm) {
-      return null;
-    }
+    if (!this.genericForm) return null;
     return this.genericForm.controls[columnName] as FormControl || null;
   }
 
-  checkPasswordMatch(): void {
-    if (!this.passwordReset) {
+  // Sjednocená funkce pro kontrolu shody hesel
+  checkPasswordMatch(columnName?: string): void {
+    // 1. Logika pro speciální režim passwordReset (staré chování)
+    if (this.passwordReset && !columnName) {
+      const newPassword = this.formData['new_password'];
+      const newPasswordConfirmation = this.formData['new_password_confirmation'];
+      this.passwordsNotMatching = newPassword !== newPasswordConfirmation;
       return;
     }
-    const newPassword = this.formData['new_password'];
-    const newPasswordConfirmation = this.formData['new_password_confirmation'];
-    this.passwordsNotMatching = newPassword !== newPasswordConfirmation;
+
+    // 2. Logika pro dynamický typ 'confirm-password'
+    if (columnName) {
+      const original = this.formData[columnName];
+      const confirmation = this.confirmPasswordData[columnName];
+      this.passwordsNotMatching = (original !== confirmation) && !!confirmation;
+    }
   }
 
   getValidationErrorMessage(control: FormControl | null, fieldDefinition: InputDefinition): string | null {
@@ -115,27 +117,16 @@ export class GenericFormComponent implements OnInit, OnDestroy {
       return null;
     }
 
-    if (control.errors?.['required']) {
-      return fieldDefinition.errorMessage || 'Toto pole je povinné.';
-    }
-    if (control.errors?.['pattern']) {
-      return fieldDefinition.errorMessage || 'Neplatný formát.';
-    }
-    if (control.errors?.['email']) {
-      return fieldDefinition.errorMessage || 'Neplatný formát e-mailu.';
-    }
-    if (control.errors?.['min']) {
-      return `Minimální hodnota je ${fieldDefinition.min}.`;
-    }
-    if (control.errors?.['max']) {
-      return `Maximální hodnota je ${fieldDefinition.max}.`;
-    }
+    if (control.errors?.['required']) return fieldDefinition.errorMessage || 'Toto pole je povinné.';
+    if (control.errors?.['pattern']) return fieldDefinition.errorMessage || 'Neplatný formát.';
+    if (control.errors?.['email']) return fieldDefinition.errorMessage || 'Neplatný formát e-mailu.';
+    if (control.errors?.['min']) return `Minimální hodnota je ${fieldDefinition.min}.`;
+    if (control.errors?.['max']) return `Maximální hodnota je ${fieldDefinition.max}.`;
 
     return null;
   }
 
-  onSliderChange(input: InputDefinition): void {
-  }
+  onSliderChange(input: InputDefinition): void {}
 
   onFormClick(event: MouseEvent): void {
     event.stopPropagation();
@@ -148,7 +139,6 @@ export class GenericFormComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    console.log('Formulář byl zrušen a zavřen.');
     this.formCanceled.emit();
   }
 
@@ -156,6 +146,7 @@ export class GenericFormComponent implements OnInit, OnDestroy {
     event?.preventDefault();
     if (this.isSubmitting) return;
 
+    // Označit všechna pole jako dotčená pro zobrazení validací
     Object.keys(form.controls).forEach(field => {
       const control = form.controls[field];
       if (control) {
@@ -164,12 +155,20 @@ export class GenericFormComponent implements OnInit, OnDestroy {
       }
     });
 
+    // Kontrola shody hesel před odesláním (pro oba případy)
     if (this.passwordReset) {
       this.checkPasswordMatch();
-      if (this.passwordsNotMatching) {
-        console.warn('Formulář nelze odeslat. Hesla se neshodují.');
-        return;
+    }
+    
+    this.visibleInputDefinitions.forEach(input => {
+      if (input.type === 'confirm-password') {
+        this.checkPasswordMatch(input.column_name);
       }
+    });
+
+    if (this.passwordsNotMatching) {
+      console.warn('Formulář nelze odeslat. Hesla se neshodují.');
+      return;
     }
 
     if (form.valid) {
@@ -177,39 +176,28 @@ export class GenericFormComponent implements OnInit, OnDestroy {
       
       let hasFile = false;
       Object.keys(this.formData).forEach(key => {
-        if (this.formData[key] instanceof File) {
-          hasFile = true;
-        }
+        if (this.formData[key] instanceof File) hasFile = true;
       });
 
       if (hasFile) {
-        console.log('Generuji FormData pro odeslání se souborem...');
         const formDataPayload = new FormData();
-        
         Object.keys(this.formData).forEach(key => {
           const value = this.formData[key];
-
           if (value instanceof File) {
             formDataPayload.append(key, value, value.name);
           } else if (value !== null && value !== undefined) {
             formDataPayload.append(key, String(value));
           }
         });
-
-        formDataPayload.forEach((val, k) => {
-          console.log(`FormData payload check: ${k} =`, val instanceof File ? `File: ${val.name}` : val);
-        });
-
         this.formSubmitted.emit(formDataPayload);
       } else {
-        console.log('Odesílám čistý JSON:', this.formData);
         this.formSubmitted.emit({ ...this.formData });
       }
 
       this.onCancel();
       this.isSubmitting = false;
     } else {
-      console.warn('Formulář je neplatný. Opravte prosím chyby.');
+      console.warn('Formulář je neplatný.');
     }
   }
 }

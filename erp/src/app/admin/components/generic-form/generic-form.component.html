@@ -63,9 +63,45 @@
                   <label [for]="input.column_name">Aktivní / Souhlasím</label>
                 </div>
 
+                <ng-container *ngSwitchCase="'confirm-password'">
+                  <div class="confirm-password-container">
+                    <input 
+                      type="password" 
+                      [id]="input.column_name" 
+                      [placeholder]="input.placeholder || 'Zadejte heslo'"
+                      [required]="!!input.required" 
+                      [pattern]="input.pattern || ''" 
+                      [name]="input.column_name"
+                      [(ngModel)]="formData[input.column_name]" 
+                      class="custom-input" 
+                      [disabled]="input.editable === false"
+                      (ngModelChange)="checkPasswordMatch(input.column_name)" 
+                    />
+
+                    <label [for]="input.column_name + '_confirm'" class="field-label sub-label" style="margin-top: 10px; display: block;">
+                      Potvrzení hesla <span *ngIf="input.required" class="required-star">*</span>
+                    </label>
+                    <input 
+                      type="password" 
+                      [id]="input.column_name + '_confirm'" 
+                      [placeholder]="'Zadejte heslo znovu'"
+                      [required]="!!input.required" 
+                      [name]="input.column_name + '_confirm'"
+                      [(ngModel)]="confirmPasswordData[input.column_name]" 
+                      class="custom-input" 
+                      [disabled]="input.editable === false"
+                      (ngModelChange)="checkPasswordMatch(input.column_name)" 
+                    />
+                  </div>
+                  
+                  <div *ngIf="passwordsNotMatching && confirmPasswordData[input.column_name]" class="error-text">
+                    Hesla se neshodují.
+                  </div>
+                </ng-container>
+                
                 <input *ngSwitchDefault [type]="input.type" [id]="input.column_name" [name]="input.column_name"
                   [(ngModel)]="formData[input.column_name]" class="custom-input" [disabled]="input.editable === false" />
-
+                
               </ng-container>
 
               <div *ngIf="getControl(input.column_name)?.invalid && (getControl(input.column_name)?.dirty || getControl(input.column_name)?.touched)"

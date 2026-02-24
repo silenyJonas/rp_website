@@ -58,7 +58,7 @@ export const FORM_FIELDS: InputDefinition[] = [
     column_name: 'user_password_hash',
     label: 'Heslo',
     placeholder: 'Zadejte heslo',
-    type: 'password',
+    type: 'confirm-password',
     required: true,
     pattern: '^.{8,}$',
     errorMessage: 'Minimálně 8 znaků',
