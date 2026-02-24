@@ -150,46 +150,52 @@ class UserController extends Controller
     /**
      * Změna hesla.
      */
-    public function changePassword(PasswordChangeRequest $request, $id): JsonResponse
-    {
-        try {
-            $user = User::findOrFail($id);
-            $validated = $request->validated();
-            $auth = $request->user() ?? auth('sanctum')->user();
+ public function changePassword(PasswordChangeRequest $request, $id): JsonResponse
+{
+    try {
+        $user = User::findOrFail($id); // Ten, komu měníme heslo
+        $validated = $request->validated();
+        $auth = $request->user() ?? auth('sanctum')->user(); // Ten, kdo sedí u PC
 
-            if ($user->roles()->where('role_name', 'primeadmin')->exists()) {
-                return response()->json(['message' => 'Heslo Prime Admina nelze měnit.'], 403);
-            }
-
-            $isAdmin = $auth->roles()->whereIn('role_name', ['admin', 'sysadmin', 'primeadmin'])->exists();
-            $isOwner = $user->id === $auth->id;
-
-            if (!$isOwner && !$isAdmin) {
-                return response()->json(['message' => 'Nedostatečná oprávnění.'], 403);
-            }
-
-            if ($isOwner) {
-                if (!isset($validated['old_password']) || !Hash::check($validated['old_password'], $user->user_password_hash)) {
-                    return response()->json(['message' => 'Původní heslo je nesprávné.'], 403);
-                }
-            }
-
-            $user->update(['user_password_hash' => Hash::make($validated['new_password'])]);
-            
-            $this->logAction(
-                $request, 
-                'PasswordChanged', 
-                'User', 
-                "Změna hesla u: {$user->user_email} " . ($isAdmin && !$isOwner ? "(provedl admin)" : ""), 
-                $user->id
-            );
-
-            return response()->json(['message' => 'Heslo úspěšně změněno.']);
-        } catch (\Exception $e) {
-            $this->logAction($request, 'error', 'User', "Chyba při změně hesla ID {$id}: " . $e->getMessage(), $id);
-            return response()->json(['message' => 'Změna hesla selhala.'], 500);
+        // 1. Ochrana Prime Admina (nikdo mu nesmí změnit heslo)
+        if ($user->roles()->where('role_name', 'primeadmin')->exists()) {
+            return response()->json(['message' => 'Heslo Prime Admina nelze měnit.'], 403);
         }
+
+        $isAdmin = $auth->roles()->whereIn('role_name', ['admin', 'sysadmin', 'primeadmin'])->exists();
+        $isOwner = $user->id === $auth->id;
+
+        // 2. Kontrola práv: Můžu měnit heslo jen sobě nebo jsem admin
+        if (!$isOwner && !$isAdmin) {
+            return response()->json(['message' => 'Nedostatečná oprávnění.'], 403);
+        }
+
+        /**
+         * 3. BEZPEČNOSTNÍ POJISTKA
+         * Ověřujeme 'old_password' proti heslu PŘIHLÁŠENÉHO uživatele ($auth).
+         * Tím zajistíme, že i admin musí zadat SVÉ heslo, aby mohl změnit heslo někomu jinému.
+         */
+        if (!isset($validated['old_password']) || !Hash::check($validated['old_password'], $auth->user_password_hash)) {
+            return response()->json(['message' => 'Vaše potvrzovací heslo (aktuální heslo) je nesprávné.'], 403);
+        }
+
+        // 4. Samotná změna hesla u cílového uživatele
+        $user->update(['user_password_hash' => Hash::make($validated['new_password'])]);
+        
+        $this->logAction(
+            $request, 
+            'PasswordChanged', 
+            'User', 
+            "Změna hesla u: {$user->user_email} " . ($isAdmin && !$isOwner ? "(provedl admin: {$auth->user_email})" : ""), 
+            $user->id
+        );
+
+        return response()->json(['message' => 'Heslo úspěšně změněno.']);
+    } catch (\Exception $e) {
+        $this->logAction($request, 'error', 'User', "Chyba při změně hesla ID {$id}: " . $e->getMessage(), $id);
+        return response()->json(['message' => 'Změna hesla selhala.'], 500);
     }
+}
 
     /**
      * Obnova smazaného uživatele.

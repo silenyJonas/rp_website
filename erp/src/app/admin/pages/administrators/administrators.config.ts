@@ -28,7 +28,7 @@ export const FORM_FIELDS: InputDefinition[] = [
   {
     column_name: 'user_email',
     label: 'Přihlašovací login',
-    placeholder: 'Zadejte login',
+    placeholder: 'Např. novak_jan',
     type: 'text',
     required: true,
     pattern: '^[a-zA-Z0-9._-]{3,20}$',
@@ -38,7 +38,7 @@ export const FORM_FIELDS: InputDefinition[] = [
   {
     column_name: 'full_name',
     label: 'Celé jméno',
-    placeholder: 'Jméno a příjmení',
+    placeholder: 'Zadejte jméno a příjmení',
     type: 'text',
     required: true,
     errorMessage: 'Jméno je povinné',
@@ -47,7 +47,7 @@ export const FORM_FIELDS: InputDefinition[] = [
   {
     column_name: 'contact_email',
     label: 'Kontaktní e-mail',
-    placeholder: 'jmeno@firma.cz',
+    placeholder: 'soukromy@email.cz',
     type: 'text',
     required: false,
     pattern: '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$',
@@ -57,7 +57,7 @@ export const FORM_FIELDS: InputDefinition[] = [
   {
     column_name: 'user_password_hash',
     label: 'Heslo',
-    placeholder: 'Zadejte heslo',
+    placeholder: 'Zadejte silné heslo',
     type: 'confirm-password',
     required: true,
     pattern: '^.{8,}$',
@@ -72,14 +72,69 @@ export const FORM_FIELDS: InputDefinition[] = [
     required: true,
     editable: true, show_in_edit: true, show_in_create: true
   },
-  { column_name: 'phone_number', label: 'Telefon', type: 'text', required: false, editable: true, show_in_edit: true, show_in_create: true },
-  { column_name: 'birth_date', label: 'Datum narození', type: 'date', required: false, editable: true, show_in_edit: true, show_in_create: true },
-  { column_name: 'personal_id_num', label: 'Rodné číslo', type: 'text', required: false, editable: true, show_in_edit: true, show_in_create: true },
-  { column_name: 'address', label: 'Trvalé bydliště', type: 'text', required: false, editable: true, show_in_edit: true, show_in_create: true },
-  { column_name: 'bank_account', label: 'Bankovní účet', type: 'text', required: false, editable: true, show_in_edit: true, show_in_create: true },
-  { column_name: 'commission_rate', label: 'Provize (%)', type: 'number', required: true, editable: true, show_in_edit: true, show_in_create: true },
-  { column_name: 'has_tax_declaration', label: 'Daňové prohlášení', type: 'checkbox', required: false, editable: true, show_in_edit: true, show_in_create: true },
-  { column_name: 'internal_note', label: 'Poznámka', type: 'textarea', required: false, editable: true, show_in_edit: true, show_in_create: true }
+  { 
+    column_name: 'phone_number', 
+    label: 'Telefon', 
+    placeholder: '+420 123 456 789',
+    type: 'text', 
+    required: false, 
+    editable: true, show_in_edit: true, show_in_create: true 
+  },
+  { 
+    column_name: 'birth_date', 
+    label: 'Datum narození', 
+    placeholder: 'RRRR-MM-DD',
+    type: 'date', 
+    required: false, 
+    editable: true, show_in_edit: true, show_in_create: true 
+  },
+  { 
+    column_name: 'personal_id_num', 
+    label: 'Rodné číslo', 
+    placeholder: 'YYMMDD/XXXX',
+    type: 'text', 
+    required: false, 
+    editable: true, show_in_edit: true, show_in_create: true 
+  },
+  { 
+    column_name: 'address', 
+    label: 'Trvalé bydliště', 
+    placeholder: 'Ulice, město, PSČ',
+    type: 'text', 
+    required: false, 
+    editable: true, show_in_edit: true, show_in_create: true 
+  },
+  { 
+    column_name: 'bank_account', 
+    label: 'Bankovní účet', 
+    placeholder: '123456789/0100',
+    type: 'text', 
+    required: false, 
+    editable: true, show_in_edit: true, show_in_create: true 
+  },
+  { 
+    column_name: 'commission_rate', 
+    label: 'Provize (%)', 
+    placeholder: 'Výchozí je 10',
+    type: 'number', 
+    required: true, 
+    editable: true, show_in_edit: true, show_in_create: true 
+  },
+  { 
+    column_name: 'has_tax_declaration', 
+    label: 'Daňové prohlášení', 
+    type: 'checkbox', 
+    required: false, 
+    editable: true, show_in_edit: true, show_in_create: true 
+  },
+  { 
+    column_name: 'internal_note', 
+    label: 'Poznámka', 
+    placeholder: 'Interní poznámka k uživateli (nevidí ji)',
+    type: 'textarea', 
+    required: false, 
+    editable: true, show_in_edit: true, show_in_create: true 
+  }
 ];
 
 export const TABLE_COLUMNS: ColumnDefinition[] = [
