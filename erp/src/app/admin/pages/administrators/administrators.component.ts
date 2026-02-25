@@ -145,38 +145,47 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
     });
   }
 
-  handleResetPasswordFormOpened(item: any) {
-    this.showResetPasswordForm = true;
-    this.selectedItemForEdit = { 
-      id: item.id, 
-      old_password: '', 
-      new_password: '', 
-      new_password_confirmation: '' 
-    };
-    this.cd.markForCheck();
-  }
+ resetPasswordTitle: string = 'Resetovat heslo';
 
-  handleResetPasswordFormSubmitted(formData: any) {
-    this.isLoading = true;
-    const payload = {
-      old_password: formData.old_password,
-      new_password: formData.new_password,
-      new_password_confirmation: formData.new_password_confirmation
-    };
+handleResetPasswordFormOpened(item: any) {
+  // Sestavíme titulek přímo zde - formbuilder ho jen tupě zobrazí
+  this.resetPasswordTitle = `Resetovat heslo: ${item.user_email}`;
+  
+  // Připravíme data pro formbuilder
+  this.selectedItemForEdit = { 
+    id: item.id, 
+    old_password: '', 
+    new_password: '' 
+  };
+  this.showResetPasswordForm = true;
+  this.cd.markForCheck();
+}
 
-    this.dataHandler.put(`users/${formData.id}/change-password`, payload)
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-          this.showResetPasswordForm = false;
-          this.cd.markForCheck();
-        })
-      )
-      .subscribe({
-        next: () => this.alertDialogService.open('Úspěch', 'Heslo bylo změněno.', 'success'),
-        error: (err) => this.alertDialogService.open('Chyba', err.error?.message || 'Heslo se nepodařilo změnit.', 'danger')
-      });
-  }
+handleResetPasswordFormSubmitted(formData: any) {
+  this.isLoading = true;
+  
+  // API očekává potvrzení hesla. Protože používáme v configu 'confirm-password',
+  // formbuilder nám pošle hodnotu v klíči 'new_password'. 
+  // My ji pro API zdvojíme.
+  const payload = {
+    old_password: formData.old_password,
+    new_password: formData.new_password,
+    new_password_confirmation: formData.new_password // Mapování pro API
+  };
+
+  this.dataHandler.put(`users/${formData.id}/change-password`, payload)
+    .pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.showResetPasswordForm = false;
+        this.cd.markForCheck();
+      })
+    )
+    .subscribe({
+      next: () => this.alertDialogService.open('Úspěch', 'Heslo bylo změněno.', 'success'),
+      error: (err) => this.alertDialogService.open('Chyba', err.error?.message || 'Akce selhala.', 'danger')
+    });
+}
 
   handleViewDetails(item: any) {
     if (!item.id) return;

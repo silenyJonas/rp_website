@@ -88,9 +88,9 @@
 
 <app-generic-form
   *ngIf="showResetPasswordForm"
+  [headerText]="'Resetovat heslo'"
   [inputDefinitions]="resetPasswordFormFields"
   [formDataToEdit]="selectedItemForEdit"
-  [passwordReset]="true"
   (formSubmitted)="handleResetPasswordFormSubmitted($event)"
   (formCanceled)="showResetPasswordForm = false"
 ></app-generic-form>
