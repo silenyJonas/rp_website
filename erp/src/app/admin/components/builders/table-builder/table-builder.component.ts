@@ -2,13 +2,13 @@ import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, O
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
-import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
-import { BaseDataComponent } from '../base-data/base-data.component';
-import { DataHandler } from '../../../core/services/data-handler.service';
-import { ConfirmDialogService } from '../../../core/services/confirm-dialog.service';
-import { AlertDialogService } from '../../../core/services/alert-dialog.service';
-import { AuthService } from '../../../core/auth/auth.service';
-import { GenericTableService } from '../../../core/services/generic-table.service';
+import { ColumnDefinition } from '../../../../shared/interfaces/generic-form-column-definiton';
+import { BaseDataComponent } from '../../base-data/base-data.component';
+import { DataHandler } from '../../../../core/services/data-handler.service';
+import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
+import { AlertDialogService } from '../../../../core/services/alert-dialog.service';
+import { AuthService } from '../../../../core/auth/auth.service';
+import { GenericTableService } from '../../../../core/services/generic-table.service';
 
 export interface Buttons {
   display_name: string;
@@ -19,14 +19,14 @@ export interface Buttons {
 }
 
 @Component({
-  selector: 'app-generic-table',
+  selector: 'app-table-builder',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './generic-table.component.html',
+  templateUrl: './table-builder.component.html',
   styleUrls: ['../table-style.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GenericTableComponent extends BaseDataComponent<any> implements OnInit, OnChanges {
+export class TableBuilderComponent extends BaseDataComponent<any> implements OnInit, OnChanges {
   @Input() override data: any[] = [];
   @Input('columns') columnDefinitions: ColumnDefinition[] = [];
   @Input() tableCaption?: string;

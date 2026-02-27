@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GenericFilterFormComponent } from './generic-filter-form.component';
+import { GenericFilterFormComponent } from './filter-form-builder.component';
 
 describe('GenericFilterFormComponent', () => {
   let component: GenericFilterFormComponent;

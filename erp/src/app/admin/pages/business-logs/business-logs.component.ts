@@ -5,11 +5,10 @@ import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
-import { GenericTableComponent, Buttons } from '../../components/generic-table/generic-table.component';
-import { GenericFilterFormComponent } from '../../components/generic-filter-form/generic-filter-form.component';
-import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
-import { PaginationButtonsComponent } from '../../components/pagination-buttons/pagination-buttons.component';
-
+import { TableBuilderComponent, Buttons } from '../../components/builders/table-builder/table-builder.component';
+import { FilterFormBuilderComponent } from '../../components/builders/filter-form-builder/filter-form-builder.component';
+import { DetailsbuilderComponent } from '../../components/builders/details-builder/details-builder.component';
+import { PaginationButtonsBuilderComponent } from '../../components/builders/pagination-buttons-builder/pagination-buttons-builder.component';
 import { DataHandler } from '../../../core/services/data-handler.service';
 import { GenericTableService, FilterParams } from '../../../core/services/generic-table.service';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -25,15 +24,15 @@ import {
   selector: 'app-business-logs',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, GenericTableComponent, GenericFilterFormComponent, 
-    GenericDetailsComponent, PaginationButtonsComponent
+    CommonModule, FormsModule, TableBuilderComponent, FilterFormBuilderComponent, 
+    DetailsbuilderComponent, PaginationButtonsBuilderComponent
   ],
   templateUrl: './business-logs.component.html',
   styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BusinessLogsComponent extends BaseDataComponent<any> implements OnInit {
-  @ViewChild('activeTable') activeTable!: GenericTableComponent;
+  @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
   override apiEndpoint: string = 'business_logs';
 

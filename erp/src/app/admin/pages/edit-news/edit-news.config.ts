@@ -1,5 +1,5 @@
-import { Buttons } from '../../components/generic-table/generic-table.component';
-import { InputDefinition } from '../../components/generic-form/generic-form.component';
+import { Buttons } from '../../components/builders/table-builder/table-builder.component';
+import { InputDefinition } from '../../components/builders/form-builder/form-builder.component';
 import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
 import { FilterColumns } from '../../../shared/interfaces/filter-columns';
 import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';

@@ -1,19 +1,19 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FilterColumns } from '../../../shared/interfaces/filter-columns';
+import { FilterColumns } from '../../../../shared/interfaces/filter-columns';
 
 @Component({
-  selector: 'app-generic-filter-form',
+  selector: 'app-filter-form-builder',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule
   ],
-  templateUrl: './generic-filter-form.component.html',
-  styleUrl: './generic-filter-form.component.css'
+  templateUrl: './filter-form-builder.component.html',
+  styleUrl: './filter-form-builder.component.css'
 })
-export class GenericFilterFormComponent implements OnChanges {
+export class FilterFormBuilderComponent implements OnChanges {
 
   @Input() filterColumns: FilterColumns[] = [];
   @Input() filterFormTitle: string = 'Filtrovat data';

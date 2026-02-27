@@ -21,16 +21,16 @@
 
     <div class="main-content-layout">
       <div class="filter-side-panel" [class.active]="isFilterVisible">
-        <app-generic-filter-form
+        <app-filter-form-builder
           [filterColumns]="filterColumns"
           [initialFilters]="filters"
           (filtersApplied)="applyFilters($event)"
           (filtersCleared)="clearFilters()">
-        </app-generic-filter-form>
+        </app-filter-form-builder>
       </div>
 
       <div class="table-and-pagination-container">
-        <app-generic-table #activeTable
+        <app-table-builder #activeTable
           [buttons]="buttons"
           [data]="data"
           [currentFilters]="filters"
@@ -39,10 +39,10 @@
           [tableCaption]="'Seznam událostí systému'"
           [apiEndpoint]="apiEndpoint"
           (viewDetailsOpened)="handleViewDetails($event)">
-        </app-generic-table>
+        </app-table-builder>
 
         <div class="flex justify-between items-center mt-4">
-          <app-pagination-buttons
+          <app-pagination-buttons-builder
             [currentPage]="currentPage"
             [totalPages]="totalPages"
             [totalItems]="totalItems"
@@ -50,16 +50,16 @@
             [dataLength]="data.length"
             (pageChange)="handlePageChange($event)"
             (itemsPerPageChange)="handleItemsPerPageChange($event)">
-          </app-pagination-buttons>
+          </app-pagination-buttons-builder>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<app-generic-details 
+<app-details-builder 
   *ngIf="showDetails" 
   [itemDetailColumns]="detailsColumns"
   [itemData]="selectedItemForDetails"
   (closeDetails)="handleCloseDetails()">
-</app-generic-details>
+</app-details-builder>

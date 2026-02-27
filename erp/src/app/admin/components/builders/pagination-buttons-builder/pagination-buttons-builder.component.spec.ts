@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PaginationButtonsComponent } from './pagination-buttons.component';
+import { PaginationButtonsBuilderComponent } from './pagination-buttons-builder.component';
 
 describe('PaginationButtonsComponent', () => {
-  let component: PaginationButtonsComponent;
-  let fixture: ComponentFixture<PaginationButtonsComponent>;
+  let component: PaginationButtonsBuilderComponent;
+  let fixture: ComponentFixture<PaginationButtonsBuilderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PaginationButtonsComponent]
+      imports: [PaginationButtonsBuilderComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PaginationButtonsComponent);
+    fixture = TestBed.createComponent(PaginationButtonsBuilderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

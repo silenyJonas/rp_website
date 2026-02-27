@@ -27,16 +27,16 @@
     
     <div class="main-content-layout">
       <div class="filter-side-panel" [class.active]="isFilterVisible">
-        <app-generic-filter-form
+        <app-filter-form-builder
           [filterColumns]="filterColumns"
           [initialFilters]="filters"
           (filtersApplied)="applyFilters($event)"
           (filtersCleared)="clearFilters()">
-        </app-generic-filter-form>
+        </app-filter-form-builder>
       </div>
 
       <div class="table-and-pagination-container">
-        <app-generic-table #activeTable *ngIf="!showTrashTable"
+        <app-table-builder #activeTable *ngIf="!showTrashTable"
           [buttons]="buttons"
           [data]="data"
           [columns]="newsColumns"
@@ -49,19 +49,19 @@
           (createFormOpened)="handleCreateFormOpened()"
           (editFormOpened)="handleEditFormOpened($event)"
           (viewDetailsOpened)="handleViewDetails($event)">
-        </app-generic-table>
+        </app-table-builder>
 
-        <app-generic-trash-table *ngIf="showTrashTable"
+        <app-trash-table-builder *ngIf="showTrashTable"
           [data]="trashData"
           [columns]="trashNewsColumns"
           [tableCaption]="'Archiv smazaných novinek'"
           [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
           (itemRestored)="refreshData()">
-        </app-generic-trash-table>
+        </app-trash-table-builder>
 
         <div class="flex justify-between items-center mt-4">
-          <app-pagination-buttons
+          <app-pagination-buttons-builder
             [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
             [totalPages]="showTrashTable ? trashTotalPages : totalPages"
             [totalItems]="showTrashTable ? trashTotalItems : totalItems"
@@ -69,24 +69,24 @@
             [dataLength]="showTrashTable ? trashData.length : data.length"
             (pageChange)="handlePageChange($event)"
             (itemsPerPageChange)="handleItemsPerPageChange($event)">
-          </app-pagination-buttons>
+          </app-pagination-buttons-builder>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<app-generic-form 
+<app-form-builder 
   *ngIf="showCreateForm" 
   [inputDefinitions]="formFields" 
   [formDataToEdit]="selectedItemForEdit"
   (formSubmitted)="handleFormSubmitted($event)"
   (formCanceled)="onCancelForm()">
-</app-generic-form>
+</app-form-builder>
 
-<app-generic-details 
+<app-details-builder 
   *ngIf="showDetails" 
   [itemData]="selectedItemForDetails"
   [itemDetailColumns]="detailsColumns"
   (closeDetails)="handleCloseDetails()">
-</app-generic-details>
+</app-details-builder>

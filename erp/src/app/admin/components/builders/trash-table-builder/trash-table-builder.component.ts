@@ -1,12 +1,12 @@
 import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
-import { BaseDataComponent } from '../base-data/base-data.component';
-import { DataHandler } from '../../../core/services/data-handler.service';
-import { ConfirmDialogService } from '../../../core/services/confirm-dialog.service';
-import { AlertDialogService } from '../../../core/services/alert-dialog.service';
-import { GenericTableService } from '../../../core/services/generic-table.service'; 
+import { ColumnDefinition } from '../../../../shared/interfaces/generic-form-column-definiton';
+import { BaseDataComponent } from '../../base-data/base-data.component';
+import { DataHandler } from '../../../../core/services/data-handler.service';
+import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
+import { AlertDialogService } from '../../../../core/services/alert-dialog.service';
+import { GenericTableService } from '../../../../core/services/generic-table.service'; 
 
 export interface Buttons {
   display_name: string;
@@ -16,17 +16,17 @@ export interface Buttons {
 }
 
 @Component({
-  selector: 'app-generic-trash-table',
+  selector: 'app-trash-table-builder',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
   ],
-  templateUrl: './generic-trash-table.component.html',
+  templateUrl: './trash-table-builder.component.html',
   styleUrls: ['../table-style.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GenericTrashTableComponent extends BaseDataComponent<any> implements OnInit, OnChanges {
+export class TrashTableBuilderComponent extends BaseDataComponent<any> implements OnInit, OnChanges {
   @Input() override data: any[] = [];
   @Input('columns') columnDefinitions: ColumnDefinition[] = [];
   @Input() tableCaption?: string;

@@ -5,13 +5,12 @@ import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
-import { GenericTableComponent } from '../../components/generic-table/generic-table.component';
-import { GenericTrashTableComponent } from '../../components/generic-trash-table/generic-trash-table.component';
-import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
-import { GenericFilterFormComponent } from '../../components/generic-filter-form/generic-filter-form.component';
-import { GenericDetailsComponent } from '../../components/generic-details/generic-details.component';
-import { PaginationButtonsComponent } from '../../components/pagination-buttons/pagination-buttons.component';
-
+import { TableBuilderComponent } from '../../components/builders/table-builder/table-builder.component';
+import { TrashTableBuilderComponent } from '../../components/builders/trash-table-builder/trash-table-builder.component';
+import { FormBuilderComponent } from '../../components/builders/form-builder/form-builder.component';
+import { FilterFormBuilderComponent } from '../../components/builders/filter-form-builder/filter-form-builder.component';
+import { DetailsbuilderComponent } from '../../components/builders/details-builder/details-builder.component';
+import { PaginationButtonsBuilderComponent } from '../../components/builders/pagination-buttons-builder/pagination-buttons-builder.component';
 import { DataHandler } from '../../../core/services/data-handler.service';
 import { GenericTableService, FilterParams } from '../../../core/services/generic-table.service';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -30,16 +29,16 @@ import {
   selector: 'app-support-tickets',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, GenericTableComponent, GenericTrashTableComponent,
-    GenericFormComponent, GenericFilterFormComponent, GenericDetailsComponent, 
-    HasPermissionDirective, PaginationButtonsComponent
+    CommonModule, FormsModule, TableBuilderComponent, TrashTableBuilderComponent,
+    FormBuilderComponent, FilterFormBuilderComponent, DetailsbuilderComponent, 
+    HasPermissionDirective, PaginationButtonsBuilderComponent
   ],
   templateUrl: './support-tickets.component.html',
   styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SupportTicketsComponent extends BaseDataComponent<any> implements OnInit {
-  @ViewChild('activeTable') activeTable!: GenericTableComponent;
+  @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
   override apiEndpoint: string = 'support_tickets';
   

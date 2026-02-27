@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
 
 @Component({
-  selector: 'app-pagination-buttons',
+  selector: 'app-pagination-buttons-builder',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './pagination-buttons.component.html',
-  styleUrl: './pagination-buttons.component.css',
+  templateUrl: './pagination-buttons-builder.component.html',
+  styleUrl: './pagination-buttons-builder.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PaginationButtonsComponent {
+export class PaginationButtonsBuilderComponent {
   @Input() currentPage: number = 1;
   @Input() totalPages: number = 1;
   @Input() totalItems: number = 0;

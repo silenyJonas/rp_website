@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GenericTrashTableComponent } from './generic-trash-table.component';
+import { TrashTableBuilderComponent } from './trash-table-builder.component';
 
 describe('GenericTrashTableComponent', () => {
-  let component: GenericTrashTableComponent;
-  let fixture: ComponentFixture<GenericTrashTableComponent>;
+  let component: TrashTableBuilderComponent;
+  let fixture: ComponentFixture<TrashTableBuilderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GenericTrashTableComponent]
+      imports: [TrashTableBuilderComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GenericTrashTableComponent);
+    fixture = TestBed.createComponent(TrashTableBuilderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

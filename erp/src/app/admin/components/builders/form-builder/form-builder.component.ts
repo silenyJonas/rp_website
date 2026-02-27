@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm, FormControl } from '@angular/forms';
-import { AlertDialogService } from '../../../core/services/alert-dialog.service'; // Import service
+import { AlertDialogService } from '../../../../core/services/alert-dialog.service'; // Import service
 
 export interface InputDefinition {
   column_name: string;
@@ -23,13 +23,13 @@ export interface InputDefinition {
 }
 
 @Component({
-  selector: 'app-generic-form',
+  selector: 'app-form-builder',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './generic-form.component.html',
-  styleUrl: './generic-form.component.css',
+  templateUrl: './form-builder.component.html',
+  styleUrl: './form-builder.component.css',
 })
-export class GenericFormComponent implements OnInit, OnDestroy {
+export class FormBuilderComponent implements OnInit, OnDestroy {
   @Input() headerText: string = 'Vytvořit nový záznam';
   @Input() inputDefinitions: InputDefinition[] = [];
   @Input() formDataToEdit: any = null;

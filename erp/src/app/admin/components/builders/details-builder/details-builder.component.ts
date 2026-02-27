@@ -1,16 +1,16 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
-import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
-import { environment } from '../../../../environments/environment';
+import { ItemDetailsColumns } from '../../../../shared/interfaces/item-details-columns';
+import { environment } from '../../../../../environments/environment';
 @Component({
-  selector: 'app-generic-details',
+  selector: 'app-details-builder',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './generic-details.component.html',
-  styleUrl: './generic-details.component.css',
+  templateUrl: './details-builder.component.html',
+  styleUrl: './details-builder.component.css',
   providers: [DatePipe, CurrencyPipe]
 })
-export class GenericDetailsComponent implements OnInit, OnDestroy {
+export class DetailsbuilderComponent implements OnInit, OnDestroy {
   @Input() itemData: any;
   @Input() itemDetailColumns: ItemDetailsColumns[] = [];
   @Output() closeDetails = new EventEmitter<void>();
