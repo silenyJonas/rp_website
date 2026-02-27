@@ -1,17 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs/operators';
-
+import { SHARED_UI_BUILDERS } from '../../../shared/imports/shared-ui-builders';
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
-import { TableBuilderComponent, Buttons } from '../../components/builders/table-builder/table-builder.component';
-import { FilterFormBuilderComponent } from '../../components/builders/filter-form-builder/filter-form-builder.component';
-import { DetailsbuilderComponent } from '../../components/builders/details-builder/details-builder.component';
-import { PaginationButtonsBuilderComponent } from '../../components/builders/pagination-buttons-builder/pagination-buttons-builder.component';
 import { DataHandler } from '../../../core/services/data-handler.service';
 import { GenericTableService, FilterParams } from '../../../core/services/generic-table.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { TableBuilderComponent } from '../../components/builders/table-builder/table-builder.component';
 
 import {
   BUTTONS,
@@ -24,8 +18,7 @@ import {
   selector: 'app-business-logs',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, TableBuilderComponent, FilterFormBuilderComponent, 
-    DetailsbuilderComponent, PaginationButtonsBuilderComponent
+    SHARED_UI_BUILDERS
   ],
   templateUrl: './business-logs.component.html',
   styleUrl: '../default-style.css',

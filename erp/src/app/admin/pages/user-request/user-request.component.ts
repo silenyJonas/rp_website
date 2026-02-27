@@ -1,21 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
-
+import { SHARED_UI_BUILDERS } from '../../../shared/imports/shared-ui-builders';
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
-import { TableBuilderComponent } from '../../components/builders/table-builder/table-builder.component';
-import { TrashTableBuilderComponent } from '../../components/builders/trash-table-builder/trash-table-builder.component';
-import { FormBuilderComponent } from '../../components/builders/form-builder/form-builder.component';
-import { FilterFormBuilderComponent } from '../../components/builders/filter-form-builder/filter-form-builder.component';
-import { DetailsbuilderComponent } from '../../components/builders/details-builder/details-builder.component';
-import { PaginationButtonsBuilderComponent } from '../../components/builders/pagination-buttons-builder/pagination-buttons-builder.component';
 import { DataHandler } from '../../../core/services/data-handler.service';
 import { GenericTableService, FilterParams } from '../../../core/services/generic-table.service';
 import { AuthService } from '../../../core/auth/auth.service';
-import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
-import { RawRequestCommission } from '../../../shared/interfaces/raw-request-commission';
+import { TableBuilderComponent } from '../../components/builders/table-builder/table-builder.component';
 
 import {
   USER_REQUEST_BUTTONS,
@@ -30,15 +21,13 @@ import {
   selector: 'app-user-request',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, TableBuilderComponent, TrashTableBuilderComponent,
-    FormBuilderComponent, FilterFormBuilderComponent, DetailsbuilderComponent,
-    HasPermissionDirective, PaginationButtonsBuilderComponent
+    SHARED_UI_BUILDERS
   ],
   templateUrl: './user-request.component.html',
   styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserRequestComponent extends BaseDataComponent<RawRequestCommission> implements OnInit {
+export class UserRequestComponent extends BaseDataComponent<any> implements OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
   override apiEndpoint: string = 'raw_request_commissions';
@@ -50,7 +39,7 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   filterColumns = USER_REQUEST_FILTER_COLUMNS;
   detailsColumns = USER_REQUEST_DETAILS_COLUMNS;
 
-  selectedItemForEdit: RawRequestCommission | null = null;
+  selectedItemForEdit: any | null = null;
   selectedItemForDetails: any | null = null;
 
   filters: FilterParams = {
@@ -114,12 +103,12 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     this.showCreateForm = true;
   }
 
-  handleEditFormOpened(item: RawRequestCommission): void {
+  handleEditFormOpened(item: any): void {
     this.selectedItemForEdit = { ...item };
     this.showCreateForm = true;
   }
 
-  handleFormSubmitted(formData: RawRequestCommission): void {
+  handleFormSubmitted(formData: any): void {
     this.isLoading = true;
     const request$ = formData.id 
       ? this.updateData(formData.id, formData) 
@@ -137,8 +126,9 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
     });
   }
 
-  handleViewDetails(item: RawRequestCommission): void {
+  handleViewDetails(item: any): void {
     if (!item.id) return;
+    this.isLoading = true;
     this.getItemDetails(item.id).subscribe({
       next: (details) => {
         this.selectedItemForDetails = details;
@@ -156,6 +146,7 @@ export class UserRequestComponent extends BaseDataComponent<RawRequestCommission
   onCancelForm() {
     this.showCreateForm = false;
     this.selectedItemForEdit = null;
+    this.cd.markForCheck();
   }
 
   handleItemRestored() { this.refreshData(); }

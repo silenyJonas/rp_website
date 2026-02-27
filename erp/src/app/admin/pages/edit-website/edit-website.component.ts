@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { takeUntil, finalize } from 'rxjs/operators';
-
 import { DataHandler } from '../../../core/services/data-handler.service';
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
 import { GenericTableService } from '../../../core/services/generic-table.service';
