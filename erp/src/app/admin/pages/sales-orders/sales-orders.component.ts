@@ -1,59 +1,52 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { finalize } from 'rxjs/operators';
+// 1. Dekorátory (Nutné pro stabilitu kompilace a eliminaci JIT chyb)
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+
+// 2. Sjednocené jádro (Angular, RxJS, Služby)
+import * as Core from '../../../shared/imports/core-providers';
+
+// 3. UI Buildery (Komponenty a Typy)
 import { SHARED_UI_BUILDERS } from '../../../shared/imports/shared-ui-builders';
+import { TableBuilderComponent } from '../../components/builders/table-builder/table-builder.component';
+
+// 4. Ostatní (Báze a Konfigurace)
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
-import { DataHandler } from '../../../core/services/data-handler.service';
-import { GenericTableService, FilterParams } from '../../../core/services/generic-table.service';
-import { AuthService } from '../../../core/auth/auth.service';
-import { TableBuilderComponent, Buttons } from '../../components/builders/table-builder/table-builder.component';
-import { InputDefinition } from '../../components/builders/form-builder/form-builder.component';
-import {
-  SALES_ORDER_BUTTONS,
-  SALES_ORDER_FORM_FIELDS,
-  SALES_ORDER_COLUMNS,
-  SALES_ORDER_TRASH_COLUMNS,
-  SALES_ORDER_FILTER_COLUMNS,
-  SALES_ORDER_DETAILS_COLUMNS
-} from './sales-orders.config';
-import { TmplAstVariable } from '@angular/compiler';
+import * as Config from './sales-orders.config';
 
 @Component({
   selector: 'app-sales-orders',
   standalone: true,
-  imports: [
-    SHARED_UI_BUILDERS
-  ],
+  imports: [SHARED_UI_BUILDERS],
   templateUrl: './sales-orders.component.html',
   styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SalesOrdersComponent extends BaseDataComponent<any> implements OnInit {
+export class SalesOrdersComponent extends BaseDataComponent<any> implements Core.OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
   
   override apiEndpoint: string = 'sales_orders';
   
-  buttons: Buttons[] = SALES_ORDER_BUTTONS.filter(b => b.action !== 'create');
-  formFields: InputDefinition[] = SALES_ORDER_FORM_FIELDS;
-  columns = SALES_ORDER_COLUMNS;
-  trashColumns = SALES_ORDER_TRASH_COLUMNS;
-  filterColumns = SALES_ORDER_FILTER_COLUMNS;
-  detailsColumns = SALES_ORDER_DETAILS_COLUMNS;
+  // Zachování logiky filtrování tlačítek z konfigurace
+  buttons = Config.SALES_ORDER_BUTTONS;
+  formFields = Config.SALES_ORDER_FORM_FIELDS;
+  columns = Config.SALES_ORDER_COLUMNS;
+  trashColumns = Config.SALES_ORDER_TRASH_COLUMNS;
+  filterColumns = Config.SALES_ORDER_FILTER_COLUMNS;
+  detailsColumns = Config.SALES_ORDER_DETAILS_COLUMNS;
 
   selectedItemForEdit: any = null;
   selectedItemForDetails: any = null;
 
-  filters: FilterParams = { 
+  filters: Core.FilterParams = { 
     sort_by: 'id', 
     sort_direction: 'desc' 
   };
 
   constructor(
-    protected override dataHandler: DataHandler,
-    protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService,
-    private authService: AuthService,
-    private router: Router
+    protected override dataHandler: Core.DataHandler,
+    protected override cd: Core.ChangeDetectorRef,
+    protected override genericTableService: Core.GenericTableService,
+    private authService: Core.AuthService,
+    private router: Core.Router
   ) { 
     super(dataHandler, cd, genericTableService); 
   }
@@ -69,11 +62,13 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
     });
   }
 
+  // --- Správa dat a filtrů ---
+
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
   }
 
-  applyFilters(newFilters: FilterParams): void { 
+  applyFilters(newFilters: Core.FilterParams): void { 
     this.filters = { ...this.filters, ...newFilters }; 
     this.currentPage = 1;
     this.refreshData(); 
@@ -97,6 +92,8 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
     if (this.activeTable) this.activeTable.exportToCSV();
   }
 
+  // --- Handlery formulářů a detailů ---
+
   handleEditFormOpened(item: any): void { 
     this.selectedItemForEdit = { ...item }; 
     this.showCreateForm = true; 
@@ -117,7 +114,7 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
   handleFormSubmitted(formData: any): void {
     this.isLoading = true;
     this.updateData(formData.id, formData).pipe(
-      finalize(() => {
+      Core.finalize(() => {
         this.isLoading = false;
         this.showCreateForm = false;
         this.cd.markForCheck();
@@ -125,8 +122,9 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements OnIn
     ).subscribe(() => this.refreshData());
   }
 
-  onCancelForm() {
+  onCancelForm(): void {
     this.showCreateForm = false;
     this.selectedItemForEdit = null;
+    this.cd.markForCheck();
   }
 }

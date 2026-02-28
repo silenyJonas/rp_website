@@ -1,19 +1,14 @@
+import { Directive } from '@angular/core'; // Přímý import pro dekorátor
+import * as Core from '../../../shared/imports/core-providers';
 
-import { Directive, OnInit, OnDestroy, OnChanges, SimpleChanges, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { Subject, Observable, throwError, of, forkJoin } from 'rxjs';
-import { takeUntil, catchError, finalize, tap, retry } from 'rxjs/operators';
-import { DataHandler } from '../../../core/services/data-handler.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { FilterParams, PaginatedResponse, GenericTableService } from '../../../core/services/generic-table.service';
-
-@Directive()
-export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: string | null }> implements OnInit, OnDestroy, OnChanges {
+@Directive() // Použít přímo, ne přes Core.Directive()
+export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: string | null }> implements Core.OnInit, Core.OnDestroy, Core.OnChanges {
   // Základní data
   data: T[] = [];
   trashData: T[] = [];
   isLoading = false;
   errorMessage: string | null = null;
-  protected destroy$ = new Subject<void>();
+  protected destroy$ = new Core.Subject<void>();
   abstract apiEndpoint: string;
   
   // UI stavy
@@ -38,11 +33,11 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
   // Filtry a Cache
   protected activeCache = new Map<number, T[]>();
   protected trashCache = new Map<number, T[]>();
-  protected currentActiveFilters: FilterParams = {};
-  protected currentTrashFilters: FilterParams = {};
+  protected currentActiveFilters: Core.FilterParams = {};
+  protected currentTrashFilters: Core.FilterParams = {};
   
   // Výchozí řazení (lze přebít v dceřiné komponentě)
-  protected defaultFilters: FilterParams = {
+  protected defaultFilters: Core.FilterParams = {
     sort_by: 'id',
     sort_direction: 'desc'
   };
@@ -50,13 +45,13 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
   private showLoaderTimeout: any;
 
   constructor(
-    protected dataHandler: DataHandler, 
-    protected cd: ChangeDetectorRef,
-    protected genericTableService: GenericTableService 
+    protected dataHandler: Core.DataHandler, 
+    protected cd: Core.ChangeDetectorRef,
+    protected genericTableService: Core.GenericTableService 
   ) {}
   
   ngOnInit(): void {}
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: Core.SimpleChanges): void {}
   
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -72,8 +67,8 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
     isTrash: boolean, 
     page: number, 
     perPage: number, 
-    filters: FilterParams
-  ): Observable<PaginatedResponse<T>> {
+    filters: Core.FilterParams
+  ): Core.Observable<Core.PaginatedResponse<T>> {
     const cache = isTrash ? this.trashCache : this.activeCache;
     const currentStoredFilters = isTrash ? this.currentTrashFilters : this.currentActiveFilters;
 
@@ -92,21 +87,21 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
       const cachedData = cache.get(page)!;
       if (isTrash) this.trashData = cachedData; else this.data = cachedData;
       this.cd.markForCheck();
-      return of({ 
+      return Core.of({ 
         data: cachedData, 
         current_page: page, 
         last_page: isTrash ? this.trashTotalPages : this.totalPages, 
         total: isTrash ? this.trashTotalItems : this.totalItems 
-      } as PaginatedResponse<T>);
+      } as Core.PaginatedResponse<T>);
     }
 
-    const params: FilterParams = { ...filters };
+    const params: Core.FilterParams = { ...filters };
     if (isTrash) params['only_trashed'] = 'true';
 
     return this.genericTableService.getPaginatedData<T>(this.apiEndpoint, page, perPage, params).pipe(
-      takeUntil(this.destroy$),
-      retry(1),
-      tap(response => {
+      Core.takeUntil(this.destroy$),
+      Core.retry(1),
+      Core.tap(response => {
         if (isTrash) {
           this.trashData = response.data;
           this.trashTotalItems = response.total;
@@ -124,17 +119,17 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
     );
   }
 
-  public forceFullRefresh(currentFilters: FilterParams = this.defaultFilters): void {
+  public forceFullRefresh(currentFilters: Core.FilterParams = this.defaultFilters): void {
     this.activeCache.clear();
     this.trashCache.clear();
     this.isLoading = true;
     this.cd.markForCheck();
 
-    forkJoin([
+    Core.forkJoin([
       this.fetchPaginatedData(false, this.currentPage, this.itemsPerPage, currentFilters),
       this.fetchPaginatedData(true, this.trashCurrentPage, this.trashItemsPerPage, currentFilters)
     ]).pipe(
-      finalize(() => {
+      Core.finalize(() => {
         this.isLoading = false;
         this.cd.markForCheck();
       })
@@ -143,7 +138,7 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
 
   // --- HANDLERY STRÁNKOVÁNÍ ---
 
-  onHandlePageChange(page: number, filters: FilterParams = this.currentActiveFilters): void {
+  onHandlePageChange(page: number, filters: Core.FilterParams = this.currentActiveFilters): void {
     if (this.showTrashTable) {
       if (page >= 1 && page <= this.trashTotalPages && page !== this.trashCurrentPage) {
         this.trashCurrentPage = page;
@@ -157,7 +152,7 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
     }
   }
 
-  onHandleItemsPerPageChange(value: number, filters: FilterParams = this.currentActiveFilters): void {
+  onHandleItemsPerPageChange(value: number, filters: Core.FilterParams = this.currentActiveFilters): void {
     if (this.showTrashTable) {
       this.trashItemsPerPage = value;
       this.trashCurrentPage = 1;
@@ -190,98 +185,99 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
     this.isLoading = true;
     this.dataHandler.getCollection<T>(this.apiEndpoint)
       .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
+        Core.takeUntil(this.destroy$),
+        Core.finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
       )
       .subscribe(responseData => this.data = responseData);
   }
 
-  getItemDetails(id: number | undefined): Observable<T> {
-    if (!id) return throwError(() => new Error('ID není definováno.'));
+  getItemDetails(id: number | undefined): Core.Observable<T> {
+    if (!id) return Core.throwError(() => new Error('ID není definováno.'));
     const url = `${this.apiEndpoint}/${id}/details`;
     this.isLoading = true;
     return this.dataHandler.get<T>(url).pipe(
-      takeUntil(this.destroy$),
-      finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
+      Core.takeUntil(this.destroy$),
+      Core.finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
     );
   }
 
-  postData(data: T): Observable<T> {
+  postData(data: T): Core.Observable<T> {
     this.isLoading = true;
     return this.dataHandler.post<T>(this.apiEndpoint, data).pipe(
-      takeUntil(this.destroy$),
-      finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
+      Core.takeUntil(this.destroy$),
+      Core.finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
     );
   }
   
-  updateData(id: number | undefined, data: T): Observable<T> {
-    if (!id) return throwError(() => new Error('ID není definováno.'));
+  updateData(id: number | undefined, data: T): Core.Observable<T> {
+    if (!id) return Core.throwError(() => new Error('ID není definováno.'));
     this.isLoading = true;
     return this.dataHandler.put<T>(`${this.apiEndpoint}/${id}`, data).pipe(
-      takeUntil(this.destroy$),
-      finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
+      Core.takeUntil(this.destroy$),
+      Core.finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
     );
   }
   
-  deleteData(id: number | undefined, forceDelete: boolean = false): Observable<void> {
-    if (!id) return throwError(() => new Error('ID není definováno.'));
+  deleteData(id: number | undefined, forceDelete: boolean = false): Core.Observable<void> {
+    if (!id) return Core.throwError(() => new Error('ID není definováno.'));
     this.isLoading = true;
     let url = `${this.apiEndpoint}/${id}`;
     if (forceDelete) url += '?force_delete=true';
     return this.dataHandler.delete(url).pipe(
-      takeUntil(this.destroy$),
-      finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
+      Core.takeUntil(this.destroy$),
+      Core.finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
     );
   }
 
-  restoreDataFromApi(id: number): Observable<T> {
+  restoreDataFromApi(id: number): Core.Observable<T> {
     this.isLoading = true;
     return this.dataHandler.post<T>(`${this.apiEndpoint}/${id}/restore`, {} as T).pipe(
-      takeUntil(this.destroy$),
-      finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
+      Core.takeUntil(this.destroy$),
+      Core.finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
     );
   }
   
-  uploadData<U>(formData: FormData, targetUrl?: string): Observable<U> {
+  uploadData<U>(formData: FormData, targetUrl?: string): Core.Observable<U> {
     this.isLoading = true;
     return this.dataHandler.upload<U>(targetUrl || this.apiEndpoint, formData).pipe(
-      takeUntil(this.destroy$),
-      finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
+      Core.takeUntil(this.destroy$),
+      Core.finalize(() => { this.isLoading = false; this.cd.markForCheck(); })
     );
   }
 
   // --- SPECIFICKÉ OPERACE ---
 
-  public updatePassword(id: number, data: any): Observable<any> {
-    if (!id) return throwError(() => new Error('ID uživatele pro změnu hesla není definováno.'));
+  public updatePassword(id: number, data: any): Core.Observable<any> {
+    if (!id) return Core.throwError(() => new Error('ID uživatele pro změnu hesla není definováno.'));
     
     this.isLoading = true;
     this.errorMessage = null;
     const url = `${this.apiEndpoint}/${id}/change-password`;
 
     return this.dataHandler.put<any>(url, data).pipe(
-      takeUntil(this.destroy$),
-      finalize(() => {
+      Core.takeUntil(this.destroy$),
+      Core.finalize(() => {
         this.isLoading = false;
         this.cd.markForCheck();
       }),
-      catchError((err: HttpErrorResponse) => {
+      Core.catchError((err: Core.HttpErrorResponse) => {
         this.errorMessage = err.message || 'Neznámá chyba při změně hesla.';
         this.cd.markForCheck();
-        return throwError(() => err);
+        return Core.throwError(() => err);
       })
     );
   }
-  loadAllData(filters?: FilterParams): Observable<T[]> {
+
+  loadAllData(filters?: Core.FilterParams): Core.Observable<T[]> {
     if (!this.apiEndpoint) {
-      return throwError(() => new Error('Chyba: API endpoint není definován pro načtení všech dat.'));
+      return Core.throwError(() => new Error('Chyba: API endpoint není definován pro načtení všech dat.'));
     }
     const params = new URLSearchParams();
     params.set('no_pagination', 'true');
 
     if (filters) {
       Object.keys(filters).forEach(key => {
-        const value = filters[key as keyof FilterParams];
+        const value = filters[key as keyof Core.FilterParams];
         if (value !== '' && value !== null && value !== undefined) {
           params.set(key, value.toString());
         }
@@ -290,15 +286,16 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
 
     const url = `${this.apiEndpoint}?${params.toString()}`;
     return this.dataHandler.getCollection<T>(url).pipe(
-      takeUntil(this.destroy$),
-      catchError((err: Error) => {
-        return throwError(() => err);
+      Core.takeUntil(this.destroy$),
+      Core.catchError((err: Error) => {
+        return Core.throwError(() => err);
       })
     );
   }
-  public hardDeleteAllTrashedDataFromApi(): Observable<void> {
+
+  public hardDeleteAllTrashedDataFromApi(): Core.Observable<void> {
     if (!this.apiEndpoint) {
-      return throwError(() => new Error('Chyba: API endpoint není definován pro hromadné smazání.'));
+      return Core.throwError(() => new Error('Chyba: API endpoint není definován pro hromadné smazání.'));
     }
 
     const deleteUrl = `${this.apiEndpoint}/force-delete-all`;
@@ -306,15 +303,15 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
     this.errorMessage = null;
 
     return this.dataHandler.delete(deleteUrl).pipe(
-      takeUntil(this.destroy$),
-      finalize(() => {
+      Core.takeUntil(this.destroy$),
+      Core.finalize(() => {
         this.isLoading = false;
         this.cd.markForCheck();
       }),
-      catchError((err: HttpErrorResponse) => {
+      Core.catchError((err: Core.HttpErrorResponse) => {
         this.errorMessage = err.message || 'Neznámá chyba při hromadném mazání.';
         this.cd.markForCheck();
-        return throwError(() => err);
+        return Core.throwError(() => err);
       })
     );
   }

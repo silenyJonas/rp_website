@@ -1,58 +1,52 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { finalize } from 'rxjs/operators';
+// 1. Dekorátory (Nutné pro stabilitu kompilace a eliminaci JIT chyb)
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+
+// 2. Sjednocené jádro (Služby, Typy, RxJS operátory)
+import * as Core from '../../../shared/imports/core-providers';
+
+// 3. UI Buildery (Komponenty a Typy)
 import { SHARED_UI_BUILDERS } from '../../../shared/imports/shared-ui-builders';
-import { BaseDataComponent } from '../../components/base-data/base-data.component';
-import { DataHandler } from '../../../core/services/data-handler.service';
-import { GenericTableService, FilterParams } from '../../../core/services/generic-table.service';
-import { AuthService } from '../../../core/auth/auth.service';
 import { TableBuilderComponent } from '../../components/builders/table-builder/table-builder.component';
-import { InputDefinition } from '../../components/builders/form-builder/form-builder.component';
-import {
-  NEWS_BUTTONS,
-  NEWS_FORM_FIELDS,
-  NEWS_COLUMNS,
-  NEWS_TRASH_COLUMNS,
-  NEWS_FILTER_COLUMNS,
-  NEWS_DETAILS_COLUMNS
-} from './edit-news.config';
+
+// 4. Ostatní (Báze a Konfigurace)
+import { BaseDataComponent } from '../../components/base-data/base-data.component';
+import * as Config from './edit-news.config';
 
 @Component({
   selector: 'app-news',
   standalone: true,
-  imports: [
-    SHARED_UI_BUILDERS
-  ],
+  imports: [SHARED_UI_BUILDERS],
   templateUrl: './edit-news.component.html',
   styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EditNewsComponent extends BaseDataComponent<any> implements OnInit {
+export class EditNewsComponent extends BaseDataComponent<any> implements Core.OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
   override apiEndpoint: string = 'news';
 
-  buttons = NEWS_BUTTONS;
-  formFields = NEWS_FORM_FIELDS;
-  newsColumns = NEWS_COLUMNS;
-  trashNewsColumns = NEWS_TRASH_COLUMNS;
-  filterColumns = NEWS_FILTER_COLUMNS;
-  detailsColumns = NEWS_DETAILS_COLUMNS;
+  // Konfigurace načtená přes barrel Config
+  buttons = Config.NEWS_BUTTONS;
+  formFields = Config.NEWS_FORM_FIELDS;
+  newsColumns = Config.NEWS_COLUMNS;
+  trashNewsColumns = Config.NEWS_TRASH_COLUMNS;
+  filterColumns = Config.NEWS_FILTER_COLUMNS;
+  detailsColumns = Config.NEWS_DETAILS_COLUMNS;
 
   selectedItemForEdit: any | null = null;
   selectedItemForDetails: any | null = null;
 
-  filters: FilterParams = {
+  filters: Core.FilterParams = {
     sort_by: 'id',
     sort_direction: 'desc'
   };
 
   constructor(
-    protected override dataHandler: DataHandler,
-    protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService,
-    private authService: AuthService,
-    private router: Router
+    protected override dataHandler: Core.DataHandler,
+    protected override cd: Core.ChangeDetectorRef,
+    protected override genericTableService: Core.GenericTableService,
+    private authService: Core.AuthService,
+    private router: Core.Router
   ) {
     super(dataHandler, cd, genericTableService);
   }
@@ -68,11 +62,13 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
     });
   }
 
+  // --- Správa dat a filtrů ---
+
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
   }
 
-  applyFilters(newFilters: FilterParams): void {
+  applyFilters(newFilters: Core.FilterParams): void {
     this.filters = { ...this.filters, ...newFilters };
     this.currentPage = 1;
     this.refreshData();
@@ -80,7 +76,6 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
 
   clearFilters(): void {
     this.filters = { sort_by: 'id', sort_direction: 'desc' };
-    this.currentPage = 1;
     this.refreshData();
   }
 
@@ -95,6 +90,8 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
   exportActiveTable(): void {
     if (this.activeTable) this.activeTable.exportToCSV();
   }
+
+  // --- Handlery formulářů a detailů ---
 
   handleCreateFormOpened(): void {
     this.selectedItemForEdit = null;
@@ -113,7 +110,7 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
       : this.postData(formData);
 
     request$.pipe(
-      finalize(() => {
+      Core.finalize(() => {
         this.isLoading = false;
         this.showCreateForm = false;
         this.cd.markForCheck();
@@ -136,10 +133,12 @@ export class EditNewsComponent extends BaseDataComponent<any> implements OnInit 
   handleCloseDetails(): void {
     this.selectedItemForDetails = null;
     this.showDetails = false;
+    this.cd.markForCheck();
   }
 
-  onCancelForm() {
+  onCancelForm(): void {
     this.showCreateForm = false;
     this.selectedItemForEdit = null;
+    this.cd.markForCheck();
   }
 }

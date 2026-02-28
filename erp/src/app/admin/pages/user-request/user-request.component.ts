@@ -1,58 +1,52 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { finalize } from 'rxjs/operators';
+// 1. Dekorátory (Nutné pro stabilitu kompilace a eliminaci JIT chyb)
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+
+// 2. Sjednocené jádro (Služby, Typy, RxJS operátory)
+import * as Core from '../../../shared/imports/core-providers';
+
+// 3. UI Buildery (Komponenty a Typy)
 import { SHARED_UI_BUILDERS } from '../../../shared/imports/shared-ui-builders';
-import { BaseDataComponent } from '../../components/base-data/base-data.component';
-import { DataHandler } from '../../../core/services/data-handler.service';
-import { GenericTableService, FilterParams } from '../../../core/services/generic-table.service';
-import { AuthService } from '../../../core/auth/auth.service';
 import { TableBuilderComponent } from '../../components/builders/table-builder/table-builder.component';
 
-import {
-  USER_REQUEST_BUTTONS,
-  USER_REQUEST_FORM_FIELDS,
-  USER_REQUEST_COLUMNS,
-  USER_REQUEST_TRASH_COLUMNS,
-  USER_REQUEST_FILTER_COLUMNS,
-  USER_REQUEST_DETAILS_COLUMNS
-} from './user-request.config';
+// 4. Ostatní (Báze a Konfigurace)
+import { BaseDataComponent } from '../../components/base-data/base-data.component';
+import * as Config from './user-request.config';
 
 @Component({
   selector: 'app-user-request',
   standalone: true,
-  imports: [
-    SHARED_UI_BUILDERS
-  ],
+  imports: [SHARED_UI_BUILDERS],
   templateUrl: './user-request.component.html',
   styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserRequestComponent extends BaseDataComponent<any> implements OnInit {
+export class UserRequestComponent extends BaseDataComponent<any> implements Core.OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
   override apiEndpoint: string = 'raw_request_commissions';
 
-  buttons = USER_REQUEST_BUTTONS;
-  formFields = USER_REQUEST_FORM_FIELDS;
-  userRequestColumns = USER_REQUEST_COLUMNS;
-  trashUserRequestColumns = USER_REQUEST_TRASH_COLUMNS;
-  filterColumns = USER_REQUEST_FILTER_COLUMNS;
-  detailsColumns = USER_REQUEST_DETAILS_COLUMNS;
+  // Konfigurace načtená přes barrel Config
+  buttons = Config.USER_REQUEST_BUTTONS;
+  formFields = Config.USER_REQUEST_FORM_FIELDS;
+  userRequestColumns = Config.USER_REQUEST_COLUMNS;
+  trashUserRequestColumns = Config.USER_REQUEST_TRASH_COLUMNS;
+  filterColumns = Config.USER_REQUEST_FILTER_COLUMNS;
+  detailsColumns = Config.USER_REQUEST_DETAILS_COLUMNS;
 
   selectedItemForEdit: any | null = null;
   selectedItemForDetails: any | null = null;
 
-  filters: FilterParams = {
+  filters: Core.FilterParams = {
     sort_by: 'id',
     sort_direction: 'desc'
   };
 
   constructor(
-    protected override dataHandler: DataHandler,
-    protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService,
-    private authService: AuthService,
-    private router: Router
+    protected override dataHandler: Core.DataHandler,
+    protected override cd: Core.ChangeDetectorRef,
+    protected override genericTableService: Core.GenericTableService,
+    private authService: Core.AuthService,
+    private router: Core.Router
   ) {
     super(dataHandler, cd, genericTableService);
   }
@@ -68,11 +62,13 @@ export class UserRequestComponent extends BaseDataComponent<any> implements OnIn
     });
   }
 
+  // --- Správa dat a filtrů ---
+
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
   }
 
-  applyFilters(newFilters: FilterParams): void {
+  applyFilters(newFilters: Core.FilterParams): void {
     this.filters = { ...this.filters, ...newFilters };
     this.currentPage = 1; 
     this.refreshData();
@@ -98,6 +94,8 @@ export class UserRequestComponent extends BaseDataComponent<any> implements OnIn
     }
   }
 
+  // --- Handlery formulářů a detailů ---
+
   handleCreateFormOpened(): void {
     this.selectedItemForEdit = null;
     this.showCreateForm = true;
@@ -115,7 +113,7 @@ export class UserRequestComponent extends BaseDataComponent<any> implements OnIn
       : this.postData(formData);
 
     request$.pipe(
-      finalize(() => {
+      Core.finalize(() => {
         this.isLoading = false;
         this.showCreateForm = false;
         this.cd.markForCheck();
@@ -138,17 +136,17 @@ export class UserRequestComponent extends BaseDataComponent<any> implements OnIn
     });
   }
 
-  handleCloseDetails() {
+  handleCloseDetails(): void {
     this.selectedItemForDetails = null;
     this.showDetails = false;
   }
 
-  onCancelForm() {
+  onCancelForm(): void {
     this.showCreateForm = false;
     this.selectedItemForEdit = null;
     this.cd.markForCheck();
   }
 
-  handleItemRestored() { this.refreshData(); }
-  handleItemDeleted() { this.refreshData(); }
+  handleItemRestored(): void { this.refreshData(); }
+  handleItemDeleted(): void { this.refreshData(); }
 }

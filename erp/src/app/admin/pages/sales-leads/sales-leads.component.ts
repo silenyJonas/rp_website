@@ -1,54 +1,53 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { finalize } from 'rxjs/operators';
+// 1. Dekorátory (Nutné pro stabilitu kompilace a eliminaci JIT chyb)
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+
+// 2. Sjednocené jádro (Služby, Typy, RxJS operátory)
+import * as Core from '../../../shared/imports/core-providers';
+
+// 3. UI Buildery (Komponenty a Typy)
 import { SHARED_UI_BUILDERS } from '../../../shared/imports/shared-ui-builders';
-import { BaseDataComponent } from '../../components/base-data/base-data.component';
-import { DataHandler } from '../../../core/services/data-handler.service';
-import { GenericTableService, FilterParams } from '../../../core/services/generic-table.service';
-import { AuthService } from '../../../core/auth/auth.service';
-import { AlertDialogService } from '../../../core/services/alert-dialog.service';
 import { TableBuilderComponent } from '../../components/builders/table-builder/table-builder.component';
-import {
-  SALES_LEAD_BUTTONS,
-  SALES_LEAD_FORM_FIELDS,
-  SALES_LEAD_COLUMNS,
-  SALES_LEAD_TRASH_COLUMNS,
-  SALES_LEAD_FILTER_COLUMNS,
-  SALES_LEAD_DETAILS_COLUMNS
-} from './sales-leads.config';
+
+// 4. Ostatní (Báze a Konfigurace)
+import { BaseDataComponent } from '../../components/base-data/base-data.component';
+import * as Config from './sales-leads.config';
 
 @Component({
   selector: 'app-sales-leads',
   standalone: true,
-  imports: [
-    SHARED_UI_BUILDERS
-  ],
+  imports: [SHARED_UI_BUILDERS],
   templateUrl: './sales-leads.component.html',
   styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SalesLeadsComponent extends BaseDataComponent<any> implements OnInit {
+export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
   override apiEndpoint: string = 'sales_leads';
-  buttons = SALES_LEAD_BUTTONS;
-  formFields = SALES_LEAD_FORM_FIELDS;
-  salesLeadColumns = SALES_LEAD_COLUMNS;
-  trashSalesLeadColumns = SALES_LEAD_TRASH_COLUMNS;
-  filterColumns = SALES_LEAD_FILTER_COLUMNS;
-  detailsColumns = SALES_LEAD_DETAILS_COLUMNS;
+
+  // Konfigurace načtená přes barrel Config
+  buttons = Config.SALES_LEAD_BUTTONS;
+  formFields = Config.SALES_LEAD_FORM_FIELDS;
+  salesLeadColumns = Config.SALES_LEAD_COLUMNS;
+  trashSalesLeadColumns = Config.SALES_LEAD_TRASH_COLUMNS;
+  filterColumns = Config.SALES_LEAD_FILTER_COLUMNS;
+  detailsColumns = Config.SALES_LEAD_DETAILS_COLUMNS;
 
   selectedItemForEdit: any | null = null;
   selectedItemForDetails: any | null = null;
-  filters: FilterParams = { sort_by: 'id', sort_direction: 'desc' };
+  
+  filters: Core.FilterParams = { 
+    sort_by: 'id', 
+    sort_direction: 'desc' 
+  };
 
   constructor(
-    protected override dataHandler: DataHandler,
-    protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService,
-    private authService: AuthService,
-    private alertDialogService: AlertDialogService,
-    private router: Router
+    protected override dataHandler: Core.DataHandler,
+    protected override cd: Core.ChangeDetectorRef,
+    protected override genericTableService: Core.GenericTableService,
+    private authService: Core.AuthService,
+    private alertDialogService: Core.AlertDialogService,
+    private router: Core.Router
   ) {
     super(dataHandler, cd, genericTableService);
   }
@@ -57,6 +56,8 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
     super.ngOnInit();
     this.refreshData();
   }
+
+  // --- Specifická logika Sales Leads (IDENTICKÁ) ---
 
   handleGenerateFormLink(item: any): void {
     const url = `${window.location.origin}/order_form/lead_id=${item.id}`;
@@ -83,24 +84,76 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements OnIni
     this.dataHandler.post('business_logs', logData).subscribe();
   }
 
-  refreshData(): void { this.forceFullRefresh(this.filters); }
-  applyFilters(f: FilterParams): void { this.filters = { ...this.filters, ...f }; this.currentPage = 1; this.refreshData(); }
-  clearFilters(): void { this.filters = { sort_by: 'id', sort_direction: 'desc' }; this.refreshData(); }
-  handlePageChange(p: number): void { this.onHandlePageChange(p, this.filters); }
-  handleItemsPerPageChange(v: number): void { this.onHandleItemsPerPageChange(v, this.filters); }
-  exportActiveTable(): void { this.activeTable?.exportToCSV(); }
+  // --- Správa dat a filtrů ---
 
-  handleCreateFormOpened(): void { this.selectedItemForEdit = null; this.showCreateForm = true; }
-  handleEditFormOpened(item: any): void { this.selectedItemForEdit = { ...item }; this.showCreateForm = true; }
+  public refreshData(): void { 
+    this.forceFullRefresh(this.filters); 
+  }
+
+  applyFilters(f: Core.FilterParams): void { 
+    this.filters = { ...this.filters, ...f }; 
+    this.currentPage = 1; 
+    this.refreshData(); 
+  }
+
+  clearFilters(): void { 
+    this.filters = { sort_by: 'id', sort_direction: 'desc' }; 
+    this.refreshData(); 
+  }
+
+  handlePageChange(p: number): void { 
+    this.onHandlePageChange(p, this.filters); 
+  }
+
+  handleItemsPerPageChange(v: number): void { 
+    this.onHandleItemsPerPageChange(v, this.filters); 
+  }
+
+  exportActiveTable(): void { 
+    this.activeTable?.exportToCSV(); 
+  }
+
+  // --- Handlery formulářů a detailů ---
+
+  handleCreateFormOpened(): void { 
+    this.selectedItemForEdit = null; 
+    this.showCreateForm = true; 
+  }
+
+  handleEditFormOpened(item: any): void { 
+    this.selectedItemForEdit = { ...item }; 
+    this.showCreateForm = true; 
+  }
+
   handleFormSubmitted(formData: any): void {
     this.isLoading = true;
     const req = formData.id ? this.updateData(formData.id, formData) : this.postData(formData);
-    req.pipe(finalize(() => { this.isLoading = false; this.showCreateForm = false; this.cd.markForCheck(); }))
-       .subscribe(() => this.refreshData());
+    req.pipe(
+      Core.finalize(() => { 
+        this.isLoading = false; 
+        this.showCreateForm = false; 
+        this.cd.markForCheck(); 
+      })
+    ).subscribe(() => this.refreshData());
   }
+
   handleViewDetails(item: any): void {
-    this.getItemDetails(item.id).subscribe(d => { this.selectedItemForDetails = d; this.showDetails = true; this.cd.markForCheck(); });
+    this.getItemDetails(item.id).subscribe(d => { 
+      this.selectedItemForDetails = d; 
+      this.showDetails = true; 
+      this.cd.markForCheck(); 
+    });
   }
-  onCancelForm() { this.showCreateForm = false; }
-  handleCloseDetails() { this.showDetails = false; }
+
+  onCancelForm(): void { 
+    this.showCreateForm = false; 
+    this.selectedItemForEdit = null;
+    this.cd.markForCheck();
+  }
+
+  handleCloseDetails(): void { 
+    this.showDetails = false; 
+    this.selectedItemForDetails = null;
+    this.cd.markForCheck();
+  }
 }

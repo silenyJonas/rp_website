@@ -1,57 +1,52 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { finalize } from 'rxjs/operators';
+// 1. Dekorátory (Nutné pro stabilitu kompilace a eliminaci JIT chyb)
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+
+// 2. Sjednocené jádro (Služby, Typy, RxJS operátory)
+import * as Core from '../../../shared/imports/core-providers';
+
+// 3. UI Buildery (Komponenty a Typy)
 import { SHARED_UI_BUILDERS } from '../../../shared/imports/shared-ui-builders';
+import { TableBuilderComponent } from '../../components/builders/table-builder/table-builder.component';
+
+// 4. Ostatní (Báze a Konfigurace)
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
-import { DataHandler } from '../../../core/services/data-handler.service';
-import { GenericTableService, FilterParams } from '../../../core/services/generic-table.service';
-import { AuthService } from '../../../core/auth/auth.service';
-import { TableBuilderComponent, Buttons } from '../../components/builders/table-builder/table-builder.component';
-import { InputDefinition } from '../../components/builders/form-builder/form-builder.component';
-import {
-  JOB_APPLICATION_BUTTONS,
-  JOB_APPLICATION_FORM_FIELDS,
-  JOB_APPLICATION_COLUMNS,
-  JOB_APPLICATION_TRASH_COLUMNS,
-  JOB_APPLICATION_FILTER_COLUMNS,
-  JOB_APPLICATION_DETAILS_COLUMNS
-} from './job-applications.config';
+import * as Config from './job-applications.config';
+
 @Component({
   selector: 'app-job-applications',
   standalone: true,
-  imports: [
-    SHARED_UI_BUILDERS
-  ],
+  imports: [SHARED_UI_BUILDERS],
   templateUrl: './job-applications.component.html',
   styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class JobApplicationsComponent extends BaseDataComponent<any> implements OnInit {
+export class JobApplicationsComponent extends BaseDataComponent<any> implements Core.OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
   
   override apiEndpoint: string = 'job_applications';
   
-  buttons: Buttons[] = JOB_APPLICATION_BUTTONS.filter(b => b.action !== 'create');
-  formFields: InputDefinition[] = JOB_APPLICATION_FORM_FIELDS;
-  columns = JOB_APPLICATION_COLUMNS;
-  trashColumns = JOB_APPLICATION_TRASH_COLUMNS;
-  filterColumns = JOB_APPLICATION_FILTER_COLUMNS;
-  detailsColumns = JOB_APPLICATION_DETAILS_COLUMNS;
+  // Logika zachována: Filtrace create tlačítka z konfigurace
+  buttons = Config.JOB_APPLICATION_BUTTONS.filter(b => b.action !== 'create');
+  formFields = Config.JOB_APPLICATION_FORM_FIELDS;
+  columns = Config.JOB_APPLICATION_COLUMNS;
+  trashColumns = Config.JOB_APPLICATION_TRASH_COLUMNS;
+  filterColumns = Config.JOB_APPLICATION_FILTER_COLUMNS;
+  detailsColumns = Config.JOB_APPLICATION_DETAILS_COLUMNS;
 
   selectedItemForEdit: any = null;
   selectedItemForDetails: any = null;
 
-  filters: FilterParams = { 
+  filters: Core.FilterParams = { 
     sort_by: 'id', 
     sort_direction: 'desc' 
   };
 
   constructor(
-    protected override dataHandler: DataHandler,
-    protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService,
-    private authService: AuthService,
-    private router: Router
+    protected override dataHandler: Core.DataHandler,
+    protected override cd: Core.ChangeDetectorRef,
+    protected override genericTableService: Core.GenericTableService,
+    private authService: Core.AuthService,
+    private router: Core.Router
   ) { 
     super(dataHandler, cd, genericTableService); 
   }
@@ -67,11 +62,13 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
     });
   }
 
+  // --- Správa dat a filtrů ---
+
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
   }
 
-  applyFilters(newFilters: FilterParams): void { 
+  applyFilters(newFilters: Core.FilterParams): void { 
     this.filters = { ...this.filters, ...newFilters }; 
     this.currentPage = 1;
     this.refreshData(); 
@@ -95,7 +92,10 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
     if (this.activeTable) this.activeTable.exportToCSV();
   }
 
+  // --- Handlery formulářů a detailů ---
+
   handleEditFormOpened(item: any): void { 
+    // IDENTICKÁ LOGIKA: Reset formuláře s timeoutem a hlubokou kopií
     this.selectedItemForEdit = null;
     this.showCreateForm = false;
     this.cd.detectChanges();
@@ -121,8 +121,9 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
 
   handleFormSubmitted(formData: any): void {
     this.isLoading = true;
+    // Logika zachována: Používá se updateData (Job Applications se většinou jen editují)
     this.updateData(formData.id, formData).pipe(
-      finalize(() => {
+      Core.finalize(() => {
         this.isLoading = false;
         this.showCreateForm = false;
         this.selectedItemForEdit = null;
@@ -131,7 +132,7 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
     ).subscribe(() => this.refreshData());
   }
 
-  onCancelForm() {
+  onCancelForm(): void {
     this.showCreateForm = false;
     this.selectedItemForEdit = null;
     this.cd.markForCheck();

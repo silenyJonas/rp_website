@@ -1,22 +1,21 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+// 1. Sjednocené jádro (Angular, RxJS, Služby, HttpClient)
+import * as Core from '../../../shared/imports/core-providers';
+import { HttpClient } from '@angular/common/http'; // HttpClient zatím nemáš v core-providers, ponechávám zde
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { takeUntil, finalize } from 'rxjs/operators';
-import { DataHandler } from '../../../core/services/data-handler.service';
-import { BaseDataComponent } from '../../components/base-data/base-data.component';
-import { GenericTableService } from '../../../core/services/generic-table.service';
-import { AlertDialogService } from '../../../core/services/alert-dialog.service';
 
-@Component({
+// 2. Báze
+import { BaseDataComponent } from '../../components/base-data/base-data.component';
+
+@Core.Component({
   selector: 'app-edit-website',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './edit-website.component.html',
   styleUrls: ['./edit-website.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: Core.ChangeDetectionStrategy.OnPush
 })
-export class EditWebsiteComponent extends BaseDataComponent<any> implements OnInit, OnDestroy {
+export class EditWebsiteComponent extends BaseDataComponent<any> implements Core.OnInit, Core.OnDestroy {
   
   override apiEndpoint = 'save-translations'; 
 
@@ -28,11 +27,11 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
   searchQuery: string = '';
 
   constructor(
-    protected override dataHandler: DataHandler,
-    protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService, 
+    protected override dataHandler: Core.DataHandler,
+    protected override cd: Core.ChangeDetectorRef,
+    protected override genericTableService: Core.GenericTableService, 
     private http: HttpClient,
-    private alertDialogService: AlertDialogService
+    private alertDialogService: Core.AlertDialogService
   ) {
     super(dataHandler, cd, genericTableService);
   }
@@ -40,6 +39,7 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
   override ngOnInit(): void {
     this.refreshTranslations();
   }
+
   public refreshTranslations(): void {
     this.isLoading = true;
     this.errorMessage = null;
@@ -48,8 +48,8 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
     const url = `assets/i18n/${this.currentLang}.json?t=${new Date().getTime()}`;
     
     this.http.get(url).pipe(
-      takeUntil(this.destroy$),
-      finalize(() => {
+      Core.takeUntil(this.destroy$),
+      Core.finalize(() => {
         this.isLoading = false;
         this.cd.markForCheck();
         setTimeout(() => this.resizeAllTextareas(), 50);
@@ -72,7 +72,6 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
     this.currentLang = lang;
     this.refreshTranslations();
   }
-
 
   refreshFlattenedList(): void {
     this.flattenedKeys = [];
@@ -146,8 +145,8 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
 
     this.dataHandler.post(this.apiEndpoint, payload)
       .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => {
+        Core.takeUntil(this.destroy$),
+        Core.finalize(() => {
           this.isLoading = false;
           this.cd.markForCheck();
         })
@@ -156,7 +155,7 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements OnIn
         next: () => {
           this.alertDialogService.open('Administrace', `Web byl úspěšně aktualizován (${this.currentLang}).`, 'success');
         },
-        error: (err) => {
+        error: () => {
           this.alertDialogService.open('Chyba', 'Uložení na server selhalo. Zkontrolujte práva k zápisu.', 'danger');
         }
       });

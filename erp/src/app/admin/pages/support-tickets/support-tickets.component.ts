@@ -1,57 +1,52 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { finalize } from 'rxjs/operators';
+// 1. Dekorátory (Nutné pro stabilitu kompilace a eliminaci JIT chyb)
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+
+// 2. Sjednocené jádro (Angular, RxJS, Služby)
+import * as Core from '../../../shared/imports/core-providers';
+
+// 3. UI Buildery (Komponenty a Typy)
 import { SHARED_UI_BUILDERS } from '../../../shared/imports/shared-ui-builders';
-import { BaseDataComponent } from '../../components/base-data/base-data.component';
-import { DataHandler } from '../../../core/services/data-handler.service';
-import { GenericTableService, FilterParams } from '../../../core/services/generic-table.service';
-import { AuthService } from '../../../core/auth/auth.service';
 import { TableBuilderComponent } from '../../components/builders/table-builder/table-builder.component';
-import {
-  SUPPORT_TICKET_BUTTONS,
-  SUPPORT_TICKET_FORM_FIELDS,
-  SUPPORT_TICKET_COLUMNS,
-  SUPPORT_TICKET_TRASH_COLUMNS,
-  SUPPORT_TICKET_FILTER_COLUMNS,
-  SUPPORT_TICKET_DETAILS_COLUMNS
-} from './support-tickets.config';
+
+// 4. Ostatní (Báze a Konfigurace)
+import { BaseDataComponent } from '../../components/base-data/base-data.component';
+import * as Config from './support-tickets.config';
 
 @Component({
   selector: 'app-support-tickets',
   standalone: true,
-  imports: [
-    SHARED_UI_BUILDERS
-  ],
+  imports: [SHARED_UI_BUILDERS],
   templateUrl: './support-tickets.component.html',
   styleUrl: '../default-style.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SupportTicketsComponent extends BaseDataComponent<any> implements OnInit {
+export class SupportTicketsComponent extends BaseDataComponent<any> implements Core.OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
   override apiEndpoint: string = 'support_tickets';
   
-  buttons = SUPPORT_TICKET_BUTTONS;
-  formFields = SUPPORT_TICKET_FORM_FIELDS;
-  columns = SUPPORT_TICKET_COLUMNS;
-  trashColumns = SUPPORT_TICKET_TRASH_COLUMNS;
-  filterColumns = SUPPORT_TICKET_FILTER_COLUMNS;
-  detailsColumns = SUPPORT_TICKET_DETAILS_COLUMNS;
+  // Konfigurace načtená přes barrel Config
+  buttons = Config.SUPPORT_TICKET_BUTTONS;
+  formFields = Config.SUPPORT_TICKET_FORM_FIELDS;
+  columns = Config.SUPPORT_TICKET_COLUMNS;
+  trashColumns = Config.SUPPORT_TICKET_TRASH_COLUMNS;
+  filterColumns = Config.SUPPORT_TICKET_FILTER_COLUMNS;
+  detailsColumns = Config.SUPPORT_TICKET_DETAILS_COLUMNS;
 
   selectedItemForEdit: any = null;
   selectedItemForDetails: any = null;
 
-  filters: FilterParams = { 
+  filters: Core.FilterParams = { 
     sort_by: 'id', 
     sort_direction: 'desc' 
   };
 
   constructor(
-    protected override dataHandler: DataHandler,
-    protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService,
-    private authService: AuthService,
-    private router: Router
+    protected override dataHandler: Core.DataHandler,
+    protected override cd: Core.ChangeDetectorRef,
+    protected override genericTableService: Core.GenericTableService,
+    private authService: Core.AuthService,
+    private router: Core.Router
   ) { 
     super(dataHandler, cd, genericTableService); 
   }
@@ -67,11 +62,13 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
     });
   }
 
+  // --- Správa dat a filtrů ---
+
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
   }
 
-  applyFilters(newFilters: FilterParams): void { 
+  applyFilters(newFilters: Core.FilterParams): void { 
     this.filters = { ...this.filters, ...newFilters }; 
     this.currentPage = 1;
     this.refreshData(); 
@@ -94,6 +91,8 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
   exportActiveTable(): void {
     if (this.activeTable) this.activeTable.exportToCSV();
   }
+
+  // --- Handlery formulářů a detailů ---
 
   handleCreateFormOpened(): void { 
     this.selectedItemForEdit = null; 
@@ -120,6 +119,7 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
   handleFormSubmitted(formData: any): void {
     this.isLoading = true;
     
+    // Logika zachována: Ošetření FormData vs Object
     const isFormData = formData instanceof FormData;
     const id = isFormData ? formData.get('id') : formData.id;
 
@@ -127,6 +127,7 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
 
     if (id) {
       if (isFormData) {
+        // Laravely/API často vyžadují u FormData s files _method PUT pro POST request
         formData.append('_method', 'PUT');
         request = this.dataHandler.post(`${this.apiEndpoint}/${id}`, formData);
       } else {
@@ -137,7 +138,7 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
     }
     
     request.pipe(
-      finalize(() => {
+      Core.finalize(() => {
         this.isLoading = false;
         this.showCreateForm = false;
         this.cd.markForCheck();
@@ -145,8 +146,9 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements O
     ).subscribe(() => this.refreshData());
   }
 
-  onCancelForm() {
+  onCancelForm(): void {
     this.showCreateForm = false;
     this.selectedItemForEdit = null;
+    this.cd.markForCheck();
   }
 }
