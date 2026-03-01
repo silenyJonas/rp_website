@@ -1,19 +1,26 @@
-// 1. Sjednocené jádro (Angular, RxJS, Služby, HttpClient)
+// 1. Dekorátory a Angular Jádro (Nutné pro stabilitu AOT kompilace a eliminaci JIT chyb)
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+// 2. Sjednocené jádro (Služby, Typy, RxJS)
 import * as Core from '../../../shared/imports/core-providers';
-import { HttpClient } from '@angular/common/http'; // HttpClient zatím nemáš v core-providers, ponechávám zde
+
+// 3. UI moduly (Importujeme přes Core pro sjednocení, pokud je tam máš, nebo přímo)
+// Pokud nemáš CommonModule a Forms v core-providers, doplň si je tam.
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-// 2. Báze
+// 4. Ostatní (Báze a Router)
+import { RouterModule } from '@angular/router';
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
 
-@Core.Component({
+@Component({
   selector: 'app-edit-website',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
   templateUrl: './edit-website.component.html',
   styleUrls: ['./edit-website.component.css'],
-  changeDetection: Core.ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditWebsiteComponent extends BaseDataComponent<any> implements Core.OnInit, Core.OnDestroy {
   
@@ -28,7 +35,7 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements Core
 
   constructor(
     protected override dataHandler: Core.DataHandler,
-    protected override cd: Core.ChangeDetectorRef,
+    protected override cd: ChangeDetectorRef, // Přímý import dekorátoru/typu
     protected override genericTableService: Core.GenericTableService, 
     private http: HttpClient,
     private alertDialogService: Core.AlertDialogService
@@ -45,6 +52,7 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements Core
     this.errorMessage = null;
     this.cd.markForCheck();
 
+    // Cache busting pomocí timestampu
     const url = `assets/i18n/${this.currentLang}.json?t=${new Date().getTime()}`;
     
     this.http.get(url).pipe(
@@ -52,6 +60,7 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements Core
       Core.finalize(() => {
         this.isLoading = false;
         this.cd.markForCheck();
+        // Timeout pro zajištění, že se DOM vykreslil před výpočtem výšky
         setTimeout(() => this.resizeAllTextareas(), 50);
       })
     ).subscribe({

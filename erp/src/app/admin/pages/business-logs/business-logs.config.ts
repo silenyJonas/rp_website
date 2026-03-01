@@ -1,16 +1,12 @@
-import { Buttons } from '../../components/builders/table-builder/table-builder.component';
-import { InputDefinition } from '../../components/builders/form-builder/form-builder.component';
-import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
-import { FilterColumns } from '../../../shared/interfaces/filter-columns';
-import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
+import * as Core from '../../../shared/imports/core-providers';
 
-export const BUTTONS: Buttons[] = [
+export const BUTTONS: Core.Buttons[] = [
   { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
 ];
 
-export const FORM_FIELDS: InputDefinition[] = [];
+export const FORM_FIELDS: Core.InputDefinition[] = [];
 
-export const TABLE_COLUMNS: ColumnDefinition[] = [
+export const TABLE_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'created_at', header: 'Čas', type: 'date', format: 'short' },
   { key: 'user_email_plain', header: 'Uživatel', type: 'text' },
@@ -20,7 +16,7 @@ export const TABLE_COLUMNS: ColumnDefinition[] = [
   { key: 'origin', header: 'IP adresa', type: 'text' }
 ];
 
-export const FILTER_COLUMNS: FilterColumns[] = [
+export const FILTER_COLUMNS: Core.FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID logu', canSort: true },
   { key: 'user_email_plain', header: 'Uživatel', type: 'text', placeholder: 'Email uživatele', canSort: true },
   { 
@@ -42,7 +38,7 @@ export const FILTER_COLUMNS: FilterColumns[] = [
   { key: 'origin', header: 'IP adresa', type: 'text', placeholder: 'Hledat IP', canSort: true }
 ];
 
-export const DETAILS_COLUMNS: ItemDetailsColumns[] = [
+export const DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID Záznamu', type: 'text' },
   { key: 'created_at', displayName: 'Čas události', type: 'date', format: 'medium' },
   { key: 'origin', displayName: 'IP adresa zdroje', type: 'text' },

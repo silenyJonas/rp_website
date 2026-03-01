@@ -1,8 +1,4 @@
-import { Buttons } from '../../components/builders/table-builder/table-builder.component';
-import { InputDefinition } from '../../components/builders/form-builder/form-builder.component';
-import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
-import { FilterColumns } from '../../../shared/interfaces/filter-columns';
-import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
+import * as Core from '../../../shared/imports/core-providers';
 
 export const ROLE_OPTIONS = [
   { value: '1', label: 'sysadmin' },
@@ -11,20 +7,20 @@ export const ROLE_OPTIONS = [
   { value: '5', label: 'Salesman' },
 ];
 
-export const BUTTONS: Buttons[] = [
+export const BUTTONS: Core.Buttons[] = [
   { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
   { display_name: '🔑', header_name: 'Heslo', isActive: true, type: 'neutral_button', action: 'password_reset' },
   { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
 ];
 
-export const RESET_PASSWORD_FORM_FIELDS: InputDefinition[] = [
+export const RESET_PASSWORD_FORM_FIELDS: Core.InputDefinition[] = [
   { column_name: 'old_password', label: 'Vaše aktuální heslo (potvrzení)', placeholder: 'Zadejte své heslo', type: 'password', required: true, editable: true, show_in_edit: true, show_in_create: true },
   { column_name: 'new_password', label: 'Nové heslo uživatele', placeholder: 'Minimálně 8 znaků', type: 'password', required: true, pattern: '^.{8,}$', errorMessage: 'Heslo musí mít 8 a více znaků', editable: true, show_in_edit: true, show_in_create: true },
   { column_name: 'new_password_confirmation', label: 'Potvrzení nového hesla', placeholder: 'Zadejte znovu nové heslo', type: 'password', required: true, pattern: '^.{8,}$', errorMessage: 'Heslo musí mít 8 a více znaků', editable: true, show_in_edit: true, show_in_create: true },
 ];
 
-export const FORM_FIELDS: InputDefinition[] = [
+export const FORM_FIELDS: Core.InputDefinition[] = [
   {
     column_name: 'user_email',
     label: 'Přihlašovací login',
@@ -137,7 +133,7 @@ export const FORM_FIELDS: InputDefinition[] = [
   }
 ];
 
-export const TABLE_COLUMNS: ColumnDefinition[] = [
+export const TABLE_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'full_name', header: 'Jméno', type: 'text' },
   { key: 'user_email', header: 'Login', type: 'text' },
@@ -145,14 +141,14 @@ export const TABLE_COLUMNS: ColumnDefinition[] = [
   { key: 'last_login_at', header: 'Poslední log', type: 'date', format: 'short' },
 ];
 
-export const TRASH_TABLE_COLUMNS: ColumnDefinition[] = [
+export const TRASH_TABLE_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'full_name', header: 'Jméno', type: 'text' },
   { key: 'user_email', header: 'Login', type: 'text' },
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' },
 ];
 
-export const FILTER_COLUMNS: FilterColumns[] = [
+export const FILTER_COLUMNS: Core.FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID', canSort: true },
   { key: 'full_name', header: 'Jméno', type: 'text', placeholder: 'Hledat jméno', canSort: true },
   { key: 'user_email', header: 'Login', type: 'text', placeholder: 'Hledat login', canSort: true },
@@ -166,7 +162,7 @@ export const FILTER_COLUMNS: FilterColumns[] = [
   }
 ];
 
-export const DETAILS_COLUMNS: ItemDetailsColumns[] = [
+export const DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID uživatele', type: 'text' },
   { key: 'full_name', displayName: 'Celé jméno', type: 'text' },
   { key: 'user_email', displayName: 'Systémový Login', type: 'text' },

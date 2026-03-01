@@ -2,25 +2,8 @@ import { Component, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild, O
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm, FormControl } from '@angular/forms';
 import { AlertDialogService } from '../../../../core/services/alert-dialog.service'; // Import service
+import { InputDefinition } from '../../../../shared/interfaces/input-definiton';
 
-export interface InputDefinition {
-  column_name: string;
-  label: string;
-  placeholder?: string;
-  type: string;
-  required?: boolean;
-  min?: number;
-  max?: number;
-  pattern?: string;
-  errorMessage?: string;
-  options?: { value: string; label: string }[];
-  defaultValue?: any;
-  step?: number;
-  editable?: boolean;
-  show_in_edit?: boolean;
-  show_in_create?: boolean;
-  hide_in_edit?: boolean;
-}
 
 @Component({
   selector: 'app-form-builder',

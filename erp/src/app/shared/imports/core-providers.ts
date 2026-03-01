@@ -1,11 +1,7 @@
-// 1. EXPORTY HODNOT (Dekorátory, Třídy, Observable)
-// Tyto prvky existují i v běžícím JavaScriptu.
+export * from './shared-config';
+
 export { 
-  Component, 
-  ChangeDetectionStrategy, 
   ChangeDetectorRef, 
-  ViewChild, 
-  Directive 
 } from '@angular/core';
 
 export { Router } from '@angular/router';

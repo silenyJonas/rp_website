@@ -1,10 +1,7 @@
-import { Buttons } from '../../components/builders/table-builder/table-builder.component';
-import { InputDefinition } from '../../components/builders/form-builder/form-builder.component';
-import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
-import { FilterColumns } from '../../../shared/interfaces/filter-columns';
-import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
+import * as Core from '../../../shared/imports/core-providers';
 
-export const USER_REQUEST_BUTTONS: Buttons[] = [
+
+export const USER_REQUEST_BUTTONS: Core.Buttons[] = [
   { display_name: '🔍', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
   { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
@@ -14,7 +11,7 @@ export const USER_REQUEST_STATUS_OPTIONS: string[] = ['Nově zadané', 'Zpracov�
 export const USER_REQUEST_PRIORITY_OPTIONS: string[] = ['Nízká', 'Neutrální', 'Vysoká'];
 export const USER_REQUEST_THEMA_OPTIONS: string[] = ['Webový vývoj', 'Desktopový vývoj', 'Mobilní vývoj', 'AI vývoj', 'Jiné'];
 
-export const USER_REQUEST_FORM_FIELDS: InputDefinition[] = [
+export const USER_REQUEST_FORM_FIELDS: Core.InputDefinition[] = [
   {
     column_name: 'thema',
     label: 'Téma / Předmět',
@@ -79,7 +76,7 @@ export const USER_REQUEST_FORM_FIELDS: InputDefinition[] = [
   }
 ];
 
-export const USER_REQUEST_COLUMNS: ColumnDefinition[] = [
+export const USER_REQUEST_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'thema', header: 'Téma', type: 'text' },
   { key: 'contact_email', header: 'Email', type: 'text' },
@@ -88,14 +85,14 @@ export const USER_REQUEST_COLUMNS: ColumnDefinition[] = [
   { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' }
 ];
 
-export const USER_REQUEST_TRASH_COLUMNS: ColumnDefinition[] = [
+export const USER_REQUEST_TRASH_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'thema', header: 'Téma', type: 'text' },
   { key: 'contact_email', header: 'Email', type: 'text' },
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' }
 ];
 
-export const USER_REQUEST_FILTER_COLUMNS: FilterColumns[] = [
+export const USER_REQUEST_FILTER_COLUMNS: Core.FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID...', canSort: true },
   { key: 'thema', header: 'Téma', type: 'select', placeholder: 'Hledat téma...',options: USER_REQUEST_THEMA_OPTIONS, canSort: true },
   { key: 'contact_email', header: 'Email', type: 'text', placeholder: 'Hledat email...', canSort: true },
@@ -103,7 +100,7 @@ export const USER_REQUEST_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'priority', header: 'Priorita', type: 'select', options: USER_REQUEST_PRIORITY_OPTIONS, placeholder: '-- Priorita --', canSort: true },
 ];
 
-export const USER_REQUEST_DETAILS_COLUMNS: ItemDetailsColumns[] = [
+export const USER_REQUEST_DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID požadavku', type: 'text' },
   { key: 'thema', displayName: 'Téma', type: 'text' },
   { key: 'contact_email', displayName: 'Email', type: 'text' },

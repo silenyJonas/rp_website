@@ -1,8 +1,4 @@
-import { Buttons } from '../../components/builders/table-builder/table-builder.component';
-import { InputDefinition } from '../../components/builders/form-builder/form-builder.component';
-import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
-import { FilterColumns } from '../../../shared/interfaces/filter-columns';
-import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
+import * as Core from '../../../shared/imports/core-providers';
 
 export const NEWS_THEMA_OPTIONS: string[] = [
   'Milník', 
@@ -15,13 +11,13 @@ export const NEWS_THEMA_OPTIONS: string[] = [
   'Akce'
 ];
 
-export const NEWS_BUTTONS: Buttons[] = [
+export const NEWS_BUTTONS: Core.Buttons[] = [
   { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
   { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
 ];
 
-export const NEWS_FORM_FIELDS: InputDefinition[] = [
+export const NEWS_FORM_FIELDS: Core.InputDefinition[] = [
   {
     column_name: 'title',
     label: 'Titulek novinky',
@@ -106,7 +102,7 @@ export const NEWS_FORM_FIELDS: InputDefinition[] = [
   }
 ];
 
-export const NEWS_COLUMNS: ColumnDefinition[] = [
+export const NEWS_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'title', header: 'Titulek', type: 'text' },
   { key: 'thema', header: 'Téma', type: 'text' },
@@ -114,20 +110,20 @@ export const NEWS_COLUMNS: ColumnDefinition[] = [
   { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' }
 ];
 
-export const NEWS_TRASH_COLUMNS: ColumnDefinition[] = [
+export const NEWS_TRASH_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'title', header: 'Titulek', type: 'text' },
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' }
 ];
 
-export const NEWS_FILTER_COLUMNS: FilterColumns[] = [
+export const NEWS_FILTER_COLUMNS: Core.FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'Hledat ID', canSort: true },
   { key: 'title', header: 'Titulek', type: 'text', placeholder: 'Hledat v titulku', canSort: true },
   { key: 'author', header: 'Autor', type: 'text', placeholder: 'Hledat autora', canSort: true },
   { key: 'thema', header: 'Téma', type: 'select', options: NEWS_THEMA_OPTIONS, placeholder: '-- Vybrat téma --', canSort: true }
 ];
 
-export const NEWS_DETAILS_COLUMNS: ItemDetailsColumns[] = [
+export const NEWS_DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID záznamu', type: 'text' },
   { key: 'title', displayName: 'Titulek', type: 'text' },
   { key: 'thema', displayName: 'Kategorie', type: 'text' },

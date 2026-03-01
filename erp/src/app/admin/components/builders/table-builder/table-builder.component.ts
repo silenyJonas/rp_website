@@ -9,14 +9,8 @@ import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.s
 import { AlertDialogService } from '../../../../core/services/alert-dialog.service';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { GenericTableService } from '../../../../core/services/generic-table.service';
+import { Buttons } from '../../../../shared/interfaces/buttons';
 
-export interface Buttons {
-  display_name: string;
-  header_name: string;
-  isActive: boolean;
-  action: string;
-  type: 'info_button' | 'create_button' | 'delete_button' | 'neutral_button' | 'generate_form';
-}
 
 @Component({
   selector: 'app-table-builder',

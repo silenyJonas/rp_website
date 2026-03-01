@@ -4,7 +4,7 @@ import { TableBuilderComponent } from '../../admin/components/builders/table-bui
 import { TrashTableBuilderComponent } from '../../admin/components/builders/trash-table-builder/trash-table-builder.component';
 import { FormBuilderComponent } from '../../admin/components/builders/form-builder/form-builder.component';
 import { FilterFormBuilderComponent } from '../../admin/components/builders/filter-form-builder/filter-form-builder.component';
-import { DetailsbuilderComponent } from '../../admin/components/builders/details-builder/details-builder.component';
+import { DetailsBuilderComponent } from '../../admin/components/builders/details-builder/details-builder.component';
 import { PaginationButtonsBuilderComponent } from '../../admin/components/builders/pagination-buttons-builder/pagination-buttons-builder.component';
 import { HasPermissionDirective } from '../../core/directives/has-permission.directive';
 export const SHARED_UI_BUILDERS = [
@@ -15,7 +15,7 @@ export const SHARED_UI_BUILDERS = [
   TrashTableBuilderComponent,
   FormBuilderComponent,
   FilterFormBuilderComponent,
-  DetailsbuilderComponent,
+  DetailsBuilderComponent,
   PaginationButtonsBuilderComponent,
   HasPermissionDirective
 ] as const;

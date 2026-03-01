@@ -1,8 +1,4 @@
-import { Buttons } from '../../components/builders/table-builder/table-builder.component';
-import { InputDefinition } from '../../components/builders/form-builder/form-builder.component';
-import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
-import { FilterColumns } from '../../../shared/interfaces/filter-columns';
-import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
+import * as Core from '../../../shared/imports/core-providers';
 
 export const JOB_APP_STATUS_OPTIONS = [
   { value: 'Nový', label: 'Nový uchazeč' },
@@ -12,13 +8,13 @@ export const JOB_APP_STATUS_OPTIONS = [
   { value: 'Zásobník', label: 'V databázi (do budoucna)' }
 ];
 
-export const JOB_APPLICATION_BUTTONS: Buttons[] = [
+export const JOB_APPLICATION_BUTTONS: Core.Buttons[] = [
   { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Stav / Poznámka', isActive: true, type: 'neutral_button', action: 'edit' },
   { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
 ];
 
-export const JOB_APPLICATION_FORM_FIELDS: InputDefinition[] = [
+export const JOB_APPLICATION_FORM_FIELDS: Core.InputDefinition[] = [
   {
     column_name: 'state',
     label: 'Stav uchazeče',
@@ -65,7 +61,7 @@ export const JOB_APPLICATION_FORM_FIELDS: InputDefinition[] = [
   }
 ];
 
-export const JOB_APPLICATION_COLUMNS: ColumnDefinition[] = [
+export const JOB_APPLICATION_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'full_name', header: 'Uchazeč', type: 'text' },
   { key: 'position_name', header: 'Pozice', type: 'text' },
@@ -73,14 +69,14 @@ export const JOB_APPLICATION_COLUMNS: ColumnDefinition[] = [
   { key: 'created_at', header: 'Doručeno', type: 'date', format: 'short' }
 ];
 
-export const JOB_APPLICATION_TRASH_COLUMNS: ColumnDefinition[] = [
+export const JOB_APPLICATION_TRASH_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'full_name', header: 'Uchazeč', type: 'text' },
   { key: 'position_name', header: 'Pozice', type: 'text' },
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' }
 ];
 
-export const JOB_APPLICATION_FILTER_COLUMNS: FilterColumns[] = [
+export const JOB_APPLICATION_FILTER_COLUMNS: Core.FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID', canSort: true },
   { key: 'last_name', header: 'Příjmení', type: 'text', placeholder: 'Hledat příjmení...', canSort: true },
   { key: 'position_name', header: 'Pozice', type: 'text', placeholder: 'Název pozice...', canSort: true },
@@ -94,7 +90,7 @@ export const JOB_APPLICATION_FILTER_COLUMNS: FilterColumns[] = [
   }
 ];
 
-export const JOB_APPLICATION_DETAILS_COLUMNS: ItemDetailsColumns[] = [
+export const JOB_APPLICATION_DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID Žádosti', type: 'text' },
   { key: 'full_name', displayName: 'Celé jméno', type: 'text' },
   { key: 'position_name', displayName: 'Hlášená pozice', type: 'text' },

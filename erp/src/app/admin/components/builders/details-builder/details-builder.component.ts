@@ -10,7 +10,7 @@ import { environment } from '../../../../../environments/environment';
   styleUrl: './details-builder.component.css',
   providers: [DatePipe, CurrencyPipe]
 })
-export class DetailsbuilderComponent implements OnInit, OnDestroy {
+export class DetailsBuilderComponent implements OnInit, OnDestroy {
   @Input() itemData: any;
   @Input() itemDetailColumns: ItemDetailsColumns[] = [];
   @Output() closeDetails = new EventEmitter<void>();

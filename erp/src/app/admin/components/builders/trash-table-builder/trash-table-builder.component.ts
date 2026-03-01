@@ -7,14 +7,7 @@ import { DataHandler } from '../../../../core/services/data-handler.service';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
 import { AlertDialogService } from '../../../../core/services/alert-dialog.service';
 import { GenericTableService } from '../../../../core/services/generic-table.service'; 
-
-export interface Buttons {
-  display_name: string;
-  isActive: boolean;
-  type: 'confirm_button' | 'delete_button' | 'info_button' | 'create_button' | 'neutral_button';
-  header_name: string;
-}
-
+import { Buttons } from '../../../../shared/interfaces/buttons';
 @Component({
   selector: 'app-trash-table-builder',
   standalone: true,
@@ -35,8 +28,8 @@ export class TrashTableBuilderComponent extends BaseDataComponent<any> implement
   @Input() uploadsBaseUrl: string = '';
   
   buttons: Buttons[] = [
-    { display_name: '♻️', header_name: "Obnovit", isActive: true, type: 'confirm_button' },
-    { display_name: '🧨', header_name: "Trvale smazat", isActive: true, type: 'delete_button' },
+    { display_name: '♻️', header_name: "Obnovit", isActive: true, type: 'confirm_button', action: "restore" },
+    { display_name: '🧨', header_name: "Trvale smazat", isActive: true, type: 'delete_button', action: "delete" },
   ];
 
   public isFullWidth: boolean = true;
@@ -87,11 +80,11 @@ export class TrashTableBuilderComponent extends BaseDataComponent<any> implement
     return typeof value === 'object' && value !== null && !Array.isArray(value);
   }
   
-  handleAction(item: any, buttonType: string): void {
+  handleAction(item: any, action: string): void {
     if (!item.id) return;
 
-    switch (buttonType) {
-      case 'confirm_button':
+    switch (action) {
+      case 'restore':
         this.confirmDialogService.open('Potvrzení obnovení', 'Opravdu chcete obnovit tuto položku?').then(result => {
           if (result) {
             this.restoreDataFromApi(item.id).subscribe({
@@ -109,7 +102,7 @@ export class TrashTableBuilderComponent extends BaseDataComponent<any> implement
         });
         break;
 
-      case 'delete_button':
+      case 'delete':
         this.confirmDialogService.open('Potvrzení trvalého smazání', 'Opravdu si přejete TRVALE smazat tuto položku? Tato akce je nevratná!').then(result => {
           if (result) {
             this.deleteData(item.id, true).subscribe({

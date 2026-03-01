@@ -1,10 +1,6 @@
-import { Buttons } from '../../components/builders/table-builder/table-builder.component';
-import { InputDefinition } from '../../components/builders/form-builder/form-builder.component';
-import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
-import { FilterColumns } from '../../../shared/interfaces/filter-columns';
-import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
+import * as Core from '../../../shared/imports/core-providers';
 
-export const SALES_LEAD_BUTTONS: Buttons[] = [
+export const SALES_LEAD_BUTTONS: Core.Buttons[] = [
   { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
   { display_name: '🔗', header_name: 'Link', isActive: true, type: 'neutral_button', action: 'generate_form' },
@@ -32,7 +28,7 @@ export const SALES_LEAD_SOURCE_CHANNELS: string[] = [
   'Partner / Affiliate', 'Jiný online kanál', 'Jiný offline kanál'
 ];
 
-export const SALES_LEAD_FORM_FIELDS: InputDefinition[] = [
+export const SALES_LEAD_FORM_FIELDS: Core.InputDefinition[] = [
   {
     column_name: 'subject_name',
     label: 'Název subjektu / Firmy',
@@ -169,7 +165,7 @@ export const SALES_LEAD_FORM_FIELDS: InputDefinition[] = [
   }
 ];
 
-export const SALES_LEAD_COLUMNS: ColumnDefinition[] = [
+export const SALES_LEAD_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'subject_name', header: 'Subjekt / Firma', type: 'text' },
   { key: 'status', header: 'Stav', type: 'text' },
@@ -179,13 +175,13 @@ export const SALES_LEAD_COLUMNS: ColumnDefinition[] = [
   { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'd.M.yyyy H:mm' }
 ];
 
-export const SALES_LEAD_TRASH_COLUMNS: ColumnDefinition[] = [
+export const SALES_LEAD_TRASH_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'subject_name', header: 'Subjekt', type: 'text' },
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'd.M.yyyy H:mm' }
 ];
 
-export const SALES_LEAD_FILTER_COLUMNS: FilterColumns[] = [
+export const SALES_LEAD_FILTER_COLUMNS: Core.FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID...', canSort: true },
   { key: 'subject_name', header: 'Subjekt', type: 'text', placeholder: 'Hledat firmu...', canSort: true },
   { key: 'status', header: 'Stav', type: 'select', options: SALES_LEAD_STATUS_OPTIONS, placeholder: '-- Stav --', canSort: true },
@@ -193,7 +189,7 @@ export const SALES_LEAD_FILTER_COLUMNS: FilterColumns[] = [
   { key: 'salesman_name', header: 'Obchodník', type: 'text', placeholder: 'Jméno...', canSort: true },
 ];
 
-export const SALES_LEAD_DETAILS_COLUMNS: ItemDetailsColumns[] = [
+export const SALES_LEAD_DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID Leadů', type: 'text' },
   { key: 'subject_name', displayName: 'Název subjektu', type: 'text' },
   { key: 'contact_person', displayName: 'Kontaktní osoba', type: 'text' },

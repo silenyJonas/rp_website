@@ -1,16 +1,12 @@
-import { Buttons } from '../../components/builders/table-builder/table-builder.component';
-import { InputDefinition } from '../../components/builders/form-builder/form-builder.component';
-import { ColumnDefinition } from '../../../shared/interfaces/generic-form-column-definiton';
-import { FilterColumns } from '../../../shared/interfaces/filter-columns';
-import { ItemDetailsColumns } from '../../../shared/interfaces/item-details-columns';
+import * as Core from '../../../shared/imports/core-providers';
 
-export const SUPPORT_TICKET_BUTTONS: Buttons[] = [
+export const SUPPORT_TICKET_BUTTONS: Core.Buttons[] = [
   { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
   { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
 ];
 
-export const SUPPORT_TICKET_FORM_FIELDS: InputDefinition[] = [
+export const SUPPORT_TICKET_FORM_FIELDS: Core.InputDefinition[] = [
   {
     column_name: 'user_name_plain',
     label: 'Jméno žadatele',
@@ -89,7 +85,7 @@ export const SUPPORT_TICKET_FORM_FIELDS: InputDefinition[] = [
   }
 ];
 
-export const SUPPORT_TICKET_COLUMNS: ColumnDefinition[] = [
+export const SUPPORT_TICKET_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'subject', header: 'Předmět', type: 'text' },
   { key: 'user_name_plain', header: 'Žadatel', type: 'text' },
@@ -99,14 +95,14 @@ export const SUPPORT_TICKET_COLUMNS: ColumnDefinition[] = [
   { key: 'created_at', header: 'Vytvořeno', type: 'date', format: 'short' }
 ];
 
-export const SUPPORT_TICKET_TRASH_COLUMNS: ColumnDefinition[] = [
+export const SUPPORT_TICKET_TRASH_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'subject', header: 'Předmět', type: 'text' },
   { key: 'user_name_plain', header: 'Žadatel', type: 'text' },
   { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' }
 ];
 
-export const SUPPORT_TICKET_FILTER_COLUMNS: FilterColumns[] = [
+export const SUPPORT_TICKET_FILTER_COLUMNS: Core.FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID', canSort: true },
   { key: 'subject', header: 'Předmět', type: 'text', placeholder: 'Hledat předmět', canSort: true },
   { key: 'user_name_plain', header: 'Žadatel', type: 'text', placeholder: 'Žadatel', canSort: true },
@@ -136,7 +132,7 @@ export const SUPPORT_TICKET_FILTER_COLUMNS: FilterColumns[] = [
   }
 ];
 
-export const SUPPORT_TICKET_DETAILS_COLUMNS: ItemDetailsColumns[] = [
+export const SUPPORT_TICKET_DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID Ticketu', type: 'text' },
   { key: 'state', displayName: 'Stav', type: 'text' },
   { key: 'subject', displayName: 'Předmět', type: 'text' },
