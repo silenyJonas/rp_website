@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    Options -MultiViews -Indexes
+
+    # 1. Pravidlo pro Storage - pokud existuje symlink v /www
+    RewriteCond %{REQUEST_URI} ^/storage [NC]
+    RewriteRule ^storage/(.*)$ storage/$1 [L]
+
+    # 2. Laravel API -> /laravel/public/index.php
+    RewriteCond %{REQUEST_URI} ^/api
+    RewriteRule ^ laravel/public/index.php [L]
+
+    # 3. Pokud soubor nebo složka existuje, načti ho přímo
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # 4. Vše ostatní -> Angular index.html
+    RewriteRule ^ index.html [L]
+</IfModule>
+
+
