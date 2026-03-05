@@ -56,26 +56,68 @@
       "duration": "2025",
       "client": "NAUCSETO, s. r. o.",
       "description": "We created a clear and modern website for an educational institution, serving as the main communication portal for students, parents, and teachers. The site includes interactive schedules, an events calendar, a news blog, and a secure section for uploading study materials. We simplified communication and made key information accessible in one place."
-    },
-    "project_3": {
-      "name": "Custom ERP System",
-      "duration": "2024/2025",
-      "client": "",
-      "description": "We developed a custom-tailored ERP (Enterprise Resource Planning) system that centralizes and automates key business processes—from financial management to human resources and logistics. The system provides a comprehensive overview of the business operations in real-time, allowing for better decision-making and increasing overall efficiency and transparency."
-    },
-    "project_4": {
-      "name": "Custom CRM system",
-      "duration": "2024",
-      "client": "",
-      "description": "We developed a sophisticated CRM (Customer Relationship Management) system designed to meet the client's specific needs. The system includes comprehensive customer and sales cycle management, communication automation, and detailed analytics. It helps companies build stronger relationships with clients, optimize sales processes, and increase customer loyalty."
-    },
-    "project_5": {
-      "name": "AI automation",
-      "duration": "2024",
-      "client": "",
-      "description": "We implemented an AI solution that automates repetitive and time-consuming tasks. This artificial intelligence is capable of analyzing data, generating responses, and performing operations that previously required human intervention. The result is a significant increase in efficiency, a reduction in errors, and the freeing up of employee capacity for more creative and complex tasks."
     }
   },
+  "privacy_policy": {
+    "header_main": "Privacy Policy",
+    "last_update_text": "Last updated:",
+    "last_update_date": "August 22, 2025",
+    "sections": {
+        "section_1": {
+            "title": "1. Introductory Provisions",
+            "content": "<p>This Privacy Policy (hereinafter referred to as the „Policy“) describes how <strong>RegioPartner, s.r.o.</strong>, with its registered office at Kytlická 862/6, 190 00 Prague, ID No.: 25133161, VAT No.: CZ25133161, registered in the Commercial Register maintained by the Municipal Court in Prague, Section C, Insert 52029 (hereinafter referred to as „we“ or „Controller“), collects, uses, and protects personal data that you provide to us in connection with the use of our website and our services, particularly the advertising of digital products and services.</p><p>We are committed to protecting your privacy and process personal data in accordance with Regulation (EU) 2016/679 of the European Parliament and of the Council (hereinafter referred to as „GDPR“) and applicable legal regulations of the Czech Republic, especially Act No. 110/2019 Coll., on the Processing of Personal Data, as amended.</p><p>If you do not agree with this Policy, please do not use our website or services.</p>"
+        },
+        "section_2": {
+            "title": "2. Data Controller",
+            "content": "<p>The controller of your personal data is:</p><p><strong>RegioPartner, s.r.o.</strong><br>Registered Office: Kytlická 862/6, 190 00 Prague<br>ID No.: 25133161<br>VAT No.: CZ25133161<br>E-mail: <a href='mailto:info@rpsw.cz'>info&#64;rpsw.cz</a><br>Phone: +420 733 188 328</p><p>If you have any questions regarding the processing of personal data, please contact us at the e-mail address above.</p>"
+        },
+        "section_3": {
+            "title": "3. What Personal Data We Collect and Why",
+            "content": "<p>We collect and process personal data only for defined, legitimate purposes and to the extent necessary to fulfill those purposes.</p>",
+            "subsections": [
+                {
+                    "title": "3.1. Data Provided by You",
+                    "text": "We may collect personal data that you voluntarily provide to us, for example when:",
+                    "list": [
+                        "<strong>Placing an order for services:</strong> First name, last name, e-mail, phone. Purpose: Processing the order and providing the agreed service. Legal basis: Performance of a contract (Art. 6(1)(b) GDPR).",
+                        "<strong>Contacting us via form:</strong> Name, e-mail, phone, message content. Purpose: Answering inquiries, resolving requests, providing price offers. Legal basis: Legitimate interest (Art. 6(1)(f) GDPR) in effective communication with customers/users and pre-contractual negotiations.",
+                        "<strong>Subscribing to the newsletter:</strong> E-mail. Purpose: Sending commercial communications and news updates. Legal basis: Consent (Art. 6(1)(a) GDPR)."
+                    ]
+                },
+                {
+                    "title": "3.2. Automatically Collected Data",
+                    "text": "When using our website, we may automatically collect certain information, such as:",
+                    "list": [
+                        "<strong>IP address:</strong> Purpose: Website security, diagnostics, traffic statistics. Legal basis: Legitimate interest (Art. 6(1)(f) GDPR).",
+                        "<strong>Browser and device data:</strong> Browser type, operating system, language. Purpose: Ensuring correct website functionality, display optimization. Legal basis: Legitimate interest (Art. 6(1)(f) GDPR).",
+                        "<strong>Website traffic data (cookies and similar technologies):</strong> Pages viewed, time spent on page, referrals from other sites. Purpose: Improving website functionality, user behavior analysis. Legal basis: Consent (for marketing and analytical cookies, Art. 6(1)(a) GDPR), legitimate interest (for necessary cookies, Art. 6(1)(f) GDPR). More detailed information can be found in our Cookie Policy."
+                    ]
+                }
+            ]
+        },
+        "section_4": {
+            "title": "4. How Long We Retain Personal Data",
+            "content": "<p>We retain personal data only for as long as necessary to fulfill the purposes for which it was collected or for the period stipulated by legal regulations. The retention period varies depending on the type of data and the purpose of processing:</p><ul><li><strong>Data for contract performance:</strong> For the duration of the contractual relationship and subsequently for the period set by law for archiving accounting and tax documents (usually 10 years).</li><li><strong>Data for marketing purposes (newsletter):</strong> For the duration of your consent, at most 5 years from its granting, or until consent is withdrawn.</li><li><strong>Data from contact forms:</strong> For the time necessary to resolve your request, usually 1 year.</li><li><strong>Cookie data:</strong> Retention periods vary by cookie type (see our Cookie Policy).</li></ul><p>Upon expiry of the retention period, personal data is deleted or anonymized.</p>"
+        },
+        "section_5": {
+            "title": "5. To Whom We Transfer Personal Data (Recipients)",
+            "content": "<p>We transfer your personal data only to the necessary extent and only to verified entities based on a personal data processing agreement that ensures the same level of protection. This may include:</p><ul><li><strong>IT and Hosting Providers:</strong> To ensure the operation of the website and information systems. For example, <strong>INTERNET CZ, a.s.</strong>.</li><li><strong>Marketing and Analytical Service Providers:</strong> (e.g., Google Analytics, e-mail marketing tools).</li><li><strong>Payment Service Providers:</strong> For processing payments (e.g., banks, payment gateways).</li><li><strong>Accounting and Legal Advisors:</strong> For fulfilling legal obligations and defending legal claims.</li><li><strong>Public Authorities:</strong> In case of a legal obligation (e.g., courts, police, tax office).</li></ul><p>We do not transfer personal data to countries outside the European Union or the European Economic Area without ensuring adequate data protection safeguards (e.g., standard contractual clauses).</p>"
+        },
+        "section_6": {
+            "title": "6. Your Rights Regarding Data Processing",
+            "content": "<p>In accordance with the GDPR, you have the following rights:</p><ul><li><strong>Right of access</strong> (Art. 15 GDPR): The right to obtain confirmation as to whether or not your personal data is being processed and to access that data.</li><li><strong>Right to rectification</strong> (Art. 16 GDPR): The right to have inaccurate data corrected or incomplete data completed.</li><li><strong>Right to erasure</strong> (Right to be forgotten, Art. 17 GDPR): The right to have data deleted if legal grounds are met.</li><li><strong>Right to restriction of processing</strong> (Art. 18 GDPR): The right to limit the processing of your data.</li><li><strong>Right to data portability</strong> (Art. 20 GDPR): The right to receive your data in a structured, machine-readable format.</li><li><strong>Right to object</strong> (Art. 21 GDPR): The right to object to processing based on legitimate interest or for direct marketing.</li><li><strong>Right to withdraw consent</strong> (Art. 7(3) GDPR): The right to withdraw consent at any time.</li><li><strong>Right to lodge a complaint</strong> (Art. 77 GDPR): The right to lodge a complaint with a supervisory authority.</li></ul><p>Supervisory authority contact:<br><strong>Office for Personal Data Protection (ÚOOÚ)</strong><br>Pplk. Sochora 27, 170 00 Prague 7, Czech Republic<br>Phone: +420 234 665 800<br>Web: <a href='https://www.uoou.cz' target='_blank'>www.uoou.cz</a></p>"
+        },
+        "section_7": {
+            "title": "7. Personal Data Security",
+            "content": "<p>We have adopted appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction. These measures include: <strong>data encryption</strong> (SSL/TLS), operation on <strong>secure servers</strong> with regular audits, strict <strong>access control</strong> using strong passwords, <strong>regular data backups</strong>, and <strong>employee training</strong> in data security.</p>"
+        },
+        "section_8": {
+            "title": "8. Changes to This Policy",
+            "content": "<p>We may update this Policy from time to time. Any changes will be posted on this page with the last updated date. We recommend checking this page regularly to stay informed about how we are protecting your data.</p>"
+        }
+    },
+    "footer_effective": "This Privacy Policy takes effect on August 22, 2025."
+},
   "footer": {
     "company_name": "RegioPartner, s.r.o.",
     "address_label": "Address",
@@ -742,7 +784,7 @@
       }
     }
   },
-  "about-us": {
+  "about_us": {
     "header": "Additional Information",
     "paragraph_1": "The company Regiopartner s.r.o. has been active for more than 20 years in the field of evaluations and regional development planning. We focus on evaluating programs and projects financed from public funds and on strategic planning for territorial development. Thanks to this experience, we have built a stable foundation and professional know-how, on which we are gradually building new activities.",
     "paragraph_2": "In 2023, we therefore founded a new division, RPsoftware, which expands the company's activities towards modern technologies. RPsoftware builds on the previous IT support provided to the core company in the areas of survey research, statistical data processing, and other IT products. The new division focuses on software development and providing digital solutions, especially for small and medium-sized enterprises and also for individuals who need a reliable partner for their IT projects.",
@@ -769,6 +811,43 @@
   "sales-rep": {
     "title": "Business Development Representative",
     "content": "We are looking for an energetic and independent Business Development colleague to help us identify new business opportunities and expand our client portfolio. If you have excellent communication skills and enjoy connecting technical solutions with client needs, we are looking for you.<br><br><strong>Your Main Tasks:</strong><br>• Proactively searching for new client segments and establishing initial business contacts.<br>• Professionally negotiating offers and presenting our services as a modern technological partner.<br>• Maintaining relationships with key clients and partners.<br><br><strong>Expected Candidate Profile:</strong><br>• Age 18+ and professional demeanor in both online and personal communication.<br>• High level of inner discipline, independence, and effective self-management skills.<br>• Knowledge of social media environments as a tool for modern business is a great advantage.<br>• Ability to clearly and understandably interpret complex technical solutions.<br><br><strong>Offered Conditions:</strong><br>• Flexible cooperation via DPP with the possibility of full home-office work.<br>• Flexible working schedule that you can fully adapt to your time possibilities.<br>• Financial compensation with a significant variable component based on successfully closed deals."
+  }
+},
+"order_form": {
+  "header": "Inquiry Form",
+  "labels": {
+    "name": "Client Name",
+    "ico": "ID (IČO)",
+    "address": "Client Address",
+    "phone": "Client Phone",
+    "email": "Client Email",
+    "description": "Detailed Order Description",
+    "attachment": "Attachment max 10MB (all file types)",
+    "gdpr_consent": "I agree to the processing of personal data",
+    "gdpr_link": "Privacy Policy",
+    "tos_consent": "I agree to the terms of service",
+    "tos_link": "General Terms and Conditions (TOS)",
+    "required_info": "* Indicates a required field"
+  },
+  "placeholders": {
+    "phone": "+420...",
+    "file_drop": "Click or drag file here"
+  },
+  "errors": {
+    "ico_pattern": "ID must contain only digits.",
+    "phone_pattern": "Only digits and \"+\" at the start.",
+    "phone_max": "Maximum length is 20 characters.",
+    "email_invalid": "Enter a valid email.",
+    "submit_error": "Sorry, the inquiry could not be sent."
+  },
+  "buttons": {
+    "send": "Send Inquiry",
+    "sending": "Sending...",
+    "go_home": "Go Home"
+  },
+  "thank_you": {
+    "title": "Thank you for your inquiry",
+    "text": "A technician will contact you shortly to discuss a specific solution."
   }
 }
 }

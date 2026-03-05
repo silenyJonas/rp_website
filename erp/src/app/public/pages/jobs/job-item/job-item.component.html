@@ -1,10 +1,11 @@
-<div class="main-content">
+<div class="main-content" *ngIf="t">
   <div class="container-width-fix">
 
     <div class="header-1" *ngIf="job">{{ job.title }}</div>
+    <div class="header-1" *ngIf="!job">{{ t.not_found }}</div>
     
     <div class="content-display" *ngIf="job">
-      <a routerLink="/jobs" class="back-link">{{ back_link_text }}</a>
+      <a routerLink="/jobs" class="back-link">{{ t.back_link }}</a>
 
       <div class="paragraph-node" [innerHTML]="job.fullContent"></div>
       
@@ -19,7 +20,7 @@
               <div class="form-group">
                 <label>Jméno <span class="required-asterisk">*</span></label>
                 <input type="text" formControlName="first_name"
-                       [class.error-input]="applicationForm.get('first_name')?.invalid && applicationForm.get('first_name')?.value">
+                       [class.error-input]="applicationForm.get('first_name')?.invalid && applicationForm.get('first_name')?.touched">
                 <small class="error-msg" *ngIf="applicationForm.get('first_name')?.errors?.['required'] && applicationForm.get('first_name')?.touched">
                   Jméno je povinné.
                 </small>
@@ -27,7 +28,7 @@
               <div class="form-group">
                 <label>Příjmení <span class="required-asterisk">*</span></label>
                 <input type="text" formControlName="last_name"
-                       [class.error-input]="applicationForm.get('last_name')?.invalid && applicationForm.get('last_name')?.value">
+                       [class.error-input]="applicationForm.get('last_name')?.invalid && applicationForm.get('last_name')?.touched">
                 <small class="error-msg" *ngIf="applicationForm.get('last_name')?.errors?.['required'] && applicationForm.get('last_name')?.touched">
                   Příjmení je povinné.
                 </small>
@@ -38,8 +39,8 @@
               <div class="form-group">
                 <label>E-mail <span class="required-asterisk">*</span></label>
                 <input type="email" formControlName="email"
-                       [class.error-input]="applicationForm.get('email')?.invalid && applicationForm.get('email')?.value">
-                <small class="error-msg" *ngIf="applicationForm.get('email')?.errors?.['email']">
+                       [class.error-input]="applicationForm.get('email')?.invalid && applicationForm.get('email')?.touched">
+                <small class="error-msg" *ngIf="applicationForm.get('email')?.errors?.['email'] && applicationForm.get('email')?.touched">
                   Zadejte platnou e-mailovou adresu.
                 </small>
                 <small class="error-msg" *ngIf="applicationForm.get('email')?.errors?.['required'] && applicationForm.get('email')?.touched">
@@ -80,15 +81,12 @@
                   Souhlasím se <a routerLink="/privacy-policy" target="_blank" class="gdpr-link">zpracováním osobních údajů</a> *
                 </label>
               </div>
-              <small class="error-msg" *ngIf="applicationForm.get('dataProcessingAgreement')?.invalid && applicationForm.get('dataProcessingAgreement')?.touched">
-                Musíte souhlasit se zpracováním údajů.
-              </small>
             </div>
 
             <p class="required-info">* Označuje povinné pole</p>
 
             <button type="submit" [disabled]="applicationForm.invalid || !selectedFile || isLoading" class="submit-btn-skew">
-              <span>{{ isLoading ? 'Odesílám...' : 'Odeslat přihlášku' }}</span>
+              <span>{{ btnText }}</span>
             </button>
 
             <div *ngIf="errorMessage" class="message-box error-msg">{{ errorMessage }}</div>

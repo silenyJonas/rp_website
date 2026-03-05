@@ -1,66 +1,66 @@
-<div class="form-wrp">
+<div class="form-wrp" *ngIf="f">
   <div class="contact-form">
     
     <ng-container *ngIf="!isSubmitted; else thankYouMessage">
-      <h2>Poptávkový formulář</h2>
+      <h2>{{ f.header }}</h2>
       
       <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
         <input type="hidden" formControlName="lead_id">
 
         <div class="form-group">
-          <label>Jméno klienta <span class="required-asterisk">*</span></label>
+          <label>{{ f.labels.name }} <span class="required-asterisk">*</span></label>
           <input type="text" formControlName="client_name">
         </div>
 
         <div class="form-group">
-          <label>IČO</label>
+          <label>{{ f.labels.ico }}</label>
           <input type="text" formControlName="ico" 
                  [class.error-input]="orderForm.get('ico')?.invalid && orderForm.get('ico')?.dirty">
           <small class="error-msg" *ngIf="orderForm.get('ico')?.errors?.['pattern']">
-            IČO musí obsahovat pouze číslice.
+            {{ f.errors.ico_pattern }}
           </small>
         </div>
 
         <div class="form-group">
-          <label>Adresa klienta</label>
+          <label>{{ f.labels.address }}</label>
           <input type="text" formControlName="client_address">
         </div>
 
-        <div class="mobile-flex-stack" style="display: flex; gap: 20px;">
-          <div class="form-group" style="flex: 1;">
-            <label>Telefon klienta</label>
+        <div class="mobile-flex-stack">
+          <div class="form-group flex-1">
+            <label>{{ f.labels.phone }}</label>
             <input type="text" formControlName="client_phone" 
-                   placeholder="+420..."
+                   [placeholder]="f.placeholders.phone"
                    maxlength="20"
                    [class.error-input]="orderForm.get('client_phone')?.invalid && orderForm.get('client_phone')?.dirty">
             <small class="error-msg" *ngIf="orderForm.get('client_phone')?.errors?.['pattern']">
-              Pouze číslice a "+" na začátku.
+              {{ f.errors.phone_pattern }}
             </small>
             <small class="error-msg" *ngIf="orderForm.get('client_phone')?.errors?.['maxlength']">
-              Maximální délka je 20 znaků.
+              {{ f.errors.phone_max }}
             </small>
           </div>
-          <div class="form-group" style="flex: 1;">
-            <label>Email klienta<span class="required-asterisk">*</span></label>
+          <div class="form-group flex-1">
+            <label>{{ f.labels.email }} <span class="required-asterisk">*</span></label>
             <input type="email" formControlName="client_email"
                    [class.error-input]="orderForm.get('client_email')?.invalid && orderForm.get('client_email')?.dirty">
             <small class="error-msg" *ngIf="orderForm.get('client_email')?.errors?.['email'] && orderForm.get('client_email')?.dirty">
-              Zadejte platný email.
+              {{ f.errors.email_invalid }}
             </small>
           </div>
         </div>
 
         <div class="form-group">
-          <label>Detailní popis objednávky <span class="required-asterisk">*</span></label>
+          <label>{{ f.labels.description }} <span class="required-asterisk">*</span></label>
           <textarea formControlName="order_description" rows="4"></textarea>
         </div>
 
         <div class="form-group">
-            <label>Příloha max 10MB (všechny typy souborů)</label>
+            <label>{{ f.labels.attachment }}</label>
             <div class="file-drop-area" [class.has-file]="selectedFile">
                 <span class="file-msg">
-                <span class="upload-icon">{{ selectedFile ? '✓' : '+' }}</span> 
-                <span class="file-text">{{ selectedFile ? selectedFile.name : 'Klikněte nebo přetáhněte soubor sem' }}</span>
+                  <span class="upload-icon">{{ selectedFile ? '✓' : '+' }}</span> 
+                  <span class="file-text">{{ selectedFile ? selectedFile.name : f.placeholders.file_drop }}</span>
                 </span>
                 <input type="file" class="file-input" (change)="onFileSelected($event)">
             </div>
@@ -70,21 +70,23 @@
           <div class="checkbox-group">
             <input type="checkbox" id="dataProcessingAgreement" formControlName="dataProcessingAgreement">
             <label for="dataProcessingAgreement">
-              Souhlasím se zpracováním osobních údajů <span class="required-asterisk">*</span>
+              {{ f.labels.gdpr_consent }} <span class="required-asterisk">*</span>
             </label>
           </div>
-          <a routerLink="/privacy-policy" target="_blank" class="privacy-policy-link">Zásady ochrany osobních údajů</a>
+          <a routerLink="/privacy-policy" target="_blank" class="privacy-policy-link">{{ f.labels.gdpr_link }}</a>
 
-          <div class="checkbox-group" style="margin-top: 15px;">
+          <div class="checkbox-group mt-15">
             <input type="checkbox" id="tosAgreement" formControlName="tosAgreement">
             <label for="tosAgreement">
-              Souhlasím s obchodními podmínkami <span class="required-asterisk">*</span>
+              {{ f.labels.tos_consent }} <span class="required-asterisk">*</span>
             </label>
           </div>
-          <a routerLink="/tos" target="_blank" class="privacy-policy-link">Všeobecné obchodní podmínky (TOS)</a>
+          <a routerLink="/tos" target="_blank" class="privacy-policy-link">{{ f.labels.tos_link }}</a>
         </div>
 
-        <p class="required-info">* Označuje povinné pole</p>
+        <p class="required-info">{{ f.labels.required_info }}</p>
+
+        <div *ngIf="errorMessage" class="error-msg-main">{{ errorMessage }}</div>
 
         <button type="submit" class="submit-btn" [disabled]="orderForm.invalid || isLoading">
           <span>{{ btnText }}</span>
@@ -95,12 +97,12 @@
     <ng-template #thankYouMessage>
       <div class="success-container">
         <div class="success-icon">✓</div>
-        <h2>Děkujeme za odeslání poptávky</h2>
+        <h2>{{ f.thank_you.title }}</h2>
         <p class="success-text">
-          V nejbližší době vás bude kontaktovat technik, který s vámi dohodne konkrétní řešení.
+          {{ f.thank_you.text }}
         </p>
         <button class="submit-btn" routerLink="/home">
-          <span>Odejít domů</span>
+          <span>{{ f.buttons.go_home }}</span>
         </button>
       </div>
     </ng-template>

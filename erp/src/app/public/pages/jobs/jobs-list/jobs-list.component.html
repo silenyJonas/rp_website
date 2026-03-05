@@ -1,6 +1,6 @@
-<div class="main-content">
+<div class="main-content" *ngIf="t">
   <div class="jobs-section">
-    <div class="header-1">{{ header_1_text }}</div>
+    <div class="header-1">{{ t.careers.header_1 }}</div>
 
     <div class="jobs-container">
       <div *ngFor="let job of availableJobs; let i = index"
@@ -24,7 +24,7 @@
 
   <div class="write-us-wrp">
     <div class="write-us-text">
-      {{ write_us_prompt_text }}
+      {{ t.careers.write_us_prompt }}
     </div>
     <div class="write-us-icons">
       <a href="https://www.instagram.com/rpsw.cz" target="_blank" class="icon-wrp">

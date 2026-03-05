@@ -1,82 +1,63 @@
-<div class="header-1">{{ header1 }}</div>
-<div class="header-0-2-t">{{ header02T }}</div>
+<div *ngIf="s">
+    <div class="header-1">{{ s.header1 }}</div>
+    <div class="header-0-2-t">{{ s.header02T }}</div>
 
-<div class="main-content">
-    <div class="content-wrp">
-        <div class="filter-wrp">
-            <form class="finder" (submit)="onSearch($event)">
-                <input type="text" [placeholder]="searchPlaceholder" class="search-input" name="searchInput" [(ngModel)]="searchQuery">
-                <button type="submit" class="search-button" aria-label="Najít">
-                    <img [src]="search_icon" alt="Search Icon">
-                </button>
-            </form>
+    <div class="main-content">
+        <div class="content-wrp">
+            <div class="filter-wrp">
+                <form class="finder" (submit)="onSearch($event)">
+                    <input type="text" [placeholder]="s.searchPlaceholder" class="search-input" name="searchInput" [(ngModel)]="searchQuery">
+                    <button type="submit" class="search-button">
+                        <img [src]="search_icon" alt="Search">
+                    </button>
+                </form>
 
-            <form class="filter" (submit)="onFilter($event)">
-                <div class="filter-group">
-                    <label for="sort-order">{{ sortByLabel }}</label>
-                    <select name="sortOrder" id="sort-order" [(ngModel)]="selectedSortOrder">
-                        <option value="">{{ sortByDefaultOption }}</option>
-                        <option value="az">{{ sortByAz }}</option>
-                        <option value="za">{{ sortByZa }}</option>
-                        <option value="price-desc">{{ sortByPriceDesc }}</option>
-                        <option value="price-asc">{{ sortByPriceAsc }}</option>
-                    </select>
-                </div>
-                
-                <div class="result">
-                    {{ resultsCountText }} {{ allFilteredAndSortedProducts.length }} {{ productsSuffix }}
-                </div>
-                <div class="btn-wrp-form-s">
-                    <button type="submit" class="filter-button">{{ filterButtonText }}</button>
-                    <button type="button" class="reset-button" (click)="onReset()">{{ resetButtonText }}</button>
-                </div>
-            </form>
-
-            <div class="money-form-wrp">
-                <form class="money-form">
-                    <div class="currency-slider-track" #currencySliderTrack>
-                        <span
-                            class="currency-label"
-                            data-currency="czk"
-                            (click)="selectCurrency('czk')"
-                            [ngClass]="{'active': currentCurrency === 'czk'}"
-                        >CZK</span>
-                        <span
-                            class="currency-label"
-                            data-currency="eur"
-                            (click)="selectCurrency('eur')"
-                            [ngClass]="{'active': currentCurrency === 'eur'}"
-                        >EUR</span>
-                        <div class="currency-slider" #currencySlider></div>
+                <form class="filter" (submit)="onFilter($event)">
+                    <div class="filter-group">
+                        <label for="sort-order">{{ s.sortByLabel }}</label>
+                        <select name="sortOrder" id="sort-order" [(ngModel)]="selectedSortOrder">
+                            <option value="">{{ s.sortByDefaultOption }}</option>
+                            <option value="az">{{ s.sortByAz }}</option>
+                            <option value="za">{{ s.sortByZa }}</option>
+                            <option value="price-desc">{{ s.sortByPriceDesc }}</option>
+                            <option value="price-asc">{{ s.sortByPriceAsc }}</option>
+                        </select>
+                    </div>
+                    
+                    <div class="result">
+                        {{ s.resultsCountText }} {{ allFilteredAndSortedProducts.length }} {{ s.productsSuffix }}
+                    </div>
+                    <div class="btn-wrp-form-s">
+                        <button type="submit" class="filter-button">{{ s.filterButtonText }}</button>
+                        <button type="button" class="reset-button" (click)="onReset()">{{ s.resetButtonText }}</button>
                     </div>
                 </form>
-            </div>
-        </div>
 
-        <div class="prod-wrp" #prodWrp>
-            <app-product-card-list [products]="paginatedProducts"></app-product-card-list>
-
-            <div *ngIf="paginatedProducts.length === 0" class="msg-wrp">
-                
-                <p class="msg-text">{{ noProductsMessage }}</p>
-            </div>
-
-            <div class="pages-wrp" *ngIf="totalPages > 1">
-                <div class="pages">
-                    <div class="left-arrow" [class.disabled]="currentPage === 1" (click)="prevPage()">
-                        &lt;
-                    </div>
-                    <div class="pages-count">
-                        <div 
-                            class="page-1" 
-                            *ngFor="let page of pagesToShow" 
-                            [class.active]="page === currentPage" 
-                            (click)="goToPage(page)">
-                            {{ page }}
+                <div class="money-form-wrp">
+                    <form class="money-form">
+                        <div class="currency-slider-track" #currencySliderTrack>
+                            <span class="currency-label" data-currency="czk" (click)="selectCurrency('czk')" [ngClass]="{'active': currentCurrency === 'czk'}">CZK</span>
+                            <span class="currency-label" data-currency="eur" (click)="selectCurrency('eur')" [ngClass]="{'active': currentCurrency === 'eur'}">EUR</span>
+                            <div class="currency-slider" #currencySlider></div>
                         </div>
-                    </div>
-                    <div class="right-arrow" [class.disabled]="currentPage === totalPages" (click)="nextPage()">
-                        &gt;
+                    </form>
+                </div>
+            </div>
+
+            <div class="prod-wrp" #prodWrp>
+                <app-product-card-list [products]="paginatedProducts"></app-product-card-list>
+
+                <div *ngIf="paginatedProducts.length === 0" class="msg-wrp">
+                    <p class="msg-text">{{ s.noProductsMessage }}</p>
+                </div>
+
+                <div class="pages-wrp" *ngIf="totalPages > 1">
+                    <div class="pages">
+                        <div class="left-arrow" [class.disabled]="currentPage === 1" (click)="prevPage()">&lt;</div>
+                        <div class="pages-count">
+                            <div class="page-1" *ngFor="let page of pagesToShow" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</div>
+                        </div>
+                        <div class="right-arrow" [class.disabled]="currentPage === totalPages" (click)="nextPage()">&gt;</div>
                     </div>
                 </div>
             </div>

@@ -12,15 +12,14 @@ import { LocalizationService } from '../../services/localization.service';
 @Component({
   selector: 'app-shop',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ProductCardListComponent
-  ],
+  imports: [CommonModule, FormsModule, ProductCardListComponent],
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.css']
 })
 export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
+  // Jediná proměnná pro veškerý lokalizovaný obsah (texty i produkty)
+  s: any = null;
+
   priceRangeValue: number = 0;
   selectedSortOrder: string = '';
   searchQuery: string = '';
@@ -31,8 +30,6 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('prodWrp') prodWrp!: ElementRef;
 
   currentCurrency: 'czk' | 'eur' = 'czk';
-
-  shopProducts: Product[] = [];
   allFilteredAndSortedProducts: Product[] = [];
   paginatedProducts: Product[] = [];
 
@@ -42,31 +39,15 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
   pagesToShow: number[] = [];
 
   private exchangeRates = {
-    'czk': { toEUR: 0.040, symbol: ' Kč' },
-    'eur': { toCZK: 24.5, symbol: ' €' }
+    'czk': { symbol: ' Kč' },
+    'eur': { symbol: ' €' }
   };
-
-  header1: string = '';
-  header02T: string = '';
-  searchPlaceholder: string = '';
-  sortByLabel: string = '';
-  sortByDefaultOption: string = '';
-  sortByAz: string = '';
-  sortByZa: string = '';
-  sortByPriceDesc: string = '';
-  sortByPriceAsc: string = '';
-  resultsCountText: string = '';
-  productsSuffix: string = '';
-  filterButtonText: string = '';
-  resetButtonText: string = '';
-  noProductsMessage: string = '';
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private localizationService: LocalizationService,
-    private http: HttpClient
+    private localizationService: LocalizationService
   ) { }
 
   ngOnInit(): void {
@@ -74,14 +55,10 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(translations => {
         if (translations && translations.shop) {
-          this.loadLocalizedContent();
-          this.shopProducts = translations.shop.products_data || [];
-          this.applyFilters();
-          this.cdr.detectChanges();
-        } else {
-          console.warn('ShopComponent: Objekt "shop" nebo "products_data" nebyl nalezen v překladech.');
-          this.shopProducts = [];
-          this.loadLocalizedContent();
+          // Načtení celého objektu shop do proměnné 's'
+          this.s = translations.shop;
+          
+          // Reset filtrace při změně jazyka/překladů
           this.applyFilters();
           this.cdr.detectChanges();
         }
@@ -93,25 +70,8 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private loadLocalizedContent(): void {
-    this.header1 = this.localizationService.getText('shop.header1');
-    this.header02T = this.localizationService.getText('shop.header02T');
-    this.searchPlaceholder = this.localizationService.getText('shop.searchPlaceholder');
-    this.sortByLabel = this.localizationService.getText('shop.sortByLabel');
-    this.sortByDefaultOption = this.localizationService.getText('shop.sortByDefaultOption');
-    this.sortByAz = this.localizationService.getText('shop.sortByAz');
-    this.sortByZa = this.localizationService.getText('shop.sortByZa');
-    this.sortByPriceDesc = this.localizationService.getText('shop.sortByPriceDesc');
-    this.sortByPriceAsc = this.localizationService.getText('shop.sortByPriceAsc');
-    this.resultsCountText = this.localizationService.getText('shop.resultsCountText');
-    this.productsSuffix = this.localizationService.getText('shop.productsSuffix');
-    this.filterButtonText = this.localizationService.getText('shop.filterButtonText');
-    this.resetButtonText = this.localizationService.getText('shop.resetButtonText');
-    this.noProductsMessage = this.localizationService.getText('shop.noProductsMessage');
-  }
-
   ngAfterViewInit(): void {
-    this.updateSliderPosition();
+    setTimeout(() => this.updateSliderPosition(), 0);
   }
 
   selectCurrency(currency: 'czk' | 'eur'): void {
@@ -124,136 +84,85 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updateSliderPosition(): void {
-    if (!this.currencySliderTrack || !this.currencySlider) {
-      console.error('updateSliderPosition: Currency switcher elements are unavailable.');
-      return;
-    }
+    if (!this.currencySliderTrack || !this.currencySlider) return;
+    const track = this.currencySliderTrack.nativeElement;
+    const slider = this.currencySlider.nativeElement;
+    const activeLabel = track.querySelector(`[data-currency="${this.currentCurrency}"]`) as HTMLElement;
 
-    const sliderTrackElement = this.currencySliderTrack.nativeElement;
-    const sliderElement = this.currencySlider.nativeElement;
-    const activeLabelElement = sliderTrackElement.querySelector(`[data-currency="${this.currentCurrency}"]`) as HTMLElement;
-
-    if (activeLabelElement) {
-      const targetLeft = activeLabelElement.offsetLeft;
-      const targetWidth = activeLabelElement.offsetWidth;
-
-      sliderElement.style.left = `${targetLeft}px`;
-      sliderElement.style.width = `${targetWidth}px`;
-
-      sliderTrackElement.querySelectorAll('.currency-label').forEach((label: HTMLElement) => {
-        if (label.dataset['currency'] === this.currentCurrency) {
-          label.classList.add('active');
-        } else {
-          label.classList.remove('active');
-        }
-      });
+    if (activeLabel) {
+      slider.style.left = `${activeLabel.offsetLeft}px`;
+      slider.style.width = `${activeLabel.offsetWidth}px`;
       this.cdr.detectChanges();
-    } else {
-      console.error(`updateSliderPosition: Could not find active label element for currency: ${this.currentCurrency}`);
     }
   }
 
   private formatPrice(price: number, currency: 'czk' | 'eur'): string {
-    const symbol = this.exchangeRates[currency].symbol;
     const options: Intl.NumberFormatOptions = {
       minimumFractionDigits: (currency === 'eur') ? 2 : 0,
       maximumFractionDigits: (currency === 'eur') ? 2 : 0,
     };
-
-    let formattedValue: string;
-    if (currency === 'czk') {
-      formattedValue = price.toLocaleString('cs-CZ', options);
-    } else {
-      formattedValue = price.toLocaleString('en-US', options);
-    }
-    return `${formattedValue}${symbol}`;
+    const locale = (currency === 'czk') ? 'cs-CZ' : 'en-US';
+    const formatted = price.toLocaleString(locale, options);
+    return `${formatted}${this.exchangeRates[currency].symbol}`;
   }
 
   applyFilters(): void {
-    let tempProducts = [...this.shopProducts];
+    if (!this.s || !this.s.products_data) return;
+
+    let tempProducts = [...this.s.products_data];
 
     if (this.searchQuery) {
-      const lowerCaseQuery = this.searchQuery.toLowerCase();
-      tempProducts = tempProducts.filter(product =>
-        product.name.toLowerCase().includes(lowerCaseQuery) ||
-        product.shortDescription.toLowerCase().includes(lowerCaseQuery)
+      const query = this.searchQuery.toLowerCase();
+      tempProducts = tempProducts.filter(p =>
+        p.name.toLowerCase().includes(query) ||
+        p.shortDescription.toLowerCase().includes(query)
       );
     }
 
     if (this.selectedSortOrder) {
       tempProducts.sort((a, b) => {
-        const priceA = (this.currentCurrency === 'czk' ? a.priceCZK : a.priceEUR) || 0;
-        const priceB = (this.currentCurrency === 'czk' ? b.priceCZK : b.priceEUR) || 0;
-
+        const pA = (this.currentCurrency === 'czk' ? a.priceCZK : a.priceEUR) || 0;
+        const pB = (this.currentCurrency === 'czk' ? b.priceCZK : b.priceEUR) || 0;
         switch (this.selectedSortOrder) {
           case 'az': return a.name.localeCompare(b.name);
           case 'za': return b.name.localeCompare(a.name);
-          case 'price-asc': return priceA - priceB;
-          case 'price-desc': return priceB - priceA;
+          case 'price-asc': return pA - pB;
+          case 'price-desc': return pB - pA;
           default: return 0;
         }
       });
     }
 
-    this.allFilteredAndSortedProducts = tempProducts.map(product => {
-      const displayPrice = (this.currentCurrency === 'czk') ? product.priceCZK : product.priceEUR;
-      return {
-        ...product,
-        price: this.formatPrice(displayPrice, this.currentCurrency)
-      };
-    });
+    this.allFilteredAndSortedProducts = tempProducts.map(p => ({
+      ...p,
+      price: this.formatPrice((this.currentCurrency === 'czk' ? p.priceCZK : p.priceEUR), this.currentCurrency)
+    }));
 
     this.totalPages = Math.ceil(this.allFilteredAndSortedProducts.length / this.itemsPerPage);
-    if (this.currentPage > this.totalPages && this.totalPages > 0) {
-        this.currentPage = this.totalPages;
-    } else if (this.totalPages === 0) {
-        this.currentPage = 1;
-    }
     this.updatePaginatedProducts();
     this.generatePageNumbers();
-
     this.cdr.detectChanges();
   }
 
   private updatePaginatedProducts(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedProducts = this.allFilteredAndSortedProducts.slice(startIndex, endIndex);
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    this.paginatedProducts = this.allFilteredAndSortedProducts.slice(start, start + this.itemsPerPage);
   }
 
   private generatePageNumbers(): void {
-    this.pagesToShow = [];
-    for (let i = 1; i <= this.totalPages; i++) {
-      this.pagesToShow.push(i);
-    }
+    this.pagesToShow = Array.from({length: this.totalPages}, (_, i) => i + 1);
   }
 
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
       this.currentPage = page;
       this.updatePaginatedProducts();
-      this.cdr.detectChanges();
       this.scrollToProdWrp();
     }
   }
 
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-      this.updatePaginatedProducts();
-      this.cdr.detectChanges();
-      this.scrollToProdWrp();
-    }
-  }
-
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.updatePaginatedProducts();
-      this.cdr.detectChanges();
-      this.scrollToProdWrp();
-    }
-  }
+  nextPage(): void { if (this.currentPage < this.totalPages) this.goToPage(this.currentPage + 1); }
+  prevPage(): void { if (this.currentPage > 1) this.goToPage(this.currentPage - 1); }
 
   private scrollToProdWrp(): void {
     if (window.innerWidth < 1375 && this.prodWrp) {
@@ -261,17 +170,8 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  onSearch(event: Event): void {
-    event.preventDefault();
-    this.currentPage = 1;
-    this.applyFilters();
-  }
-
-  onFilter(event: Event): void {
-    event.preventDefault();
-    this.currentPage = 1;
-    this.applyFilters();
-  }
+  onSearch(event: Event): void { event.preventDefault(); this.currentPage = 1; this.applyFilters(); }
+  onFilter(event: Event): void { event.preventDefault(); this.currentPage = 1; this.applyFilters(); }
 
   onReset(): void {
     this.searchQuery = '';

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { finalize, takeUntil } from 'rxjs/operators';
-
 import { BaseDataComponent } from '../../../../admin/components/base-data/base-data.component';
 import { DataHandler } from '../../../../core/services/data-handler.service';
 import { GenericTableService } from '../../../../core/services/generic-table.service';
@@ -22,7 +21,7 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
   
   applicationForm!: FormGroup;
   job: any = null;
-  back_link_text: string = '';
+  t: any = null; // Celý job_detail objekt
   isSubmitted = false;
   selectedFile: File | null = null;
 
@@ -43,7 +42,8 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
     this.localizationService.currentTranslations$
       .pipe(takeUntil(this.destroy$))
       .subscribe(translations => {
-        if (translations && Object.keys(translations).length > 0) {
+        if (translations?.job_detail) {
+          this.t = translations.job_detail;
           this.loadJobData();
           this.cd.markForCheck();
         }
@@ -61,9 +61,9 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
     });
   }
 
+  // Pomocná metoda pro tlačítko (logika zachována)
   get btnText(): string {
-    if (this.isLoading) return 'Odesílám...';
-    return this.localizationService.getText('job_detail.form.submit_btn') || 'Odeslat přihlášku';
+    return this.isLoading ? 'Odesílám...' : 'Odeslat přihlášku';
   }
 
   onFileSelected(event: any): void {
@@ -85,7 +85,6 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
     this.cd.markForCheck();
 
     const formData = new FormData();
-    
     Object.keys(this.applicationForm.value).forEach(key => {
       const value = this.applicationForm.value[key];
       if (value !== null && value !== undefined) {
@@ -94,9 +93,7 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
       }
     });
 
-    if (this.job) {
-      formData.append('position_name', this.job.title);
-    }
+    if (this.job) formData.append('position_name', this.job.title);
     formData.append('cv_file', this.selectedFile, this.selectedFile.name);
 
     this.uploadData<any>(formData).pipe(
@@ -112,21 +109,18 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
       },
       error: (err) => {
         this.errorMessage = 'Omlouváme se, přihlášku se nepodařilo odeslat. Zkuste to prosím později.';
-        console.error('Chyba při odesílání přihlášky:', err);
+        this.cd.markForCheck();
       }
     });
   }
 
   private loadJobData(): void {
     const jobId = this.route.snapshot.paramMap.get('id');
-    this.back_link_text = this.localizationService.getText('job_detail.back_link');
-    
-    if (jobId) {
-      const title = this.localizationService.getText(`job_detail.${jobId}.title`);
-      const content = this.localizationService.getText(`job_detail.${jobId}.content`);
-      if (title && content) {
-        this.job = { title, fullContent: content };
-      }
+    if (jobId && this.t[jobId]) {
+      this.job = { 
+        title: this.t[jobId].title, 
+        fullContent: this.t[jobId].content 
+      };
     }
   }
 }
