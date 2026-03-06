@@ -1,5 +1,4 @@
-
-<form class="generic-form-container" (ngSubmit)="onSubmit()" #dynamicForm="ngForm">
+<form class="generic-form-container" (ngSubmit)="onSubmit()" #dynamicForm="ngForm" *ngIf="t">
   <div class="form-blur-wrapper" [class.blurred]="!isOpen">
     <div class="form-header">
       <h2>{{form_header}}</h2>
@@ -7,9 +6,9 @@
     </div>
 
     <div *ngIf="successMessage" class="success-message-in-form">
-      <h2 class="success-message-title">{{ internal_success_title }}</h2>
+      <h2 class="success-message-title">{{ t.success_title }}</h2>
       <p class="success-message-text">{{ successMessage }}</p>
-      <button class="back-to-form-button" (click)="onReset()">{{ internal_reset_button_text }}</button>
+      <button type="button" class="back-to-form-button" (click)="onReset()">{{ t.reset_button_text }}</button>
     </div>
 
     <div *ngIf="!successMessage">
@@ -56,9 +55,8 @@
             [name]="field.name"
             [(ngModel)]="formData[field.name]"
             [required]="field.required ?? false"
-            [disabled]="(field.disabled ?? false) || isLoading || !isOpen"
-            [attr.aria-describedby]="field.name + '-error'" >
-            <option *ngIf="!field.required" [value]="null">{{ internal_select_default_option }}</option>
+            [disabled]="(field.disabled ?? false) || isLoading || !isOpen">
+            <option *ngIf="!field.required" [value]="null">{{ t.select_default_option }}</option>
             <option *ngFor="let option of field.options" [value]="option.value">
               {{ option.label }}
             </option>
@@ -75,8 +73,7 @@
                 [value]="option.value"
                 [(ngModel)]="formData[field.name]"
                 [required]="field.required ?? false"
-                [disabled]="(field.disabled ?? false) || isLoading || !isOpen"
-                [attr.aria-describedby]="field.name + '-error'" >
+                [disabled]="(field.disabled ?? false) || isLoading || !isOpen">
               <label [for]="field.name + '_' + option.value">{{ option.label }}</label>
             </div>
           </div>
@@ -90,8 +87,7 @@
               [name]="field.name"
               [(ngModel)]="formData[field.name]"
               [required]="field.required ?? false"
-              [disabled]="(field.disabled ?? false) || isLoading || !isOpen"
-              [attr.aria-describedby]="field.name + '-error'" >
+              [disabled]="(field.disabled ?? false) || isLoading || !isOpen">
             <label [for]="field.name">{{ field.placeholder || field.label }}</label>
           </div>
         </ng-container>
@@ -105,32 +101,30 @@
         </div>
       </div>
 
-<div class="form-group">
-  <div class="checkbox-group">
-    <input
-      type="checkbox"
-      id="dataProcessingAgreement"
-      name="dataProcessingAgreement"
-      [(ngModel)]="formData['dataProcessingAgreement']"
-      required
-      [disabled]="isLoading || !isOpen"
-    >
-    <label for="dataProcessingAgreement">
-      {{consent}}
-      <span class="required-asterisk">*</span>
-    </label>
-    
-  </div>
-  <a routerLink="/privacy-policy" target="_blank" class="privacy-policy-link">
-      {{privacy_policy_link}}
-  </a>
-  <div
-    *ngIf="dynamicForm.controls['dataProcessingAgreement']?.invalid && (dynamicForm.controls['dataProcessingAgreement']?.dirty || dynamicForm.controls['dataProcessingAgreement']?.touched)"
-    class="validation-error"
-  >
-    {{ validation_required }}
-  </div>
-</div>
+      <div class="form-group">
+        <div class="checkbox-group">
+          <input
+            type="checkbox"
+            id="dataProcessingAgreement"
+            name="dataProcessingAgreement"
+            [(ngModel)]="formData['dataProcessingAgreement']"
+            required
+            [disabled]="isLoading || !isOpen"
+          >
+          <label for="dataProcessingAgreement">
+            {{ t.consent }} <span class="required-asterisk">*</span>
+          </label>
+        </div>
+        <a routerLink="/privacy-policy" target="_blank" class="privacy-policy-link">
+            {{ t.privacy_policy_link }}
+        </a>
+        <div
+          *ngIf="dynamicForm.controls['dataProcessingAgreement']?.invalid && (dynamicForm.controls['dataProcessingAgreement']?.dirty || dynamicForm.controls['dataProcessingAgreement']?.touched)"
+          class="validation-error"
+        >
+          {{ t.validation_required }}
+        </div>
+      </div>
 
       <div *ngIf="errorMessage" class="error-message">
         {{ errorMessage }}
@@ -138,8 +132,8 @@
 
       <div class="form-buttons">
         <button type="submit" [disabled]="!dynamicForm.form.valid || isLoading || !isOpen">
-          <span *ngIf="!isLoading">{{form_button}}</span>
-          <span *ngIf="isLoading">{{ internal_sending_text }}</span>
+          <span *ngIf="!isLoading">{{ form_button }}</span>
+          <span *ngIf="isLoading">{{ t.sending_text }}</span>
         </button>
       </div>
     </div>

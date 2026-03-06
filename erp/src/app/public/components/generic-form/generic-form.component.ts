@@ -1,4 +1,3 @@
-
 import {
   Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy,
   ChangeDetectorRef, OnChanges, SimpleChanges
@@ -14,11 +13,7 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-generic-form',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule 
-  ],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './generic-form.component.html',
   styleUrl: './generic-form.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -42,35 +37,11 @@ export class GenericFormComponent implements OnInit, OnDestroy, OnChanges {
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
+  // Jeden objekt pro všechny překlady (včetně validací)
+  t: any = null;
+
   private destroy$ = new Subject<void>();
-  internal_success_title: string = '';
-  internal_success_message: string = '';
-  internal_reset_button_text: string = '';
-  internal_sending_text: string = '';
-  internal_error_submit_generic: string = '';
-  internal_error_validation_generic: string = '';
-  internal_select_default_option: string = '';
-  internal_closed_title: string = '';
-  consent: string = '';
-  privacy_policy_link: string = '';
-
-
-
   closed_form_icon_link: string = 'assets/images/icons/closed-form-icon.png';
-
-  validation_required: string = '';
-  validation_email: string = '';
-  validation_pattern: string = '';
-  validation_minlength_prefix: string = '';
-  validation_minlength_suffix: string = '';
-  validation_maxlength_prefix: string = '';
-  validation_maxlength_suffix: string = '';
-  validation_min_prefix: string = '';
-  validation_min_suffix: string = '';
-  validation_max_prefix: string = '';
-  validation_max_suffix: string = '';
-  validation_invalid_value: string = '';
-
   translatedFormConfig: FormFieldConfig[] = [];
 
   constructor(private cd: ChangeDetectorRef, private localizationService: LocalizationService) {}
@@ -78,49 +49,26 @@ export class GenericFormComponent implements OnInit, OnDestroy, OnChanges {
   ngOnInit(): void {
     this.localizationService.currentTranslations$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.loadTranslatedTexts();
-        this.translateFormConfig();
-        this.initializeFormData();
-        this.cd.detectChanges();
+      .subscribe(translations => {
+        if (translations?.form) {
+          this.t = translations.form;
+          this.translateFormConfig();
+          this.initializeFormData();
+          this.cd.markForCheck(); // Šetrnější než detectChanges, řeší lagování
+        }
       });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-      if (changes['isOpen'] || changes['closedMessage']) {
-          this.cd.detectChanges();
-      }
+    if (changes['isOpen'] || changes['closedMessage'] || changes['formConfig']) {
+      if (this.t) this.translateFormConfig();
+      this.cd.markForCheck();
+    }
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  private loadTranslatedTexts(): void {
-    this.consent = this.localizationService.getText('form.consent');
-    this.privacy_policy_link = this.localizationService.getText('form.privacy_policy_link');
-    this.internal_success_title = this.localizationService.getText('form.success_title');
-    this.internal_success_message = this.localizationService.getText('form.success_message');
-    this.internal_reset_button_text = this.localizationService.getText('form.reset_button_text');
-    this.internal_sending_text = this.localizationService.getText('form.sending_text');
-    this.internal_error_submit_generic = this.localizationService.getText('form.error_submit_generic');
-    this.internal_error_validation_generic = this.localizationService.getText('form.error_validation_generic');
-    this.internal_select_default_option = this.localizationService.getText('form.select_default_option');
-    this.internal_closed_title = this.localizationService.getText('form.closed_title');
-
-    this.validation_required = this.localizationService.getText('form.validation_required');
-    this.validation_email = this.localizationService.getText('form.validation_email');
-    this.validation_pattern = this.localizationService.getText('form.validation_pattern');
-    this.validation_minlength_prefix = this.localizationService.getText('form.validation_minlength_prefix');
-    this.validation_minlength_suffix = this.localizationService.getText('form.validation_minlength_suffix');
-    this.validation_maxlength_prefix = this.localizationService.getText('form.validation_maxlength_prefix');
-    this.validation_maxlength_suffix = this.localizationService.getText('form.validation_maxlength_suffix');
-    this.validation_min_prefix = this.localizationService.getText('form.validation_min_prefix');
-    this.validation_min_suffix = this.localizationService.getText('form.validation_min_suffix');
-    this.validation_max_prefix = this.localizationService.getText('form.validation_max_prefix');
-    this.validation_max_suffix = this.localizationService.getText('form.validation_max_suffix');
-    this.validation_invalid_value = this.localizationService.getText('form.validation_invalid_value');
   }
 
   private translateFormConfig(): void {
@@ -157,29 +105,30 @@ export class GenericFormComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   onSubmit(): void {
-    if (!this.isOpen) return;
+    if (!this.isOpen || this.isLoading) return;
 
     if (this.dynamicForm.valid) {
       this.isLoading = true;
       this.errorMessage = null;
       this.successMessage = null;
 
+      // Simulace odeslání
       setTimeout(() => {
         this.isLoading = false;
-        const success = Math.random() > 0.2;
+        const success = Math.random() > 0.1;
 
         if (success) {
-          this.successMessage = this.internal_success_message;
+          this.successMessage = this.t.success_message;
           this.formSubmitted.emit(this.formData);
           this.initializeFormData();
         } else {
-          this.errorMessage = this.internal_error_submit_generic;
+          this.errorMessage = this.t.error_submit_generic;
         }
-        this.cd.detectChanges();
+        this.cd.markForCheck();
       }, 1500);
     } else {
-      this.errorMessage = this.internal_error_validation_generic;
-      this.cd.detectChanges();
+      this.errorMessage = this.t.error_validation_generic;
+      this.cd.markForCheck();
     }
   }
 
@@ -192,34 +141,29 @@ export class GenericFormComponent implements OnInit, OnDestroy, OnChanges {
     this.successMessage = null;
     this.isLoading = false;
     this.formReset.emit();
-    this.cd.detectChanges();
+    this.cd.markForCheck();
   }
 
   getValidationErrors(fieldName: string): string | null {
     const control = this.dynamicForm?.controls[fieldName];
     if (control && control.invalid && (control.dirty || control.touched)) {
-      if (control.errors?.['required']) {
-        return this.validation_required;
-      }
-      if (control.errors?.['email']) {
-        return this.validation_email;
-      }
-      if (control.errors?.['pattern']) {
-        return this.validation_pattern;
-      }
+      if (control.errors?.['required']) return this.t.validation_required;
+      if (control.errors?.['email']) return this.t.validation_email;
+      if (control.errors?.['pattern']) return this.t.validation_pattern;
+      
       if (control.errors?.['minlength']) {
-        return `${this.validation_minlength_prefix} ${control.errors['minlength'].requiredLength} ${this.validation_minlength_suffix}`;
+        return `${this.t.validation_minlength_prefix} ${control.errors['minlength'].requiredLength} ${this.t.validation_minlength_suffix}`;
       }
       if (control.errors?.['maxlength']) {
-        return `${this.validation_maxlength_prefix} ${control.errors['maxlength'].requiredLength} ${this.validation_maxlength_suffix}`;
+        return `${this.t.validation_maxlength_prefix} ${control.errors['maxlength'].requiredLength} ${this.t.validation_maxlength_suffix}`;
       }
       if (control.errors?.['min']) {
-        return `${this.validation_min_prefix} ${control.errors['min'].min}${this.validation_min_suffix}`;
+        return `${this.t.validation_min_prefix} ${control.errors['min'].min}${this.t.validation_min_suffix}`;
       }
       if (control.errors?.['max']) {
-        return `${this.validation_max_prefix} ${control.errors['max'].max}${this.validation_max_suffix}`;
+        return `${this.t.validation_max_prefix} ${control.errors['max'].max}${this.t.validation_max_suffix}`;
       }
-      return this.validation_invalid_value;
+      return this.t.validation_invalid_value;
     }
     return null;
   }
