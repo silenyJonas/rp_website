@@ -15,8 +15,10 @@ export class LoginComponent {
   email = '';
   password = '';
   errorMessage = '';
+  showPassword = false;
 
   constructor(private router: Router, private authService: AuthService) {} 
+
   onLogin(): void {
     this.errorMessage = '';
 

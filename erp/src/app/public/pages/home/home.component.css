@@ -7,7 +7,9 @@ body {
 .m-t--75{
     margin-top: -75px;
 }
-
+.m-t-33{
+    margin-top: 33px;
+}
 .m-b-25{
     margin-bottom: 25px;
 }
@@ -582,6 +584,7 @@ width: 45%;
     height: 200px;
     display: flex;
 }
+
 .connector-wrapper{
     display: flex;
     align-items: center;
