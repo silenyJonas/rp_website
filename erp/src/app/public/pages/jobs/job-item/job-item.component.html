@@ -85,8 +85,15 @@
 
             <p class="required-info">* Označuje povinné pole</p>
 
-            <button type="submit" [disabled]="applicationForm.invalid || !selectedFile || isLoading" class="submit-btn-skew">
-              <span>{{ btnText }}</span>
+            <button type="submit" 
+                    [disabled]="applicationForm.invalid || !selectedFile || (loadingService.isLoading$ | async)" 
+                    class="submit-btn-skew">
+              <span>
+                <ng-container *ngIf="(loadingService.isLoading$ | async); else btnNormal">
+                  Odesílám...
+                </ng-container>
+                <ng-template #btnNormal>Odeslat přihlášku</ng-template>
+              </span>
             </button>
 
             <div *ngIf="errorMessage" class="message-box error-msg">{{ errorMessage }}</div>

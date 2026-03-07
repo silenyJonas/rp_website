@@ -6,6 +6,7 @@ import { map, startWith } from 'rxjs/operators';
 import { AuthService } from '../../../core/auth/auth.service';
 import { PermissionService } from '../../../core/auth/services/permission.service';
 import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
+import { LoadingService } from '../../../core/services/loading.service'; // Uprav cestu dle tvé struktury
 
 @Component({
   selector: 'app-admin-layout',
@@ -18,6 +19,9 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   userEmail: string | null = null;
   userRole: string | null = null;
   isLoggedIn: boolean = false;
+  
+  // Globální loading stream
+  isLoadingGlobal$: Observable<boolean>;
   
   currentDate$: Observable<Date> = interval(1000).pipe(
     startWith(0),
@@ -37,8 +41,12 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     private router: Router, 
     private authService: AuthService,
     private permissionService: PermissionService,
-    private cdr: ChangeDetectorRef
-  ) { }
+    private cdr: ChangeDetectorRef,
+    private loadingService: LoadingService // Vstříknutí loading služby
+  ) { 
+    // Inicializace streamu loadingu
+    this.isLoadingGlobal$ = this.loadingService.isLoading$;
+  }
 
   ngOnInit(): void {
     if (typeof window !== 'undefined') {
@@ -71,6 +79,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     if (window.innerWidth > 768) {
       localStorage.setItem('admin_menu_open', this.isMenuOpen.toString());
     }
+    this.cdr.markForCheck();
   }
 
   onLinkClick(): void {
@@ -92,6 +101,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     let newWidth = event.clientX;
     if (newWidth >= this.minWidth && newWidth <= this.maxWidth) {
       this.sidebarWidth = newWidth;
+      this.cdr.markForCheck();
     }
   }
 

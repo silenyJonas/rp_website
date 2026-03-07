@@ -106,7 +106,6 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements C
   
   handleViewDetails(item: any): void {
     if (!item.id) return;
-    this.isLoading = true;
     this.getItemDetails(item.id).subscribe({
       next: (res) => {
         this.selectedItemForDetails = res;
@@ -117,7 +116,6 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements C
   }
 
   handleFormSubmitted(formData: any): void {
-    this.isLoading = true;
     
     // Logika zachována: Ošetření FormData vs Object
     const isFormData = formData instanceof FormData;
@@ -139,7 +137,6 @@ export class SupportTicketsComponent extends BaseDataComponent<any> implements C
     
     request.pipe(
       Core.finalize(() => {
-        this.isLoading = false;
         this.showCreateForm = false;
         this.cd.markForCheck();
       })

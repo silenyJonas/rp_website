@@ -107,14 +107,12 @@ export class UserRequestComponent extends BaseDataComponent<any> implements Core
   }
 
   handleFormSubmitted(formData: any): void {
-    this.isLoading = true;
     const request$ = formData.id 
       ? this.updateData(formData.id, formData) 
       : this.postData(formData);
 
     request$.pipe(
       Core.finalize(() => {
-        this.isLoading = false;
         this.showCreateForm = false;
         this.cd.markForCheck();
       })
@@ -126,7 +124,6 @@ export class UserRequestComponent extends BaseDataComponent<any> implements Core
 
   handleViewDetails(item: any): void {
     if (!item.id) return;
-    this.isLoading = true;
     this.getItemDetails(item.id).subscribe({
       next: (details) => {
         this.selectedItemForDetails = details;

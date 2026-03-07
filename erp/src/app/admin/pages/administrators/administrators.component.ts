@@ -105,7 +105,6 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements C
   }
 
   handleFormSubmitted(formData: any): void {
-    this.isLoading = true;
     const payload = { ...formData };
     if (payload.role_id) {
       payload.role_id = parseInt(payload.role_id, 10);
@@ -113,7 +112,6 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements C
     const request$ = payload.id ? this.updateData(payload.id, payload) : this.postData(payload);
     request$.pipe(
       Core.finalize(() => {
-        this.isLoading = false;
         this.showCreateForm = false;
         this.cd.markForCheck();
       })
@@ -137,7 +135,6 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements C
   }
 
   handleResetPasswordFormSubmitted(formData: any): void {
-    this.isLoading = true;
     const payload = {
       old_password: formData.old_password,
       new_password: formData.new_password,
@@ -147,7 +144,6 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements C
     this.dataHandler.put(`users/${formData.id}/change-password`, payload)
       .pipe(
         Core.finalize(() => {
-          this.isLoading = false;
           this.showResetPasswordForm = false;
           this.cd.markForCheck();
         })

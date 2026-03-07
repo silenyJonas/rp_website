@@ -1,10 +1,4 @@
 <div class="user-request-container container mx-auto p-4">
-  <div *ngIf="isLoading" class="text-center text-blue-500 p-4">Načítání obchodních leadů...</div>
-  <div *ngIf="errorMessage" class="text-center text-red-500 p-4">
-    {{ errorMessage }}
-    <button class="neutral_button ml-4" (click)="refreshData()">Zkusit znovu</button>
-  </div>
-  
   <div *ngIf="!errorMessage">
     <div class="toolbar-actions m-b-t-5">
       <div class="table-header">Obchodní leady (CRM)</div>
@@ -42,7 +36,6 @@
           [columns]="salesLeadColumns"
           [isFullWidth]="isTableFullWidth"
           [tableCaption]="'Seznam obchodních příležitostí'"
-          [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
           (generateFormOpened)="handleGenerateFormLink($event)"
           (itemDeleted)="refreshData()"
@@ -55,7 +48,6 @@
           [data]="trashData"
           [columns]="trashSalesLeadColumns"
           [tableCaption]="'Archiv smazaných leadů'"
-          [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
           (itemRestored)="refreshData()">
         </app-trash-table-builder>

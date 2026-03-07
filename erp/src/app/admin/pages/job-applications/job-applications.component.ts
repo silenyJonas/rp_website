@@ -109,7 +109,6 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
   
   handleViewDetails(item: any): void {
     if (!item.id) return;
-    this.isLoading = true;
     this.getItemDetails(item.id).subscribe({
       next: (res) => {
         this.selectedItemForDetails = res;
@@ -120,11 +119,9 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
   }
 
   handleFormSubmitted(formData: any): void {
-    this.isLoading = true;
     // Logika zachována: Používá se updateData (Job Applications se většinou jen editují)
     this.updateData(formData.id, formData).pipe(
       Core.finalize(() => {
-        this.isLoading = false;
         this.showCreateForm = false;
         this.selectedItemForEdit = null;
         this.cd.markForCheck();

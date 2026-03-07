@@ -104,7 +104,6 @@ export class OrderFormComponent implements OnInit, OnDestroy {
 
     this.publicDataService.submitOrder(formData).pipe(
       finalize(() => {
-        this.isLoading = false;
         this.cd.markForCheck();
       })
     ).subscribe({

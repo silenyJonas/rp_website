@@ -1,11 +1,4 @@
 <div class="user-request-container container mx-auto p-4">
-  <div *ngIf="isLoading" class="text-center text-blue-500 p-4">Načítání novinek...</div>
-  
-  <div *ngIf="errorMessage" class="text-center text-red-500 p-4">
-    {{ errorMessage }}
-    <button class="neutral_button ml-4" (click)="refreshData()">Zkusit znovu</button>
-  </div>
-  
   <div *ngIf="!errorMessage">
     <div class="toolbar-actions m-b-t-5">
       <div class="table-header">Správa sekce novinek</div>
@@ -43,7 +36,6 @@
           [currentFilters]="filters"
           [isFullWidth]="isTableFullWidth"
           [tableCaption]="'Seznam aktualit a novinek'"
-          [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
           (itemDeleted)="refreshData()"
           (createFormOpened)="handleCreateFormOpened()"
@@ -55,7 +47,6 @@
           [data]="trashData"
           [columns]="trashNewsColumns"
           [tableCaption]="'Archiv smazaných novinek'"
-          [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
           (itemRestored)="refreshData()">
         </app-trash-table-builder>

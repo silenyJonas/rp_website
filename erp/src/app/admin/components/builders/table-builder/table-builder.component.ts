@@ -25,7 +25,7 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements OnI
   @Input('columns') columnDefinitions: ColumnDefinition[] = [];
   @Input() tableCaption?: string;
   @Input() override apiEndpoint: string = '';
-  @Input() override isLoading: boolean = false;
+  @Input() isLoading: boolean = false;
   @Input() uploadsBaseUrl: string = '';
   @Input() buttons: Buttons[] = [];
   @Input() isAdminTable: boolean = false;

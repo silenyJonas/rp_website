@@ -1,11 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { BaseDataComponent } from '../../../../components/base-data/base-data.component';
 import { DataHandler } from '../../../../../core/services/data-handler.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { finalize } from 'rxjs/operators';
 import { GenericTableService } from '../../../../../core/services/generic-table.service'; 
+import { LoadingService } from '../../../../../core/services/loading.service';
 
 @Component({
   selector: 'app-support-form',
@@ -15,6 +15,9 @@ import { GenericTableService } from '../../../../../core/services/generic-table.
   styleUrl: './support-form.component.css',
 })
 export class SupportFormComponent extends BaseDataComponent<any> implements OnInit {
+  // Propojení na globální loading stav
+  public override loadingService = inject(LoadingService);
+  
   override apiEndpoint: string = 'support_tickets';
   
   supportForm!: FormGroup;
@@ -49,14 +52,13 @@ export class SupportFormComponent extends BaseDataComponent<any> implements OnIn
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
+      this.cd.markForCheck();
     }
   }
 
   onSubmit(): void {
     if (this.supportForm.valid) {
-      this.isLoading = true;
-      this.cd.detectChanges();
-
+      // Stav isLoading už neřešíme ručně, interceptor ho zapne automaticky
       const formData = new FormData();
       Object.keys(this.supportForm.value).forEach(key => {
         formData.append(key, this.supportForm.value[key]);
@@ -66,12 +68,7 @@ export class SupportFormComponent extends BaseDataComponent<any> implements OnIn
         formData.append('attachment', this.selectedFile, this.selectedFile.name);
       }
 
-      this.uploadData<any>(formData).pipe(
-        finalize(() => {
-          this.isLoading = false;
-          this.cd.detectChanges();
-        })
-      ).subscribe({
+      this.uploadData<any>(formData).subscribe({
         next: (response: any) => { 
           this.isSubmitted = true;
           this.lastTicketId = response.id;
@@ -79,6 +76,7 @@ export class SupportFormComponent extends BaseDataComponent<any> implements OnIn
         },
         error: (err: any) => {
           console.error('Chyba při odesílání ticketu:', err);
+          this.cd.markForCheck();
         }
       });
     }

@@ -45,13 +45,16 @@
     </div>
 
     <div class="load-more-container" *ngIf="hasMore">
-      <button (click)="loadMore()" [disabled]="isLoading" class="load-more-btn">
-        <span *ngIf="!isLoading">ZOBRAZIT STARŠÍ AKTUALIZACE ↓</span>
-        <span *ngIf="isLoading">NAČÍTÁM DALŠÍ...</span>
+      <button (click)="loadMore()" 
+              [disabled]="loadingService.isLoading$ | async" 
+              class="load-more-btn">
+        <span *ngIf="!(loadingService.isLoading$ | async)">ZOBRAZIT STARŠÍ AKTUALIZACE ↓</span>
+        <span *ngIf="loadingService.isLoading$ | async">NAČÍTÁM DALŠÍ...</span>
       </button>
     </div>
 
-    <div *ngIf="accumulatedNews.length === 0 && !isLoading" style="text-align: center; color: #52525b; padding: 20px;">
+    <div *ngIf="accumulatedNews.length === 0 && !(loadingService.isLoading$ | async)" 
+         style="text-align: center; color: #52525b; padding: 20px;">
       Momentálně nejsou k dispozici žádné novinky.
     </div>
   </section>

@@ -126,11 +126,9 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
   }
 
   handleFormSubmitted(formData: any): void {
-    this.isLoading = true;
     const req = formData.id ? this.updateData(formData.id, formData) : this.postData(formData);
     req.pipe(
       Core.finalize(() => { 
-        this.isLoading = false; 
         this.showCreateForm = false; 
         this.cd.markForCheck(); 
       })

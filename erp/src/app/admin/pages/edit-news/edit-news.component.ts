@@ -1,15 +1,9 @@
-// 1. Dekorátory (Nutné pro stabilitu kompilace a eliminaci JIT chyb)
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-
-// 2. Sjednocené jádro (Služby, Typy, RxJS operátory)
+import { Component, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import * as Core from '../../../shared/imports/core-providers';
-
-// 3. UI Buildery (Komponenty a Typy)
 import { SHARED_UI_BUILDERS } from '../../../shared/imports/shared-ui-builders';
 import { TableBuilderComponent } from '../../components/builders/table-builder/table-builder.component';
-
-// 4. Ostatní (Báze a Konfigurace)
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
+import { LoadingService } from '../../../core/services/loading.service';
 import * as Config from './edit-news.config';
 
 @Component({
@@ -21,11 +15,13 @@ import * as Config from './edit-news.config';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditNewsComponent extends BaseDataComponent<any> implements Core.OnInit {
+  // Přidáno pro propojení s HTML
+  public override loadingService = inject(LoadingService);
+
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
   override apiEndpoint: string = 'news';
 
-  // Konfigurace načtená přes barrel Config
   buttons = Config.NEWS_BUTTONS;
   formFields = Config.NEWS_FORM_FIELDS;
   newsColumns = Config.NEWS_COLUMNS;
@@ -62,8 +58,6 @@ export class EditNewsComponent extends BaseDataComponent<any> implements Core.On
     });
   }
 
-  // --- Správa dat a filtrů ---
-
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
   }
@@ -91,8 +85,6 @@ export class EditNewsComponent extends BaseDataComponent<any> implements Core.On
     if (this.activeTable) this.activeTable.exportToCSV();
   }
 
-  // --- Handlery formulářů a detailů ---
-
   handleCreateFormOpened(): void {
     this.selectedItemForEdit = null;
     this.showCreateForm = true;
@@ -104,14 +96,12 @@ export class EditNewsComponent extends BaseDataComponent<any> implements Core.On
   }
 
   handleFormSubmitted(formData: any): void {
-    this.isLoading = true;
     const request$ = formData.id 
       ? this.updateData(formData.id, formData) 
       : this.postData(formData);
 
     request$.pipe(
       Core.finalize(() => {
-        this.isLoading = false;
         this.showCreateForm = false;
         this.cd.markForCheck();
       })
@@ -120,7 +110,6 @@ export class EditNewsComponent extends BaseDataComponent<any> implements Core.On
 
   handleViewDetails(item: any): void {
     if (!item.id) return;
-    this.isLoading = true;
     this.getItemDetails(item.id).subscribe({
       next: (details) => {
         this.selectedItemForDetails = details;

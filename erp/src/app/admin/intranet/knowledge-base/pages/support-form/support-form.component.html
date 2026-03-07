@@ -51,8 +51,13 @@
       </div>
 
       <div class="kb-form-actions">
-        <button type="submit" class="kb-btn-primary" [disabled]="supportForm.invalid || isLoading">
-          {{ isLoading ? 'ODESÍLÁM...' : 'ODESLAT POŽADAVEK' }}
+        <button type="submit" class="kb-btn-primary" [disabled]="supportForm.invalid || (loadingService.isLoading$ | async)">
+          <span>
+            <ng-container *ngIf="(loadingService.isLoading$ | async); else normalText">
+              ODESÍLÁM...
+            </ng-container>
+            <ng-template #normalText>ODESLAT POŽADAVEK</ng-template>
+          </span>
         </button>
       </div>
     </form>

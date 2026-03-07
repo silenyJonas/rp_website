@@ -1,15 +1,4 @@
 <div class="user-request-container container mx-auto p-4">
-  
-  <div *ngIf="isLoading && data.length === 0" class="text-center p-10">
-    <div class="spinner"></div>
-    <p class="text-blue-500">Načítání administrátorů...</p>
-  </div>
-  
-  <div *ngIf="errorMessage" class="bg-red-100 text-red-700 p-4 rounded mb-4 flex justify-between">
-    <span>{{ errorMessage }}</span>
-    <button (click)="refreshData()" class="underline">Zkusit znovu</button>
-  </div>
-  
   <div *ngIf="!errorMessage">
     <div class="toolbar-actions m-b-t-5">
       <div class="table-header">Správa uživatelských účtů</div>
@@ -46,7 +35,6 @@
           [tableCaption]="'Seznam Administrátorksých účtů'"
           [columns]="tableColumns"
           [isFullWidth]="isTableFullWidth"
-          [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
           (itemDeleted)="handleItemDeleted()"
           (editFormOpened)="handleEditFormOpened($event)"
@@ -57,7 +45,6 @@
         <app-trash-table-builder *ngIf="showTrashTable"
           [data]="trashData"
           [columns]="trashTableColumns"
-          [isLoading]="isLoading"
           [apiEndpoint]="apiEndpoint"
           (itemRestored)="handleItemRestored()">
         </app-trash-table-builder>

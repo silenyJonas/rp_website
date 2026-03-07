@@ -2,8 +2,8 @@
   <div class="header-box">
     <h1>Editovat veřejné texty</h1>
     <div class="lang-switcher">
-      <button [class.active]="currentLang === 'cz'" (click)="loadLang('cz')">CZ</button>
-      <button [class.active]="currentLang === 'en'" (click)="loadLang('en')">EN</button>
+      <button [class.active]="currentLang === 'cz'" (click)="loadLang('cz')" [disabled]="loadingService.isLoading$ | async">CZ</button>
+      <button [class.active]="currentLang === 'en'" (click)="loadLang('en')" [disabled]="loadingService.isLoading$ | async">EN</button>
     </div>
   </div>
 
@@ -25,17 +25,12 @@
       type="button" 
       class="save-btn" 
       (click)="onSubmit()" 
-      [disabled]="isLoading">
-      {{ isLoading ? 'Ukládám...' : 'Uložit změny' }}
+      [disabled]="loadingService.isLoading$ | async">
+      {{ (loadingService.isLoading$ | async) ? 'Ukládám...' : 'Uložit změny' }}
     </button>
   </div>
 
-  <div class="table-wrapper" [class.loading-fade]="isLoading">
-    <div class="loader-overlay" *ngIf="isLoading">
-      <div class="spinner"></div>
-      <p>Pracuji...</p>
-    </div>
-
+  <div class="table-wrapper" [class.loading-fade]="loadingService.isLoading$ | async">
     <table class="admin-table">
       <thead>
         <tr>
@@ -59,8 +54,8 @@
             </textarea>
           </td>
         </tr>
-        <tr *ngIf="filteredKeys.length === 0 && !isLoading">
-          <td colspan="2" class="empty-results">Žádné výsledky pro "{{ searchQuery }}"</td>
+        <tr *ngIf="filteredKeys.length === 0 && !(loadingService.isLoading$ | async)">
+          <td colspan="2" class="empty-results">Žádné výsledky</td>
         </tr>
       </tbody>
     </table>

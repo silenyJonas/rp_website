@@ -91,7 +91,6 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements Cor
     const logId = item.business_log_id || item.id;
     if (!logId) return;
 
-    this.isLoading = true;
     this.getItemDetails(logId).subscribe({
       next: (details) => {
         this.selectedItemForDetails = details;
@@ -99,7 +98,6 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements Cor
         this.cd.markForCheck();
       },
       complete: () => {
-        this.isLoading = false;
         this.cd.markForCheck();
       }
     });

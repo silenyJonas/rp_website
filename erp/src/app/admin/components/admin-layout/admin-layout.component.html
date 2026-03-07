@@ -103,3 +103,10 @@
     <router-outlet></router-outlet>
   </main>
 </div>
+
+<div class="global-loading-overlay" *ngIf="isLoadingGlobal$ | async">
+  <div class="loader-container">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Načítám data...</div>
+  </div>
+</div>

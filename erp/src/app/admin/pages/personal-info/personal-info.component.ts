@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { finalize } from 'rxjs/operators';
 
 import { DataHandler } from '../../../core/services/data-handler.service';
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
@@ -52,15 +51,12 @@ export class PersonalInfoComponent extends BaseDataComponent<UserLogin> implemen
   private loadCurrentUserData(): void {
     const userId = this.authService.getUserId();
     if (userId) {
-      this.isLoading = true;
+      // Žádné isLoading = true; Interceptor to vyřeší
       this.getItemDetails(parseInt(userId, 10))
-        .pipe(finalize(() => {
-          this.isLoading = false;
-          this.cd.markForCheck();
-        }))
         .subscribe({
           next: (data: UserLogin) => { 
             this.userData = data;
+            this.cd.markForCheck();
           },
           error: (err) => {
             console.error('Chyba při načítání dat uživatele:', err);

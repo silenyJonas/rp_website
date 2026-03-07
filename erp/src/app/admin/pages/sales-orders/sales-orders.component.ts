@@ -101,7 +101,6 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements Core
   
   handleViewDetails(item: any): void {
     if (!item.id) return;
-    this.isLoading = true;
     this.getItemDetails(item.id).subscribe({
       next: (res) => {
         this.selectedItemForDetails = res;
@@ -112,10 +111,8 @@ export class SalesOrdersComponent extends BaseDataComponent<any> implements Core
   }
 
   handleFormSubmitted(formData: any): void {
-    this.isLoading = true;
     this.updateData(formData.id, formData).pipe(
       Core.finalize(() => {
-        this.isLoading = false;
         this.showCreateForm = false;
         this.cd.markForCheck();
       })

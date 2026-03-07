@@ -88,8 +88,13 @@
           <input id="new_password_confirmation" type="password" formControlName="new_password_confirmation" placeholder="Zopakujte heslo">
         </div>
 
-        <button class="action_button" type="submit" [disabled]="passwordForm.invalid || isLoading">
-          {{ isLoading ? 'Ukládání...' : 'Aktualizovat heslo' }}
+        <button class="action_button" 
+                type="submit" 
+                [disabled]="passwordForm.invalid || (loadingService.isLoading$ | async)">
+          <ng-container *ngIf="(loadingService.isLoading$ | async); else btnText">
+            Ukládání...
+          </ng-container>
+          <ng-template #btnText>Aktualizovat heslo</ng-template>
         </button>
       </form>
     </div>

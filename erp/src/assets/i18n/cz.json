@@ -280,66 +280,66 @@
             }
         }
     },
- "privacy_policy": {
-    "header_main": "Zásady zpracování osobních údajů",
-    "last_update_text": "Datum poslední aktualizace:",
-    "last_update_date": "22. srpna 2025",
-    "sections": {
-        "section_1": {
-            "title": "1. Úvodní ustanovení",
-            "content": "<p>Tyto Zásady zpracování osobních údajů (dále jen „Zásady“) popisují, jak společnost <strong>RegioPartner, s.r.o.</strong>, se sídlem Kytlická 862/6, 190 00 Praha, IČO: 25133161, DIČ: CZ25133161, zapsaná v obchodním rejstříku vedeném Městským soudem v Praze, oddíl C, vložka 52029 (dále jen „my“ nebo „Správce“), shromažďuje, používá a chrání osobní údaje, které nám poskytujete v souvislosti s používáním našich webových stránek a našich služeb, zejména inzerce digitálních produktů a služeb.</p><p>Zavazujeme se chránit vaše soukromí a zpracováváme osobní údaje v souladu s Nařízením Evropského parlamentu a Rady (EU) 2016/679 (dále jen „GDPR“) a platnými právními předpisy České republiky, zejména zákonem č. 110/2019 Sb., o zpracování osobních údajů, ve znění pozdějších předpisů.</p><p>Pokud s těmito Zásadami nesouhlasíte, prosíme, nepoužívejte naše webové stránky ani služby.</p>"
+    "privacy_policy": {
+        "header_main": "Zásady zpracování osobních údajů",
+        "last_update_text": "Datum poslední aktualizace:",
+        "last_update_date": "22. srpna 2025",
+        "sections": {
+            "section_1": {
+                "title": "1. Úvodní ustanovení",
+                "content": "<p>Tyto Zásady zpracování osobních údajů (dále jen „Zásady“) popisují, jak společnost <strong>RegioPartner, s.r.o.<\/strong>, se sídlem Kytlická 862\/6, 190 00 Praha, IČO: 25133161, DIČ: CZ25133161, zapsaná v obchodním rejstříku vedeném Městským soudem v Praze, oddíl C, vložka 52029 (dále jen „my“ nebo „Správce“), shromažďuje, používá a chrání osobní údaje, které nám poskytujete v souvislosti s používáním našich webových stránek a našich služeb, zejména inzerce digitálních produktů a služeb.<\/p><p>Zavazujeme se chránit vaše soukromí a zpracováváme osobní údaje v souladu s Nařízením Evropského parlamentu a Rady (EU) 2016\/679 (dále jen „GDPR“) a platnými právními předpisy České republiky, zejména zákonem č. 110\/2019 Sb., o zpracování osobních údajů, ve znění pozdějších předpisů.<\/p><p>Pokud s těmito Zásadami nesouhlasíte, prosíme, nepoužívejte naše webové stránky ani služby.<\/p>"
+            },
+            "section_2": {
+                "title": "2. Správce osobních údajů",
+                "content": "<p>Správcem vašich osobních údajů je:<\/p><p><strong>RegioPartner, s.r.o.<\/strong><br>Sídlo: Kytlická 862\/6, 190 00 Praha<br>IČO: 25133161<br>DIČ: CZ25133161<br>E-mail: <a href='mailto:info@rpsw.cz'>info&#64;rpsw.cz<\/a><br>Telefon: +420 733 188 328<\/p><p>V případě dotazů ohledně zpracování osobních údajů nás prosím kontaktujte na výše uvedeném e-mailu.<\/p>"
+            },
+            "section_3": {
+                "title": "3. Jaké osobní údaje shromažďujeme a proč",
+                "content": "<p>Shromažďujeme a zpracováváme osobní údaje pouze pro definované, legitimní účely a v rozsahu nezbytném pro naplnění těchto účelů.<\/p>",
+                "subsections": [
+                    {
+                        "title": "3.1. Údaje poskytnuté vámi",
+                        "text": "Můžeme shromažďovat osobní údaje, které nám dobrovolně poskytnete, například při:",
+                        "list": [
+                            "<strong>Vytvoření objednávky služeb:<\/strong> Jméno, příjmení, e-mail, telefon. Účel: Vyřízení objednávky a poskytnutí sjednané služby. Právní základ: Plnění smlouvy (čl. 6 odst. 1 písm. b) GDPR).",
+                            "<strong>Kontaktu prostřednictvím formuláře:<\/strong> Jméno, e-mail, telefon, obsah zprávy. Účel: Zodpovězení dotazu, řešení požadavku, poskytnutí cenové nabídky. Právní základ: Oprávněný zájem (čl. 6 odst. 1 písm. f) GDPR) na efektivní komunikaci se zákazníky\/uživateli a předsmluvní jednání.",
+                            "<strong>Přihlášení k odběru newsletteru:<\/strong> E-mail. Účel: Zasílání obchodních sdělení a informací o novinkách. Právní základ: Souhlas (čl. 6 odst. 1 písm. a) GDPR)."
+                        ]
+                    },
+                    {
+                        "title": "3.2. Údaje shromažďované automaticky",
+                        "text": "Při používání našich webových stránek můžeme automaticky shromažďovat některé informace, jako jsou:",
+                        "list": [
+                            "<strong>IP adresa:<\/strong> Účel: Zabezpečení webu, diagnostika problémů, statistiky návštěvnosti. Právní základ: Oprávněný zájem (čl. 6 odst. 1 písm. f) GDPR).",
+                            "<strong>Údaje o prohlížeči a zařízení:<\/strong> Typ prohlížeče, operační systém, jazyk. Účel: Zajištění správné funkčnosti webu, optimalizace zobrazení. Právní základ: Oprávněný zájem (čl. 6 odst. 1 písm. f) GDPR).",
+                            "<strong>Údaje o návštěvnosti webu (cookies a podobné technologie):<\/strong> Zobrazované stránky, doba strávená na stránce, reference na jiné weby. Účel: Zlepšování funkčnosti webu, analýza chování uživatelů. Právní základ: Souhlas (pro marketingové a analytické cookies, čl. 6 odst. 1 písm. a) GDPR), oprávněný zájem (pro nezbytné cookies, čl. 6 odst. 1 písm. f) GDPR). Podrobnější informace o cookies naleznete v našich Zásadách používání souborů cookie."
+                        ]
+                    }
+                ]
+            },
+            "section_4": {
+                "title": "4. Jak dlouho osobní údaje uchováváme",
+                "content": "<p>Osobní údaje uchováváme pouze po dobu nezbytně nutnou k naplnění účelů, pro které byly shromážděny, nebo po dobu stanovenou právními předpisy. Doba uchování se liší v závislosti na typu údajů a účelu zpracování:<\/p><ul><li><strong>Údaje pro plnění smlouvy:<\/strong> Po dobu trvání smluvního vztahu a následně po dobu stanovenou zákonem pro archivaci účetních a daňových dokladů (obvykle 10 let).<\/li><li><strong>Údaje pro marketingové účely (newsletter):<\/strong> Po dobu trvání vašeho souhlasu, nejdéle však 5 let od jeho udělení, nebo do odvolání souhlasu.<\/li><li><strong>Údaje z kontaktních formulářů:<\/strong> Po dobu nezbytnou pro vyřízení vašeho požadavku, obvykle 1 rok.<\/li><li><strong>Údaje z cookies:<\/strong> Doba uchování se liší dle typu cookies (viz naše Zásady používání souborů cookie).<\/li><\/ul><p>Po uplynutí doby uchování jsou osobní údaje vymazány nebo anonymizovány.<\/p>"
+            },
+            "section_5": {
+                "title": "5. Komu osobní údaje předáváme (Příjemci)",
+                "content": "<p>Vaše osobní údaje předáváme pouze v nezbytném rozsahu a pouze prověřeným subjektům, a to na základě smlouvy o zpracování osobních údajů, která zajišťuje stejnou úroveň ochrany. Může se jednat o:<\/p><ul><li><strong>Poskytovatelé IT služeb a hostingu:<\/strong> Pro zajištění provozu webu a informačních systémů. Jedná se například o společnost <strong>INTERNET CZ, a.s.<\/strong>.<\/li><li><strong>Poskytovatelé marketingových a analytických služeb:<\/strong> (např. Google Analytics, nástroje pro e-mail marketing).<\/li><li><strong>Poskytovatelé platebních služeb:<\/strong> Pro zpracování plateb (např. banky, platební brány).<\/li><li><strong>Účetní a právní poradci:<\/strong> Pro plnění právních povinností a obranu právních nároků.<\/li><li><strong>Orgány veřejné moci:<\/strong> V případě zákonné povinnosti (např. soudy, policie, finanční úřad).<\/li><\/ul><p>Nepředáváme osobní údaje do zemí mimo Evropskou unii nebo Evropský hospářský prostor bez zajištění odpovídajících záruk ochrany osobních údajů (např. standardní smluvní doložky).<\/p>"
+            },
+            "section_6": {
+                "title": "6. Vaše práva v souvislosti se zpracováním osobních údajů",
+                "content": "<p>V souladu s GDPR máte následující práva:<\/p><ul><li><strong>Právo na přístup<\/strong> k osobním údajům (čl. 15 GDPR): Máte právo získat potvrzení, zda jsou či nejsou vaše osobní údaje zpracovávány.<\/li><li><strong>Právo na opravu<\/strong> (čl. 16 GDPR): Máte právo na opravu nepřesných nebo doplnění neúplných údajů.<\/li><li><strong>Právo na výmaz<\/strong> (čl. 17 GDPR): Právo „být zapomenut“, pokud jsou splněny zákonné důvody.<\/li><li><strong>Právo na omezení zpracování<\/strong> (čl. 18 GDPR): Máte právo na omezení zpracování v případech stanovených GDPR.<\/li><li><strong>Právo na přenositelnost údajů<\/strong> (čl. 20 GDPR): Právo získat údaje ve strukturovaném a strojově čitelném formátu.<\/li><li><strong>Právo vznést námitku<\/strong> (čl. 21 GDPR): Právo vznést námitku proti zpracování založeném na oprávněném zájmu nebo pro přímý marketing.<\/li><li><strong>Právo odvolat souhlas<\/strong> (čl. 7 odst. 3 GDPR): Právo souhlas kdykoli odvolat.<\/li><li><strong>Právo podat stížnost<\/strong> u dozorového úřadu (čl. 77 GDPR).<\/li><\/ul><p>Kontakt na dozorový úřad:<br><strong>Úřad pro ochranu osobních údajů<\/strong><br>Pplk. Sochora 27, 170 00 Praha 7<br>Telefon: +420 234 665 800<br>Web: <a href='https:\/\/www.uoou.cz' target='_blank'>www.uoou.cz<\/a><\/p>"
+            },
+            "section_7": {
+                "title": "7. Bezpečnost osobních údajů",
+                "content": "<p>Přijali jsme vhodná technická a organizační opatření k ochraně vašich osobních údajů před neoprávněným přístupem, změnou, zveřejněním nebo zničením. Mezi tato opatření patří: <strong>šifrování dat<\/strong> (SSL\/TLS), provoz na <strong>zabezpečených serverech<\/strong> s pravidelnými audity, striktní <strong>řízení přístupu<\/strong> pomocí silných hesel, <strong>pravidelné zálohování<\/strong> dat a <strong>školení zaměstnanců<\/strong> v oblasti bezpečnosti dat.<\/p>"
+            },
+            "section_8": {
+                "title": "8. Změny těchto Zásad",
+                "content": "<p>Tyto Zásady můžeme čas od času aktualizovat. Jakékoli změny zveřejníme na této stránce s uvedením data poslední aktualizace. Doporučujeme pravidelně kontrolovat tuto stránku, abyste byli informováni o tom, jak chráníme vaše údaje.<\/p>"
+            }
         },
-        "section_2": {
-            "title": "2. Správce osobních údajů",
-            "content": "<p>Správcem vašich osobních údajů je:</p><p><strong>RegioPartner, s.r.o.</strong><br>Sídlo: Kytlická 862/6, 190 00 Praha<br>IČO: 25133161<br>DIČ: CZ25133161<br>E-mail: <a href='mailto:info@rpsw.cz'>info&#64;rpsw.cz</a><br>Telefon: +420 733 188 328</p><p>V případě dotazů ohledně zpracování osobních údajů nás prosím kontaktujte na výše uvedeném e-mailu.</p>"
-        },
-        "section_3": {
-            "title": "3. Jaké osobní údaje shromažďujeme a proč",
-            "content": "<p>Shromažďujeme a zpracováváme osobní údaje pouze pro definované, legitimní účely a v rozsahu nezbytném pro naplnění těchto účelů.</p>",
-            "subsections": [
-                {
-                    "title": "3.1. Údaje poskytnuté vámi",
-                    "text": "Můžeme shromažďovat osobní údaje, které nám dobrovolně poskytnete, například při:",
-                    "list": [
-                        "<strong>Vytvoření objednávky služeb:</strong> Jméno, příjmení, e-mail, telefon. Účel: Vyřízení objednávky a poskytnutí sjednané služby. Právní základ: Plnění smlouvy (čl. 6 odst. 1 písm. b) GDPR).",
-                        "<strong>Kontaktu prostřednictvím formuláře:</strong> Jméno, e-mail, telefon, obsah zprávy. Účel: Zodpovězení dotazu, řešení požadavku, poskytnutí cenové nabídky. Právní základ: Oprávněný zájem (čl. 6 odst. 1 písm. f) GDPR) na efektivní komunikaci se zákazníky/uživateli a předsmluvní jednání.",
-                        "<strong>Přihlášení k odběru newsletteru:</strong> E-mail. Účel: Zasílání obchodních sdělení a informací o novinkách. Právní základ: Souhlas (čl. 6 odst. 1 písm. a) GDPR)."
-                    ]
-                },
-                {
-                    "title": "3.2. Údaje shromažďované automaticky",
-                    "text": "Při používání našich webových stránek můžeme automaticky shromažďovat některé informace, jako jsou:",
-                    "list": [
-                        "<strong>IP adresa:</strong> Účel: Zabezpečení webu, diagnostika problémů, statistiky návštěvnosti. Právní základ: Oprávněný zájem (čl. 6 odst. 1 písm. f) GDPR).",
-                        "<strong>Údaje o prohlížeči a zařízení:</strong> Typ prohlížeče, operační systém, jazyk. Účel: Zajištění správné funkčnosti webu, optimalizace zobrazení. Právní základ: Oprávněný zájem (čl. 6 odst. 1 písm. f) GDPR).",
-                        "<strong>Údaje o návštěvnosti webu (cookies a podobné technologie):</strong> Zobrazované stránky, doba strávená na stránce, reference na jiné weby. Účel: Zlepšování funkčnosti webu, analýza chování uživatelů. Právní základ: Souhlas (pro marketingové a analytické cookies, čl. 6 odst. 1 písm. a) GDPR), oprávněný zájem (pro nezbytné cookies, čl. 6 odst. 1 písm. f) GDPR). Podrobnější informace o cookies naleznete v našich Zásadách používání souborů cookie."
-                    ]
-                }
-            ]
-        },
-        "section_4": {
-            "title": "4. Jak dlouho osobní údaje uchováváme",
-            "content": "<p>Osobní údaje uchováváme pouze po dobu nezbytně nutnou k naplnění účelů, pro které byly shromážděny, nebo po dobu stanovenou právními předpisy. Doba uchování se liší v závislosti na typu údajů a účelu zpracování:</p><ul><li><strong>Údaje pro plnění smlouvy:</strong> Po dobu trvání smluvního vztahu a následně po dobu stanovenou zákonem pro archivaci účetních a daňových dokladů (obvykle 10 let).</li><li><strong>Údaje pro marketingové účely (newsletter):</strong> Po dobu trvání vašeho souhlasu, nejdéle však 5 let od jeho udělení, nebo do odvolání souhlasu.</li><li><strong>Údaje z kontaktních formulářů:</strong> Po dobu nezbytnou pro vyřízení vašeho požadavku, obvykle 1 rok.</li><li><strong>Údaje z cookies:</strong> Doba uchování se liší dle typu cookies (viz naše Zásady používání souborů cookie).</li></ul><p>Po uplynutí doby uchování jsou osobní údaje vymazány nebo anonymizovány.</p>"
-        },
-        "section_5": {
-            "title": "5. Komu osobní údaje předáváme (Příjemci)",
-            "content": "<p>Vaše osobní údaje předáváme pouze v nezbytném rozsahu a pouze prověřeným subjektům, a to na základě smlouvy o zpracování osobních údajů, která zajišťuje stejnou úroveň ochrany. Může se jednat o:</p><ul><li><strong>Poskytovatelé IT služeb a hostingu:</strong> Pro zajištění provozu webu a informačních systémů. Jedná se například o společnost <strong>INTERNET CZ, a.s.</strong>.</li><li><strong>Poskytovatelé marketingových a analytických služeb:</strong> (např. Google Analytics, nástroje pro e-mail marketing).</li><li><strong>Poskytovatelé platebních služeb:</strong> Pro zpracování plateb (např. banky, platební brány).</li><li><strong>Účetní a právní poradci:</strong> Pro plnění právních povinností a obranu právních nároků.</li><li><strong>Orgány veřejné moci:</strong> V případě zákonné povinnosti (např. soudy, policie, finanční úřad).</li></ul><p>Nepředáváme osobní údaje do zemí mimo Evropskou unii nebo Evropský hospářský prostor bez zajištění odpovídajících záruk ochrany osobních údajů (např. standardní smluvní doložky).</p>"
-        },
-        "section_6": {
-            "title": "6. Vaše práva v souvislosti se zpracováním osobních údajů",
-            "content": "<p>V souladu s GDPR máte následující práva:</p><ul><li><strong>Právo na přístup</strong> k osobním údajům (čl. 15 GDPR): Máte právo získat potvrzení, zda jsou či nejsou vaše osobní údaje zpracovávány.</li><li><strong>Právo na opravu</strong> (čl. 16 GDPR): Máte právo na opravu nepřesných nebo doplnění neúplných údajů.</li><li><strong>Právo na výmaz</strong> (čl. 17 GDPR): Právo „být zapomenut“, pokud jsou splněny zákonné důvody.</li><li><strong>Právo na omezení zpracování</strong> (čl. 18 GDPR): Máte právo na omezení zpracování v případech stanovených GDPR.</li><li><strong>Právo na přenositelnost údajů</strong> (čl. 20 GDPR): Právo získat údaje ve strukturovaném a strojově čitelném formátu.</li><li><strong>Právo vznést námitku</strong> (čl. 21 GDPR): Právo vznést námitku proti zpracování založeném na oprávněném zájmu nebo pro přímý marketing.</li><li><strong>Právo odvolat souhlas</strong> (čl. 7 odst. 3 GDPR): Právo souhlas kdykoli odvolat.</li><li><strong>Právo podat stížnost</strong> u dozorového úřadu (čl. 77 GDPR).</li></ul><p>Kontakt na dozorový úřad:<br><strong>Úřad pro ochranu osobních údajů</strong><br>Pplk. Sochora 27, 170 00 Praha 7<br>Telefon: +420 234 665 800<br>Web: <a href='https://www.uoou.cz' target='_blank'>www.uoou.cz</a></p>"
-        },
-        "section_7": {
-            "title": "7. Bezpečnost osobních údajů",
-            "content": "<p>Přijali jsme vhodná technická a organizační opatření k ochraně vašich osobních údajů před neoprávněným přístupem, změnou, zveřejněním nebo zničením. Mezi tato opatření patří: <strong>šifrování dat</strong> (SSL/TLS), provoz na <strong>zabezpečených serverech</strong> s pravidelnými audity, striktní <strong>řízení přístupu</strong> pomocí silných hesel, <strong>pravidelné zálohování</strong> dat a <strong>školení zaměstnanců</strong> v oblasti bezpečnosti dat.</p>"
-        },
-        "section_8": {
-            "title": "8. Změny těchto Zásad",
-            "content": "<p>Tyto Zásady můžeme čas od času aktualizovat. Jakékoli změny zveřejníme na této stránce s uvedením data poslední aktualizace. Doporučujeme pravidelně kontrolovat tuto stránku, abyste byli informováni o tom, jak chráníme vaše údaje.</p>"
-        }
+        "footer_effective": "Tyto Zásady zpracování osobních údajů nabývají účinnosti dnem 22. srpna 2025."
     },
-    "footer_effective": "Tyto Zásady zpracování osobních údajů nabývají účinnosti dnem 22. srpna 2025."
-},
     "shop": {
         "header1": "Naše digitální produkty",
         "header02T": "Spuštění na vaší doméně do 24 hodin",
@@ -815,106 +815,106 @@
         }
     },
     "tos": {
-    "title": "Obchodní podmínky",
-    "last_update_label": "Datum poslední aktualizace:",
-    "last_update_date": "22. srpna 2025",
-    "section_1": {
-      "title": "1. Úvodní ustanovení",
-      "p1": "Tyto obchodní podmínky (dále jen „OP“) společnosti <strong>RegioPartner, s.r.o.</strong>, se sídlem Kytlická 862/6, 190 00 Praha, IČO: 25133161, DIČ: CZ25133161, zapsané v obchodním rejstříku vedeném Městským soudem v Praze, oddíl C, vložka 52029 (dále jen „Prodávající“), upravují v souladu s ustanovením § 1751 odst. 1 zákona č. 89/2012 Sb., občanský zákoník (dále jen „občanský zákoník“), vzájemná práva a povinnosti smluvních stran vzniklé v souvislosti nebo na základě kupní smlouvy uzavírané mezi Prodávajícím a jinou fyzickou či právnickou osobou (dále jen „Kupující“) prostřednictvím webového rozhraní Prodávajícího umístěného na internetové adrese www.rpsw.cz (dále jen „e-shop“).",
-      "p2": "Ustanovení OP jsou nedílnou součástí kupní smlouvy. Odchylná ujednání v kupní smlouvě mají přednost před ustanoveními OP.",
-      "p3": "Znění OP může Prodávající měnit či doplňovat. Nové znění OP nabývá účinnosti dnem jeho zveřejnění na webové stránce Prodávajícího."
+        "title": "Obchodní podmínky",
+        "last_update_label": "Datum poslední aktualizace:",
+        "last_update_date": "22. srpna 2025",
+        "section_1": {
+            "title": "1. Úvodní ustanovení",
+            "p1": "Tyto obchodní podmínky (dále jen „OP“) společnosti <strong>RegioPartner, s.r.o.<\/strong>, se sídlem Kytlická 862\/6, 190 00 Praha, IČO: 25133161, DIČ: CZ25133161, zapsané v obchodním rejstříku vedeném Městským soudem v Praze, oddíl C, vložka 52029 (dále jen „Prodávající“), upravují v souladu s ustanovením § 1751 odst. 1 zákona č. 89\/2012 Sb., občanský zákoník (dále jen „občanský zákoník“), vzájemná práva a povinnosti smluvních stran vzniklé v souvislosti nebo na základě kupní smlouvy uzavírané mezi Prodávajícím a jinou fyzickou či právnickou osobou (dále jen „Kupující“) prostřednictvím webového rozhraní Prodávajícího umístěného na internetové adrese www.rpsw.cz (dále jen „e-shop“).",
+            "p2": "Ustanovení OP jsou nedílnou součástí kupní smlouvy. Odchylná ujednání v kupní smlouvě mají přednost před ustanoveními OP.",
+            "p3": "Znění OP může Prodávající měnit či doplňovat. Nové znění OP nabývá účinnosti dnem jeho zveřejnění na webové stránce Prodávajícího."
+        },
+        "section_2": {
+            "title": "2. Předmět smlouvy",
+            "p1": "Předmětem kupní smlouvy je prodej a poskytování digitálních produktů a služeb, které jsou specifikovány v nabídce na e-shopu Prodávajícího. Digitální produkty zahrnují, ale nejsou omezeny na: software, online kurzy, e-booky, grafické šablony, audio a video záznamy. Služby zahrnují například tvorbu a správu online reklamy."
+        },
+        "section_3": {
+            "title": "3. Objednávka a uzavření kupní smlouvy",
+            "p1": "Veškerá prezentace zboží a služeb umístěná ve webovém rozhraní e-shopu je informativního charakteru a Prodávající není povinen uzavřít kupní smlouvu ohledně tohoto zboží a služeb. Ustanovení § 1732 odst. 2 občanského zákoníku se nepoužije.",
+            "p2": "Pro objednání zboží (služeb) vyplní Kupující objednávkový formulář na webové stránce. Objednávkový formulář obsahuje zejména informace o:",
+            "li1": "objednávaném zboží (službách) (Kupující vloží objednávané zboží do elektronického nákupního košíku webového rozhraní obchodu),",
+            "li2": "způsobu úhrady kupní ceny zboží (služeb),",
+            "li3": "údajích o požadovaném způsobu doručení objednávaného zboží,",
+            "li4": "informacích o nákladech spojených s dodáním zboží (služeb).",
+            "p3": "Odesláním objednávky Kupující potvrzuje, že se seznámil s těmito OP a souhlasí s nimi.",
+            "p4": "Kupní smlouva je uzavřena doručením přijetí objednávky (akceptací) Prodávajícího Kupujícímu elektronickou poštou, a to na e-mailovou adresu Kupujícího uvedenou v objednávce."
+        },
+        "section_4": {
+            "title": "4. Cena zboží a platební podmínky",
+            "p1": "Ceny zboží a služeb jsou uvedeny včetně DPH, pokud není výslovně uvedeno jinak.",
+            "p2": "Společně s kupní cenou je Kupující povinen uhradit Prodávajícímu také náklady spojené s dodáním zboží (služeb) ve sjednané výši.",
+            "p3": "Prodávající akceptuje následující způsoby platby:",
+            "li1": "bankovním převodem na účet Prodávajícího,",
+            "li2": "online platbou kartou prostřednictvím platební brány.",
+            "p4": "V případě bezhotovostní platby je kupní cena splatná do 7 dnů od uzavření kupní smlouvy. Závazek Kupujícího uhradit kupní cenu je splněn okamžikem připsání příslušné částky na účet Prodávajícího."
+        },
+        "section_5": {
+            "title": "5. Dodání digitálních produktů a služeb",
+            "p1": "Digitální produkty jsou dodány bez zbytečného odkladu po uhrazení ceny, zpravidla do 24 hodin, a to ve formě odkazu ke stažení, přístupu do členské sekce, nebo zasláním souborů na e-mail Kupujícího. V případě služeb je dodání stanoveno individuálně na základě dohody s Kupujícím.",
+            "p2": "Náklady na dopravu zboží jsou uvedeny v objednávce a jsou součástí kupní ceny."
+        },
+        "section_6": {
+            "title": "6. Odstoupení od smlouvy",
+            "p1": "Vzhledem k povaze digitálního obsahu, který není dodáván na hmotném nosiči, a s ohledem na ust. § 1837 písm. l) občanského zákoníku, nemá Kupující právo odstoupit od smlouvy, pokud mu byl obsah dodán s jeho předchozím výslovným souhlasem a před uplynutím lhůty pro odstoupení od smlouvy Kupující prohlásil, že byl poučen o tom, že dodáním digitálního obsahu zaniká jeho právo na odstoupení od smlouvy.",
+            "p2": "Pokud se jedná o službu, Kupující spotřebitel má právo odstoupit od kupní smlouvy bez udání důvodu ve lhůtě 14 dnů od jejího uzavření, pokud poskytování služby již nezačalo.",
+            "p3": "Oznámení o odstoupení od smlouvy musí být Prodávajícímu doručeno ve výše uvedené lhůtě."
+        },
+        "section_7": {
+            "title": "7. Práva z vadného plnění (Reklamace)",
+            "p1": "Práva a povinnosti smluvních stran ohledně práv z vadného plnění se řídí příslušnými obecně závaznými právními předpisy (zejména ustanoveními § 1914 až 1925, § 2099 až 2117 a § 2161 až 2174 občanského zákoníku a zákonem č. 634\/1992 Sb., o ochraně spotřebitele, ve znění pozdějších předpisů).",
+            "p2": "Prodávající odpovídá Kupujícímu, že digitální produkt nebo služba při převzetí nemá vady. Zejména Prodávající odpovídá Kupujícímu, že v době, kdy Kupující produkt převzal, má vlastnosti, které si strany ujednaly, hodí se k účelu, který pro jeho použití Prodávající uvádí, a odpovídá požadavkům právních předpisů.",
+            "p3": "Práva z vadného plnění uplatňuje Kupující u Prodávajícího elektronickou poštou na adrese: <a href=\"mailto:info@rpsw.cz\">info&#64;rpsw.cz<\/a>."
+        },
+        "section_8": {
+            "title": "8. Ochrana osobních údajů",
+            "p1": "Prodávající se zavazuje chránit osobní údaje Kupujícího v souladu s platnými právními předpisy, zejména s nařízením GDPR (Nařízení Evropského parlamentu a Rady (EU) 2016\/679 o ochraně fyzických osob v souvislosti se zpracováním osobních údajů).",
+            "p2": "Podrobné informace o zpracování osobních údajů jsou k dispozici v samostatném dokumentu \"Zásady ochrany osobních údajů\", který je dostupný na webové stránce Prodávajícího. Odkaz:"
+        },
+        "section_9": {
+            "title": "9. Závěrečná ustanovení",
+            "p1": "Je-li některé ustanovení OP neplatné nebo neúčinné, nebo se takovým stane, namísto neplatných ustanovení nastoupí ustanovení, jehož smysl se neplatnému ustanovení co nejvíce přibližuje.",
+            "p2": "Tyto obchodní podmínky se řídí právním řádem České republiky.",
+            "p3": "Veškeré spory vznikající z těchto OP nebo v souvislosti s nimi budou řešeny příslušnými soudy České republiky.",
+            "p4": "V případě, že dojde mezi Prodávajícím a spotřebitelem ke vzniku spotřebitelského sporu z kupní smlouvy, který se nepodaří vyřešit vzájemnou dohodou, může spotřebitel podat návrh na mimosoudní řešení takového sporu určenému subjektu mimosoudního řešení spotřebitelských sporů, kterým je:",
+            "p5": "Česká obchodní inspekce<br>Ústřední inspektorát – oddělení ADR<br>Štěpánská 44<br>110 00 Praha 1<br>Web: <a href=\"https:\/\/www.coi.cz\/mimosoudni-reseni-spotrebitelskych-sporu-adr\/\" target=\"_blank\">www.coi.cz<\/a>",
+            "effective_date": "Tyto obchodní podmínky nabývají účinnosti dnem 22. srpna 2025."
+        }
     },
-    "section_2": {
-      "title": "2. Předmět smlouvy",
-      "p1": "Předmětem kupní smlouvy je prodej a poskytování digitálních produktů a služeb, které jsou specifikovány v nabídce na e-shopu Prodávajícího. Digitální produkty zahrnují, ale nejsou omezeny na: software, online kurzy, e-booky, grafické šablony, audio a video záznamy. Služby zahrnují například tvorbu a správu online reklamy."
-    },
-    "section_3": {
-      "title": "3. Objednávka a uzavření kupní smlouvy",
-      "p1": "Veškerá prezentace zboží a služeb umístěná ve webovém rozhraní e-shopu je informativního charakteru a Prodávající není povinen uzavřít kupní smlouvu ohledně tohoto zboží a služeb. Ustanovení § 1732 odst. 2 občanského zákoníku se nepoužije.",
-      "p2": "Pro objednání zboží (služeb) vyplní Kupující objednávkový formulář na webové stránce. Objednávkový formulář obsahuje zejména informace o:",
-      "li1": "objednávaném zboží (službách) (Kupující vloží objednávané zboží do elektronického nákupního košíku webového rozhraní obchodu),",
-      "li2": "způsobu úhrady kupní ceny zboží (služeb),",
-      "li3": "údajích o požadovaném způsobu doručení objednávaného zboží,",
-      "li4": "informacích o nákladech spojených s dodáním zboží (služeb).",
-      "p3": "Odesláním objednávky Kupující potvrzuje, že se seznámil s těmito OP a souhlasí s nimi.",
-      "p4": "Kupní smlouva je uzavřena doručením přijetí objednávky (akceptací) Prodávajícího Kupujícímu elektronickou poštou, a to na e-mailovou adresu Kupujícího uvedenou v objednávce."
-    },
-    "section_4": {
-      "title": "4. Cena zboží a platební podmínky",
-      "p1": "Ceny zboží a služeb jsou uvedeny včetně DPH, pokud není výslovně uvedeno jinak.",
-      "p2": "Společně s kupní cenou je Kupující povinen uhradit Prodávajícímu také náklady spojené s dodáním zboží (služeb) ve sjednané výši.",
-      "p3": "Prodávající akceptuje následující způsoby platby:",
-      "li1": "bankovním převodem na účet Prodávajícího,",
-      "li2": "online platbou kartou prostřednictvím platební brány.",
-      "p4": "V případě bezhotovostní platby je kupní cena splatná do 7 dnů od uzavření kupní smlouvy. Závazek Kupujícího uhradit kupní cenu je splněn okamžikem připsání příslušné částky na účet Prodávajícího."
-    },
-    "section_5": {
-      "title": "5. Dodání digitálních produktů a služeb",
-      "p1": "Digitální produkty jsou dodány bez zbytečného odkladu po uhrazení ceny, zpravidla do 24 hodin, a to ve formě odkazu ke stažení, přístupu do členské sekce, nebo zasláním souborů na e-mail Kupujícího. V případě služeb je dodání stanoveno individuálně na základě dohody s Kupujícím.",
-      "p2": "Náklady na dopravu zboží jsou uvedeny v objednávce a jsou součástí kupní ceny."
-    },
-    "section_6": {
-      "title": "6. Odstoupení od smlouvy",
-      "p1": "Vzhledem k povaze digitálního obsahu, který není dodáván na hmotném nosiči, a s ohledem na ust. § 1837 písm. l) občanského zákoníku, nemá Kupující právo odstoupit od smlouvy, pokud mu byl obsah dodán s jeho předchozím výslovným souhlasem a před uplynutím lhůty pro odstoupení od smlouvy Kupující prohlásil, že byl poučen o tom, že dodáním digitálního obsahu zaniká jeho právo na odstoupení od smlouvy.",
-      "p2": "Pokud se jedná o službu, Kupující spotřebitel má právo odstoupit od kupní smlouvy bez udání důvodu ve lhůtě 14 dnů od jejího uzavření, pokud poskytování služby již nezačalo.",
-      "p3": "Oznámení o odstoupení od smlouvy musí být Prodávajícímu doručeno ve výše uvedené lhůtě."
-    },
-    "section_7": {
-      "title": "7. Práva z vadného plnění (Reklamace)",
-      "p1": "Práva a povinnosti smluvních stran ohledně práv z vadného plnění se řídí příslušnými obecně závaznými právními předpisy (zejména ustanoveními § 1914 až 1925, § 2099 až 2117 a § 2161 až 2174 občanského zákoníku a zákonem č. 634/1992 Sb., o ochraně spotřebitele, ve znění pozdějších předpisů).",
-      "p2": "Prodávající odpovídá Kupujícímu, že digitální produkt nebo služba při převzetí nemá vady. Zejména Prodávající odpovídá Kupujícímu, že v době, kdy Kupující produkt převzal, má vlastnosti, které si strany ujednaly, hodí se k účelu, který pro jeho použití Prodávající uvádí, a odpovídá požadavkům právních předpisů.",
-      "p3": "Práva z vadného plnění uplatňuje Kupující u Prodávajícího elektronickou poštou na adrese: <a href=\"mailto:info@rpsw.cz\">info&#64;rpsw.cz</a>."
-    },
-    "section_8": {
-      "title": "8. Ochrana osobních údajů",
-      "p1": "Prodávající se zavazuje chránit osobní údaje Kupujícího v souladu s platnými právními předpisy, zejména s nařízením GDPR (Nařízení Evropského parlamentu a Rady (EU) 2016/679 o ochraně fyzických osob v souvislosti se zpracováním osobních údajů).",
-      "p2": "Podrobné informace o zpracování osobních údajů jsou k dispozici v samostatném dokumentu \"Zásady ochrany osobních údajů\", který je dostupný na webové stránce Prodávajícího. Odkaz:"
-    },
-    "section_9": {
-      "title": "9. Závěrečná ustanovení",
-      "p1": "Je-li některé ustanovení OP neplatné nebo neúčinné, nebo se takovým stane, namísto neplatných ustanovení nastoupí ustanovení, jehož smysl se neplatnému ustanovení co nejvíce přibližuje.",
-      "p2": "Tyto obchodní podmínky se řídí právním řádem České republiky.",
-      "p3": "Veškeré spory vznikající z těchto OP nebo v souvislosti s nimi budou řešeny příslušnými soudy České republiky.",
-      "p4": "V případě, že dojde mezi Prodávajícím a spotřebitelem ke vzniku spotřebitelského sporu z kupní smlouvy, který se nepodaří vyřešit vzájemnou dohodou, může spotřebitel podat návrh na mimosoudní řešení takového sporu určenému subjektu mimosoudního řešení spotřebitelských sporů, kterým je:",
-      "p5": "Česká obchodní inspekce<br>Ústřední inspektorát – oddělení ADR<br>Štěpánská 44<br>110 00 Praha 1<br>Web: <a href=\"https://www.coi.cz/mimosoudni-reseni-spotrebitelskych-sporu-adr/\" target=\"_blank\">www.coi.cz</a>",
-      "effective_date": "Tyto obchodní podmínky nabývají účinnosti dnem 22. srpna 2025."
+    "order_form": {
+        "header": "Poptávkový formulář",
+        "labels": {
+            "name": "Jméno klienta",
+            "ico": "IČO",
+            "address": "Adresa klienta",
+            "phone": "Telefon klienta",
+            "email": "Email klienta",
+            "description": "Detailní popis objednávky",
+            "attachment": "Příloha max 10MB (všechny typy souborů)",
+            "gdpr_consent": "Souhlasím se zpracováním osobních údajů",
+            "gdpr_link": "Zásady ochrany osobních údajů",
+            "tos_consent": "Souhlasím s obchodními podmínkami",
+            "tos_link": "Všeobecné obchodní podmínky (TOS)",
+            "required_info": "* Označuje povinné pole"
+        },
+        "placeholders": {
+            "phone": "+420...",
+            "file_drop": "Klikněte nebo přetáhněte soubor sem"
+        },
+        "errors": {
+            "ico_pattern": "IČO musí obsahovat pouze číslice.",
+            "phone_pattern": "Pouze číslice a \"+\" na začátku.",
+            "phone_max": "Maximální délka je 20 znaků.",
+            "email_invalid": "Zadejte platný email.",
+            "submit_error": "Omlouváme se, objednávku se nepodařilo odeslat."
+        },
+        "buttons": {
+            "send": "Odeslat poptávku",
+            "sending": "Odesílám...",
+            "go_home": "Odejít domů"
+        },
+        "thank_you": {
+            "title": "Děkujeme za odeslání poptávky",
+            "text": "V nejbližší době vás bude kontaktovat technik, který s vámi dohodne konkrétní řešení."
+        }
     }
-  },
-  "order_form": {
-  "header": "Poptávkový formulář",
-  "labels": {
-    "name": "Jméno klienta",
-    "ico": "IČO",
-    "address": "Adresa klienta",
-    "phone": "Telefon klienta",
-    "email": "Email klienta",
-    "description": "Detailní popis objednávky",
-    "attachment": "Příloha max 10MB (všechny typy souborů)",
-    "gdpr_consent": "Souhlasím se zpracováním osobních údajů",
-    "gdpr_link": "Zásady ochrany osobních údajů",
-    "tos_consent": "Souhlasím s obchodními podmínkami",
-    "tos_link": "Všeobecné obchodní podmínky (TOS)",
-    "required_info": "* Označuje povinné pole"
-  },
-  "placeholders": {
-    "phone": "+420...",
-    "file_drop": "Klikněte nebo přetáhněte soubor sem"
-  },
-  "errors": {
-    "ico_pattern": "IČO musí obsahovat pouze číslice.",
-    "phone_pattern": "Pouze číslice a \"+\" na začátku.",
-    "phone_max": "Maximální délka je 20 znaků.",
-    "email_invalid": "Zadejte platný email.",
-    "submit_error": "Omlouváme se, objednávku se nepodařilo odeslat."
-  },
-  "buttons": {
-    "send": "Odeslat poptávku",
-    "sending": "Odesílám...",
-    "go_home": "Odejít domů"
-  },
-  "thank_you": {
-    "title": "Děkujeme za odeslání poptávky",
-    "text": "V nejbližší době vás bude kontaktovat technik, který s vámi dohodne konkrétní řešení."
-  }
-}
 }

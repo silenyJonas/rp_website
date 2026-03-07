@@ -1,12 +1,13 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { BaseDataComponent } from '../../../../admin/components/base-data/base-data.component';
 import { DataHandler } from '../../../../core/services/data-handler.service';
 import { GenericTableService } from '../../../../core/services/generic-table.service';
 import { LocalizationService } from '../../../services/localization.service';
+import { LoadingService } from '../../../../core/services/loading.service';
 
 @Component({
   selector: 'app-job-item',
@@ -17,11 +18,14 @@ import { LocalizationService } from '../../../services/localization.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JobItemComponent extends BaseDataComponent<any> implements OnInit, OnDestroy {
+  // Přímý přístup k loading službě pro HTML šablonu
+  public override loadingService = inject(LoadingService);
+  
   override apiEndpoint: string = 'job_applications';
   
   applicationForm!: FormGroup;
   job: any = null;
-  t: any = null; // Celý job_detail objekt
+  t: any = null; 
   isSubmitted = false;
   selectedFile: File | null = null;
 
@@ -61,11 +65,6 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
     });
   }
 
-  // Pomocná metoda pro tlačítko (logika zachována)
-  get btnText(): string {
-    return this.isLoading ? 'Odesílám...' : 'Odeslat přihlášku';
-  }
-
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
@@ -80,9 +79,7 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
       return;
     }
 
-    this.isLoading = true;
     this.errorMessage = null;
-    this.cd.markForCheck();
 
     const formData = new FormData();
     Object.keys(this.applicationForm.value).forEach(key => {
@@ -96,11 +93,8 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
     if (this.job) formData.append('position_name', this.job.title);
     formData.append('cv_file', this.selectedFile, this.selectedFile.name);
 
+    // Interceptor automaticky spustí globální loading
     this.uploadData<any>(formData).pipe(
-      finalize(() => {
-        this.isLoading = false;
-        this.cd.markForCheck();
-      }),
       takeUntil(this.destroy$)
     ).subscribe({
       next: () => {

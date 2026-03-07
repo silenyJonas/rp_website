@@ -1,13 +1,13 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { finalize } from 'rxjs/operators';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { DataHandler } from '../../../core/services/data-handler.service';
 import { GenericTableService } from '../../../core/services/generic-table.service';
 import { UserLogin } from '../../../shared/interfaces/user';
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
+import { LoadingService } from '../../../core/services/loading.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +18,9 @@ import { BaseDataComponent } from '../../components/base-data/base-data.componen
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent extends BaseDataComponent<UserLogin> implements OnInit {
+  // Přidáno pro přístup k loading stavu v HTML
+  public override loadingService = inject(LoadingService);
+  
   override apiEndpoint = 'users';
   
   userData: UserLogin | null = null;
@@ -39,14 +42,8 @@ export class DashboardComponent extends BaseDataComponent<UserLogin> implements 
     const userId = this.authService.getUserId();
     if (!userId) return;
 
-    this.isLoading = true;
+    // Odstraněno ruční isLoading = true (řeší interceptor)
     this.getItemDetails(parseInt(userId, 10))
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-          this.cd.markForCheck();
-        })
-      )
       .subscribe({
         next: (data) => {
           this.userData = data;
@@ -54,6 +51,7 @@ export class DashboardComponent extends BaseDataComponent<UserLogin> implements 
         },
         error: (err) => {
           this.errorMessage = 'Nepodařilo se načíst profil uživatele.';
+          this.cd.markForCheck();
           console.error(err);
         }
       });
