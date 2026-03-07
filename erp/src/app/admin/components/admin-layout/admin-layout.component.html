@@ -10,7 +10,7 @@
     <div class="header-item time-hide-mobile" *ngIf="isLoggedIn && userRole">| {{ userRole }}</div>
     
     <div class="header-item time-hide-mobile">
-      | {{ (currentDate$ | async) | date:'HH:mm:ss d. MMMM yyyy' }}
+      | {{ (currentDate$ | async) | date:'HH:mm:ss d. MMMM yyyy' : undefined : 'cs-CZ' }}
     </div>
   </div>
 

@@ -24,7 +24,6 @@ export class TrashTableBuilderComponent extends BaseDataComponent<any> implement
   @Input('columns') columnDefinitions: ColumnDefinition[] = [];
   @Input() tableCaption?: string;
   @Input() override apiEndpoint: string = '';
-  @Input() isLoading: boolean = false;
   @Input() uploadsBaseUrl: string = '';
   
   buttons: Buttons[] = [

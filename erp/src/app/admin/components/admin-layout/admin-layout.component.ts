@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener, LOCALE_ID } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Subscription, interval, Observable } from 'rxjs';
@@ -13,7 +13,10 @@ import { LoadingService } from '../../../core/services/loading.service'; // Upra
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.css'],
   standalone: true,
-  imports: [CommonModule, RouterModule, DatePipe, HasPermissionDirective]
+  imports: [CommonModule, RouterModule, DatePipe, HasPermissionDirective],
+    providers: [
+    { provide: LOCALE_ID, useValue: 'cs-CZ' }
+  ]
 })
 export class AdminLayoutComponent implements OnInit, OnDestroy {
   userEmail: string | null = null;

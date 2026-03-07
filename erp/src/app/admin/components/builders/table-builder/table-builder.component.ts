@@ -25,7 +25,6 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements OnI
   @Input('columns') columnDefinitions: ColumnDefinition[] = [];
   @Input() tableCaption?: string;
   @Input() override apiEndpoint: string = '';
-  @Input() isLoading: boolean = false;
   @Input() uploadsBaseUrl: string = '';
   @Input() buttons: Buttons[] = [];
   @Input() isAdminTable: boolean = false;
@@ -106,7 +105,6 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements OnI
 
   async exportToCSV() {
     try {
-      this.isLoading = true;
       this.cd.markForCheck();
       
       const responseData = await firstValueFrom(this.loadDataAsCollection());
@@ -133,7 +131,6 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements OnI
       console.error('Export error:', error);
       this.alertDialogService.open('Chyba', 'Při exportu nastala chyba.', 'danger');
     } finally {
-      this.isLoading = false;
       this.cd.markForCheck();
     }
   }
