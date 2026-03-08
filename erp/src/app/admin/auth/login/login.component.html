@@ -45,15 +45,15 @@
             </div>
           </div>
 
-          <div *ngIf="errorMessage" class="error-message">
-            {{ errorMessage }}
-          </div>
+          
 
           <div class="submit-wrp">
             <button type="submit">Přihlásit se</button>
           </div>
         </form>
-
+<div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </div>
         <div class="back-to-home">
           <a routerLink="/home" class="home-link">Zpět na hlavní stránku</a>
         </div>
