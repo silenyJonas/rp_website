@@ -1,15 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LocalizationService } from '../../../services/localization.service';
 import { RouterModule } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
-interface JobItem {
-  id: string;
-  title: string;
-  shortDescription: string;
-}
+// Tvůj hromadný import pro služby a RxJS nástroje
+import * as Web from '../../../../shared/imports/web-providers';
+import { JobItem } from '../../../../shared/interfaces/job-item';
+
 
 @Component({
   selector: 'app-jobs-list',
@@ -26,19 +22,19 @@ export class JobsListComponent implements OnInit, OnDestroy {
   ig_icon: string = 'assets/images/icons/ig.png';
   email_icon: string = 'assets/images/icons/email.png';
 
-  private destroy$ = new Subject<void>();
+  private destroy$ = new Web.Subject<void>();
 
   constructor(
-    private localizationService: LocalizationService,
+    private localizationService: Web.LocalizationService,
     private cdr: ChangeDetectorRef 
   ) {}
 
   ngOnInit(): void {
     this.localizationService.currentTranslations$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(Web.takeUntil(this.destroy$))
       .subscribe(translations => {
         if (translations?.careers) {
-          this.t = translations; // Ukládáme celý objekt pro přístup ke careers i job_detail
+          this.t = translations;
           this.loadJobs();
           this.cdr.markForCheck();
         }
@@ -47,7 +43,6 @@ export class JobsListComponent implements OnInit, OnDestroy {
 
   private loadJobs(): void {
     const jobs: JobItem[] = [];
-    // Logika procházení jobů zůstává, mapujeme na tvé klíče job_1, job_2...
     for (let i = 1; i <= 10; i++) {
       const id = this.t.careers[`job_${i}_id`];
       const title = this.t.careers[`job_${i}_title`];

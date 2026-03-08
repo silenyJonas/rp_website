@@ -1,16 +1,12 @@
-import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
+import * as Core from '../../../../shared/imports/core-providers';
 import { ColumnDefinition } from '../../../../shared/interfaces/generic-form-column-definiton';
 import { BaseDataComponent } from '../../base-data/base-data.component';
-import { DataHandler } from '../../../../core/services/data-handler.service';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
-import { AlertDialogService } from '../../../../core/services/alert-dialog.service';
-import { AuthService } from '../../../../core/auth/auth.service';
-import { GenericTableService } from '../../../../core/services/generic-table.service';
 import { Buttons } from '../../../../shared/interfaces/buttons';
-
 
 @Component({
   selector: 'app-table-builder',
@@ -20,7 +16,7 @@ import { Buttons } from '../../../../shared/interfaces/buttons';
   styleUrls: ['../table-style.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableBuilderComponent extends BaseDataComponent<any> implements OnInit, OnChanges {
+export class TableBuilderComponent extends BaseDataComponent<any> implements Core.OnInit, Core.OnChanges {
   @Input() override data: any[] = [];
   @Input('columns') columnDefinitions: ColumnDefinition[] = [];
   @Input() tableCaption?: string;
@@ -39,18 +35,18 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements OnI
   @Output() resetPasswordFormOpened = new EventEmitter<any>(); 
 
   constructor(
-    protected override dataHandler: DataHandler,
-    protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService,
+    protected override dataHandler: Core.DataHandler,
+    protected override cd: Core.ChangeDetectorRef,
+    protected override genericTableService: Core.GenericTableService,
     private confirmDialogService: ConfirmDialogService,
-    private alertDialogService: AlertDialogService,
-    public authService: AuthService 
+    private alertDialogService: Core.AlertDialogService,
+    public authService: Core.AuthService 
   ) {
     super(dataHandler, cd, genericTableService);
   }
 
   override ngOnInit(): void { super.ngOnInit(); }
-  override ngOnChanges(changes: SimpleChanges): void { super.ngOnChanges(changes); }
+  override ngOnChanges(changes: Core.SimpleChanges): void { super.ngOnChanges(changes); }
 
   getCellValue(item: any, column: ColumnDefinition): any {
     const keys = column.key.split('.');

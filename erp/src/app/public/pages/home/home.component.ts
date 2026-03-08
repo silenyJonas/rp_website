@@ -1,16 +1,9 @@
-// src/app/home/home.component.ts
-
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { PublicDataService } from '../../services/public-data.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Subject } from 'rxjs';
+import * as Web from '../../../shared/imports/web-providers';
 import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
-import { FormFieldConfig } from '../../../shared/interfaces/form-field-config';
-import { takeUntil } from 'rxjs/operators';
-import { LocalizationService } from '../../services/localization.service';
 
 @Component({
   selector: 'app-home',
@@ -24,7 +17,7 @@ import { LocalizationService } from '../../services/localization.service';
     GenericFormComponent
   ]
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements Web.OnInit {
 
   private heroBackgroundImageUrl: string = 'assets/images/backgrounds/home_background.jpg';
   private serviceBackgrounds: { [key: string]: string } = {
@@ -141,15 +134,15 @@ export class HomeComponent implements OnInit {
   selectUsItem3Bullet3: string = '';
 
 
-  contactFormConfig: FormFieldConfig[] = [];
+  contactFormConfig: Web.FormFieldConfig[] = [];
 
-  private destroy$ = new Subject<void>(); // Pro správné odhlášení z odběrů
+  private destroy$ = new Web.Subject<void>(); // Pro správné odhlášení z odběrů
 
-  constructor(private publicDataService: PublicDataService,private localizationService: LocalizationService) { }
+  constructor(private publicDataService: Web.PublicDataService, private localizationService: Web.LocalizationService) { }
 
 ngOnInit(): void {
   this.localizationService.currentTranslations$
-    .pipe(takeUntil(this.destroy$))
+    .pipe(Web.takeUntil(this.destroy$))
     .subscribe(translations => {
       if (translations) {
 
@@ -283,14 +276,12 @@ ngOnInit(): void {
 
 
   handleFormSubmission(formData: any): void {
-    // console.log('Data přijata z generického formuláře k odeslání do PublicDataService:', formData);
-
     this.publicDataService.submitContactForm(formData).subscribe({
       next: (response) => {
-        // console.log('Formulář odeslán úspěšně přes PublicDataService!', response);
+        // console.log('Formulář odeslán úspěšně!', response);
       },
-      error: (error: HttpErrorResponse) => {
-        // console.error('Chyba při odesílání formuláře přes PublicDataService:', error);
+      error: (error: Web.HttpErrorResponse) => {
+        // console.error('Chyba při odesílání formuláře:', error);
       }
     });
   }

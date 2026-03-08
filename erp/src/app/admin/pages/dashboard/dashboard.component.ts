@@ -1,10 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { AuthService } from '../../../core/auth/auth.service';
-import { DataHandler } from '../../../core/services/data-handler.service';
-import { GenericTableService } from '../../../core/services/generic-table.service';
+// Import tvého Core namespace
+import * as Core from '../../../shared/imports/core-providers';
+
+// Importy specifické pro tuto komponentu
 import { UserLogin } from '../../../shared/interfaces/user';
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
 import { LoadingService } from '../../../core/services/loading.service';
@@ -17,24 +18,28 @@ import { LoadingService } from '../../../core/services/loading.service';
   styleUrl: './dashboard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent extends BaseDataComponent<UserLogin> implements OnInit {
-  // Přidáno pro přístup k loading stavu v HTML
+// OPRAVA: Používáme Core.OnInit přímo v implements. 
+// Pokud chyba přetrvává, ujisti se, že v core-providers.ts máš: export type { OnInit ... }
+export class DashboardComponent extends BaseDataComponent<UserLogin> implements Core.OnInit {
+  
+  // Přístup k loading stavu pro šablonu (pomocí async pipe)
   public override loadingService = inject(LoadingService);
   
   override apiEndpoint = 'users';
-  
   userData: UserLogin | null = null;
 
   constructor(
-    protected override dataHandler: DataHandler,
-    protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService, 
-    private authService: AuthService
+    protected override dataHandler: Core.DataHandler,
+    protected override cd: Core.ChangeDetectorRef,
+    protected override genericTableService: Core.GenericTableService, 
+    // AuthService je třída, takže Core.AuthService funguje správně
+    private authService: Core.AuthService
   ) {
     super(dataHandler, cd, genericTableService);
   }
 
   override ngOnInit(): void {
+    // Voláme init z BaseDataComponent pokud je potřeba, jinak vlastní logiku
     this.loadUserProfile();
   }
 
@@ -42,7 +47,9 @@ export class DashboardComponent extends BaseDataComponent<UserLogin> implements 
     const userId = this.authService.getUserId();
     if (!userId) return;
 
-    // Odstraněno ruční isLoading = true (řeší interceptor)
+    // Snapshot kontrola proti double-clicku během 300ms prodlevy interceptoru
+    if (this.loadingService.isLoadingSnapshot) return;
+
     this.getItemDetails(parseInt(userId, 10))
       .subscribe({
         next: (data) => {
@@ -52,7 +59,7 @@ export class DashboardComponent extends BaseDataComponent<UserLogin> implements 
         error: (err) => {
           this.errorMessage = 'Nepodařilo se načíst profil uživatele.';
           this.cd.markForCheck();
-          console.error(err);
+          console.error('Dashboard Error:', err);
         }
       });
   }

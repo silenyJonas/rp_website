@@ -2,10 +2,9 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrateg
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { finalize, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { PublicDataService } from '../../services/public-data.service';
-import { LocalizationService } from '../../services/localization.service';
+
+// Tvůj hromadný import pro služby a RxJS nástroje
+import * as Web from '../../../shared/imports/web-providers';
 
 @Component({
   selector: 'app-order-form',
@@ -24,20 +23,20 @@ export class OrderFormComponent implements OnInit, OnDestroy {
   errorMessage: string | null = null;
   
   f: any = null; // Proměnná pro překlady
-  private destroy$ = new Subject<void>();
+  private destroy$ = new Web.Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private cd: ChangeDetectorRef,
-    private publicDataService: PublicDataService,
-    private localizationService: LocalizationService
+    private publicDataService: Web.PublicDataService,
+    private localizationService: Web.LocalizationService
   ) {}
 
   ngOnInit(): void {
     // Lokalizace
     this.localizationService.currentTranslations$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(Web.takeUntil(this.destroy$))
       .subscribe(translations => {
         if (translations?.order_form) {
           this.f = translations.order_form;
@@ -103,16 +102,18 @@ export class OrderFormComponent implements OnInit, OnDestroy {
     }
 
     this.publicDataService.submitOrder(formData).pipe(
-      finalize(() => {
+      Web.finalize(() => {
+        this.isLoading = false;
         this.cd.markForCheck();
-      })
+      }),
+      Web.takeUntil(this.destroy$)
     ).subscribe({
       next: () => {
         this.isSubmitted = true;
         this.cd.markForCheck();
       },
-      error: (err) => {
-        this.errorMessage = this.f.errors.submit_error;
+      error: (err: any) => {
+        this.errorMessage = this.f?.errors?.submit_error || 'Error';
         console.error('Chyba při odesílání:', err);
         this.cd.markForCheck();
       }

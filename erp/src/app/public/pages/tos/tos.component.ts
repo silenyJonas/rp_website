@@ -1,29 +1,24 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { LocalizationService } from '../../services/localization.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import * as Web from '../../../shared/imports/web-providers';
 
-@Component({
+@Web.Component({
   selector: 'app-tos',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [Web.CommonModule, Web.RouterModule],
   templateUrl: './tos.component.html',
   styleUrl: './tos.component.css'
 })
-export class TosComponent implements OnInit, OnDestroy {
+export class TosComponent implements Web.OnInit, Web.OnDestroy {
   t: any = null;
-  private destroy$ = new Subject<void>();
+  private destroy$ = new Web.Subject<void>();
 
   constructor(
-    private localizationService: LocalizationService,
-    private cdr: ChangeDetectorRef 
+    private localizationService: Web.LocalizationService,
+    private cdr: Web.ChangeDetectorRef 
   ) { }
 
   ngOnInit(): void {
     this.localizationService.currentTranslations$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(Web.takeUntil(this.destroy$))
       .subscribe(translations => {
         if (translations && Object.keys(translations).length > 0) {
           // Načteme celou sekci 'tos' do jedné proměnné pro snazší přístup

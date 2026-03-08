@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LocalizationService } from '../../services/localization.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+
+// Tvůj hromadný import pro služby, RxJS a typy
+import * as Web from '../../../shared/imports/web-providers';
 
 @Component({
   selector: 'app-about-us',
@@ -12,20 +12,20 @@ import { takeUntil } from 'rxjs/operators';
   styleUrl: './about-us.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AboutUsComponent implements OnInit, OnDestroy {
+export class AboutUsComponent implements Web.OnInit, Web.OnDestroy {
   // Jeden objekt pro všechny texty v komponentě
   t: any = null;
 
-  private destroy$ = new Subject<void>();
+  private destroy$ = new Web.Subject<void>();
 
   constructor(
-    private localizationService: LocalizationService,
+    private localizationService: Web.LocalizationService,
     private cdr: ChangeDetectorRef 
   ) { }
 
   ngOnInit(): void {
     this.localizationService.currentTranslations$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(Web.takeUntil(this.destroy$))
       .subscribe(translations => {
         if (translations?.about_us) {
           this.t = translations.about_us;

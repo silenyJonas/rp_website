@@ -1,46 +1,30 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { LocalizationService } from '../../services/localization.service';
-
-import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
-import { FormFieldConfig } from '../../../shared/interfaces/form-field-config';
+import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { PublicDataService } from '../../services/public-data.service';
-import { HttpErrorResponse } from '@angular/common/http';
-
-interface Technology {
-    id: string;
-    name: string;
-}
-interface Item {
-    id: number;
-    question: string;
-    answer: string;
-    isActive: boolean;
-}
+import * as Web from '../../../shared/imports/web-providers';
+import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
+import { Technology } from '../../../shared/interfaces/technology';
+import { Item } from '../../../shared/interfaces/item';
 
 @Component({
     selector: 'app-main-content',
     standalone: true,
-    imports: [CommonModule, RouterLink, GenericFormComponent, FormsModule],
+    imports: [CommonModule, RouterModule, GenericFormComponent, FormsModule], // přímé importy
     templateUrl: './services.component.html',
     styleUrls: ['./services.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServicesComponent implements OnInit, OnDestroy {
-    // Jediná proměnná pro veškerý lokalizovaný obsah
+  // zbytek beze změny...
     s: any = null;
 
-    contactFormConfig: FormFieldConfig[] = [];
-    private destroy$ = new Subject<void>();
+    contactFormConfig: Web.FormFieldConfig[] = [];
+    private destroy$ = new Web.Subject<void>();
 
     currentTech: string = 'web-dev';
     technologies: Technology[] = [];
 
-    // Statické konfigurace obrázků (nemění se překladem)
     webTechImages = [
         { name: 'C#', path: 'assets/images/services-img/csharp.png' },
         { name: 'TypeScript', path: 'assets/images/services-img/ts.png' },
@@ -66,20 +50,19 @@ export class ServicesComponent implements OnInit, OnDestroy {
     ];
 
     constructor(
-        private publicDataService: PublicDataService,
+        private publicDataService: Web.PublicDataService,
         private cdr: ChangeDetectorRef,
-        private route: ActivatedRoute,
-        private localizationService: LocalizationService
+        private route: Web.ActivatedRoute,
+        private localizationService: Web.LocalizationService
     ) { }
 
     ngOnInit(): void {
         this.localizationService.currentTranslations$
-            .pipe(takeUntil(this.destroy$))
+            .pipe(Web.takeUntil(this.destroy$))
             .subscribe(translations => {
                 if (translations && translations.services) {
                     this.s = translations.services;
 
-                    // Inicializace technologií pro přepínač
                     this.technologies = [
                         { id: 'web-dev', name: this.s.web_dev_header },
                         { id: 'desktop-dev', name: this.s.desktop_dev_header },
@@ -87,16 +70,13 @@ export class ServicesComponent implements OnInit, OnDestroy {
                         { id: 'ai-dev', name: this.s.ai_dev_header }
                     ];
 
-                    // Sestavení konfigurace formuláře
                     this.buildFormConfig();
-
                     this.cdr.detectChanges();
                 }
             });
 
-        // Logika pro Query parametry (tech)
         this.route.queryParams.pipe(
-            takeUntil(this.destroy$)
+            Web.takeUntil(this.destroy$)
         ).subscribe(params => {
             const techIdFromUrl = params['tech'];
             if (techIdFromUrl && this.technologies.some(t => t.id === techIdFromUrl)) {
@@ -169,7 +149,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     handleFormSubmission(formData: any): void {
         this.publicDataService.submitContactForm(formData).subscribe({
             next: () => {},
-            error: (error: HttpErrorResponse) => {}
+            error: (error: Web.HttpErrorResponse) => {}
         });
     }
 

@@ -1,13 +1,16 @@
-import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+// Import tvého Core namespace
+import * as Core from '../../../../shared/imports/core-providers';
+
+// Specifické importy, které nejsou v Core
 import { ColumnDefinition } from '../../../../shared/interfaces/generic-form-column-definiton';
 import { BaseDataComponent } from '../../base-data/base-data.component';
-import { DataHandler } from '../../../../core/services/data-handler.service';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
-import { AlertDialogService } from '../../../../core/services/alert-dialog.service';
-import { GenericTableService } from '../../../../core/services/generic-table.service'; 
 import { Buttons } from '../../../../shared/interfaces/buttons';
+
 @Component({
   selector: 'app-trash-table-builder',
   standalone: true,
@@ -19,7 +22,7 @@ import { Buttons } from '../../../../shared/interfaces/buttons';
   styleUrls: ['../table-style.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TrashTableBuilderComponent extends BaseDataComponent<any> implements OnInit, OnChanges {
+export class TrashTableBuilderComponent extends BaseDataComponent<any> implements Core.OnInit, Core.OnChanges {
   @Input() override data: any[] = [];
   @Input('columns') columnDefinitions: ColumnDefinition[] = [];
   @Input() tableCaption?: string;
@@ -37,16 +40,16 @@ export class TrashTableBuilderComponent extends BaseDataComponent<any> implement
   @Output() itemDeletedPermanently = new EventEmitter<void>();
 
   constructor(
-    protected override dataHandler: DataHandler,
-    protected override cd: ChangeDetectorRef,
-    protected override genericTableService: GenericTableService,
+    protected override dataHandler: Core.DataHandler,
+    protected override cd: Core.ChangeDetectorRef,
+    protected override genericTableService: Core.GenericTableService,
     private confirmDialogService: ConfirmDialogService,
-    private alertDialogService: AlertDialogService
+    private alertDialogService: Core.AlertDialogService
   ) {
     super(dataHandler, cd, genericTableService);
   }
 
-  override ngOnChanges(changes: SimpleChanges): void {
+  override ngOnChanges(changes: Core.SimpleChanges): void {
     super.ngOnChanges(changes);
   }
 

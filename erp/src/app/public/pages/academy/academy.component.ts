@@ -1,31 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PublicDataService } from '../../services/public-data.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { LocalizationService } from '../../services/localization.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
+import * as Web from '../../../shared/imports/web-providers';
 import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
-import { FormFieldConfig } from '../../../shared/interfaces/form-field-config';
-
-interface TimelineItemKeys {
-  id: number;
-  titleKey: string;
-  contentKey: string;
-  themesKeys: string[];
-  newThingsKeys: { textKey: string; icon: string; }[];
-  isActive: boolean;
-}
-
-interface TimelineItem {
-  id: number;
-  title: string;
-  content: string;
-  isActive: boolean;
-  themes: string[]; 
-  newThings: string[][]; 
-}
+import {TimelineItemKeys} from '../../../shared/interfaces/timeline-item-keys'
+import { TimelineItem } from '../../../shared/interfaces/timeline-item';
 
 @Component({
   selector: 'app-academy',
@@ -38,8 +16,7 @@ interface TimelineItem {
   styleUrls: ['./academy.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AcademyComponent implements OnInit, OnDestroy {
-
+export class AcademyComponent implements Web.OnInit, Web.OnDestroy {
   form_header: string = '';
   form_description: string = '';
   form_button: string = '';
@@ -68,7 +45,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
   yearlyPaymentAmount: string = '';
   yearlyPaymentNote: string = '';
 
-  private initialContactFormConfig: FormFieldConfig[] = [
+  private initialContactFormConfig: Web.FormFieldConfig[] = [
     {
       label: 'academy.consultation_form.fields.theme_label',
       isLocalizedLabel: true,
@@ -116,7 +93,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
     }
   ];
 
-  contactFormConfig: FormFieldConfig[] = [];
+  contactFormConfig: Web.FormFieldConfig[] = [];
 
   timeIcon: string = 'assets/images/icons/curses/time.png';
   calendarIcon: string = 'assets/images/icons/curses/calendar.png';
@@ -250,17 +227,17 @@ export class AcademyComponent implements OnInit, OnDestroy {
   webDevSectionDescription: string = '';
   desktopDevSectionDescription: string = '';
 
-  private destroy$ = new Subject<void>();
+  private destroy$ = new Web.Subject<void>();
 
   constructor(
-    private publicDataService: PublicDataService,
+    private publicDataService: Web.PublicDataService,
     private cdr: ChangeDetectorRef,
-    public localizationService: LocalizationService
+    public localizationService: Web.LocalizationService
   ) { }
 
   ngOnInit(): void {
     this.localizationService.currentTranslations$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(Web.takeUntil(this.destroy$))
       .subscribe(() => {
         this.loadLocalizedContent();
         this.cdr.detectChanges();
@@ -307,7 +284,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
     this.yearlyPaymentNote = this.localizationService.getText('academy.prices.yearly.note');
 
     this.contactFormConfig = this.initialContactFormConfig.map(field => {
-      const translatedField: FormFieldConfig = { ...field };
+      const translatedField: Web.FormFieldConfig = { ...field };
 
       if (field.isLocalizedLabel) {
         translatedField.label = this.localizationService.getText(field.label);
@@ -368,7 +345,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
       next: (response) => {
         console.log('Formulář odeslán úspěšně přes PublicDataService!', response);
       },
-      error: (error: HttpErrorResponse) => {
+      error: (error: Web.HttpErrorResponse) => {
         console.error('Chyba při odesílání formuláře přes PublicDataService:', error);
       }
     });

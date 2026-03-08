@@ -1,14 +1,10 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LocalizationService } from '../../services/localization.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
-interface FaqItem {
-  question: string;
-  answer: string;
-  isActive: boolean;
-}
+// Tvůj hromadný import pro služby a RxJS nástroje
+import * as Web from '../../../shared/imports/web-providers';
+
+import { FaqItem } from '../../../shared/interfaces/faq-item';
 
 @Component({
   selector: 'app-faq',
@@ -18,23 +14,23 @@ interface FaqItem {
   styleUrls: ['./faq.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush 
 })
-export class FaqComponent implements OnInit, OnDestroy {
+export class FaqComponent implements Web.OnInit, Web.OnDestroy {
   t: any = null;
   faqItems: FaqItem[] = [];
 
   ig_icon: string = 'assets/images/icons/ig.png';
   email_icon: string = 'assets/images/icons/email.png';
 
-  private destroy$ = new Subject<void>();
+  private destroy$ = new Web.Subject<void>();
 
   constructor(
-    private localizationService: LocalizationService,
+    private localizationService: Web.LocalizationService,
     private cdr: ChangeDetectorRef 
   ) {}
 
   ngOnInit(): void {
     this.localizationService.currentTranslations$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(Web.takeUntil(this.destroy$))
       .subscribe(translations => {
         if (translations?.faq) {
           this.t = translations.faq;

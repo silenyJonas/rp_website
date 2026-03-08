@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LocalizationService } from '../../services/localization.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import * as Web from '../../../shared/imports/web-providers';
 
 @Component({
   selector: 'app-references',
@@ -15,16 +13,16 @@ import { takeUntil } from 'rxjs/operators';
 export class ReferencesComponent implements OnInit, OnDestroy {
   r: any = null;
 
-  private destroy$ = new Subject<void>();
+  private destroy$ = new Web.Subject<void>();
 
   constructor(
-    private localizationService: LocalizationService,
+    private localizationService: Web.LocalizationService,
     private cdr: ChangeDetectorRef 
   ) { }
 
   ngOnInit(): void {
     this.localizationService.currentTranslations$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(Web.takeUntil(this.destroy$))
       .subscribe(translations => {
         if (translations && translations.projects) {
           this.r = translations.projects;
