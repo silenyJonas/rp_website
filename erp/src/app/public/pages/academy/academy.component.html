@@ -1,462 +1,273 @@
 <div class="header-1">
-    {{ academyHeader }}
+  {{ t?.header }}
 </div>
 <div class="header-0-2-t">
-    {{second_header}}
+  {{ t?.second_header }}
 </div>
 <div class="main-content">
-    <div class="courses-wrp">
-        <div class="courses-wrp-1">
+  <div class="courses-wrp">
+    <div class="courses-wrp-1">
 
-            <div class="web-course-wrp">
-                <div class="p-wrp">
-                    <div class="header-course">
-                        {{ webDevSectionTitle }}
-                    </div>
-                    <div class="text-1">
-                        {{ webDevSectionDescription }}
-                    </div>
-                    <div class="text-1">
-                        {{ introText }}
-                    </div>
-                    <div class="info-wrp">
-                        <div class="i-when">
-                            <div class="i-header-1">
-                                {{ timeHeader }}
-                            </div>
-                            <div class="i-inside">
-                                <div class="line">
-                                    <div class="i-i-img">
-                                        <img [src]="timeIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.time_duration') }}
-                                    </div>
-                                </div>
-
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="calendarIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.tuesday_time') }}
-                                    </div>
-                                </div>
-
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="calendarIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.thursday_time') }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="i-what sep">
-                            <div class="i-header-1">
-                                {{ onlineHeader }}
-                            </div>
-                            <div class="i-inside">
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="onlineIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.icons.online') }}
-                                    </div>
-                                </div>
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="discordIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.icons.discord') }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="i-where">
-                            <div class="i-header-1">
-                                {{ whatHeader }}
-                            </div>
-                            <div class="i-inside">
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="clientIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.internet_basics') }}
-                                    </div>
-                                </div>
-
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="wwwIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.website_creation') }}
-                                    </div>
-                                </div>
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="wwwIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.web_app_creation') }}
-                                    </div>
-                                </div>
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="databaseIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.database_basics') }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="timeline-section-container">
-
-                        <div class="diff-wrp">
-                            <div *ngFor="let item of webTimelineItems; let i = index"
-                                class="diff-ins"
-                                [ngClass]="{'active-item': item.isActive}"
-                                [style.animation-delay]="i * 0.1 + 's'">
-
-                                <div class="diff-line" (click)="toggleWebItem(item)">
-                                    <div class="ball" [ngClass]="{'active-ball': item.isActive}">
-                                        {{ i + 1 }}
-                                    </div>
-                                    <div class="diff-header">
-                                        <div class="diff-c-header">
-                                            <h3>{{ item.title }}</h3>
-                                        </div>
-                                        <div class="diff-arrow" [ngClass]="{'rotated': item.isActive}">
-                                            <div class="arrow-txt">
-                                                >
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="diff-answer" [ngClass]="{'active-answer': item.isActive}">
-                                    <div class="content-1-wrp">
-                                        {{item.content}}
-                                    </div>
-                                    <div class="duration-wrp">
-                                        <div class="diff-c-header-2">
-                                            {{ commonDurationHeader }}
-                                        </div>
-                                        <div class="duration-text">
-                                            {{ localizationService.getText('academy.common.course_duration') }}
-                                        </div>
-                                    </div>
-                                    <div class="des-wrp">
-                                        <div class="s-1">
-                                            <div class="diff-c-header-1">
-                                                {{ commonThemesHeader }}
-                                            </div>
-                                            <ul class="diff-c-list">
-                                                <li *ngFor="let theme of item.themes">
-                                                    {{theme}}
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="s-1">
-                                            <div class="diff-c-header-1">
-                                                {{ commonNewThingsHeader }}
-                                            </div>
-                                            <div class="diff-c-icon-wrp">
-                                                <div class="diff-c-icon" *ngIf="item.newThings[0]">
-                                                    <div class="diff-con-icon">
-                                                        <img [src]="item.newThings[0][1]" alt="">
-                                                    </div>
-                                                    <div class="diff-con-text">
-                                                        {{item.newThings[0][0]}}
-                                                    </div>
-                                                </div>
-                                                <div class="diff-c-icon" *ngIf="item.newThings[1]">
-                                                    <div class="diff-con-icon">
-                                                        <img [src]="item.newThings[1][1]" alt="">
-                                                    </div>
-                                                    <div class="diff-con-text">
-                                                        {{item.newThings[1][0]}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+      <div class="web-course-wrp">
+        <div class="p-wrp">
+          <div class="header-course">{{ t?.web_development?.title }}</div>
+          <div class="text-1">{{ t?.web_development?.description }}</div>
+          <div class="text-1">{{ t?.intro_text }}</div>
+          <div class="info-wrp">
+            <div class="i-when">
+              <div class="i-header-1">{{ t?.icons?.time }}</div>
+              <div class="i-inside">
+                <div class="line">
+                  <div class="i-i-img"><img [src]="timeIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.time_duration }}</div>
                 </div>
-            </div>
-
-
-            <div class="desktop-course-wrp">
-                <div class="p-wrp">
-                    <div class="header-course">
-                        {{ desktopDevSectionTitle }}
-                    </div>
-                    <div class="text-1">
-                        {{ desktopDevSectionDescription }}
-                    </div>
-
-                    <div class="text-1">
-                        {{ introText }}
-                    </div>
-                    <div class="info-wrp">
-                        <div class="i-when">
-                            <div class="i-header-1">
-                                {{ timeHeader }}
-                            </div>
-                            <div class="i-inside">
-                                <div class="line">
-                                    <div class="i-i-img">
-                                        <img [src]="timeIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.time_duration') }}
-                                    </div>
-                                </div>
-
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="calendarIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.tuesday_time_desktop') }}
-                                    </div>
-                                </div>
-
-
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="calendarIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.thursday_time_desktop') }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="i-what sep">
-                            <div class="i-header-1">
-                                {{ onlineHeader }}
-                            </div>
-                            <div class="i-inside">
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="onlineIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.icons.online') }}
-                                    </div>
-                                </div>
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="discordIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.icons.discord') }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="i-where">
-                            <div class="i-header-1">
-                                {{ whatHeader }}
-                            </div>
-                            <div class="i-inside">
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="pcIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.computer_principles') }}
-                                    </div>
-                                </div>
-
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="cmdIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.cmd_applications') }}
-                                    </div>
-                                </div>
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="guiIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.gui_applications') }}
-                                    </div>
-                                </div>
-                                <div class="line">
-                                    <div class="i-i-img ">
-                                        <img [src]="databaseIcon" alt="">
-                                    </div>
-                                    <div class="i-i-text">
-                                        {{ localizationService.getText('academy.common.database_basics') }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="timeline-section-container">
-
-                        <div class="diff-wrp">
-                            <div *ngFor="let item of desktopTimelineItems; let i = index"
-                                class="diff-ins"
-                                [ngClass]="{'active-item': item.isActive}"
-                                [style.animation-delay]="i * 0.1 + 's'">
-
-                                <div class="diff-line" (click)="toggleDesktopItem(item)">
-                                    <div class="ball" [ngClass]="{'active-ball': item.isActive}">
-                                        {{ i + 1 }}
-                                    </div>
-                                    <div class="diff-header">
-                                        <div class="diff-c-header">
-                                            <h3>{{ item.title }}</h3>
-                                        </div>
-                                        <div class="diff-arrow" [ngClass]="{'rotated': item.isActive}">
-                                            <div class="arrow-txt">
-                                                >
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="diff-answer" [ngClass]="{'active-answer': item.isActive}">
-                                    <div class="content-1-wrp">
-                                        {{item.content}}
-                                    </div>
-                                    <div class="duration-wrp">
-                                        <div class="diff-c-header-2">
-                                            {{ commonDurationHeader }}
-                                        </div>
-                                        <div class="duration-text">
-                                            {{ localizationService.getText('academy.common.course_duration') }}
-                                        </div>
-                                    </div>
-                                    <div class="des-wrp">
-                                        <div class="s-1">
-                                            <div class="diff-c-header-1">
-                                                {{ commonThemesHeader }}
-                                            </div>
-                                            <ul class="diff-c-list">
-                                                <li *ngFor="let theme of item.themes">
-                                                    {{theme}}
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="s-1">
-                                            <div class="diff-c-header-1">
-                                                {{ commonNewThingsHeader }}
-                                            </div>
-                                            <div class="diff-c-icon-wrp">
-                                                <div class="diff-c-icon" *ngIf="item.newThings[0]">
-                                                    <div class="diff-con-icon">
-                                                        <img [src]="item.newThings[0][1]" alt="">
-                                                    </div>
-                                                    <div class="diff-con-text">
-                                                        {{item.newThings[0][0]}}
-                                                    </div>
-                                                </div>
-                                                <div class="diff-c-icon" *ngIf="item.newThings[1]">
-                                                    <div class="diff-con-icon">
-                                                        <img [src]="item.newThings[1][1]" alt="">
-                                                    </div>
-                                                    <div class="diff-con-text">
-                                                        {{item.newThings[1][0]}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="line">
+                  <div class="i-i-img"><img [src]="calendarIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.tuesday_time }}</div>
                 </div>
+                <div class="line">
+                  <div class="i-i-img"><img [src]="calendarIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.thursday_time }}</div>
+                </div>
+              </div>
             </div>
+            <div class="i-what sep">
+              <div class="i-header-1">{{ t?.icons?.online }}</div>
+              <div class="i-inside">
+                <div class="line">
+                  <div class="i-i-img"><img [src]="onlineIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.icons?.online }}</div>
+                </div>
+                <div class="line">
+                  <div class="i-i-img"><img [src]="discordIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.icons?.discord }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="i-where">
+              <div class="i-header-1">{{ t?.icons?.what }}</div>
+              <div class="i-inside">
+                <div class="line">
+                  <div class="i-i-img"><img [src]="clientIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.internet_basics }}</div>
+                </div>
+                <div class="line">
+                  <div class="i-i-img"><img [src]="wwwIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.website_creation }}</div>
+                </div>
+                <div class="line">
+                  <div class="i-i-img"><img [src]="wwwIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.web_app_creation }}</div>
+                </div>
+                <div class="line">
+                  <div class="i-i-img"><img [src]="databaseIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.database_basics }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-section-container">
+            <div class="diff-wrp">
+              <div *ngFor="let item of webTimelineItems; let i = index"
+                class="diff-ins"
+                [ngClass]="{'active-item': item.isActive}"
+                [style.animation-delay]="i * 0.1 + 's'">
+                <div class="diff-line" (click)="toggleWebItem(item)">
+                  <div class="ball" [ngClass]="{'active-ball': item.isActive}">{{ i + 1 }}</div>
+                  <div class="diff-header">
+                    <div class="diff-c-header"><h3>{{ item.title }}</h3></div>
+                    <div class="diff-arrow" [ngClass]="{'rotated': item.isActive}">
+                      <div class="arrow-txt">></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="diff-answer" [ngClass]="{'active-answer': item.isActive}">
+                  <div class="content-1-wrp">{{ item.content }}</div>
+                  <div class="duration-wrp">
+                    <div class="diff-c-header-2">{{ t?.common?.duration_header }}</div>
+                    <div class="duration-text">{{ t?.common?.course_duration }}</div>
+                  </div>
+                  <div class="des-wrp">
+                    <div class="s-1">
+                      <div class="diff-c-header-1">{{ t?.common?.themes_header }}</div>
+                      <ul class="diff-c-list">
+                        <li *ngFor="let theme of item.themes">{{ theme }}</li>
+                      </ul>
+                    </div>
+                    <div class="s-1">
+                      <div class="diff-c-header-1">{{ t?.common?.new_things_header }}</div>
+                      <div class="diff-c-icon-wrp">
+                        <div class="diff-c-icon" *ngIf="item.newThings[0]">
+                          <div class="diff-con-icon"><img [src]="item.newThings[0][1]" alt=""></div>
+                          <div class="diff-con-text">{{ item.newThings[0][0] }}</div>
+                        </div>
+                        <div class="diff-c-icon" *ngIf="item.newThings[1]">
+                          <div class="diff-con-icon"><img [src]="item.newThings[1][1]" alt=""></div>
+                          <div class="diff-con-text">{{ item.newThings[1][0] }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
 
-
-    <div class="header-2">
-        {{ priceHeader }}
-    </div>
-
-    <div class="prices-wrp">
-        <div class="prices-wrp-1">
-            <div class="price-card">
-                <div class="price-header-strip">
-                    {{ monthlyPaymentHeader }}
+      <div class="desktop-course-wrp">
+        <div class="p-wrp">
+          <div class="header-course">{{ t?.desktop_development?.title }}</div>
+          <div class="text-1">{{ t?.desktop_development?.description }}</div>
+          <div class="text-1">{{ t?.intro_text }}</div>
+          <div class="info-wrp">
+            <div class="i-when">
+              <div class="i-header-1">{{ t?.icons?.time }}</div>
+              <div class="i-inside">
+                <div class="line">
+                  <div class="i-i-img"><img [src]="timeIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.time_duration }}</div>
                 </div>
-                <div class="price-content">
-                    <div class="price-amount">
-                        {{ monthlyPaymentAmount }}
-                    </div>
-                    <div class="price-note">
-                        {{ monthlyPaymentNote }}
-                    </div>
+                <div class="line">
+                  <div class="i-i-img"><img [src]="calendarIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.tuesday_time_desktop }}</div>
                 </div>
+                <div class="line">
+                  <div class="i-i-img"><img [src]="calendarIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.thursday_time_desktop }}</div>
+                </div>
+              </div>
             </div>
-
-            <div class="price-card">
-                <div class="price-header-strip">
-                    {{ quarterlyPaymentHeader }}
+            <div class="i-what sep">
+              <div class="i-header-1">{{ t?.icons?.online }}</div>
+              <div class="i-inside">
+                <div class="line">
+                  <div class="i-i-img"><img [src]="onlineIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.icons?.online }}</div>
                 </div>
-                <div class="price-content">
-                    <div class="price-amount">
-                        {{ quarterlyPaymentAmount }}
-                    </div>
-                    <div class="price-note">
-                        {{ quarterlyPaymentNote }}
-                    </div>
+                <div class="line">
+                  <div class="i-i-img"><img [src]="discordIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.icons?.discord }}</div>
                 </div>
+              </div>
             </div>
-
-            <div class="price-card">
-                <div class="price-header-strip">
-                    {{ yearlyPaymentHeader }}
+            <div class="i-where">
+              <div class="i-header-1">{{ t?.icons?.what }}</div>
+              <div class="i-inside">
+                <div class="line">
+                  <div class="i-i-img"><img [src]="pcIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.computer_principles }}</div>
                 </div>
-                <div class="price-content">
-                    <div class="price-amount">
-                        {{ yearlyPaymentAmount }}
-                    </div>
-                    <div class="price-note">
-                        {{ yearlyPaymentNote }}
-                    </div>
+                <div class="line">
+                  <div class="i-i-img"><img [src]="cmdIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.cmd_applications }}</div>
                 </div>
+                <div class="line">
+                  <div class="i-i-img"><img [src]="guiIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.gui_applications }}</div>
+                </div>
+                <div class="line">
+                  <div class="i-i-img"><img [src]="databaseIcon" alt=""></div>
+                  <div class="i-i-text">{{ t?.common?.database_basics }}</div>
+                </div>
+              </div>
             </div>
+          </div>
+
+          <div class="timeline-section-container">
+            <div class="diff-wrp">
+              <div *ngFor="let item of desktopTimelineItems; let i = index"
+                class="diff-ins"
+                [ngClass]="{'active-item': item.isActive}"
+                [style.animation-delay]="i * 0.1 + 's'">
+                <div class="diff-line" (click)="toggleDesktopItem(item)">
+                  <div class="ball" [ngClass]="{'active-ball': item.isActive}">{{ i + 1 }}</div>
+                  <div class="diff-header">
+                    <div class="diff-c-header"><h3>{{ item.title }}</h3></div>
+                    <div class="diff-arrow" [ngClass]="{'rotated': item.isActive}">
+                      <div class="arrow-txt">></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="diff-answer" [ngClass]="{'active-answer': item.isActive}">
+                  <div class="content-1-wrp">{{ item.content }}</div>
+                  <div class="duration-wrp">
+                    <div class="diff-c-header-2">{{ t?.common?.duration_header }}</div>
+                    <div class="duration-text">{{ t?.common?.course_duration }}</div>
+                  </div>
+                  <div class="des-wrp">
+                    <div class="s-1">
+                      <div class="diff-c-header-1">{{ t?.common?.themes_header }}</div>
+                      <ul class="diff-c-list">
+                        <li *ngFor="let theme of item.themes">{{ theme }}</li>
+                      </ul>
+                    </div>
+                    <div class="s-1">
+                      <div class="diff-c-header-1">{{ t?.common?.new_things_header }}</div>
+                      <div class="diff-c-icon-wrp">
+                        <div class="diff-c-icon" *ngIf="item.newThings[0]">
+                          <div class="diff-con-icon"><img [src]="item.newThings[0][1]" alt=""></div>
+                          <div class="diff-con-text">{{ item.newThings[0][0] }}</div>
+                        </div>
+                        <div class="diff-c-icon" *ngIf="item.newThings[1]">
+                          <div class="diff-con-icon"><img [src]="item.newThings[1][1]" alt=""></div>
+                          <div class="diff-con-text">{{ item.newThings[1][0] }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <div class="header-3" >
-        {{ form_header }}
-    </div>
-    <div class="form-wrp">
-        <div class="form">
-            <app-generic-form
-                [isOpen]="false"
-                [closedMessage]="form_closed_message"
-                [closedTitle]="form_closed_title"
-                [formConfig]="contactFormConfig"
-                [form_header]="form_header"
-                [form_description]="form_description"
-                [form_button]="form_button"
-                (formSubmitted)="handleFormSubmission($event)"
-                (formReset)="handleFormReset()">
-            </app-generic-form>
+  <div class="header-2">{{ t?.prices?.header }}</div>
+
+  <div class="prices-wrp">
+    <div class="prices-wrp-1">
+      <div class="price-card">
+        <div class="price-header-strip">{{ t?.prices?.monthly?.header }}</div>
+        <div class="price-content">
+          <div class="price-amount">{{ t?.prices?.monthly?.amount }}</div>
+          <div class="price-note">{{ t?.prices?.monthly?.note }}</div>
         </div>
+      </div>
+      <div class="price-card">
+        <div class="price-header-strip">{{ t?.prices?.quarterly?.header }}</div>
+        <div class="price-content">
+          <div class="price-amount">{{ t?.prices?.quarterly?.amount }}</div>
+          <div class="price-note">{{ t?.prices?.quarterly?.note }}</div>
+        </div>
+      </div>
+      <div class="price-card">
+        <div class="price-header-strip">{{ t?.prices?.yearly?.header }}</div>
+        <div class="price-content">
+          <div class="price-amount">{{ t?.prices?.yearly?.amount }}</div>
+          <div class="price-note">{{ t?.prices?.yearly?.note }}</div>
+        </div>
+      </div>
     </div>
+  </div>
 
+  <div class="header-3">{{ t?.consultation_form?.header }}</div>
+  <div class="form-wrp">
+    <div class="form">
+      <app-generic-form
+        [isOpen]="false"
+        [closedMessage]="t?.form_closed_message"
+        [closedTitle]="t?.form_closed_title"
+        [formConfig]="contactFormConfig"
+        [form_header]="t?.consultation_form?.header"
+        [form_description]="t?.consultation_form?.description"
+        [form_button]="t?.consultation_form?.button"
+        (formSubmitted)="handleFormSubmission($event)"
+        (formReset)="handleFormReset()">
+      </app-generic-form>
+    </div>
+  </div>
 </div>

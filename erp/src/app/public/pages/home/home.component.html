@@ -4,10 +4,10 @@
         <div class="header-0">
             <div class="h-wrp">
                 <div class="header-0-1">
-                    {{headerMain}}
+                    {{ t?.header_1 }}
                 </div>
                 <div class="header-0-2">
-                    {{headerSubtitle}}
+                    {{ t?.header_2 }}
                 </div>
             </div>
             
@@ -18,105 +18,57 @@
         </div>
 
         <div class="mobile-hero-m">
-    <div class="links-wrp-m-m">
+<div class="links-wrp-m-m">
         <div class="link-w-c-m-m">
             <a routerLink="/services" [queryParams]="{ tech: 'web-dev' }" class="l-1-2">
-                {{webDevelopmentHeader}}
+                {{ t?.web_header }}
             </a>
             <a routerLink="/services" [queryParams]="{ tech: 'desktop-dev' }" class="l-1-2">
-                {{desktopDevelopmentHeader}}
+                {{ t?.desktop_header }}
             </a>
             <a routerLink="/services" [queryParams]="{ tech: 'mobile-dev' }" class="l-1-2">
-                {{mobileDevelopmentHeader}}
+                {{ t?.mobile_header }}
             </a>
             <a routerLink="/services" [queryParams]="{ tech: 'ai-dev' }" class="l-1-2">
-                {{aiDevelopmentHeader}}
+                {{ t?.ai_header }}
             </a>
         </div>
     </div>
 </div>
 
         <div class="header-0-2-t">
-            {{ourServicesTitleMobile}}
+            {{ t?.our_services_m }}
         </div>
 
         <div class="stats-wrp-m">    
     <div class="stats-m">
-        <!-- at do totoho miri ruzovy drat a je to na tom podklade ty stats a treba kazde ve svem chvlivecku tak nejak  -->
-        
         <div class="stat-1">
             <div class="s-1-h">
-                {{statsProjectsCount}}
+                {{ t?.stats_projects_count }}
             </div>
             <div class="s-1-t">
-                {{statsProjectsLabel}}
+                {{ t?.stats_projects_text }}
             </div>
         </div>
         <div class="stat-2">
             <div class="s-2-h">
-                {{statsYearsCount}}
+                {{ t?.stats_years_count }}
             </div>
             <div class="s-2-t">
-                {{statsYearsLabel}}
+                {{ t?.stats_years_text }}
             </div>
         </div>
         <div class="stat-3">
             <div class="s-3-h">
-                {{statsSolutionsCount}}
+                {{ t?.stats_solutions_count }}
             </div>
             <div class="s-3-t">
-                {{statsSolutionsLabel}}
+                {{ t?.stats_solutions_text }}
             </div>
         </div>
     </div>
 </div>
-<!-- 
-<div class="header-0-2-t">
-            Učíme děti programovat
-        </div>
 
-        <div class="curses-img-wrp-m">
-            <div class="column-c-m">
-                <img [src]="scratch">
-                <div class="c-text-m">
-                    Scratch
-                </div>
-            </div>
-            <div class="column-c-m">
-                <img [src]="py">
-                <div class="c-text-m">
-                    Python
-                </div>
-            </div>
-            <div class="column-c-m">
-                <img [src]="csharp">
-                <div class="c-text-m">
-                    C#
-                </div>
-            </div>
-            <div class="column-c-m">
-                <img [src]="js">
-                <div class="c-text-m">
-                    JavaScript
-                </div>
-            </div>
-        </div>
-
-        <div class="button-wrp">
-        <div class="button">
-          <a routerLink="/academy" class="ref-button">Navštivte akademii zde</a>
-        </div>
-      </div>
-
-      <div class="header-0-2-t">
-            Máme i vlastní obchod s digitáními produkty
-        </div>
-
-        <div class="button-wrp">
-        <div class="button">
-          <a routerLink="/shop" class="ref-button">Navštivte obchod zde</a>
-        </div>
-      </div> -->
     </div>
 
 
@@ -125,15 +77,14 @@
         <div class="header-0">
             <div class="h-wrp">
                 <div class="header-0-1">
-                    {{headerMain}}
+                    {{ t?.header_1 }}
                 </div>
                 <div class="header-0-2">
-                    {{headerSubtitle}}
+                    {{ t?.header_2 }}
                 </div>
             </div>
             
         </div>
-
         <svg class="cables-and-bubbles" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
             
         <defs>
@@ -195,7 +146,7 @@
             <g class="bubble-group bubble-target bubble-1" transform="translate(-30, 130)">
                 <polygon points="20,0 180,0 160,40 0,40" 
                                 fill="#1a1a2e" stroke="#2f2f2f" stroke-width="2" class="parallelogram-shape"/>
-                <text x="90" y="25" text-anchor="middle" class="svg-text">{{webDevelopmentHeader}}</text>
+                <text x="90" y="25" text-anchor="middle" class="svg-text">{{t?.web_header}}</text>
             </g>
         </a>
 
@@ -219,7 +170,7 @@
             <g class="bubble-group bubble-target bubble-2" transform="translate(-30, 430)">
                 <polygon points="20,0 180,0 160,40 0,40" 
                                 fill="#1a1a2e" stroke="#2f2f2f" stroke-width="2" class="parallelogram-shape"/>
-                <text x="90" y="25" text-anchor="middle" class="svg-text">{{mobileDevelopmentHeader}}</text>
+                <text x="90" y="25" text-anchor="middle" class="svg-text">{{t?.mobile_header}}</text>
             </g>
         </a>
 
@@ -243,7 +194,7 @@
             <g class="bubble-group bubble-target bubble-3" transform="translate(850, 130)">
                 <polygon points="0,0 160,0 180,40 20,40" 
                                 fill="#1a1a2e" stroke="#2f2f2f" stroke-width="2" class="parallelogram-shape"/>
-                <text x="90" y="25" text-anchor="middle" class="svg-text">{{desktopDevelopmentHeader}}</text>
+                <text x="90" y="25" text-anchor="middle" class="svg-text">{{t?.desktop_header}}</text>
             </g>
         </a>
 
@@ -267,7 +218,7 @@
             <g class="bubble-group bubble-target bubble-4" transform="translate(850, 430)">
                 <polygon points="0,0 160,0 180,40 20,40" 
                                 fill="#1a1a2e" stroke="#2f2f2f" stroke-width="2" class="parallelogram-shape"/>
-                <text x="90" y="25" text-anchor="middle" class="svg-text">{{aiDevelopmentHeader}}</text>
+                <text x="90" y="25" text-anchor="middle" class="svg-text">{{t?.ai_header}}</text>
             </g>
         </a>
         </svg>
@@ -286,16 +237,16 @@
             <div class="links-wrp-m">
                 <div class="link-w-c-m">
                     <a routerLink="/services" [queryParams]="{ tech: 'web-dev' }" class="l-1-2">
-                        {{webDevelopmentHeader}}
+                        {{t?.web_header}}
                     </a>
                     <a routerLink="/services" [queryParams]="{ tech: 'desktop-dev' }" class="l-1-2">
-                        {{desktopDevelopmentHeader}}
+                        {{t?.desktop_header}}
                     </a>
                     <a routerLink="/services" [queryParams]="{ tech: 'mobile-dev' }" class="l-1-2">
-                       {{mobileDevelopmentHeader}}
+                       {{t?.mobile_header}}
                     </a>
                     <a routerLink="/services" [queryParams]="{ tech: 'ai-dev' }" class="l-1-2">
-                        {{aiDevelopmentHeader}}
+                        {{t?.ai_header}}
                     </a>
                 </div>
             </div>
@@ -307,7 +258,7 @@
 <!-- KABELY VELKE -->
      <div class="header-container" >
         <a style="text-decoration: none" routerLink="/services" class="header-1">
-            <span>{{ourServicesTitle}}</span> 
+            <span>{{t?.our_services}}</span> 
         </a>
         <svg  class="server-icon" width="138" height="60" viewBox="0 0 138 60" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -343,30 +294,29 @@
 
 
 <div class="stats-wrp">    
-    <div class="stats">
-        <!-- at do totoho miri ruzovy drat a je to na tom podklade ty stats a treba kazde ve svem chvlivecku tak nejak  -->
+   <div class="stats">
         <div class="stat-1">
             <div class="s-1-h">
-                {{statsProjectsCount}}
+                {{ t?.stats_projects_count }}
             </div>
             <div class="s-1-t">
-                {{statsProjectsLabel}}
+                {{ t?.stats_projects_text }}
             </div>
         </div>
         <div class="stat-2">
             <div class="s-2-h">
-                {{statsYearsCount}}
+                {{ t?.stats_years_count }}
             </div>
             <div class="s-2-t">
-                {{statsYearsLabel}}
+                {{ t?.stats_years_text }}
             </div>
         </div>
         <div class="stat-3">
             <div class="s-3-h">
-                {{statsSolutionsCount}}
+                {{ t?.stats_solutions_count }}
             </div>
             <div class="s-3-t">
-                {{statsSolutionsLabel}}
+                {{ t?.stats_solutions_text }}
             </div>
         </div>
     </div>
@@ -400,15 +350,15 @@
                     <div class="text-wrapper">
                         <div class="text">
                             <div class="text-in">
-                                <div class="content-container">
-                                    <div class="main-text">{{webDevTitle}}</div>
+                              <div class="content-container">
+                                    <div class="main-text">{{ t?.links?.link_1?.header }}</div>
                                     <div class="bullet-points">
-                                        <div class="bullet-item">{{webDevBullet1}}</div>
-                                        <div class="bullet-item">{{webDevBullet2}}</div>
-                                        <div class="bullet-item">{{webDevBullet3}}</div>
+                                        <div class="bullet-item">{{ t?.links?.link_1?.bullet_1 }}</div>
+                                        <div class="bullet-item">{{ t?.links?.link_1?.bullet_2 }}</div>
+                                        <div class="bullet-item">{{ t?.links?.link_1?.bullet_3 }}</div>
                                     </div>
                                 </div>
-                                <div class="learn-more-text">{{learnMore}}</div>
+                                <div class="learn-more-text">{{ t?.links?.learn_more }}</div>
                             </div>
                         </div>
                     </div>
@@ -441,14 +391,14 @@
                         <div class="text">
                             <div class="text-in">
                                 <div class="content-container">
-                                    <div class="main-text">{{desktopDevTitle}}</div>
+                                    <div class="main-text">{{ t?.links?.link_2?.header }}</div>
                                     <div class="bullet-points">
-                                        <div class="bullet-item">{{desktopDevBullet1}}</div>
-                                        <div class="bullet-item">{{desktopDevBullet2}}</div>
-                                        <div class="bullet-item">{{desktopDevBullet3}}</div>
+                                        <div class="bullet-item">{{ t?.links?.link_2?.bullet_1 }}</div>
+                                        <div class="bullet-item">{{ t?.links?.link_2?.bullet_2 }}</div>
+                                        <div class="bullet-item">{{ t?.links?.link_2?.bullet_3 }}</div>
                                     </div>
                                 </div>
-                                <div class="learn-more-text">{{learnMore}}</div>
+                                <div class="learn-more-text">{{ t?.links?.learn_more }}</div>
                             </div>
                         </div>
                     </div>
@@ -481,14 +431,14 @@
                         <div class="text">
                             <div class="text-in">
                                 <div class="content-container">
-                                    <div class="main-text">{{mobileDevTitle}}</div>
+                                    <div class="main-text">{{ t?.links?.link_3?.header }}</div>
                                     <div class="bullet-points">
-                                        <div class="bullet-item">{{mobileDevBullet1}}</div>
-                                        <div class="bullet-item">{{mobileDevBullet2}}</div>
-                                        <div class="bullet-item">{{mobileDevBullet3}}</div>
+                                        <div class="bullet-item">{{ t?.links?.link_3?.bullet_1 }}</div>
+                                        <div class="bullet-item">{{ t?.links?.link_3?.bullet_2 }}</div>
+                                        <div class="bullet-item">{{ t?.links?.link_3?.bullet_3 }}</div>
                                     </div>
                                 </div>
-                                <div class="learn-more-text">{{learnMore}}</div>
+                                <div class="learn-more-text">{{ t?.links?.learn_more }}</div>
                             </div>
                         </div>
                     </div>
@@ -522,14 +472,14 @@
                         <div class="text">
                             <div class="text-in">
                                 <div class="content-container">
-                                    <div class="main-text">{{aiDevTitle}}</div>
+                                    <div class="main-text">{{ t?.links?.link_4?.header }}</div>
                                     <div class="bullet-points">
-                                        <div class="bullet-item">{{aiDevBullet1}}</div>
-                                        <div class="bullet-item">{{aiDevBullet2}}</div>
-                                        <div class="bullet-item">{{aiDevBullet3}}</div>
+                                        <div class="bullet-item">{{ t?.links?.link_4?.bullet_1 }}</div>
+                                        <div class="bullet-item">{{ t?.links?.link_4?.bullet_2 }}</div>
+                                        <div class="bullet-item">{{ t?.links?.link_4?.bullet_3 }}</div>
                                     </div>
                                 </div>
-                                <div class="learn-more-text">{{learnMore}}</div>
+                                <div class="learn-more-text">{{ t?.links?.learn_more }}</div>
                             </div>
                         </div>
                     </div>
@@ -547,72 +497,55 @@
   </div>
 
 </div>
-
-       <div class="header-0-2-t pad-0">
-            {{selectUsHeader}}
+<div class="header-0-2-t pad-0">
+            {{ t?.select_us_header }}
         </div> 
 
 <div class="benefits-wrapper">
     <div class="benefit-item">
-        <!-- <div class="benefit-icon-wrapper">
-           <img [src]="check_mark">
-        </div> -->
         <div class="benefit-text-wrapper">
-            <div class="benefit-header">{{selectUsItem1Header}}</div>
+            <div class="benefit-header">{{ t?.select_us?.item_1?.header }}</div>
             <div class="benefit-points">
                 <ul>
-                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{selectUsItem1Bullet1}}</li>
-                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{selectUsItem1Bullet2}}</li>
-                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{selectUsItem1Bullet3}}</li>
+                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{ t?.select_us?.item_1?.bullet_1 }}</li>
+                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{ t?.select_us?.item_1?.bullet_2 }}</li>
+                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{ t?.select_us?.item_1?.bullet_3 }}</li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="benefit-item">
-        <!-- <div class="benefit-icon-wrapper">
-            <img [src]="check_mark">
-        </div> -->
         <div class="benefit-text-wrapper">
-            <div class="benefit-header">{{selectUsItem2Header}}</div>
+            <div class="benefit-header">{{ t?.select_us?.item_2?.header }}</div>
             <div class="benefit-points">
                 <ul>
-                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{selectUsItem2Bullet1}}</li>
-                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{selectUsItem2Bullet2}}</li>
-                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{selectUsItem2Bullet3}}</li>
+                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{ t?.select_us?.item_2?.bullet_1 }}</li>
+                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{ t?.select_us?.item_2?.bullet_2 }}</li>
+                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{ t?.select_us?.item_2?.bullet_3 }}</li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="benefit-item">
-
-        <!-- <div class="benefit-icon-wrapper">
-             <img [src]="check_mark">
-        </div> -->
-
         <div class="benefit-text-wrapper">
-            <div class="benefit-header">{{selectUsItem3Header}}</div>
+            <div class="benefit-header">{{ t?.select_us?.item_3?.header }}</div>
             <div class="benefit-points">
                 <ul>
-                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{selectUsItem3Bullet1}}</li>
-                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{selectUsItem3Bullet2}}</li>
-                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{selectUsItem3Bullet3}}</li>
+                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{ t?.select_us?.item_3?.bullet_1 }}</li>
+                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{ t?.select_us?.item_3?.bullet_2 }}</li>
+                    <li><span class="bullet-highlight"><img [src]="check_mark"></span> {{ t?.select_us?.item_3?.bullet_3 }}</li>
                 </ul>
             </div>
         </div>
     </div>
 </div>
- <!-- PROC SI VYBRAT ZROVNA NAS KONEC -->
  
-<!-- ZACATEK KONKTAKT -->
  <div class="gradient-seep-wrp">
-  <div class="gradient-line-separator">
-
-  </div>
-
+  <div class="gradient-line-separator"></div>
 </div>
 
       <div class="header-0-2-t pad-0">
-            {{productsSectionTitle}}
+            {{ t?.products_header }}
         </div>
 
         <div class="product-cards-section">
@@ -621,9 +554,9 @@
             <img [src]="eshop_default">
             </div>
         <div class="product-info">
-            <div class="product-title">{{product1Title}}</div>
-            <div class="product-price">{{product1Price}}</div>
-            <div class="product-description">{{product1Description}}</div>
+            <div class="product-title">{{ t?.products?.prod_1?.header }}</div>
+            <div class="product-price">{{ t?.products?.prod_1?.price }}</div>
+            <div class="product-description">{{ t?.products?.prod_1?.description }}</div>
         </div>
     </a>
 
@@ -632,9 +565,9 @@
               <img [src]="survey_engine">
             </div>
         <div class="product-info">
-            <div class="product-title">{{product2Title}}</div>
-            <div class="product-price">{{product2Price}}</div>
-            <div class="product-description">{{product2Description}}</div>
+            <div class="product-title">{{ t?.products?.prod_2?.header }}</div>
+            <div class="product-price">{{ t?.products?.prod_2?.price }}</div>
+            <div class="product-description">{{ t?.products?.prod_2?.description }}</div>
         </div>
     </a>
     <a routerLink="/shop" class="product-card">
@@ -642,9 +575,9 @@
             <img [src]="survey_solver">
             </div>
         <div class="product-info">
-            <div class="product-title">{{product3Title}}</div>
-            <div class="product-price">{{product3Price}}</div>
-            <div class="product-description">{{product3Description}}</div>
+            <div class="product-title">{{ t?.products?.prod_3?.header }}</div>
+            <div class="product-price">{{ t?.products?.prod_3?.price }}</div>
+            <div class="product-description">{{ t?.products?.prod_3?.description }}</div>
         </div>
     </a>
 
@@ -652,71 +585,55 @@
 
         <div class="button-wrp">
         <div class="button">
-          <a routerLink="/shop" class="ref-button">{{shopButtonText}}</a>
+          <a routerLink="/shop" class="ref-button">{{ t?.products?.button_shop_text }}</a>
         </div>
       </div>
 <div class="gradient-seep-wrp">
-  <div class="gradient-line-separator">
-
-  </div>
-
+  <div class="gradient-line-separator"></div>
 </div>
 
 
 <div class="header-0-2-t">
-    {{academySectionTitle}}
+    {{ t?.academy_header }}
 </div>
-
-
 
 <div class="curses-img-wrp-m">
     <div class="column-c-m">
         <img [src]="scratch">
-        <div class="c-text-m">
-            Scratch
-        </div>
+        <div class="c-text-m">Scratch</div>
     </div>
     <div class="column-c-m">
         <img [src]="py">
-        <div class="c-text-m">
-            Python
-        </div>
+        <div class="c-text-m">Python</div>
     </div>
     <div class="column-c-m">
         <img [src]="csharp">
-        <div class="c-text-m">
-            C#
-        </div>
+        <div class="c-text-m">C#</div>
     </div>
     <div class="column-c-m">
         <img [src]="js">
-        <div class="c-text-m">
-            JavaScript
-        </div>
+        <div class="c-text-m">JavaScript</div>
     </div>
 </div>
 <div class="lesson-price-note">
-    {{academyPriceLabel}} <span class="price-highlight">{{academyPriceAmount}}</span>{{academyPriceSuffix}}
+    {{ t?.price_start }} <span class="price-highlight">{{ t?.price_number }}</span>{{ t?.price_end }}
 </div>
 <div class="button-wrp">
     <div class="button">
-        <a routerLink="/academy" class="ref-button">{{academyButtonText}}</a>
+        <a routerLink="/academy" class="ref-button">{{ t?.button_academy_text }}</a>
     </div>
 </div>
 
       <div class="gradient-seep-wrp m-b-25">
-  <div class="gradient-line-separator">
-
-  </div>
-
+  <div class="gradient-line-separator"></div>
 </div>
 <div class="form-wrp">
            <div class="form">
                   <app-generic-form
                         [formConfig]="contactFormConfig"
-                        [form_header]="form_header"
-                        [form_description]="form_description"
-                        [form_button]="form_button"
+                        [form_header]="t?.consultation_form?.header"
+                        [form_description]="t?.consultation_form?.description"
+                        [form_button]="t?.consultation_form?.button"
                         (formSubmitted)="handleFormSubmission($event)"
                         (formReset)="handleFormReset()"
 

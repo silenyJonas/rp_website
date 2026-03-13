@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/
 import { CommonModule } from '@angular/common';
 import * as Web from '../../../shared/imports/web-providers';
 import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
-import {TimelineItemKeys} from '../../../shared/interfaces/timeline-item-keys'
+import { TimelineItemKeys } from '../../../shared/interfaces/timeline-item-keys';
 import { TimelineItem } from '../../../shared/interfaces/timeline-item';
 
 @Component({
@@ -17,33 +17,7 @@ import { TimelineItem } from '../../../shared/interfaces/timeline-item';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AcademyComponent implements Web.OnInit, Web.OnDestroy {
-  form_header: string = '';
-  form_description: string = '';
-  form_button: string = '';
-
-  form_closed_title: string = '';
-  form_closed_message: string = '';
-  
-  second_header: string = '';
-
-  academyHeader: string = '';
-  introText: string = '';
-  timeHeader: string = '';
-  onlineHeader: string = '';
-  whatHeader: string = '';
-  commonDurationHeader: string = '';
-  commonThemesHeader: string = '';
-  commonNewThingsHeader: string = '';
-  priceHeader: string = '';
-  monthlyPaymentHeader: string = '';
-  monthlyPaymentAmount: string = '';
-  monthlyPaymentNote: string = '';
-  quarterlyPaymentHeader: string = '';
-  quarterlyPaymentAmount: string = '';
-  quarterlyPaymentNote: string = '';
-  yearlyPaymentHeader: string = '';
-  yearlyPaymentAmount: string = '';
-  yearlyPaymentNote: string = '';
+  t: any = null;
 
   private initialContactFormConfig: Web.FormFieldConfig[] = [
     {
@@ -52,7 +26,7 @@ export class AcademyComponent implements Web.OnInit, Web.OnDestroy {
       name: 'theme',
       type: 'select',
       required: true,
-      value: 'desktop-development', 
+      value: 'desktop-development',
       options: [
         { value: 'desktop-development', label: 'academy.consultation_form.fields.theme_option_desktop', isLocalizedLabel: true },
         { value: 'web-development', label: 'academy.consultation_form.fields.theme_option_web', isLocalizedLabel: true }
@@ -64,7 +38,7 @@ export class AcademyComponent implements Web.OnInit, Web.OnDestroy {
       name: 'diff',
       type: 'select',
       required: true,
-      value: 'begginer', 
+      value: 'begginer',
       options: [
         { value: 'begginer', label: 'academy.consultation_form.fields.diff_option_begginer', isLocalizedLabel: true },
         { value: 'advanced', label: 'academy.consultation_form.fields.diff_option_advanced', isLocalizedLabel: true },
@@ -222,25 +196,23 @@ export class AcademyComponent implements Web.OnInit, Web.OnDestroy {
   webTimelineItems: TimelineItem[] = [];
   desktopTimelineItems: TimelineItem[] = [];
 
-  webDevSectionTitle: string = '';
-  desktopDevSectionTitle: string = '';
-  webDevSectionDescription: string = '';
-  desktopDevSectionDescription: string = '';
-
   private destroy$ = new Web.Subject<void>();
 
   constructor(
     private publicDataService: Web.PublicDataService,
     private cdr: ChangeDetectorRef,
     public localizationService: Web.LocalizationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.localizationService.currentTranslations$
       .pipe(Web.takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.loadLocalizedContent();
-        this.cdr.detectChanges();
+      .subscribe(translations => {
+        if (translations && Object.keys(translations).length > 0) {
+          this.t = translations.academy;
+          this.loadTranslatedData();
+          this.cdr.detectChanges();
+        }
       });
   }
 
@@ -249,40 +221,7 @@ export class AcademyComponent implements Web.OnInit, Web.OnDestroy {
     this.destroy$.complete();
   }
 
-  private loadLocalizedContent(): void {
-    this.academyHeader = this.localizationService.getText('academy.header');
-    this.second_header = this.localizationService.getText('academy.second_header');
-
-    this.form_closed_title = this.localizationService.getText('academy.form_closed_title');
-    this.form_closed_message = this.localizationService.getText('academy.form_closed_message');
-    this.introText = this.localizationService.getText('academy.intro_text');
-    this.timeHeader = this.localizationService.getText('academy.icons.time');
-    this.onlineHeader = this.localizationService.getText('academy.icons.online');
-    this.whatHeader = this.localizationService.getText('academy.icons.what'); 
-    this.commonDurationHeader = this.localizationService.getText('academy.common.duration_header');
-    this.commonThemesHeader = this.localizationService.getText('academy.common.themes_header');
-    this.commonNewThingsHeader = this.localizationService.getText('academy.common.new_things_header');
-
-    this.form_header = this.localizationService.getText('academy.consultation_form.header');
-    this.form_description = this.localizationService.getText('academy.consultation_form.description');
-    this.form_button = this.localizationService.getText('academy.consultation_form.button');
-
-    this.webDevSectionTitle = this.localizationService.getText('academy.web_development.title');
-    this.webDevSectionDescription = this.localizationService.getText('academy.web_development.description');
-    this.desktopDevSectionTitle = this.localizationService.getText('academy.desktop_development.title');
-    this.desktopDevSectionDescription = this.localizationService.getText('academy.desktop_development.description');
-
-    this.priceHeader = this.localizationService.getText('academy.prices.header');
-    this.monthlyPaymentHeader = this.localizationService.getText('academy.prices.monthly.header');
-    this.monthlyPaymentAmount = this.localizationService.getText('academy.prices.monthly.amount');
-    this.monthlyPaymentNote = this.localizationService.getText('academy.prices.monthly.note');
-    this.quarterlyPaymentHeader = this.localizationService.getText('academy.prices.quarterly.header');
-    this.quarterlyPaymentAmount = this.localizationService.getText('academy.prices.quarterly.amount');
-    this.quarterlyPaymentNote = this.localizationService.getText('academy.prices.quarterly.note');
-    this.yearlyPaymentHeader = this.localizationService.getText('academy.prices.yearly.header');
-    this.yearlyPaymentAmount = this.localizationService.getText('academy.prices.yearly.amount');
-    this.yearlyPaymentNote = this.localizationService.getText('academy.prices.yearly.note');
-
+  private loadTranslatedData(): void {
     this.contactFormConfig = this.initialContactFormConfig.map(field => {
       const translatedField: Web.FormFieldConfig = { ...field };
 
@@ -327,7 +266,7 @@ export class AcademyComponent implements Web.OnInit, Web.OnDestroy {
   }
 
   private translateTimelineItem(itemKeys: TimelineItemKeys): TimelineItem {
-    const translatedItem: TimelineItem = {
+    return {
       id: itemKeys.id,
       isActive: itemKeys.isActive,
       title: this.localizationService.getText(itemKeys.titleKey),
@@ -335,25 +274,16 @@ export class AcademyComponent implements Web.OnInit, Web.OnDestroy {
       themes: itemKeys.themesKeys.map(key => this.localizationService.getText(key)),
       newThings: itemKeys.newThingsKeys.map(nt => [this.localizationService.getText(nt.textKey), nt.icon])
     };
-    return translatedItem;
   }
 
   handleFormSubmission(formData: any): void {
-    console.log('Data přijata z generického formuláře k odeslání do PublicDataService:', formData);
-
     this.publicDataService.submitContactForm(formData).subscribe({
-      next: (response) => {
-        console.log('Formulář odeslán úspěšně přes PublicDataService!', response);
-      },
-      error: (error: Web.HttpErrorResponse) => {
-        console.error('Chyba při odesílání formuláře přes PublicDataService:', error);
-      }
+      next: () => {},
+      error: (error: Web.HttpErrorResponse) => {}
     });
   }
 
-  handleFormReset(): void {
-    console.log('Generický formulář byl resetován.');
-  }
+  handleFormReset(): void {}
 
   toggleWebItem(clickedItem: TimelineItem): void {
     clickedItem.isActive = !clickedItem.isActive;
