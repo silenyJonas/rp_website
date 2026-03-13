@@ -24,7 +24,7 @@ class TranslationController extends Controller
         $lang = $request->input('lang');
         $newData = $request->input('data');
 
-        $relativeDirectory = env('ANGULAR_I18N_PATH', '../erp/src/assets/i18n');
+        $relativeDirectory = env('ANGULAR_I18N_PATH');
         $directory = base_path($relativeDirectory);
         $filePath = $directory . '/' . $lang . '.json';
 
