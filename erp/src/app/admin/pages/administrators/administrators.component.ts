@@ -35,9 +35,6 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
     protected override dataHandler: Core.DataHandler,
     protected override cd: Core.ChangeDetectorRef,
     protected override genericTableService: Core.GenericTableService,
-    private alertDialogService: Core.AlertDialogService,
-    private authService: Core.AuthService,
-    private permissionService: Core.PermissionService, // <--- TADY JE TA SLUŽBA
     private router: Core.Router
   ) {
     super(dataHandler, cd, genericTableService);
@@ -84,16 +81,11 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
   }
 
   override ngOnInit(): void {
-    super.ngOnInit();
-    this.authService.isLoggedIn$
-      .pipe(Core.takeUntil(this.destroy$))
-      .subscribe(loggedIn => {
-        if (loggedIn) this.refreshData();
-        else this.router.navigate(['/auth/login']);
-      });
-  }
+  super.ngOnInit();
+  this.initWithAuthCheck(this.router);
+}
 
-  public refreshData(): void { this.forceFullRefresh(this.filters); }
+  override refreshData(): void { this.forceFullRefresh(this.filters); }
   handlePageChange(page: number): void { this.onHandlePageChange(page, this.filters); }
   handleItemsPerPageChange(value: number): void { this.onHandleItemsPerPageChange(value, this.filters); }
   applyFilters(newFilters: any): void { this.filters = { ...newFilters }; this.refreshData(); }

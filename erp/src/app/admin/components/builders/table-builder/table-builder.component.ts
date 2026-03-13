@@ -39,8 +39,6 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
     protected override cd: Core.ChangeDetectorRef,
     protected override genericTableService: Core.GenericTableService,
     private confirmDialogService: ConfirmDialogService,
-    private alertDialogService: Core.AlertDialogService,
-    public authService: Core.AuthService 
   ) {
     super(dataHandler, cd, genericTableService);
   }

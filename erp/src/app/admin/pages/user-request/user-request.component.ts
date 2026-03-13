@@ -37,8 +37,6 @@ export class UserRequestComponent extends BaseDataComponent<any> implements Core
     protected override dataHandler: Core.DataHandler,
     protected override cd: Core.ChangeDetectorRef,
     protected override genericTableService: Core.GenericTableService,
-    private authService: Core.AuthService,
-    private permissionService: Core.PermissionService,
     private router: Core.Router
   ) {
     super(dataHandler, cd, genericTableService);
@@ -84,16 +82,10 @@ export class UserRequestComponent extends BaseDataComponent<any> implements Core
 
   override ngOnInit(): void {
     super.ngOnInit();
-    this.authService.isLoggedIn$.subscribe(loggedIn => {
-      if (loggedIn) {
-        this.refreshData();
-      } else {
-        this.router.navigate(['/auth/login']);
-      }
-    });
+    this.initWithAuthCheck(this.router);
   }
 
-  public refreshData(): void {
+  override refreshData(): void {
     this.forceFullRefresh(this.filters);
   }
 
@@ -145,7 +137,7 @@ export class UserRequestComponent extends BaseDataComponent<any> implements Core
       })
     ).subscribe({
       next: () => this.refreshData(),
-      error: (err: any) => console.error('Chyba při ukládání:', err)
+      error: (err: any) => this.alertDialogService.open('Chyba', err.error?.message || 'Akce selhala.', 'danger')
     });
   }
 
@@ -156,7 +148,8 @@ export class UserRequestComponent extends BaseDataComponent<any> implements Core
         this.selectedItemForDetails = details;
         this.showDetails = true;
         this.cd.markForCheck();
-      }
+      },
+      error: (err: any) => this.alertDialogService.open('Chyba', err.error?.message || 'Nepodařilo se načíst detail.', 'danger')
     });
   }
 

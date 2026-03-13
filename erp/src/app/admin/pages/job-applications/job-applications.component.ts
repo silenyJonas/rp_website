@@ -37,8 +37,6 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
     protected override dataHandler: Core.DataHandler,
     protected override cd: Core.ChangeDetectorRef,
     protected override genericTableService: Core.GenericTableService,
-    private authService: Core.AuthService,
-    private permissionService: Core.PermissionService,
     private router: Core.Router
   ) {
     super(dataHandler, cd, genericTableService);
@@ -81,17 +79,11 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
   }
 
   override ngOnInit(): void {
-    super.ngOnInit();
-    this.authService.isLoggedIn$.subscribe(loggedIn => {
-      if (loggedIn) {
-        this.refreshData();
-      } else {
-        this.router.navigate(['/auth/login']);
-      }
-    });
-  }
+  super.ngOnInit();
+  this.initWithAuthCheck(this.router);
+}
 
-  public refreshData(): void {
+  override refreshData(): void {
     this.forceFullRefresh(this.filters);
   }
 
@@ -138,7 +130,8 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
         this.selectedItemForDetails = res;
         this.showDetails = true;
         this.cd.markForCheck();
-      }
+      },
+      error: (err: any) => this.alertDialogService.open('Chyba', err.error?.message || 'Nepodařilo se načíst detail.', 'danger')
     });
   }
 
@@ -149,7 +142,10 @@ export class JobApplicationsComponent extends BaseDataComponent<any> implements 
         this.selectedItemForEdit = null;
         this.cd.markForCheck();
       })
-    ).subscribe(() => this.refreshData());
+    ).subscribe({
+      next: () => this.refreshData(),
+      error: (err: any) => this.alertDialogService.open('Chyba', err.error?.message || 'Akce selhala.', 'danger')
+    });
   }
 
   onCancelForm(): void {

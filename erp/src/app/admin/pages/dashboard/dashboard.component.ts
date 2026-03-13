@@ -32,12 +32,9 @@ export class DashboardComponent extends BaseDataComponent<UserLogin> implements 
     protected override dataHandler: Core.DataHandler,
     protected override cd: Core.ChangeDetectorRef,
     protected override genericTableService: Core.GenericTableService, 
-    // AuthService je třída, takže Core.AuthService funguje správně
-    private authService: Core.AuthService
   ) {
     super(dataHandler, cd, genericTableService);
   }
-
   override ngOnInit(): void {
     // Voláme init z BaseDataComponent pokud je potřeba, jinak vlastní logiku
     this.loadUserProfile();

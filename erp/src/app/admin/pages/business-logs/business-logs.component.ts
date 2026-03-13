@@ -33,7 +33,6 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements Cor
     protected override dataHandler: Core.DataHandler,
     protected override cd: Core.ChangeDetectorRef,
     protected override genericTableService: Core.GenericTableService,
-    private authService: Core.AuthService,
     private router: Core.Router
   ) {
     super(dataHandler, cd, genericTableService);
@@ -61,17 +60,11 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements Cor
   }
 
   override ngOnInit(): void {
-    super.ngOnInit();
-    this.authService.isLoggedIn$.subscribe(loggedIn => {
-      if (loggedIn) {
-        this.refreshData();
-      } else {
-        this.router.navigate(['/auth/login']);
-      }
-    });
-  }
+  super.ngOnInit();
+  this.initWithAuthCheck(this.router);
+}
 
-  public refreshData(): void {
+  override refreshData(): void {
     this.forceFullRefresh(this.filters);
   }
 

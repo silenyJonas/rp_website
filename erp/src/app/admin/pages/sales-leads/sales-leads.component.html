@@ -1,4 +1,7 @@
 <div class="user-request-container container mx-auto p-4">
+    <div *ngIf="errorMessage" class="error-banner">
+    ⚠️ {{ errorMessage }}
+  </div>
   <div *ngIf="!errorMessage">
     <div class="toolbar-actions m-b-t-5">
       <div class="table-header">Obchodní leady (CRM)</div>

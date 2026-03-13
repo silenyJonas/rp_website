@@ -34,11 +34,9 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements Core
     protected override cd: ChangeDetectorRef, 
     protected override genericTableService: Core.GenericTableService, 
     private http: HttpClient,
-    private alertDialogService: Core.AlertDialogService
   ) {
     super(dataHandler, cd, genericTableService);
   }
-
   override ngOnInit(): void {
     this.refreshTranslations();
   }

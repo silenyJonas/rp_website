@@ -1,6 +1,5 @@
 import { Directive, inject } from '@angular/core'; 
 import * as Core from '../../../shared/imports/core-providers';
-import { LoadingService } from '../../../core/services/loading.service'; // Předpokládaná cesta
 
 @Directive()
 export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: string | null }> implements Core.OnInit, Core.OnDestroy, Core.OnChanges {
@@ -36,14 +35,18 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
     sort_direction: 'desc'
   };
 
-  // Vstřikujeme globální loading pro případ, že by dceřiná komponenta chtěla reagovat na stav
-  public loadingService = inject(LoadingService);
+  public loadingService = inject(Core.LoadingService);
+  public alertDialogService = inject(Core.AlertDialogService);
+  public authService = inject(Core.AuthService);
+  public permissionService = inject(Core.PermissionService);
 
   constructor(
     protected dataHandler: Core.DataHandler, 
     protected cd: Core.ChangeDetectorRef,
     protected genericTableService: Core.GenericTableService 
   ) {}
+
+  public refreshData(): void {}
   
   ngOnInit(): void {}
   ngOnChanges(changes: Core.SimpleChanges): void {}
@@ -51,6 +54,15 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  protected initWithAuthCheck(router: Core.Router): void {
+    this.authService.isLoggedIn$
+      .pipe(Core.takeUntil(this.destroy$))
+      .subscribe(loggedIn => {
+        if (loggedIn) this.refreshData();
+        else router.navigate(['/auth/login']);
+      });
   }
 
   protected fetchPaginatedData(

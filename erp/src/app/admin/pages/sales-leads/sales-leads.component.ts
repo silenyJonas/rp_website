@@ -37,9 +37,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
     protected override dataHandler: Core.DataHandler,
     protected override cd: Core.ChangeDetectorRef,
     protected override genericTableService: Core.GenericTableService,
-    private authService: Core.AuthService,
-    private alertDialogService: Core.AlertDialogService,
-    private permissionService: Core.PermissionService,
     private router: Core.Router
   ) {
     super(dataHandler, cd, genericTableService);
@@ -84,9 +81,9 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
   }
 
   override ngOnInit(): void {
-    super.ngOnInit();
-    this.refreshData();
-  }
+  super.ngOnInit();
+  this.initWithAuthCheck(this.router);
+}
 
   handleGenerateFormLink(item: any): void {
     const url = `${window.location.origin}/order_form/lead_id=${item.id}`;
@@ -112,7 +109,7 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
     this.dataHandler.post('business_logs', logData).subscribe();
   }
 
-  public refreshData(): void {
+  override refreshData(): void {
     this.forceFullRefresh(this.filters);
   }
 

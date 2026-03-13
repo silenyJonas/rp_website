@@ -29,8 +29,6 @@ export class PersonalInfoComponent extends BaseDataComponent<UserLogin> implemen
     protected override cd: ChangeDetectorRef,
     protected override genericTableService: GenericTableService, 
     private fb: FormBuilder,
-    private authService: AuthService,
-    private alertDialogService: AlertDialogService
   ) {
     super(dataHandler, cd, genericTableService);
 
@@ -42,7 +40,6 @@ export class PersonalInfoComponent extends BaseDataComponent<UserLogin> implemen
       validator: this.passwordsMatchValidator
     });
   }
-
   override ngOnInit(): void {
     super.ngOnInit(); 
     this.loadCurrentUserData();

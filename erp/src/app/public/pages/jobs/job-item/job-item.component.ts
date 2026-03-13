@@ -39,7 +39,6 @@ export class JobItemComponent extends BaseDataComponent<any> implements OnInit, 
   ) {
     super(dataHandler, cd, genericTableService);
   }
-
   override ngOnInit(): void {
     this.initForm();
     

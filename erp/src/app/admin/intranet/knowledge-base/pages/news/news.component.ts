@@ -29,7 +29,6 @@ export class NewsComponent extends BaseDataComponent<any> implements OnInit {
   ) {
     super(dataHandler, cd, genericTableService);
   }
-
   override ngOnInit(): void {
     super.ngOnInit();
     this.loadMore();

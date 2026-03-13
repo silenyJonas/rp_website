@@ -44,7 +44,6 @@ export class TrashTableBuilderComponent extends BaseDataComponent<any> implement
     protected override cd: Core.ChangeDetectorRef,
     protected override genericTableService: Core.GenericTableService,
     private confirmDialogService: ConfirmDialogService,
-    private alertDialogService: Core.AlertDialogService
   ) {
     super(dataHandler, cd, genericTableService);
   }
