@@ -6,7 +6,7 @@ import * as Core from '../../../../shared/imports/core-providers';
 import { ColumnDefinition } from '../../../../shared/interfaces/generic-form-column-definiton';
 import { BaseDataComponent } from '../../base-data/base-data.component';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
-import { Buttons } from '../../../../shared/interfaces/buttons';
+import { TableButtons } from '../../../../shared/interfaces/table-buttons';
 
 @Component({
   selector: 'app-table-builder',
@@ -22,7 +22,7 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
   @Input() tableCaption?: string;
   @Input() override apiEndpoint: string = '';
   @Input() uploadsBaseUrl: string = '';
-  @Input() buttons: Buttons[] = [];
+  @Input() buttons: TableButtons[] = [];
   @Input() isAdminTable: boolean = false;
   @Input() isFullWidth: boolean = true;
   @Input() currentFilters: any = {};

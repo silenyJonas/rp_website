@@ -9,7 +9,7 @@ import * as Core from '../../../../shared/imports/core-providers';
 import { ColumnDefinition } from '../../../../shared/interfaces/generic-form-column-definiton';
 import { BaseDataComponent } from '../../base-data/base-data.component';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
-import { Buttons } from '../../../../shared/interfaces/buttons';
+import { TableButtons } from '../../../../shared/interfaces/table-buttons';
 
 @Component({
   selector: 'app-trash-table-builder',
@@ -29,7 +29,7 @@ export class TrashTableBuilderComponent extends BaseDataComponent<any> implement
   @Input() override apiEndpoint: string = '';
   @Input() uploadsBaseUrl: string = '';
   
-  buttons: Buttons[] = [
+  buttons: TableButtons[] = [
     { display_name: '♻️', header_name: "Obnovit", isActive: true, type: 'confirm_button', action: "restore" },
     { display_name: '🧨', header_name: "Trvale smazat", isActive: true, type: 'delete_button', action: "delete" },
   ];

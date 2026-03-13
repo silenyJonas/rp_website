@@ -3,18 +3,10 @@
     <div class="toolbar-actions m-b-t-5">
       <div class="table-header">Správa uživatelských účtů</div>
       <div class="toolbar-actions-in">
-        <button (click)="toggleFilters()" class="btn-filter small-btn" [class.active]="isFilterVisible">
-          {{ isFilterVisible ? '✕ Zavřít' : '🔍 Filtrovat' }}
-        </button>
-        <button *ngIf="!showTrashTable" class="btn-create small-btn" (click)="handleCreateFormOpened()">
-          ➕ Nový uživatel
-        </button>
-        <button *ngIf="!showTrashTable" class="btn-export small-btn" (click)="exportActiveTable()">
-          📥 Export CSV
-        </button>
-        <button *appHasPermission="'view-deleted'" (click)="toggleTable()" class="btn-trash small-btn">
-          {{ showTrashTable ? '📋 Aktivní záznamy' : '🗑️ Koš' }}
-        </button>
+        <app-button-builder 
+          [configs]="toolbarButtons" 
+          (actionTriggered)="handleToolbarAction($event)">
+        </app-button-builder>
       </div>
     </div>
 
@@ -50,7 +42,6 @@
         </app-trash-table-builder>
 
         <div class="footer-controls flex justify-between items-center mt-4">
-
           <app-pagination-buttons-builder
             [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
             [totalPages]="showTrashTable ? trashTotalPages : totalPages"
@@ -75,7 +66,7 @@
 
 <app-form-builder
   *ngIf="showResetPasswordForm"
-  [headerText]="'Resetovat heslo'"
+  [headerText]="resetPasswordTitle"
   [inputDefinitions]="resetPasswordFormFields"
   [formDataToEdit]="selectedItemForEdit"
   (formSubmitted)="handleResetPasswordFormSubmitted($event)"

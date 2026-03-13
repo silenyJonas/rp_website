@@ -1,14 +1,7 @@
-// 1. Dekorátory (Nutné pro stabilitu kompilace a eliminaci JIT chyb)
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-
-// 2. Sjednocené jádro (Služby, Typy, RxJS operátory)
 import * as Core from '../../../shared/imports/core-providers';
-
-// 3. UI Buildery (Komponenty a Typy)
 import { SHARED_UI_BUILDERS } from '../../../shared/imports/shared-ui-builders';
 import { TableBuilderComponent } from '../../components/builders/table-builder/table-builder.component';
-
-// 4. Ostatní (Báze a Konfigurace)
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
 import * as Config from './sales-leads.config';
 
@@ -25,7 +18,6 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
 
   override apiEndpoint: string = 'sales_leads';
 
-  // Konfigurace načtená přes barrel Config
   buttons = Config.SALES_LEAD_BUTTONS;
   formFields = Config.SALES_LEAD_FORM_FIELDS;
   salesLeadColumns = Config.SALES_LEAD_COLUMNS;
@@ -35,10 +27,10 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
 
   selectedItemForEdit: any | null = null;
   selectedItemForDetails: any | null = null;
-  
-  filters: Core.FilterParams = { 
-    sort_by: 'id', 
-    sort_direction: 'desc' 
+
+  filters: Core.FilterParams = {
+    sort_by: 'id',
+    sort_direction: 'desc'
   };
 
   constructor(
@@ -47,9 +39,48 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
     protected override genericTableService: Core.GenericTableService,
     private authService: Core.AuthService,
     private alertDialogService: Core.AlertDialogService,
+    private permissionService: Core.PermissionService,
     private router: Core.Router
   ) {
     super(dataHandler, cd, genericTableService);
+  }
+
+  get toolbarButtons(): Core.Button[] {
+    return Config.SALES_LEAD_TOOLBAR_BUTTONS.map(btn => {
+      let updatedBtn = { ...btn };
+
+      if (updatedBtn.permission && !this.permissionService.hasPermission(updatedBtn.permission)) {
+        updatedBtn.showIf = false;
+      }
+
+      switch (btn.action) {
+        case 'toggleFilters':
+          updatedBtn.label = this.isFilterVisible ? 'Skrýt' : 'Filtry';
+          updatedBtn.isActive = this.isFilterVisible;
+          break;
+        case 'handleCreateFormOpened':
+        case 'exportActiveTable':
+          if (updatedBtn.showIf !== false) {
+            updatedBtn.showIf = !this.showTrashTable;
+          }
+          break;
+        case 'toggleTable':
+          updatedBtn.label = this.showTrashTable ? 'Aktivní' : 'Smazané';
+          break;
+      }
+
+      return updatedBtn;
+    });
+  }
+
+  handleToolbarAction(action: string): void {
+    const actions: { [key: string]: () => void } = {
+      toggleFilters: () => this.toggleFilters(),
+      handleCreateFormOpened: () => this.handleCreateFormOpened(),
+      exportActiveTable: () => this.exportActiveTable(),
+      toggleTable: () => this.toggleTable()
+    };
+    if (actions[action]) actions[action]();
   }
 
   override ngOnInit(): void {
@@ -57,11 +88,8 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
     this.refreshData();
   }
 
-  // --- Specifická logika Sales Leads (IDENTICKÁ) ---
-
   handleGenerateFormLink(item: any): void {
     const url = `${window.location.origin}/order_form/lead_id=${item.id}`;
-
     navigator.clipboard.writeText(url).then(() => {
       this.alertDialogService.open('Odkaz zkopírován', `Odkaz pro lead ID: ${item.id} je ve schránce.`, 'success');
       this.logAction(item);
@@ -84,73 +112,69 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
     this.dataHandler.post('business_logs', logData).subscribe();
   }
 
-  // --- Správa dat a filtrů ---
-
-  public refreshData(): void { 
-    this.forceFullRefresh(this.filters); 
+  public refreshData(): void {
+    this.forceFullRefresh(this.filters);
   }
 
-  applyFilters(f: Core.FilterParams): void { 
-    this.filters = { ...this.filters, ...f }; 
-    this.currentPage = 1; 
-    this.refreshData(); 
+  applyFilters(f: Core.FilterParams): void {
+    this.filters = { ...this.filters, ...f };
+    this.currentPage = 1;
+    this.refreshData();
   }
 
-  clearFilters(): void { 
-    this.filters = { sort_by: 'id', sort_direction: 'desc' }; 
-    this.refreshData(); 
+  clearFilters(): void {
+    this.filters = { sort_by: 'id', sort_direction: 'desc' };
+    this.refreshData();
   }
 
-  handlePageChange(p: number): void { 
-    this.onHandlePageChange(p, this.filters); 
+  handlePageChange(p: number): void {
+    this.onHandlePageChange(p, this.filters);
   }
 
-  handleItemsPerPageChange(v: number): void { 
-    this.onHandleItemsPerPageChange(v, this.filters); 
+  handleItemsPerPageChange(v: number): void {
+    this.onHandleItemsPerPageChange(v, this.filters);
   }
 
-  exportActiveTable(): void { 
-    this.activeTable?.exportToCSV(); 
+  exportActiveTable(): void {
+    this.activeTable?.exportToCSV();
   }
 
-  // --- Handlery formulářů a detailů ---
-
-  handleCreateFormOpened(): void { 
-    this.selectedItemForEdit = null; 
-    this.showCreateForm = true; 
+  handleCreateFormOpened(): void {
+    this.selectedItemForEdit = null;
+    this.showCreateForm = true;
   }
 
-  handleEditFormOpened(item: any): void { 
-    this.selectedItemForEdit = { ...item }; 
-    this.showCreateForm = true; 
+  handleEditFormOpened(item: any): void {
+    this.selectedItemForEdit = { ...item };
+    this.showCreateForm = true;
   }
 
   handleFormSubmitted(formData: any): void {
     const req = formData.id ? this.updateData(formData.id, formData) : this.postData(formData);
     req.pipe(
-      Core.finalize(() => { 
-        this.showCreateForm = false; 
-        this.cd.markForCheck(); 
+      Core.finalize(() => {
+        this.showCreateForm = false;
+        this.cd.markForCheck();
       })
     ).subscribe(() => this.refreshData());
   }
 
   handleViewDetails(item: any): void {
-    this.getItemDetails(item.id).subscribe(d => { 
-      this.selectedItemForDetails = d; 
-      this.showDetails = true; 
-      this.cd.markForCheck(); 
+    this.getItemDetails(item.id).subscribe(d => {
+      this.selectedItemForDetails = d;
+      this.showDetails = true;
+      this.cd.markForCheck();
     });
   }
 
-  onCancelForm(): void { 
-    this.showCreateForm = false; 
+  onCancelForm(): void {
+    this.showCreateForm = false;
     this.selectedItemForEdit = null;
     this.cd.markForCheck();
   }
 
-  handleCloseDetails(): void { 
-    this.showDetails = false; 
+  handleCloseDetails(): void {
+    this.showDetails = false;
     this.selectedItemForDetails = null;
     this.cd.markForCheck();
   }

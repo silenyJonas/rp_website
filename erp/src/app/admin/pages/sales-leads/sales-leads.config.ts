@@ -1,12 +1,41 @@
 import * as Core from '../../../shared/imports/core-providers';
 
-export const SALES_LEAD_BUTTONS: Core.Buttons[] = [
+export const SALES_LEAD_BUTTONS: Core.TableButtons[] = [
   { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
   { display_name: '🔗', header_name: 'Link', isActive: true, type: 'neutral_button', action: 'generate_form' },
   { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
 ];
-
+export const SALES_LEAD_TOOLBAR_BUTTONS: Core.Button[] = [
+  {
+    action: 'toggleFilters',
+    label: 'Filtry',
+    icon: '🔍',
+    class: 'btn-filter',
+    isActive: false
+  },
+  {
+    action: 'handleCreateFormOpened',
+    label: 'Přidat lead',
+    icon: '➕',
+    class: 'btn-create',
+    showIf: true
+  },
+  {
+    action: 'exportActiveTable',
+    label: 'Export CSV',
+    icon: '📥',
+    class: 'btn-export',
+    showIf: true
+  },
+  {
+    action: 'toggleTable',
+    label: 'Koš',
+    icon: '🗑️',
+    class: 'btn-trash',
+    permission: 'view-deleted'
+  }
+];
 export const SALES_LEAD_STATUS_OPTIONS: string[] = [
   'Nové', 'Probíhá komunikace', 'Příprava nabídky', 'Nabídka odeslána', 
   'Poptávkový formulář odeslán', 'Vyjednávání', 'Pozastaveno', 'Přebírá si dev team',

@@ -1,7 +1,24 @@
 import * as Core from '../../../shared/imports/core-providers';
 
-export const BUTTONS: Core.Buttons[] = [
+export const BUTTONS: Core.TableButtons[] = [
   { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
+];
+
+export const TOOLBAR_BUTTONS: Core.Button[] = [
+  {
+    action: 'toggleFilters',
+    label: 'Filtry',
+    icon: '🔍',
+    class: 'btn-filter',
+    isActive: false
+  },
+  {
+    action: 'exportActiveTable',
+    label: 'Export CSV',
+    icon: '📥',
+    class: 'btn-export',
+    showIf: true
+  }
 ];
 
 export const FORM_FIELDS: Core.InputDefinition[] = [];
@@ -19,21 +36,21 @@ export const TABLE_COLUMNS: Core.ColumnDefinition[] = [
 export const FILTER_COLUMNS: Core.FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID logu', canSort: true },
   { key: 'user_email_plain', header: 'Uživatel', type: 'text', placeholder: 'Email uživatele', canSort: true },
-  { 
-    key: 'event_type', 
-    header: 'Událost', 
-    type: 'select', 
-    options: ["create", "update", "soft_delete", "hard_delete", "restore", "login", "bulk_hard_delete"], 
-    placeholder: '-- Typ akce --', 
-    canSort: true 
+  {
+    key: 'event_type',
+    header: 'Událost',
+    type: 'select',
+    options: ["create", "update", "soft_delete", "hard_delete", "restore", "login", "bulk_hard_delete"],
+    placeholder: '-- Typ akce --',
+    canSort: true
   },
-  { 
-    key: 'module', 
-    header: 'Modul', 
-    type: 'select', 
-    options: ["Auth", "BusinessLog", "JobApplication", "News", "RawRequestCommission", "Role", "SalesLead", "SalesOrder", "SupportTicket", "Translation", "User"], 
-    placeholder: '-- Modul --', 
-    canSort: true 
+  {
+    key: 'module',
+    header: 'Modul',
+    type: 'select',
+    options: ["Auth", "BusinessLog", "JobApplication", "News", "RawRequestCommission", "Role", "SalesLead", "SalesOrder", "SupportTicket", "Translation", "User"],
+    placeholder: '-- Modul --',
+    canSort: true
   },
   { key: 'origin', header: 'IP adresa', type: 'text', placeholder: 'Hledat IP', canSort: true }
 ];

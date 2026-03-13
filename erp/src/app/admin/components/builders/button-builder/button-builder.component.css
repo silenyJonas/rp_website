@@ -1,0 +1,46 @@
+/* Kontejner pro tlačítka - musí odpovídat tvé struktuře toolbar-actions-in */
+.toolbar-actions-in {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Základní definice tlačítka - PŘESNĚ PODLE ZADÁNÍ */
+.small-btn {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid transparent;
+}
+
+/* Specifické barvy a okraje */
+.btn-filter { background-color: #f3f4f6; color: #374151; border-color: #d1d5db; }
+.btn-trash { background-color: #fef2f2; color: #dc2626; border-color: #fecaca; }
+.btn-create { background-color: #ecfdf5; color: #059669; border-color: #a7f3d0; }
+.btn-export { background-color: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+
+/* Stav active pro přepínače (např. aktivní filtr) */
+.small-btn.active {
+  /* Zde si drží barvu své třídy, ale můžeš přidat drobný vizuální rozdíl, 
+     pokud ho tvůj původní systém měl, např. border-style: dashed; */
+  filter: contrast(0.9);
+}
+
+/* Responzivita - PŘESNĚ PODLE ZADÁNÍ */
+@media (max-width: 768px) {
+  .toolbar-actions-in {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .small-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}

@@ -15,7 +15,6 @@ import * as Config from './edit-news.config';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditNewsComponent extends BaseDataComponent<any> implements Core.OnInit {
-  // Přidáno pro propojení s HTML
   public override loadingService = inject(LoadingService);
 
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
@@ -28,7 +27,6 @@ export class EditNewsComponent extends BaseDataComponent<any> implements Core.On
   trashNewsColumns = Config.NEWS_TRASH_COLUMNS;
   filterColumns = Config.NEWS_FILTER_COLUMNS;
   detailsColumns = Config.NEWS_DETAILS_COLUMNS;
-
   selectedItemForEdit: any | null = null;
   selectedItemForDetails: any | null = null;
 
@@ -42,9 +40,48 @@ export class EditNewsComponent extends BaseDataComponent<any> implements Core.On
     protected override cd: Core.ChangeDetectorRef,
     protected override genericTableService: Core.GenericTableService,
     private authService: Core.AuthService,
+    private permissionService: Core.PermissionService,
     private router: Core.Router
   ) {
     super(dataHandler, cd, genericTableService);
+  }
+
+  get toolbarButtons(): Core.Button[] {
+    return Config.NEWS_TOOLBAR_BUTTONS.map(btn => {
+      let updatedBtn = { ...btn };
+
+      if (updatedBtn.permission && !this.permissionService.hasPermission(updatedBtn.permission)) {
+        updatedBtn.showIf = false;
+      }
+
+      switch (btn.action) {
+        case 'toggleFilters':
+          updatedBtn.label = this.isFilterVisible ? 'Skrýt' : 'Filtry';
+          updatedBtn.isActive = this.isFilterVisible;
+          break;
+        case 'handleCreateFormOpened':
+        case 'exportActiveTable':
+          if (updatedBtn.showIf !== false) {
+            updatedBtn.showIf = !this.showTrashTable;
+          }
+          break;
+        case 'toggleTable':
+          updatedBtn.label = this.showTrashTable ? 'Aktivní' : 'Smazané';
+          break;
+      }
+
+      return updatedBtn;
+    });
+  }
+
+  handleToolbarAction(action: string): void {
+    const actions: { [key: string]: () => void } = {
+      toggleFilters: () => this.toggleFilters(),
+      handleCreateFormOpened: () => this.handleCreateFormOpened(),
+      exportActiveTable: () => this.exportActiveTable(),
+      toggleTable: () => this.toggleTable()
+    };
+    if (actions[action]) actions[action]();
   }
 
   override ngOnInit(): void {
@@ -96,10 +133,9 @@ export class EditNewsComponent extends BaseDataComponent<any> implements Core.On
   }
 
   handleFormSubmitted(formData: any): void {
-    const request$ = formData.id 
-      ? this.updateData(formData.id, formData) 
+    const request$ = formData.id
+      ? this.updateData(formData.id, formData)
       : this.postData(formData);
-
     request$.pipe(
       Core.finalize(() => {
         this.showCreateForm = false;

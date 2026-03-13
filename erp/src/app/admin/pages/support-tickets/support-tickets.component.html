@@ -3,21 +3,12 @@
     <div class="toolbar-actions m-b-t-5">
       <div class="table-header">Helpdesk tikety</div>
       <div class="toolbar-actions-in">
-        <button (click)="toggleFilters()" class="btn-filter small-btn">
-          {{ isFilterVisible ? '✕ Skrýt' : '🔍 Filtry' }}
-        </button>
-        <button *ngIf="!showTrashTable" class="btn-create small-btn" (click)="handleCreateFormOpened()">
-          ➕ Přidat
-        </button>
-        <button *ngIf="!showTrashTable" class="btn-export small-btn" (click)="exportActiveTable()">
-          📥 Export
-        </button>
-        <button *appHasPermission="'view-deleted'" (click)="toggleTable()" class="btn-trash small-btn">
-          {{ showTrashTable ? '📋 Aktivní' : '🗑️ Smazané' }}
-        </button>
+        <app-button-builder 
+          [configs]="toolbarButtons" 
+          (actionTriggered)="handleToolbarAction($event)">
+        </app-button-builder>
       </div>
     </div>
-
     <div class="main-content-layout">
       <div class="filter-side-panel" [class.active]="isFilterVisible">
         <app-filter-form-builder
@@ -27,7 +18,6 @@
           (filtersCleared)="clearFilters()">
         </app-filter-form-builder>
       </div>
-
       <div class="table-and-pagination-container">
         <app-table-builder #activeTable *ngIf="!showTrashTable"
           [buttons]="buttons"
@@ -41,7 +31,6 @@
           (editFormOpened)="handleEditFormOpened($event)"
           (viewDetailsOpened)="handleViewDetails($event)">
         </app-table-builder>
-
         <app-trash-table-builder *ngIf="showTrashTable"
           [data]="trashData"
           [columns]="trashColumns"
@@ -49,7 +38,6 @@
           [apiEndpoint]="apiEndpoint"
           (itemRestored)="refreshData()">
         </app-trash-table-builder>
-
         <div class="flex justify-between items-center mt-4">
           <app-pagination-buttons-builder
             [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
@@ -65,7 +53,6 @@
     </div>
   </div>
 </div>
-
 <app-form-builder 
   *ngIf="showCreateForm" 
   [inputDefinitions]="formFields" 
@@ -73,7 +60,6 @@
   (formSubmitted)="handleFormSubmitted($event)" 
   (formCanceled)="onCancelForm()">
 </app-form-builder>
-
 <app-details-builder 
   *ngIf="showDetails" 
   [itemDetailColumns]="detailsColumns" 

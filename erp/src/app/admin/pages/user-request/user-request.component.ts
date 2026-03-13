@@ -1,14 +1,7 @@
-// 1. Dekorátory (Nutné pro stabilitu kompilace a eliminaci JIT chyb)
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-
-// 2. Sjednocené jádro (Služby, Typy, RxJS operátory)
 import * as Core from '../../../shared/imports/core-providers';
-
-// 3. UI Buildery (Komponenty a Typy)
 import { SHARED_UI_BUILDERS } from '../../../shared/imports/shared-ui-builders';
 import { TableBuilderComponent } from '../../components/builders/table-builder/table-builder.component';
-
-// 4. Ostatní (Báze a Konfigurace)
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
 import * as Config from './user-request.config';
 
@@ -25,7 +18,6 @@ export class UserRequestComponent extends BaseDataComponent<any> implements Core
 
   override apiEndpoint: string = 'raw_request_commissions';
 
-  // Konfigurace načtená přes barrel Config
   buttons = Config.USER_REQUEST_BUTTONS;
   formFields = Config.USER_REQUEST_FORM_FIELDS;
   userRequestColumns = Config.USER_REQUEST_COLUMNS;
@@ -46,9 +38,48 @@ export class UserRequestComponent extends BaseDataComponent<any> implements Core
     protected override cd: Core.ChangeDetectorRef,
     protected override genericTableService: Core.GenericTableService,
     private authService: Core.AuthService,
+    private permissionService: Core.PermissionService,
     private router: Core.Router
   ) {
     super(dataHandler, cd, genericTableService);
+  }
+
+  get toolbarButtons(): Core.Button[] {
+    return Config.USER_REQUEST_TOOLBAR_BUTTONS.map(btn => {
+      let updatedBtn = { ...btn };
+
+      if (updatedBtn.permission && !this.permissionService.hasPermission(updatedBtn.permission)) {
+        updatedBtn.showIf = false;
+      }
+
+      switch (btn.action) {
+        case 'toggleFilters':
+          updatedBtn.label = this.isFilterVisible ? 'Skrýt' : 'Filtry';
+          updatedBtn.isActive = this.isFilterVisible;
+          break;
+        case 'handleCreateFormOpened':
+        case 'exportActiveTable':
+          if (updatedBtn.showIf !== false) {
+            updatedBtn.showIf = !this.showTrashTable;
+          }
+          break;
+        case 'toggleTable':
+          updatedBtn.label = this.showTrashTable ? 'Aktivní' : 'Koš';
+          break;
+      }
+
+      return updatedBtn;
+    });
+  }
+
+  handleToolbarAction(action: string): void {
+    const actions: { [key: string]: () => void } = {
+      toggleFilters: () => this.toggleFilters(),
+      handleCreateFormOpened: () => this.handleCreateFormOpened(),
+      exportActiveTable: () => this.exportActiveTable(),
+      toggleTable: () => this.toggleTable()
+    };
+    if (actions[action]) actions[action]();
   }
 
   override ngOnInit(): void {
@@ -62,15 +93,13 @@ export class UserRequestComponent extends BaseDataComponent<any> implements Core
     });
   }
 
-  // --- Správa dat a filtrů ---
-
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
   }
 
   applyFilters(newFilters: Core.FilterParams): void {
     this.filters = { ...this.filters, ...newFilters };
-    this.currentPage = 1; 
+    this.currentPage = 1;
     this.refreshData();
   }
 
@@ -94,8 +123,6 @@ export class UserRequestComponent extends BaseDataComponent<any> implements Core
     }
   }
 
-  // --- Handlery formulářů a detailů ---
-
   handleCreateFormOpened(): void {
     this.selectedItemForEdit = null;
     this.showCreateForm = true;
@@ -107,8 +134,8 @@ export class UserRequestComponent extends BaseDataComponent<any> implements Core
   }
 
   handleFormSubmitted(formData: any): void {
-    const request$ = formData.id 
-      ? this.updateData(formData.id, formData) 
+    const request$ = formData.id
+      ? this.updateData(formData.id, formData)
       : this.postData(formData);
 
     request$.pipe(

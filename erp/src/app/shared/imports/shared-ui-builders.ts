@@ -7,6 +7,7 @@ import { FilterFormBuilderComponent } from '../../admin/components/builders/filt
 import { DetailsBuilderComponent } from '../../admin/components/builders/details-builder/details-builder.component';
 import { PaginationButtonsBuilderComponent } from '../../admin/components/builders/pagination-buttons-builder/pagination-buttons-builder.component';
 import { HasPermissionDirective } from '../../core/directives/has-permission.directive';
+import { ButtonBuilderComponent } from '../../admin/components/builders/button-builder/button-builder.component';
 export const SHARED_UI_BUILDERS = [
   CommonModule,
   FormsModule,
@@ -17,5 +18,6 @@ export const SHARED_UI_BUILDERS = [
   FilterFormBuilderComponent,
   DetailsBuilderComponent,
   PaginationButtonsBuilderComponent,
-  HasPermissionDirective
+  HasPermissionDirective,
+  ButtonBuilderComponent
 ] as const;

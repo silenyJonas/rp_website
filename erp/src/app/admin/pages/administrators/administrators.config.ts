@@ -7,11 +7,42 @@ export const ROLE_OPTIONS = [
   { value: '5', label: 'Salesman' },
 ];
 
-export const BUTTONS: Core.Buttons[] = [
+export const TABLE_BUTTONS: Core.TableButtons[] = [
   { display_name: '🔎', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
   { display_name: '🔑', header_name: 'Heslo', isActive: true, type: 'neutral_button', action: 'password_reset' },
   { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
+];
+
+export const TOOLBAR_BUTTONS: Core.Button[] = [
+  { 
+    action: 'toggleFilters', 
+    label: 'Filtrovat', 
+    icon: '🔍', 
+    class: 'btn-filter', 
+    isActive: false 
+  },
+  { 
+    action: 'handleCreateFormOpened', 
+    label: 'Nový uživatel', 
+    icon: '➕', 
+    class: 'btn-create', 
+    showIf: true 
+  },
+  { 
+    action: 'exportActiveTable', 
+    label: 'Export CSV', 
+    icon: '📥', 
+    class: 'btn-export', 
+    showIf: true 
+  },
+  { 
+    action: 'toggleTable', 
+    label: 'Koš', 
+    icon: '🗑️', 
+    class: 'btn-trash',
+    permission: 'view-deleted' // Klíč pro PermissionService
+  }
 ];
 
 export const RESET_PASSWORD_FORM_FIELDS: Core.InputDefinition[] = [
@@ -21,116 +52,19 @@ export const RESET_PASSWORD_FORM_FIELDS: Core.InputDefinition[] = [
 ];
 
 export const FORM_FIELDS: Core.InputDefinition[] = [
-  {
-    column_name: 'user_email',
-    label: 'Přihlašovací login',
-    placeholder: 'Např. novak_jan',
-    type: 'text',
-    required: true,
-    pattern: '^[a-zA-Z0-9._-]{3,20}$',
-    errorMessage: 'Špatný formát (3-20 znaků, bez mezer)',
-    editable: true, show_in_edit: true, show_in_create: true,
-  },
-  {
-    column_name: 'full_name',
-    label: 'Celé jméno',
-    placeholder: 'Zadejte jméno a příjmení',
-    type: 'text',
-    required: true,
-    errorMessage: 'Jméno je povinné',
-    editable: true, show_in_edit: true, show_in_create: true,
-  },
-  {
-    column_name: 'contact_email',
-    label: 'Kontaktní e-mail',
-    placeholder: 'soukromy@email.cz',
-    type: 'text',
-    required: false,
-    pattern: '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$',
-    errorMessage: 'Neplatný formát e-mailu',
-    editable: true, show_in_edit: true, show_in_create: true
-  },
-  {
-    column_name: 'user_password_hash',
-    label: 'Heslo',
-    placeholder: 'Zadejte silné heslo',
-    type: 'confirm-password',
-    required: true,
-    pattern: '^.{8,}$',
-    errorMessage: 'Minimálně 8 znaků',
-    editable: true, show_in_edit: false, show_in_create: true
-  },
-  {
-    column_name: 'role_id',
-    label: 'Role',
-    type: 'select',
-    options: ROLE_OPTIONS,
-    required: true,
-    editable: true, show_in_edit: true, show_in_create: true
-  },
-  { 
-    column_name: 'phone_number', 
-    label: 'Telefon', 
-    placeholder: '+420 123 456 789',
-    type: 'text', 
-    required: false, 
-    editable: true, show_in_edit: true, show_in_create: true 
-  },
-  { 
-    column_name: 'birth_date', 
-    label: 'Datum narození', 
-    placeholder: 'RRRR-MM-DD',
-    type: 'date', 
-    required: false, 
-    editable: true, show_in_edit: true, show_in_create: true 
-  },
-  { 
-    column_name: 'personal_id_num', 
-    label: 'Rodné číslo', 
-    placeholder: 'YYMMDD/XXXX',
-    type: 'text', 
-    required: false, 
-    editable: true, show_in_edit: true, show_in_create: true 
-  },
-  { 
-    column_name: 'address', 
-    label: 'Trvalé bydliště', 
-    placeholder: 'Ulice, město, PSČ',
-    type: 'text', 
-    required: false, 
-    editable: true, show_in_edit: true, show_in_create: true 
-  },
-  { 
-    column_name: 'bank_account', 
-    label: 'Bankovní účet', 
-    placeholder: '123456789/0100',
-    type: 'text', 
-    required: false, 
-    editable: true, show_in_edit: true, show_in_create: true 
-  },
-  { 
-    column_name: 'commission_rate', 
-    label: 'Provize (%)', 
-    placeholder: 'Výchozí je 10',
-    type: 'number', 
-    required: true, 
-    editable: true, show_in_edit: true, show_in_create: true 
-  },
-  { 
-    column_name: 'has_tax_declaration', 
-    label: 'Daňové prohlášení', 
-    type: 'checkbox', 
-    required: false, 
-    editable: true, show_in_edit: true, show_in_create: true 
-  },
-  { 
-    column_name: 'internal_note', 
-    label: 'Poznámka', 
-    placeholder: 'Interní poznámka k uživateli (nevidí ji)',
-    type: 'textarea', 
-    required: false, 
-    editable: true, show_in_edit: true, show_in_create: true 
-  }
+  { column_name: 'user_email', label: 'Přihlašovací login', placeholder: 'Např. novak_jan', type: 'text', required: true, pattern: '^[a-zA-Z0-9._-]{3,20}$', errorMessage: 'Špatný formát', editable: true, show_in_edit: true, show_in_create: true },
+  { column_name: 'full_name', label: 'Celé jméno', placeholder: 'Zadejte jméno a příjmení', type: 'text', required: true, errorMessage: 'Jméno je povinné', editable: true, show_in_edit: true, show_in_create: true },
+  { column_name: 'contact_email', label: 'Kontaktní e-mail', placeholder: 'soukromy@email.cz', type: 'text', required: false, pattern: '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$', errorMessage: 'Neplatný e-mail', editable: true, show_in_edit: true, show_in_create: true },
+  { column_name: 'user_password_hash', label: 'Heslo', placeholder: 'Zadejte silné heslo', type: 'confirm-password', required: true, pattern: '^.{8,}$', errorMessage: 'Minimálně 8 znaků', editable: true, show_in_edit: false, show_in_create: true },
+  { column_name: 'role_id', label: 'Role', type: 'select', options: ROLE_OPTIONS, required: true, editable: true, show_in_edit: true, show_in_create: true },
+  { column_name: 'phone_number', label: 'Telefon', placeholder: '+420 123 456 789', type: 'text', required: false, editable: true, show_in_edit: true, show_in_create: true },
+  { column_name: 'birth_date', label: 'Datum narození', type: 'date', required: false, editable: true, show_in_edit: true, show_in_create: true },
+  { column_name: 'personal_id_num', label: 'Rodné číslo', type: 'text', required: false, editable: true, show_in_edit: true, show_in_create: true },
+  { column_name: 'address', label: 'Trvalé bydliště', type: 'text', required: false, editable: true, show_in_edit: true, show_in_create: true },
+  { column_name: 'bank_account', label: 'Bankovní účet', type: 'text', required: false, editable: true, show_in_edit: true, show_in_create: true },
+  { column_name: 'commission_rate', label: 'Provize (%)', type: 'number', required: true, editable: true, show_in_edit: true, show_in_create: true },
+  { column_name: 'has_tax_declaration', label: 'Daňové prohlášení', type: 'checkbox', required: false, editable: true, show_in_edit: true, show_in_create: true },
+  { column_name: 'internal_note', label: 'Poznámka', type: 'textarea', required: false, editable: true, show_in_edit: true, show_in_create: true }
 ];
 
 export const TABLE_COLUMNS: Core.ColumnDefinition[] = [
@@ -152,14 +86,7 @@ export const FILTER_COLUMNS: Core.FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID', canSort: true },
   { key: 'full_name', header: 'Jméno', type: 'text', placeholder: 'Hledat jméno', canSort: true },
   { key: 'user_email', header: 'Login', type: 'text', placeholder: 'Hledat login', canSort: true },
-  { 
-    key: 'role_id', 
-    header: 'Role', 
-    type: 'select', 
-    placeholder: '-- Vyberte roli --', 
-    canSort: true,
-    options: ROLE_OPTIONS.map(opt => opt.label) 
-  }
+  { key: 'role_id', header: 'Role', type: 'select', placeholder: '-- Vyberte roli --', canSort: true, options: ROLE_OPTIONS.map(opt => opt.label) }
 ];
 
 export const DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [

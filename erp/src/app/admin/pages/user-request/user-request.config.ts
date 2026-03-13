@@ -1,12 +1,41 @@
 import * as Core from '../../../shared/imports/core-providers';
 
 
-export const USER_REQUEST_BUTTONS: Core.Buttons[] = [
+export const USER_REQUEST_BUTTONS: Core.TableButtons[] = [
   { display_name: '🔍', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
   { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
   { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
 ];
-
+export const USER_REQUEST_TOOLBAR_BUTTONS: Core.Button[] = [
+  {
+    action: 'toggleFilters',
+    label: 'Filtry',
+    icon: '🔍',
+    class: 'btn-filter',
+    isActive: false
+  },
+  {
+    action: 'handleCreateFormOpened',
+    label: 'Přidat',
+    icon: '➕',
+    class: 'btn-create',
+    showIf: true
+  },
+  {
+    action: 'exportActiveTable',
+    label: 'Export CSV',
+    icon: '📥',
+    class: 'btn-export',
+    showIf: true
+  },
+  {
+    action: 'toggleTable',
+    label: 'Koš',
+    icon: '🗑️',
+    class: 'btn-trash',
+    permission: 'view-deleted'
+  }
+];
 export const USER_REQUEST_STATUS_OPTIONS: string[] = ['Nově zadané', 'Zpracovává se', 'Dokončeno', 'Zrušeno'];
 export const USER_REQUEST_PRIORITY_OPTIONS: string[] = ['Nízká', 'Neutrální', 'Vysoká'];
 export const USER_REQUEST_THEMA_OPTIONS: string[] = ['Webový vývoj', 'Desktopový vývoj', 'Mobilní vývoj', 'AI vývoj', 'Jiné'];

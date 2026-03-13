@@ -28,7 +28,7 @@ export { DataHandler } from '../../core/services/data-handler.service';
 export { GenericTableService } from '../../core/services/generic-table.service';
 export { AuthService } from '../../core/auth/auth.service';
 export { AlertDialogService } from '../../core/services/alert-dialog.service';
-
+export { PermissionService } from '../../core/auth/services/permission.service';
 
 // 2. EXPORTY TYPŮ (Interfaces, Type Aliases)
 // Tyto prvky TypeScript při kompilaci odstraní. MUSÍ mít klíčové slovo "type".

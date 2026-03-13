@@ -14,20 +14,16 @@ import * as Config from './business-logs.config';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BusinessLogsComponent extends BaseDataComponent<any> implements Core.OnInit {
-  // Přímý import ViewChild zajistí, že Angular správně prováže referenci na tabulku
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
   override apiEndpoint: string = 'business_logs';
 
-  // Logika ponechána: Odstranění create a edit pro logy
   buttons = Config.BUTTONS.filter(b => b.action !== 'create' && b.action !== 'edit');
   tableColumns = Config.TABLE_COLUMNS;
   filterColumns = Config.FILTER_COLUMNS;
   detailsColumns = Config.DETAILS_COLUMNS;
-
   selectedItemForDetails: any | null = null;
 
-  // Logika ponechána: Defaultní řazení podle času
   filters: Core.FilterParams = {
     sort_by: 'created_at',
     sort_direction: 'desc'
@@ -39,8 +35,29 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements Cor
     protected override genericTableService: Core.GenericTableService,
     private authService: Core.AuthService,
     private router: Core.Router
-  ) { 
-    super(dataHandler, cd, genericTableService); 
+  ) {
+    super(dataHandler, cd, genericTableService);
+  }
+
+  get toolbarButtons(): Core.Button[] {
+    return Config.TOOLBAR_BUTTONS.map(btn => {
+      let updatedBtn = { ...btn };
+      switch (btn.action) {
+        case 'toggleFilters':
+          updatedBtn.label = this.isFilterVisible ? 'Skrýt' : 'Filtry';
+          updatedBtn.isActive = this.isFilterVisible;
+          break;
+      }
+      return updatedBtn;
+    });
+  }
+
+  handleToolbarAction(action: string): void {
+    const actions: { [key: string]: () => void } = {
+      toggleFilters: () => this.toggleFilters(),
+      exportActiveTable: () => this.exportActiveTable()
+    };
+    if (actions[action]) actions[action]();
   }
 
   override ngOnInit(): void {
@@ -53,8 +70,6 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements Cor
       }
     });
   }
-
-  // --- Správa dat a filtrů ---
 
   public refreshData(): void {
     this.forceFullRefresh(this.filters);
@@ -84,13 +99,9 @@ export class BusinessLogsComponent extends BaseDataComponent<any> implements Cor
     if (this.activeTable) this.activeTable.exportToCSV();
   }
 
-  // --- Handlery detailů ---
-
   handleViewDetails(item: any): void {
-    // Zachování specifické logiky pro ID logu
     const logId = item.business_log_id || item.id;
     if (!logId) return;
-
     this.getItemDetails(logId).subscribe({
       next: (details) => {
         this.selectedItemForDetails = details;
