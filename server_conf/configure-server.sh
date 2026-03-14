@@ -26,7 +26,7 @@ php artisan config:clear
 php artisan cache:clear
 
 # --- 6. Storage link (uvnitř Laravelu) ---
-php artisan storage:link
+php artisan storage:link --force
 
 # --- 7. NASTAVENÍ PRÁV (To, na co ses ptal) ---
 echo "🔓 Nastavuji zápisová práva pro storage a cache..."
