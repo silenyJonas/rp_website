@@ -15,6 +15,8 @@ Připojte se přes SSH do kořenové složky webu (www) a povolte spuštění ko
 chmod +x configura-server.sh
 ```
 
+pokd server neumožňuje spouštění .sh scriptů lze napsat příkazy mauálně z configura-server.txt
+
 ## 3. Spuštění konfigurace
 
 Spusťte skript a postupujte podle pokynů na obrazovce. Během procesu budete vyzváni k úpravě souboru .env (nastavení DB a domény):

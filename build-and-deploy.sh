@@ -1,32 +1,31 @@
 #!/bin/bash
 
-# 1. Nastavení cest (předpokládáme spuštění z kořene projektu)
+# 1. Nastavení cest
 PROJECT_ROOT=$(pwd)
 ANGULAR_PATH="$PROJECT_ROOT/erp"
 API_PATH="$PROJECT_ROOT/api"
-DOTFILES_PATH="$PROJECT_ROOT/dotfiles"
-WWW_PATH="$PROJECT_ROOT/www"
+SERVER_CONF_PATH="$PROJECT_ROOT/server_conf"
+BUILD_DIR="$PROJECT_ROOT/app_build"
+WWW_PATH="$BUILD_DIR/www"
+ZIP_NAME="www.zip"
 LARAVEL_TARGET="$WWW_PATH/laravel"
-# Cesta k buildu Angularu (ověř si ji podle angular.json)
 DIST_PATH="$ANGULAR_PATH/dist/rp_website/browser"
 
 echo "------------------------------------------"
 echo "🚀 START: Komplexní Build a Deployment"
 echo "------------------------------------------"
 
-# 2. Příprava složky /www
-echo "🧹 1/5: Příprava cílové složky $WWW_PATH..."
-if [ -d "$WWW_PATH" ]; then
-    # Smažeme vnitřek, ale složku necháme
-    rm -rf "${WWW_PATH:?}"/*
-    echo "   - Složka vyčištěna."
-else
-    mkdir -p "$WWW_PATH"
-    echo "   - Složka vytvořena."
+# 2. Příprava složky app_build
+echo "🧹 1/7: Příprava cílové složky $BUILD_DIR..."
+if [ -d "$BUILD_DIR" ]; then
+    rm -rf "$BUILD_DIR"
+    echo "   - Starý build odstraněn."
 fi
+mkdir -p "$WWW_PATH"
+echo "   - Složky vytvořeny."
 
 # 3. Build Angularu
-echo "📦 2/5: Kompiluji Angular v $ANGULAR_PATH..."
+echo "📦 2/7: Kompiluji Angular v $ANGULAR_PATH..."
 cd "$ANGULAR_PATH" || exit
 ng build --configuration production
 
@@ -35,35 +34,53 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Kopírování Angularu do /www
 cp -r "$DIST_PATH"/. "$WWW_PATH/"
-echo "   - Angular nakopírován do /www"
+echo "   - Angular nakopírován do app_build/www"
 
 # 4. Kopírování API (Laravel)
-echo "📂 3/5: Příprava Laravelu v $LARAVEL_TARGET..."
+echo "📂 3/7: Příprava Laravelu v $LARAVEL_TARGET..."
 mkdir -p "$LARAVEL_TARGET"
 if [ -d "$API_PATH" ]; then
     cp -r "$API_PATH"/. "$LARAVEL_TARGET/"
-    echo "   - Laravel (api) nakopírován do /www/laravel"
+    echo "   - Laravel (api) nakopírován do app_build/www/laravel"
 else
-    echo "⚠️  [VAROVÁNÍ] Složka /api neexistuje, přeskakuji."
+    echo "⚠️  [VAROVÁNÍ] Složka /api neexistuje."
 fi
 
-# 5. Kopírování dotfiles
-echo "⚙️  4/5: Kopíruji konfigurační soubory (dotfiles)..."
-if [ -d "$DOTFILES_PATH" ]; then
-    cp -r "$DOTFILES_PATH"/. "$WWW_PATH/"
-    echo "   - Dotfiles nakopírovány do /www"
+# 5. Kopírování server_conf (včetně .htaccess, .user.ini, configure-server.txt atd.)
+echo "⚙️  4/7: Kopíruji konfigurační soubory (server_conf)..."
+if [ -d "$SERVER_CONF_PATH" ]; then
+    cp -r "$SERVER_CONF_PATH"/. "$WWW_PATH/"
+    echo "   - Obsah server_conf nakopírován do app_build/www"
 else
-    echo "⚠️  [VAROVÁNÍ] Složka /dotfiles neexistuje, přeskakuji."
+    echo "⚠️  [VAROVÁNÍ] Složka /server_conf neexistuje."
 fi
 
-# 6. Kopírování skriptů pro server (z aktuální složky)
-echo "📄 5/5: Kopíruji README a instalační skript do /www..."
-# Kontrola existence a kopírování
-[ -f "$PROJECT_ROOT/README.txt" ] && cp "$PROJECT_ROOT/README.txt" "$WWW_PATH/" && echo "   - README.txt zkopírován."
-[ -f "$PROJECT_ROOT/configura-server.sh" ] && cp "$PROJECT_ROOT/configura-server.sh" "$WWW_PATH/" && echo "   - configura-server.sh zkopírován."
+# 6. Kopírování dokumentace (do rootu buildu i do www)
+echo "📄 5/7: Kopíruji README do obou umístění..."
+find_readme() {
+    if [ -f "$PROJECT_ROOT/README.md" ]; then echo "$PROJECT_ROOT/README.md"
+    elif [ -f "$PROJECT_ROOT/README.txt" ]; then echo "$PROJECT_ROOT/README.txt"
+    fi
+}
+
+README_SRC=$(find_readme)
+if [ -n "$README_SRC" ]; then
+    cp "$README_SRC" "$WWW_PATH/"      # Do složky www (půjde do zipu)
+    cp "$README_SRC" "$BUILD_DIR/"     # Do rootu app_build (pro rychlý náhled)
+    echo "   - README zkopírováno."
+fi
+
+# 7. Finální ZIPování (uvnitř app_build)
+echo "🗜️  6/7: Vytvářím archiv $ZIP_NAME..."
+cd "$BUILD_DIR" || exit
+if command -v zip &> /dev/null; then
+    zip -r "$ZIP_NAME" www > /dev/null
+    echo "   - Archiv vytvořen v $BUILD_DIR/$ZIP_NAME"
+else
+    echo "❌ [CHYBA] Příkaz 'zip' nenalezen!"
+fi
 
 echo "------------------------------------------"
-echo "✅ [HOTOVO] Kompletní nasazení dokončeno v /www"
+echo "✅ [HOTOVO] Vše připraveno ve složce: /app_build"
 echo "------------------------------------------"
