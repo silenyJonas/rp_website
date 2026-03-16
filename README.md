@@ -1,60 +1,67 @@
-# 🚀 Prvotní konfigurace serveru
+# NÁZEV PROJEKTU: RPSW WEB FRAMEWORK
 
-poznámka pokud je potřeba vymazat symlinky z pozústalého deploye pustí se tento příkaz:
+Tato aplikace slouží jako komerční, plně rozšiřitelný základ (boilerplate) pro budování dalších projektů. Je postavena na moderním technologickém stacku s důrazem na objektově orientované programování (OOP), bezpečnost a striktní oddělení logiky mezi veřejnou a administrativní částí.
 
-```bash
-find . -type l -delete
-```
+## 1. ARCHITEKTURA A KONCEPT
 
-Po nahrání obsahu složky `www` na server postupujte podle těchto kroků:
+Aplikace je rozdělena do dvou hlavních modulů s odděleným přístupem k datům:
+PUBLIC ČÁST: Komunikuje výhradně přes Public Data Providery. Určena pro koncové uživatele.
+ADMIN ČÁST (INTRANET): Zabezpečená zóna pod autentizací, která komunikuje pouze přes Admin Data Providery. Slouží ke správě obsahu a systému.
 
-## 1. Příprava databáze
+### Hlavní pilíře:
 
-* Exportujte lokální databázi (SQL dump).
-* Na produkčním serveru vytvořte novou (nebo pokud byla přidělená poskytovatelem internetových služeb stávající) databázi a importujte do ní stažený SQL soubor.
-* vsechny tabulky připojené databáze jdou smazat tímto scriptem:
+**Strong OOP:** Veškerý kód využívá pokročilé prvky objektového programování pro maximální znovupoužitelnost.
+**Rozšiřitelnost:** Architektura API i databáze je navržena tak, aby bylo možné snadno přidávat nové moduly bez zásahu do jádra.
+**Security:** Token-based autentizace a striktní Role-Based Access Control (RBAC).
 
-```bash
-SET FOREIGN_KEY_CHECKS = 0;
+## 2. TECHNOLOGICKÝ STACK
 
-SET @tables = NULL;
-SELECT GROUP_CONCAT('`', table_name, '`') INTO @tables
-  FROM information_schema.tables
-  WHERE table_schema = (SELECT DATABASE());
+**Frontend:** Angular (silně komponentová struktura)
+**Backend:** Laravel (robustní API endpointy)
+**Databáze:** MySQL
+**Autentizace:** Token-based (JWT/Sanctum)
+**Lokalizace:** Multi-language podpora (JSON format fetching)
+**Protokol:** Plná podpora SSL (včetně implementace pro lokální vývoj)
 
-SET @views = NULL;
-SELECT IF(@tables IS NOT NULL,
-  CONCAT('DROP TABLE IF EXISTS ', @tables),
-  'SELECT "Databaze je jiz prazdna"'
-) INTO @views;
+## 3. KLÍČOVÉ FUNKCE
 
-PREPARE stmt FROM @views;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
+**Dynamická správa obsahu:** Editace veškerých textů na frontendu přímo z administrace.
+**Lokalizační servis:** Texty jsou spravovány v JSON formátu, který je dynamicky fetchován ze serveru dle zvoleného jazyka.
+**Správa médií:** Kompletní podpora pro nahrávání, ukládání a zobrazování obrázků.
+**Logging System:** Detailní logování veškerých akcí probíhajících na frontendu i backendu pro auditní účely.
+**Global Loading:** Jednotný objektový systém pro indikaci načítání napříč celou aplikací.
+**Responzivita:** Plně adaptivní rozhraní pro mobilní zařízení i desktopy.
 
-SET FOREIGN_KEY_CHECKS = 1;
-```
+## 4. BEZPEČNOST A PŘÍSTUPY
 
-## 2. Nastavení práv skriptu
+**Role-Based Access Control (RBAC):** Definování oprávnění na základě rolí uživatelů.
+**Data Provider Separation:** Striktní oddělení logiky odesílání a přijímání dat mezi veřejnou a privátní částí.
+**Intranet:** Administrativní část funguje jako uzavřený intranetový systém dostupný pouze autorizovaným subjektům.
 
-Připojte se přes SSH do kořenové složky webu (www) a povolte spuštění konfiguračního skriptu příkazem:
+## 5. INSTALACE A NASAZENÍ
 
-```bash
-chmod +x configura-server.sh
-```
+Vzhledem ke komplexnosti robustního základu a specifickým požadavkům na serverové prostředí (včetně SSL certifikátů pro lokální vývoj) postupujte podle detailního návodu v samostatném souboru:
 
-pokd server neumožňuje spouštění .sh scriptů lze napsat příkazy mauálně z configura-server.txt
+👉 Dokumentace k instalaci: [server_setup.md]
 
-## 3. Spuštění konfigurace
+### Stručný přehled kroků
 
-Spusťte skript a postupujte podle pokynů na obrazovce. Během procesu budete vyzváni k úpravě souboru .env (nastavení DB a domény):
+Klonování repozitáře.
+Konfigurace environmentálních proměnných (.env).
+Instalace závislostí (Composer pro backend, NPM pro frontend).
+Migrace databáze a seeding základních rolí.
+Nastavení lokálního SSL.
 
-```bash
-./configura-server.sh
-```
+## 6. ROZŠÍŘENÍ PRO DALŠÍ PROJEKTY
 
-## Poznámka
+Tato aplikace je "živý organismus" připravený k větvení. Díky silnému důrazu na čistý kód a OOP stačí pro nový projekt:
 
-* Skript automaticky nainstaluje závislosti (Composer)
-* vygeneruje klíče, vyčistí cache, nastaví zápisová práva pro složky
-* Laravelu a vytvoří potřebné symlinky pro správné zobrazení médií
+Rozšířit existující Base Entity a Modely.
+Přidat specifické komponenty do Angularu.
+Definovat nové API endpointy v rámci stávající struktury Providerů.
+
+## 7. LICENCE A UŽITÍ
+
+Tento software je komerční produkt. Jakékoli šíření nebo použití pro jiné než definované účely podléhá licenční smlouvě.
+
+Copyright (c) 2026. Všechna práva vyhrazena.

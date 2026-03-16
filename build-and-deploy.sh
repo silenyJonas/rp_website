@@ -66,18 +66,30 @@ else
 fi
 
 # 7. Kopírování dokumentace (do rootu buildu i do www)
-echo "📄 6/8: Kopíruji README do obou umístění..."
-find_readme() {
-    if [ -f "$PROJECT_ROOT/README.md" ]; then echo "$PROJECT_ROOT/README.md"
-    elif [ -f "$PROJECT_ROOT/README.txt" ]; then echo "$PROJECT_ROOT/README.txt"
+echo "📄 6/8: Kopíruji server_setup a README do obou umístění..."
+find_server_setup() {
+    if [ -f "$PROJECT_ROOT/server_setup.md" ]; then echo "$PROJECT_ROOT/server_setup.md"
+    elif [ -f "$PROJECT_ROOT/server_setup.txt" ]; then echo "$PROJECT_ROOT/server_setup.txt"
     fi
 }
 
-README_SRC=$(find_readme)
-if [ -n "$README_SRC" ]; then
-    cp "$README_SRC" "$WWW_PATH/"      # Půjde do zipu
-    cp "$README_SRC" "$BUILD_DIR/"     # Pro rychlý náhled
-    echo "   - README zkopírováno."
+# Kopírování server_setup
+server_setup_SRC=$(find_server_setup)
+if [ -n "$server_setup_SRC" ]; then
+    cp "$server_setup_SRC" "$WWW_PATH/"      # Půjde do zipu
+    cp "$server_setup_SRC" "$BUILD_DIR/"     # Pro rychlý náhled
+    echo "   - server_setup zkopírováno."
+fi
+
+# Kopírování README (podporuje .md i .txt verzi)
+if [ -f "$PROJECT_ROOT/README.md" ]; then
+    cp "$PROJECT_ROOT/README.md" "$WWW_PATH/"
+    cp "$PROJECT_ROOT/README.md" "$BUILD_DIR/"
+    echo "   - README.md zkopírováno."
+elif [ -f "$PROJECT_ROOT/README.txt" ]; then
+    cp "$PROJECT_ROOT/README.txt" "$WWW_PATH/"
+    cp "$PROJECT_ROOT/README.txt" "$BUILD_DIR/"
+    echo "   - README.txt zkopírováno."
 fi
 
 # 8. Finální ZIPování (uvnitř app_build)
