@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 // Import tvého Core namespace
 import * as Core from '../../../../shared/imports/core-providers';
 
-// Specifické importy, které nejsou v Core
+// Specifické importy
 import { ColumnDefinition } from '../../../../shared/interfaces/generic-form-column-definiton';
 import { BaseDataComponent } from '../../base-data/base-data.component';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
 import { TableButtons } from '../../../../shared/interfaces/table-buttons';
+import { SHARED_UI_BUILDERS } from '../../../../shared/imports/shared-ui-builders';
 
 @Component({
   selector: 'app-trash-table-builder',
@@ -17,6 +18,7 @@ import { TableButtons } from '../../../../shared/interfaces/table-buttons';
   imports: [
     CommonModule,
     FormsModule,
+    SHARED_UI_BUILDERS
   ],
   templateUrl: './trash-table-builder.component.html',
   styleUrls: ['../table-style.css'],
@@ -34,6 +36,17 @@ export class TrashTableBuilderComponent extends BaseDataComponent<any> implement
     { display_name: '🧨', header_name: "Trvale smazat", isActive: true, type: 'delete_button', action: "delete" },
   ];
 
+  deleteAllButtonConfig: Core.Button[] = [
+    {
+      action: 'deleteAll',
+      label: 'Smazat vše',
+      icon: '🗑️',
+      class: 'btn-trash small-btn',
+      isActive: false,
+      showIf: true
+    }
+  ];
+
   public isFullWidth: boolean = true;
 
   @Output() itemRestored = new EventEmitter<void>();
@@ -46,6 +59,13 @@ export class TrashTableBuilderComponent extends BaseDataComponent<any> implement
     private confirmDialogService: ConfirmDialogService,
   ) {
     super(dataHandler, cd, genericTableService);
+  }
+
+  // OPRAVA: parametr je nyní string, protože builder emituje jen název akce
+  handleToolbarAction(action: string): void {
+    if (action === 'deleteAll') {
+      this.deleteAll();
+    }
   }
 
   override ngOnChanges(changes: Core.SimpleChanges): void {
@@ -96,7 +116,6 @@ export class TrashTableBuilderComponent extends BaseDataComponent<any> implement
               },
               error: (err: any) => {
                 this.alertDialogService.open('Chyba', 'Při obnovení položky nastala chyba.', 'danger');
-                console.error('Restore error:', err);
               }
             });
           }
@@ -114,7 +133,6 @@ export class TrashTableBuilderComponent extends BaseDataComponent<any> implement
               },
               error: (err: any) => {
                 this.alertDialogService.open('Chyba', 'Při trvalém mazání položky nastala chyba.', 'danger');
-                console.error('Hard delete error:', err);
               }
             });
           }

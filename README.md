@@ -48,9 +48,8 @@
 
 - Klonování repozitáře.
 - Konfigurace environmentálních proměnných (.env).
-- Instalace závislostí (Composer pro backend, NPM pro frontend).
-- Migrace databáze a seeding základních rolí.
-- Nastavení lokálního SSL.
+- Spuštění šikovného "./configure-server.sh" scriptu se celý server konfiguruje sám (více informací v [server_setup.md])
+- pro manuální instalaci využijte soubor "manual_server_config" na sdíleném disku
 
 ## 6. ROZŠÍŘENÍ PRO DALŠÍ PROJEKTY
 

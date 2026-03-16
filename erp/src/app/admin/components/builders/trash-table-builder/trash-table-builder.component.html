@@ -1,6 +1,4 @@
-
 <div class="table-responsive">
- 
   <table [class.fit-content-table]="!isFullWidth">
     <caption *ngIf="tableCaption">
       <div class="caption-content-wrapper">
@@ -65,15 +63,15 @@
     </tbody>
   </table>
 </div>
- <div class="toolbar-trash">
-    <button class="btn-trash small-btn" (click)="deleteAll()">
-      🗑️ Smazat vše
-    </button>
+
+<div class="toolbar-trash">
+  <app-button-builder 
+    [configs]="deleteAllButtonConfig" 
+    (actionTriggered)="handleToolbarAction($event)">
+  </app-button-builder>
 
   <label class="checkbox-container">
     <input type="checkbox" [(ngModel)]="isFullWidth">
     Zobrazit tabulku na šířce stránky
   </label>
 </div>
-
-
