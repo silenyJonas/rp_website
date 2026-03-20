@@ -2,60 +2,74 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './admin/auth/login/login.component';
 
 export const routes: Routes = [
+  // --- 1. HLAVNÍ WEB (Původní stránky s webovým headerem) ---
   {
     path: '',
+    loadComponent: () => import('./public/web-pages/web-layout/web-layout.component').then(m => m.WebLayoutComponent),
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
         path: 'home',
-        loadComponent: () => import('./public/pages/home/home.component').then(m => m.HomeComponent)
+        loadComponent: () => import('./public/web-pages/home/home.component').then(m => m.HomeComponent)
       },
       {
         path: 'services',
-        loadComponent: () => import('./public/pages/services/services.component').then(m => m.ServicesComponent)
-      },
-      {
-        path: 'shop',
-        loadComponent: () => import('./public/pages/shop/shop.component').then(m => m.ShopComponent)
+        loadComponent: () => import('./public/web-pages/services/services.component').then(m => m.ServicesComponent)
       },
       {
         path: 'academy',
-        loadComponent: () => import('./public/pages/academy/academy.component').then(m => m.AcademyComponent)
+        loadComponent: () => import('./public/web-pages/academy/academy.component').then(m => m.AcademyComponent)
       },
       {
         path: 'tos',
-        loadComponent: () => import('./public/pages/tos/tos.component').then(m => m.TosComponent)
+        loadComponent: () => import('./public/web-pages/tos/tos.component').then(m => m.TosComponent)
       },
       {
         path: 'privacy-policy',
-        loadComponent: () => import('./public/pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent)
+        loadComponent: () => import('./public/web-pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent)
       },
       {
         path: 'references',
-        loadComponent: () => import('./public/pages/references/references.component').then(m => m.ReferencesComponent)
+        loadComponent: () => import('./public/web-pages/references/references.component').then(m => m.ReferencesComponent)
       },
       {
         path: 'faq',
-        loadComponent: () => import('./public/pages/faq/faq.component').then(m => m.FaqComponent)
+        loadComponent: () => import('./public/web-pages/faq/faq.component').then(m => m.FaqComponent)
       },
       {
         path: 'about-us',
-        loadComponent: () => import('./public/pages/about-us/about-us.component').then(m => m.AboutUsComponent)
+        loadComponent: () => import('./public/web-pages/about-us/about-us.component').then(m => m.AboutUsComponent)
       },
       {
         path: 'jobs',
-        loadComponent: () => import('./public/pages/jobs/jobs-list/jobs-list.component').then(m => m.JobsListComponent)
+        loadComponent: () => import('./public/web-pages/jobs/jobs-list/jobs-list.component').then(m => m.JobsListComponent)
       },
       {
         path: 'jobs/:id',
-        loadComponent: () => import('./public/pages/jobs/job-item/job-item.component').then(m => m.JobItemComponent)
+        loadComponent: () => import('./public/web-pages/jobs/job-item/job-item.component').then(m => m.JobItemComponent)
       },
       {
         path: 'order_form/:leadParam',
-        loadComponent: () => import('./public/pages/order-form/order-form.component').then(m => m.OrderFormComponent)
-      },    
+        loadComponent: () => import('./public/web-pages/order-form/order-form.component').then(m => m.OrderFormComponent)
+      },
     ]
   },
+
+  // --- 2. E-SHOP SEKCE (Nový layout, nový header, bez starého headeru) ---
+  {
+    path: 'shop',
+    loadComponent: () => import('./public/shop-pages/shop-layout/shop-layout.component').then(m => m.ShopLayoutComponent),
+    children: [
+      { path: '', redirectTo: 'catalog', pathMatch: 'full' },
+      {
+        path: 'catalog',
+        loadComponent: () => import('./public/shop-pages/catalog/catalog.component').then(m => m.CatalogComponent)
+      },
+      // Zde později přibude detail: path: 'product/:id'
+    ]
+  },
+
+  // --- 3. ADMIN & AUTH (Vlastní layouty / Sidebar) ---
   {
     path: 'auth/login',
     component: LoginComponent,
@@ -64,9 +78,11 @@ export const routes: Routes = [
     path: 'admin',
     loadChildren: () => import('./admin/admin-routing.module').then(m => m.AdminRoutingModule),
   },
+
+  // --- 4. ERROR PAGES ---
   {
     path: '404',
-    loadComponent: () => import('./public/pages/not-found/not-found.component').then(m => m.NotFoundComponent)
+    loadComponent: () => import('./public/web-pages/not-found/not-found.component').then(m => m.NotFoundComponent)
   },
   {
     path: '**', 

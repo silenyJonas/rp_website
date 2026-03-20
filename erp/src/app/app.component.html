@@ -1,10 +1,1 @@
-<app-public-header 
-  *ngIf="showPublicLayout" 
-  (menuToggled)="toggleRootScroll($event)">
-</app-public-header>
-
-<main [class.admin-main]="!showPublicLayout">
-  <router-outlet></router-outlet>
-</main>
-
-<app-public-footer *ngIf="showPublicLayout"></app-public-footer>
+<router-outlet></router-outlet>

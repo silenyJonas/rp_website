@@ -11,8 +11,8 @@ export { Subject, Observable, of } from 'rxjs';
 export { takeUntil, finalize, delay, tap, catchError } from 'rxjs/operators';
 
 // 4. Služby
-export { LocalizationService } from '../../public/services/localization.service';
-export { PublicDataService } from '../../public/services/public-data.service';
+export { LocalizationService } from '../services/localization.service';
+export { PublicDataService } from '../services/public-data.service';
 export { LoadingService } from '../../core/services/loading.service';
 
 // 5. Typy - VŠECHNY export type MUSÍ být pohromadě a oddělené

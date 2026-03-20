@@ -1,0 +1,26 @@
+<header class="shop-navbar">
+  <div class="shop-container">
+    <div class="shop-logo" routerLink="/">
+      <span class="brand-name">YourApp</span>
+      <span class="badge">Store</span>
+    </div>
+
+    <nav class="shop-nav">
+      <a routerLink="/store/catalog" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Vše</a>
+      <a routerLink="/store/catalog" [queryParams]="{category: 'software'}">Software</a>
+      <a routerLink="/store/catalog" [queryParams]="{category: 'merch'}">Merch</a>
+    </nav>
+
+    <div class="shop-actions">
+      <div class="search-box">
+        <input type="text" placeholder="Hledat produkty...">
+        <i class="icon-search"></i>
+      </div>
+      
+      <button class="cart-btn" (click)="openCart()">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-count">0</span>
+      </button>
+    </div>
+  </div>
+</header>

@@ -28,7 +28,7 @@
     "navigation": {
         "home": "Domů",
         "services": "Služby",
-        "shop": "Obchod",
+        "shop": "E-Shop",
         "academy": "Akademie",
         "references": "Projekty",
         "references_full": "Realizované projekty",
@@ -340,95 +340,6 @@
         },
         "footer_effective": "Tyto Zásady zpracování osobních údajů nabývají účinnosti dnem 22. srpna 2025."
     },
-    "shop": {
-        "header1": "Naše digitální produkty",
-        "header02T": "Spuštění na vaší doméně do 24 hodin",
-        "searchPlaceholder": "Název",
-        "sortByLabel": "Seřadit dle:",
-        "sortByDefaultOption": "-- Výchozí --",
-        "sortByAz": "A-Z",
-        "sortByZa": "Z-A",
-        "sortByPriceDesc": "Od nejdražšího",
-        "sortByPriceAsc": "Od nejlevnějšího",
-        "resultsCountText": "Počet výsledků:",
-        "productsSuffix": "produktů",
-        "filterButtonText": "Filtrovat",
-        "resetButtonText": "Resetovat",
-        "noProductsMessage": "Žádné produkty neodpovídají vašemu výběru.",
-        "products_data": [
-            {
-                "id": "prod-001",
-                "name": "Dotazníkový software",
-                "shortDescription": "Kompletní platforma pro snadnou tvorbu, distribuci a analýzu dotazníků a anket.",
-                "priceCZK": 15099,
-                "priceEUR": 603.99,
-                "imageUrl": "assets\/images\/product_images\/survey_engine.png",
-                "popupType": "survey-software",
-                "details": {
-                    "longDescription": "Náš intuitivní dotazníkový software je kompletní platforma pro vytváření, distribuci a analýzu anket, průzkumů a dotazníků, ideální pro marketingové týmy, personalisty i akademiky. S intuitivním drag-and-drop editorem vytvoříte dotazník raz dva. Díky pokročilé podmíněné logice se respondentům zobrazí jen otázky, které jsou pro ně relevantní, což zvyšuje kvalitu a přesnost získaných dat.\n\nKlíčovou výhodou naší platformy je automatizované vyhodnocování a analýza dat. Jakmile začnou přicházet odpovědi, software je shromažďuje a v reálném čase zpracovává. Nemusíte se starat o složité počítání – platforma automaticky generuje přehledné vizuální reporty a dashboardy. Ty vám na první pohled ukážou klíčové poznatky, ať už jde o průměrné hodnocení, nejčastější odpovědi, nebo rozložení preferencí.\n\nDíky tomu ušetříte čas, získáte okamžitý a srozumitelný výstup a můžete se soustředit na to nejdůležitější – na strategická rozhodnutí.",
-                    "features": [
-                        "Drag-and-drop editor pro intuitivní tvorbu dotazníků.",
-                        "Podmíněná logika (branching) pro dynamické dotazníky.",
-                        "Automatizovaná distribuce přes e-mailové kampaně a QR kódy.",
-                        "Automatické vyhodnocování a analýza dat v reálném čase s vizuálními reporty a dashboardy.",
-                        "Export dat do formátů XLSX, CSV, JSON a PDF.",
-                        "Multi-jazyková podpora pro globální průzkumy.",
-                        "Zabezpečené úložiště dat a ochrana soukromí respondentů."
-                    ],
-                    "technologyStack": "Angular, Node.js, Express.js, MongoDB",
-                    "screenshotUrl": "assets\/images\/product_images\/survey_engine.png",
-                    "supportInfo": "K dispozici je online dokumentace, video tutoriály a e-mailová podpora s odezvou do 24 hodin. Pravidelné aktualizace jsou samozřejmostí."
-                }
-            },
-            {
-                "id": "prod-002",
-                "name": "Systém pro správu uživatelů a formulářů",
-                "shortDescription": "Ucelené řešení pro centralizovanou správu uživatelských účtů, hesel a dat z formulářů.",
-                "priceCZK": 9999,
-                "priceEUR": 399.99,
-                "imageUrl": "assets\/images\/product_images\/user_management_system.png",
-                "popupType": "user-management-system",
-                "details": {
-                    "longDescription": "Náš systém je robustní a bezpečné řešení, které konsoliduje administraci uživatelů a sběr dat z formulářů do jednoho centrálního místa. S intuitivním admin panelem můžete snadno spravovat uživatelské účty, přidělovat přístupová práva podle rolí a bezpečně ukládat citlivá data. Umožňuje vám vytvářet a vkládat vlastní formuláře na jakýkoli web, přičemž veškerá odeslaná data jsou automaticky archivována a šifrována. Ideální pro webové aplikace s nutností registrace, členské sekce a pro sběr interních dat.",
-                    "features": [
-                        "Bezpečné ukládání a správa uživatelských hesel",
-                        "Komplexní systém rolí a oprávnění (administrátor, editor, čtenář)",
-                        "Přehledný seznam všech přijatých formulářů s možností filtrování.",
-                        "Automatické notifikace při přijetí nového formuláře.",
-                        "Hromadný export dat do formátů CSV a JSON.",
-                        "Dvoufaktorová autentizace (2FA) pro zvýšení bezpečnosti.",
-                        "Možnost připojení vlastního ověřovacího e-mailu."
-                    ],
-                    "technologyStack": "Angular, NestJS, PostgreSQL",
-                    "screenshotUrl": "assets\/images\/product_images\/admin_panel.png",
-                    "supportInfo": "Nabízíme bezplatné úvodní konzultace a profesionální podporu pro nastavení a integraci systému."
-                }
-            },
-            {
-                "id": "prod-003",
-                "name": "Analytický nástroj",
-                "shortDescription": "Nástroj pro transformaci surových dat na srozumitelné a vizuální reporty.",
-                "priceCZK": 5099,
-                "priceEUR": 203.99,
-                "imageUrl": "assets\/images\/product_images\/survey_solver.png",
-                "popupType": "analytics-tool",
-                "details": {
-                    "longDescription": "Náš analytický nástroj je navržen tak, aby vám pomohl získat maximum z dat, která už máte, bez ohledu na jejich původ. Jednoduše nahrajte svá data (ať už z prodejů, webové analytiky, nebo jiných zdrojů) a sledujte, jak se proměňují v dynamické grafy, tabulky a interaktivní dashboardy. Odhalte skryté trendy, korelace a statistiky, které vám pomohou lépe porozumět vašemu podnikání. Díky intuitivnímu rozhraní není potřeba žádné programování – stačí nahrát data a nechat náš nástroj, aby je zpracoval a prezentoval přehledným způsobem.",
-                    "features": [
-                        "Automatická analýza a generování statistik.",
-                        "Vizualizace dat v dynamických koláčových, pruhových a liniových grafech.",
-                        "Možnost filtrace a segmentace dat (např. podle věku, lokality).",
-                        "Porovnávání výsledků různých dotazníků nebo časových období.",
-                        "Export reportů do formátů PDF a PNG.",
-                        "Podpora pro import dat z různých zdrojů (např. Google Forms, XLS)."
-                    ],
-                    "technologyStack": "Typescript, Angular, Python",
-                    "screenshotUrl": "assets\/images\/product_images\/survey_solver.png",
-                    "supportInfo": "K dispozici je komplexní znalostní báze a e-mailová podpora. Zajišťujeme pravidelné aktualizace pro přidání nových analytických funkcí."
-                }
-            }
-        ]
-    },
     "services": {
         "service_main_text_1": "<p>V digitálním světě je silná online prezentace klíčová. Nabízíme <strong>komplexní řešení webového vývoje<\/strong>, od moderních a <strong>responzivních webových stránek<\/strong> šitých na míru, až po složité a robustní <strong>webové aplikace<\/strong>. Specializujeme se na využití nejnovějších technologií, abychom zajistili <strong>optimální výkon, bezpečnost a vynikající uživatelskou zkušenost<\/strong> pro každého návštěvníka.<\/p><p>Nezáleží na tom, zda potřebujete firemní prezentaci, e-shop, portál nebo komplexní interní systém – s námi získáte <strong>digitální řešení, které roste s vaším podnikáním<\/strong> a efektivně oslovuje vaše cílové publikum. Klademe důraz na čistý kód, modulární architekturu a snadnou rozšiřitelnost.<\/p>",
         "service_main_text_2": "<p>Přinášíme <strong>výkonné a spolehlivé desktopové aplikace<\/strong> navržené pro Windows, macOS nebo Linux. Ať už potřebujete nástroj pro interní procesy, specializovaný software pro vaši niku, nebo robustní analytickou aplikaci, zajistíme <strong>optimalizovaný výkon, intuitivní uživatelské rozhraní a maximální bezpečnost<\/strong>.<\/p><p>Naše řešení jsou šitá na míru specifickým potřebám vašeho podnikání, což zaručuje <strong>zvýšení produktivity, automatizaci úkolů a efektivnější správu dat<\/strong>. S důrazem na stabilitu a snadnou údržbu vytváříme aplikace, které jsou připraveny na výzvy dnešního digitálního světa a rostou s vašimi požadavky.<\/p>",
@@ -688,7 +599,7 @@
         "mobile_header": "Mobilní Vývoj",
         "ai_header": "AI Vývoj",
         "our_services": "Naše služby",
-        "our_services_m": "RegioPartner v číslech",
+        "our_services_m": "RPSoftware v číslech",
         "stats_projects_text": "Tým",
         "stats_projects_count": "1",
         "stats_years_text": "Let Praxe",

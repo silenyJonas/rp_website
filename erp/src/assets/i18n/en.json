@@ -28,7 +28,7 @@
   "navigation": {
     "home": "Home",
     "services": "Services",
-    "shop": "Shop",
+    "shop": "E-Shop",
     "academy": "Academy",
     "references": "Projects",
     "references_full": "Completed Projects",
@@ -339,95 +339,6 @@
       }
     }
   },
-  "shop": {
-    "header1": "Our digital products",
-    "header02T": "Launch on your domain within 24 hours",
-    "searchPlaceholder": "Name",
-    "sortByLabel": "Sort by:",
-    "sortByDefaultOption": "-- Default --",
-    "sortByAz": "A-Z",
-    "sortByZa": "Z-A",
-    "sortByPriceDesc": "By most expensive",
-    "sortByPriceAsc": "By least expensive",
-    "resultsCountText": "Number of results:",
-    "productsSuffix": "products",
-    "filterButtonText": "Filter",
-    "resetButtonText": "Reset",
-    "noProductsMessage": "No products match your selection.",
-    "products_data": [
-      {
-        "id": "prod-001",
-        "name": "Survey Software",
-        "shortDescription": "A complete platform for easy creation, distribution, and analysis of surveys and polls.",
-        "priceCZK": 15099,
-        "priceEUR": 603.99,
-        "imageUrl": "assets/images/product_images/survey_engine.png",
-        "popupType": "survey-software",
-        "details": {
-          "longDescription": "Our intuitive survey software is a complete platform for creating, distributing, and analyzing polls, surveys, and questionnaires, ideal for marketing teams, HR professionals, and academics. With an intuitive drag-and-drop editor, you can create a survey in no time. Thanks to advanced conditional logic, respondents are shown only the questions relevant to them, which increases the quality and accuracy of the data collected.\n\nA key advantage of our platform is automated evaluation and data analysis. As soon as responses start coming in, the software collects and processes them in real-time. You don't have to worry about complex calculations—the platform automatically generates clear visual reports and dashboards. These show you key insights at a glance, whether it's the average rating, most frequent answers, or distribution of preferences.\n\nThis saves you time, provides instant and understandable output, and allows you to focus on what's most important—strategic decisions.",
-          "features": [
-            "Drag-and-drop editor for intuitive survey creation.",
-            "Conditional logic (branching) for dynamic questionnaires.",
-            "Automated distribution via email campaigns and QR codes.",
-            "Automated real-time data evaluation and analysis with visual reports and dashboards.",
-            "Data export to XLSX, CSV, JSON, and PDF formats.",
-            "Multi-language support for global surveys.",
-            "Secure data storage and privacy protection for respondents."
-          ],
-          "technologyStack": "Angular, Node.js, Express.js, MongoDB",
-          "screenshotUrl": "assets/images/product_images/survey_engine.png",
-          "supportInfo": "Online documentation, video tutorials, and email support with a response within 24 hours are available. Regular updates are a matter of course."
-        }
-      },
-      {
-        "id": "prod-002",
-        "name": "User and Form Management System",
-        "shortDescription": "A comprehensive solution for centralized management of user accounts, passwords, and form data.",
-        "priceCZK": 9999,
-        "priceEUR": 399.99,
-        "imageUrl": "assets/images/product_images/user_management_system.png",
-        "popupType": "user-management-system",
-        "details": {
-          "longDescription": "Our system is a robust and secure solution that consolidates user administration and form data collection into one central location. With an intuitive admin panel, you can easily manage user accounts, assign access rights by role, and securely store sensitive data. It allows you to create and embed your own forms on any website, with all submitted data being automatically archived and encrypted. Ideal for web applications requiring registration, member sections, and for collecting internal data.",
-          "features": [
-            "Secure storage and management of user passwords",
-            "Comprehensive system of roles and permissions (administrator, editor, reader)",
-            "A clear list of all received forms with filtering options.",
-            "Automatic notifications upon receipt of a new form.",
-            "Bulk data export to CSV and JSON formats.",
-            "Two-factor authentication (2FA) for increased security.",
-            "Option to connect your own verification email."
-          ],
-          "technologyStack": "Angular, NestJS, PostgreSQL",
-          "screenshotUrl": "assets/images/product_images/admin_panel.png",
-          "supportInfo": "We offer free introductory consultations and professional support for system setup and integration."
-        }
-      },
-      {
-        "id": "prod-003",
-        "name": "Analytics Tool",
-        "shortDescription": "A tool for transforming raw data into understandable and visual reports.",
-        "priceCZK": 5099,
-        "priceEUR": 203.99,
-        "imageUrl": "assets/images/product_images/survey_solver.png",
-        "popupType": "analytics-tool",
-        "details": {
-          "longDescription": "Our analytics tool is designed to help you get the most out of the data you already have, regardless of its origin. Simply upload your data (whether from sales, web analytics, or other sources) and watch it transform into dynamic charts, tables, and interactive dashboards. Uncover hidden trends, correlations, and statistics that will help you better understand your business. Thanks to the intuitive interface, no programming is needed—just upload the data and let our tool process and present it in a clear way.",
-          "features": [
-            "Automated analysis and statistics generation.",
-            "Data visualization in dynamic pie, bar, and line charts.",
-            "Option to filter and segment data (e.g., by age, location).",
-            "Comparison of results from different surveys or time periods.",
-            "Export reports to PDF and PNG formats.",
-            "Support for importing data from various sources (e.g., Google Forms, XLS)."
-          ],
-          "technologyStack": "Typescript, Angular, Python",
-          "screenshotUrl": "assets/images/product_images/survey_solver.png",
-          "supportInfo": "A comprehensive knowledge base and email support are available. We provide regular updates to add new analytical features."
-        }
-      }
-    ]
-  },
   "services": {
     "service_main_text_1": "<p>In the digital world, a strong online presence is key. We offer <strong>comprehensive web development solutions</strong>, from modern and <strong>responsive custom websites</strong> to complex and robust <strong>web applications</strong>. We specialize in using the latest technologies to ensure <strong>optimal performance, security, and an excellent user experience</strong> for every visitor.</p><p>It doesn't matter whether you need a corporate presentation, an e-shop, a portal, or a complex internal system—with us, you get a <strong>digital solution that grows with your business</strong> and effectively reaches your target audience. We emphasize clean code, modular architecture, and easy scalability.</p>",
     "service_main_text_2": "<p>We deliver <strong>powerful and reliable desktop applications</strong> designed for Windows, macOS, or Linux. Whether you need a tool for internal processes, specialized software for your niche, or a robust analytics application, we'll ensure <strong>optimized performance, an intuitive user interface, and maximum security</strong>.</p><p>Our solutions are tailored to the specific needs of your business, which guarantees <strong>increased productivity, task automation, and more efficient data management</strong>. With a focus on stability and easy maintenance, we create applications that are ready for the challenges of today's digital world and grow with your requirements.</p>",
@@ -687,11 +598,11 @@
     "mobile_header": "Mobile Development",
     "ai_header": "AI Development",
     "our_services": "Our Services",
-    "our_services_m": "RegioPartner in numbers",
+    "our_services_m": "RPSoftware in numbers",
     "stats_projects_text": "Team",
     "stats_projects_count": "1",
-    "stats_years_text": "Quality",
-    "stats_years_count": "100%",
+    "stats_years_text": "Years Exp.",
+    "stats_years_count": "6",
     "stats_solutions_text": "Solutions",
     "stats_solutions_count": "∞",
     "consultation_form": {

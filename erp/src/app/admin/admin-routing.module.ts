@@ -1,26 +1,26 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { UserRequestComponent } from './pages/user-request/user-request.component';
+import { DashboardComponent } from './web-pages/dashboard/dashboard.component';
+import { UserRequestComponent } from './web-pages/user-request/user-request.component';
 import { AuthGuard } from '../core/auth/guards/auth.guard';
-import { AdministratorsComponent } from './pages/administrators/administrators.component';
-import { BusinessLogsComponent } from './pages/business-logs/business-logs.component';
-import { PersonalInfoComponent } from './pages/personal-info/personal-info.component';
-import { EditWebsiteComponent } from './pages/edit-website/edit-website.component';
+import { AdministratorsComponent } from './web-pages/administrators/administrators.component';
+import { BusinessLogsComponent } from './web-pages/business-logs/business-logs.component';
+import { PersonalInfoComponent } from './web-pages/personal-info/personal-info.component';
+import { EditWebsiteComponent } from './web-pages/edit-website/edit-website.component';
 import { KnowledgeBaseComponent } from './intranet/knowledge-base/knowledge-base.component';
 import { KbArticleComponent } from './intranet/knowledge-base/kb-article/kb-article.component';
 import { IntroductionsComponent } from './intranet/knowledge-base/pages/introductions/introductions.component';
 import { SalesRepComponent } from './intranet/knowledge-base/pages/sales-rep/sales-rep.component';
-import { SalesLeadsComponent } from './pages/sales-leads/sales-leads.component';
+import { SalesLeadsComponent } from './web-pages/sales-leads/sales-leads.component';
 import { NewsComponent } from './intranet/knowledge-base/pages/news/news.component';
 import { SecurityComponent } from './intranet/knowledge-base/pages/security/security.component';
 import { ContactsComponent } from './intranet/knowledge-base/pages/contacts/contacts.component';
-import { EditNewsComponent } from './pages/edit-news/edit-news.component';
-import { SalesOrdersComponent } from './pages/sales-orders/sales-orders.component';
+import { EditNewsComponent } from './web-pages/edit-news/edit-news.component';
+import { SalesOrdersComponent } from './web-pages/sales-orders/sales-orders.component';
 import { SupportFormComponent } from './intranet/knowledge-base/pages/support-form/support-form.component';
-import { SupportTicketsComponent } from './pages/support-tickets/support-tickets.component';
-import { JobApplicationsComponent } from './pages/job-applications/job-applications.component';
+import { SupportTicketsComponent } from './web-pages/support-tickets/support-tickets.component';
+import { JobApplicationsComponent } from './web-pages/job-applications/job-applications.component';
 const routes: Routes = [
   {
     path: '',

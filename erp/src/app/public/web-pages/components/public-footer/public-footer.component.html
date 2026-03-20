@@ -1,0 +1,50 @@
+<footer class="public-footer" *ngIf="t">
+  <div class="footer-content">
+    <div class="footer-section company-info">
+      <h3>{{ t?.company_name }}</h3>
+      <p><strong>{{ t?.address_label }}:</strong> {{ t?.address_value }}</p>
+      <p><strong>{{ t?.ico_label }}:</strong> {{ t?.ico_value }}</p>
+      <p><strong>{{ t?.dic_label }}:</strong> {{ t?.dic_value }}</p>
+      
+      <div class="social-links">
+        <a target="_blank" href="https://www.instagram.com/rpsw.cz">
+          <img [src]="ig_link" alt="Instagram">
+        </a>
+        <a target="_blank" href="https://www.tiktok.com/@rpsw.cz">
+          <img [src]="tt_link" alt="Tiktok">
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-section quick-links">
+      <h3>{{ t?.quick_links_header }}</h3>
+      <ul>
+        <li *ngFor="let link of footerNavLinks">
+          <a [routerLink]="link.route">{{ link.text }}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="footer-section contact-info">
+      <h3>{{ t?.contact_header }}</h3>
+      <p>
+        <strong>{{ t?.email_label }}: </strong>
+        <a href="mailto:info@rpsw.cz">{{ t?.email_value }}</a>
+      </p>
+      <p><strong>{{ t?.phone_label }}:</strong> {{ t?.phone_value }}</p>
+    </div>
+
+    <div class="footer-section legal-info">
+      <h3>{{ t?.legal_info_header }}</h3>
+      <ul>
+        <li *ngFor="let link of footerLegalLinks">
+          <a [routerLink]="link.route">{{ link.text }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <p>{{ t?.copyright_text }}</p>
+  </div>
+</footer>
