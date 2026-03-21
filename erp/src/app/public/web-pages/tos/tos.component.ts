@@ -1,29 +1,33 @@
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router'; // Důležité pro funkční linky uvnitř HTML
+
 import * as Web from '../../../shared/imports/web-providers';
 
-@Web.Component({
+@Component({
   selector: 'app-tos',
   standalone: true,
-  imports: [Web.CommonModule, Web.RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './tos.component.html',
-  styleUrl: './tos.component.css'
+  styleUrl: './tos.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TosComponent implements Web.OnInit, Web.OnDestroy {
+export class TosComponent implements OnInit, OnDestroy {
   t: any = null;
   private destroy$ = new Web.Subject<void>();
 
   constructor(
     private localizationService: Web.LocalizationService,
-    private cdr: Web.ChangeDetectorRef 
+    private cdr: ChangeDetectorRef 
   ) { }
 
   ngOnInit(): void {
     this.localizationService.currentTranslations$
       .pipe(Web.takeUntil(this.destroy$))
       .subscribe(translations => {
-        if (translations && Object.keys(translations).length > 0) {
-          // Načteme celou sekci 'tos' do jedné proměnné pro snazší přístup
+        if (translations?.tos) {
           this.t = translations.tos;
-          this.cdr.detectChanges();
+          this.cdr.markForCheck(); // Bezpečnější než detectChanges v OnPush
         }
       });
   }

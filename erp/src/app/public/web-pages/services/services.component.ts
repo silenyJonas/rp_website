@@ -16,7 +16,6 @@ import { Item } from '../../../shared/interfaces/item';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServicesComponent implements OnInit, OnDestroy {
-  // zbytek beze změny...
     s: any = null;
 
     contactFormConfig: Web.FormFieldConfig[] = [];
@@ -44,9 +43,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
         { name: 'SQLite', path: 'assets/images/services-img/sqlite.png' },
     ];
     aiTechImages = [
-        { name: 'C++', path: 'assets/images/services-img/cpp.png' },
         { name: 'Python', path: 'assets/images/services-img/py.png' },
-        { name: 'Rust', path: 'assets/images/services-img/rust.png' },
+        { name: 'C++', path: 'assets/images/services-img/cpp.png' },
     ];
 
     constructor(

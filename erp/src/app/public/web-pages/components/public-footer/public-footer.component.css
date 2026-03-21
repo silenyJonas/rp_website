@@ -58,7 +58,6 @@ a {
     text-decoration: none;
     font-size: 0.95em;
     transition: color 0.3s ease, transform 0.3s ease;
-    display: inline-block;
     font-weight: normal;
     text-shadow: none;
 }
@@ -88,6 +87,17 @@ a {
     border-top: 1px solid rgba(47, 47, 47, 0.5);
     font-size: 0.85em;
     color: #9a9a9b;
+}
+
+.footer-link{
+    display: flex;
+    justify-content: start;
+    align-content: center;
+    gap: 3px;
+}
+
+.external-icon{
+    margin-top: 2px;
 }
 
 @media (max-width: 768px) {

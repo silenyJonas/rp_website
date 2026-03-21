@@ -8,6 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 interface FooterNavLink {
   route: string;
   text: string;
+  external: boolean; // Změněno na povinné pro snadnější if v šabloně
 }
 
 @Component({
@@ -19,17 +20,13 @@ interface FooterNavLink {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PublicFooterComponent implements OnInit, OnDestroy {
-  // Jeden objekt pro všechny překlady
   t: any = null;
-  
   currentYear: number;
   footerNavLinks: FooterNavLink[] = [];
   footerLegalLinks: FooterNavLink[] = [];
 
   tt_link: string = 'assets/images/icons/tik-tok.png';
   ig_link: string = 'assets/images/icons/ig.png';
-  fb_link: string = 'assets/images/icons/fb.png';
-  x_link: string = 'assets/images/icons/x.png';
 
   private destroy$ = new Subject<void>();
 
@@ -45,15 +42,12 @@ export class PublicFooterComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(translations => {
         if (translations) {
-          // Namapujeme hlavní sekci footeru
           this.t = translations.footer;
           
-          // Pokud existuje copyright_text, nahradíme v něm placeholder pro rok
           if (this.t?.copyright_text) {
             this.t.copyright_text = this.t.copyright_text.replace('{year}', this.currentYear.toString());
           }
 
-          // Načteme dynamické linky (používají klíče i z jiných sekcí jako navigation)
           this.loadFooterNavLinks();
           this.loadFooterLegalLinks();
 
@@ -64,20 +58,21 @@ export class PublicFooterComponent implements OnInit, OnDestroy {
 
   private loadFooterNavLinks(): void {
     const navLinkKeys = [
-      { route: '/home', key: 'navigation.home' },
-      { route: '/services', key: 'navigation.services' },
-      { route: '/shop', key: 'navigation.shop' },
-      { route: '/academy', key: 'navigation.academy' },
-      { route: '/references', key: 'navigation.references_full' },
-      { route: '/faq', key: 'navigation.faq_full' },
-      { route: '/about-us', key: 'navigation.about-us' },
-      { route: '/jobs', key: 'navigation.jobs' },
-      { route: '/auth/login', key: 'navigation.login_btn' },
+      { route: '/home', key: 'navigation.home', ext: false },
+      { route: '/services', key: 'navigation.services', ext: false },
+      { route: '/academy', key: 'navigation.academy', ext: false },
+      { route: '/shop', key: 'navigation.shop', ext: true }, 
+      { route: '/references', key: 'navigation.references_full', ext: false },
+      { route: '/faq', key: 'navigation.faq_full', ext: false },
+      { route: '/about-us', key: 'navigation.about-us', ext: false },
+      { route: '/jobs', key: 'navigation.jobs', ext: false },
+      { route: '/auth/login', key: 'navigation.login_btn', ext: false },
     ];
 
     this.footerNavLinks = navLinkKeys.map(link => ({
       route: link.route,
-      text: this.localizationService.getText(link.key)
+      text: this.localizationService.getText(link.key),
+      external: link.ext
     }));
   }
 
@@ -89,7 +84,8 @@ export class PublicFooterComponent implements OnInit, OnDestroy {
 
     this.footerLegalLinks = legalLinkKeys.map(link => ({
       route: link.route,
-      text: this.localizationService.getText(link.key)
+      text: this.localizationService.getText(link.key),
+      external: false
     }));
   }
 
