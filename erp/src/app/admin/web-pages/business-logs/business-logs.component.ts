@@ -16,7 +16,7 @@ import * as Config from './business-logs.config';
 export class BusinessLogsComponent extends BaseDataComponent<any> implements Core.OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
-  override apiEndpoint: string = 'business_logs';
+  override apiEndpoint: string = 'web_log';
 
   buttons = Config.BUTTONS.filter(b => b.action !== 'create' && b.action !== 'edit');
   tableColumns = Config.TABLE_COLUMNS;

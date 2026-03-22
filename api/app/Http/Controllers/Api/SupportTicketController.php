@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\SupportTicket;
-use App\Models\BusinessLog;
+use App\Models\Web\WebLog;
 use App\Http\Requests\SupportTicket\StoreSupportTicketRequest;
 use App\Http\Requests\SupportTicket\UpdateSupportTicketRequest;
 use App\Http\Resources\SupportTicketResource;
@@ -200,7 +200,7 @@ class SupportTicketController extends Controller
     }
 
     /**
-     * Logování akcí do BusinessLog.
+     * Logování akcí do WebLog.
      */
     protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null)
     {
@@ -208,7 +208,7 @@ class SupportTicketController extends Controller
             // Získání uživatele přes sanctum i pro veřejné/hybridní routy
             $user = $request->user() ?? auth('sanctum')->user();
 
-            BusinessLog::create([
+            WebLog::create([
                 'origin'               => $request->ip(),
                 'event_type'           => $eventType,
                 'module'               => $module,

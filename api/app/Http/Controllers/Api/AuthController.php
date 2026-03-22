@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Auth, Log};
-use App\Models\{User, RefreshToken, BusinessLog};
+use App\Models\{User, RefreshToken};
+use App\Models\Web\WebLog;
 use Illuminate\Support\Str;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
@@ -120,7 +121,7 @@ class AuthController extends Controller
             // Pokud není uživatel předán (např. u login_failed), zkusíme ho vzít z requestu
             $activeUser = $user ?? $request->user();
 
-            BusinessLog::create([
+            WebLog::create([
                 'origin'               => $request->ip(),
                 'event_type'           => $eventType,
                 'module'               => $module,

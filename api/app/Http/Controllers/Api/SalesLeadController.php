@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\SalesLead;
-use App\Models\BusinessLog;
+use App\Models\Web\WebLog;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -189,7 +189,7 @@ protected function logAction(Request $request, string $eventType, string $module
         try {
             $user = $request->user();
 
-            BusinessLog::create([
+            WebLog::create([
                 'origin'               => $request->ip(),
                 'event_type'           => $eventType,
                 'module'               => $module,
@@ -206,7 +206,7 @@ protected function logAction(Request $request, string $eventType, string $module
         }
     }
     /**
-     * Sjednocené logování (BusinessLog).
+     * Sjednocené logování (WebLog).
      */
    
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\News;
-use App\Models\BusinessLog;
+use App\Models\Web\WebLog;
 use App\Http\Resources\NewsResource;
 use App\Http\Requests\News\StoreNewsRequest;
 use App\Http\Requests\News\UpdateNewsRequest;
@@ -168,7 +168,7 @@ class NewsController extends Controller
     {
         try {
             $user = $request->user();
-            BusinessLog::create([
+            WebLog::create([
                 'origin'               => $request->ip(),
                 'event_type'           => $eventType,
                 'module'               => $module,

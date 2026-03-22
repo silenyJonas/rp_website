@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\JobApplication;
-use App\Models\BusinessLog;
+use App\Models\Web\WebLog;
 use App\Http\Resources\JobApplicationResource;
 use App\Http\Requests\JobApplication\StoreJobApplicationRequest;
 use App\Http\Requests\JobApplication\UpdateJobApplicationRequest;
@@ -201,7 +201,7 @@ class JobApplicationController extends Controller
     {
         try {
             $user = $request->user();
-            BusinessLog::create([
+            WebLog::create([
                 'origin'               => $request->ip(),
                 'event_type'           => $eventType,
                 'module'               => $module,

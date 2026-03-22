@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RawRequestCommissionController;
 use App\Http\Controllers\Api\UserController; // Změněno z UserLoginController
 use App\Http\Controllers\Api\RoleController;
-use App\Http\Controllers\Api\BusinessLogController;
+use App\Http\Controllers\Api\Web\WebLogController;
 use App\Http\Controllers\Api\TranslationController;
 use App\Http\Controllers\Api\SalesLeadController;
 use App\Http\Controllers\Api\NewsController;
@@ -51,11 +51,11 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::apiResource('job_applications', JobApplicationController::class)->except(['store', 'create', 'edit']);
 
-    // BusinessLogs
-    Route::prefix('business_logs')->group(function () {
-        Route::get('/', [BusinessLogController::class, 'index']);
-        Route::post('/', [BusinessLogController::class, 'store']);
-        Route::get('/{businessLog}/details', [BusinessLogController::class, 'show']);
+    // WebLog
+    Route::prefix('web_log')->group(function () {
+        Route::get('/', [WebLogController::class, 'index']);
+        Route::post('/', [WebLogController::class, 'store']);
+        Route::get('/{WebLog}/details', [WebLogController::class, 'show']);
     });
     
     // Support Tickets

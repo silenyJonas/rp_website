@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\RawRequestCommission;
-use App\Models\BusinessLog;
+use App\Models\Web\WebLog;
 use App\Http\Resources\RawRequestCommissionResource;
 use App\Http\Requests\RawRequestCommission\StoreRawRequestCommissionRequest;
 use App\Http\Requests\RawRequestCommission\UpdateRawRequestCommissionRequest;
@@ -166,7 +166,7 @@ class RawRequestCommissionController extends Controller
     }
 
     /**
-     * Sjednocené logování (BusinessLog).
+     * Sjednocené logování (WebLog).
      */
    protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null)
     {
@@ -174,7 +174,7 @@ class RawRequestCommissionController extends Controller
             // TATO ÚPRAVA: Zkusíme získat uživatele přes sanctum guard manuálně
             $user = $request->user() ?? auth('sanctum')->user();
 
-            BusinessLog::create([
+            WebLog::create([
                 'origin'               => $request->ip(),
                 'event_type'           => $eventType,
                 'module'               => $module,

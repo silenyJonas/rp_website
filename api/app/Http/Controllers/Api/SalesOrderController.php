@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\{SalesOrder, SalesLead, BusinessLog};
+use App\Models\{SalesOrder, SalesLead};
+use App\Models\Web\WebLog;
 use App\Http\Resources\SalesOrderResource;
 use App\Http\Requests\SalesOrder\{StoreSalesOrderRequest, UpdateSalesOrderRequest};
 use Illuminate\Http\Request;
@@ -206,7 +207,7 @@ class SalesOrderController extends Controller
     }
 
     /**
-     * Sjednocené logování do BusinessLog.
+     * Sjednocené logování do WebLog.
      */
     protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null)
     {
@@ -214,7 +215,7 @@ class SalesOrderController extends Controller
             // Použití sanctum guard pro identifikaci uživatele i mimo middleware
             $user = $request->user() ?? auth('sanctum')->user();
 
-            BusinessLog::create([
+            WebLog::create([
                 'origin'               => $request->ip(),
                 'event_type'           => $eventType,
                 'module'               => $module,

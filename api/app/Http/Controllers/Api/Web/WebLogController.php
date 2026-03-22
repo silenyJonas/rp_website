@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Web;
 
 use App\Http\Controllers\Controller;
-use App\Models\BusinessLog;
-use App\Http\Resources\BusinessLogResource;
-use App\Http\Requests\BusinessLog\StoreBusinessLogRequest;
+use App\Models\Web\WebLog;
+use App\Http\Resources\Web\WebLogResource;
+use App\Http\Requests\Web\WebLog\StoreWebLogRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
 
-class BusinessLogController extends Controller
+class WebLogController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
@@ -18,10 +18,10 @@ class BusinessLogController extends Controller
         $noPagination = filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN);
 
         // Dynamicky zjistíme název tabulky z Modelu (teď to bude 'web_logs')
-        $table = (new BusinessLog())->getTable();
+        $table = (new WebLog())->getTable();
 
         // Základní query s relací na uživatele
-        $query = BusinessLog::query()->select("$table.*")->with('user');
+        $query = WebLog::query()->select("$table.*")->with('user');
 
         // --- FILTRACE ---
         if ($request->filled('id')) {
@@ -63,13 +63,13 @@ class BusinessLogController extends Controller
         // --- EXEKUCE A PAGINACE ---
         if ($noPagination) {
             $logs = $query->get();
-            return response()->json(BusinessLogResource::collection($logs));
+            return response()->json(WebLogResource::collection($logs));
         }
 
         $logs = $query->paginate($perPage);
 
         return response()->json([
-            'data'         => BusinessLogResource::collection($logs->items()),
+            'data'         => WebLogResource::collection($logs->items()),
             'total'        => $logs->total(),
             'per_page'     => $logs->perPage(),
             'current_page' => $logs->currentPage(),
@@ -79,11 +79,11 @@ class BusinessLogController extends Controller
 
     public function show($id): JsonResponse
     {
-        $log = BusinessLog::with('user')->findOrFail($id);
-        return response()->json(new BusinessLogResource($log));
+        $log = WebLog::with('user')->findOrFail($id);
+        return response()->json(new WebLogResource($log));
     }
 
-    public function store(StoreBusinessLogRequest $request): JsonResponse
+    public function store(StoreWebLogRequest $request): JsonResponse
     {
         try {
             $user = $request->user();
@@ -91,8 +91,8 @@ class BusinessLogController extends Controller
                 'user_id' => $user?->id,
                 'created_at' => now(), 
             ]);
-            $log = BusinessLog::create($logData);
-            return response()->json(new BusinessLogResource($log), 201);
+            $log = WebLog::create($logData);
+            return response()->json(new WebLogResource($log), 201);
         } catch (\Exception $e) {
             Log::error('Chyba při vytváření business logu: ' . $e->getMessage());
             return response()->json(['message' => 'Chyba serveru'], 500);

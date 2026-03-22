@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\BusinessLog;
+namespace App\Http\Requests\Web\WebLog;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateBusinessLogRequest extends FormRequest
+class UpdateWebLogRequest extends FormRequest
 {
     public function authorize(): bool { return true; }
 

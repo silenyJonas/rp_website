@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\BusinessLog;
+use App\Models\Web\WebLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -59,7 +59,7 @@ class TranslationController extends Controller
             ], 200);
 
         } catch (\Exception $e) {
-            // Logování chyby do BusinessLog
+            // Logování chyby do WebLog
             $this->logAction($request, 'error', 'Translation', "Chyba při zápisu překladu ({$lang}): " . $e->getMessage());
             
             Log::error('Chyba při zápisu překladu: ' . $e->getMessage());
@@ -104,7 +104,7 @@ class TranslationController extends Controller
                 $diffString = mb_substr($diffString, 0, 197) . '...';
             }
 
-            BusinessLog::create([
+            WebLog::create([
                 'origin'               => $request->ip(),
                 'event_type'           => $eventType,
                 'module'               => $module,

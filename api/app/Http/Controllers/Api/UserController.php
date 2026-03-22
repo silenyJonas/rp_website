@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\{User, Role, BusinessLog};
+use App\Models\{User, Role};
+use App\Models\Web\WebLog;
 use App\Http\Requests\User\{StoreUserRequest, UpdateUserRequest};
 use App\Http\Requests\PasswordChangeRequest;
 use App\Http\Resources\UserResource;
