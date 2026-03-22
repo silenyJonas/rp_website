@@ -12,6 +12,8 @@ class RawRequestCommission extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'web_raw_request_commissions';
+
     public $timestamps = true;
 
     protected $fillable = [

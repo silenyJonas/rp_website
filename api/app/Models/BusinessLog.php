@@ -11,6 +11,8 @@ class BusinessLog extends Model
     // Pokud se sloupec jmenuje prostě 'id', tento řádek smaž nebo zakomentuj:
     // protected $primaryKey = 'business_log_id'; 
 
+    protected $table = 'web_logs';
+    
     public $timestamps = false; // Necháváme, protože máš jen created_at
 
     protected $fillable = [

@@ -10,7 +10,9 @@ class JobApplication extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'job_applications';
+
+
+    protected $table = 'web_job_applications';
 
     protected $fillable = [
         'first_name',

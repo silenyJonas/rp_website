@@ -11,7 +11,7 @@ class SalesOrder extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'sales_orders';
+    protected $table = 'web_sales_orders';
 
     protected $fillable = [
         'lead_id',

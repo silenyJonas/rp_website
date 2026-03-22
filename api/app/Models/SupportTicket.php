@@ -11,7 +11,7 @@ class SupportTicket extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'support_tickets';
+    protected $table = 'web_support_tickets';
 
     protected $fillable = [
         'user_id',

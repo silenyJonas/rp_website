@@ -25,7 +25,7 @@ class User extends Authenticatable
     protected $hidden = ['user_password_hash'];
 
     // Toto zajistí, že permissions budou součástí modelu i při převodu na pole/JSON
-    protected $appends = ['permissions'];
+    protected $appends = ['core_permissions'];
 
     protected $casts = [
         'last_login_at' => 'datetime',

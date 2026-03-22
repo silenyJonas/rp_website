@@ -4,6 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\Role; // <-- Přidán import pro Role
 
 class UpdateUserRequest extends FormRequest
 {
@@ -11,7 +12,6 @@ class UpdateUserRequest extends FormRequest
 
     public function rules(): array
     {
-        // Laravel vytáhne ID z URL (funguje pro /users/{id} i /user_login/{id})
         $user = $this->route('user') ?? $this->route('user_login');
         $userId = is_object($user) ? $user->id : $user;
 
@@ -19,7 +19,6 @@ class UpdateUserRequest extends FormRequest
             'user_email' => [
                 'sometimes', 'required', 'string', 'min:3', 'max:255',
                 'regex:/^[a-zA-Z0-9._-]+$/',
-                // Tady je lék na chybu 422: ignoruj záznam, který právě updatujeme
                 Rule::unique('users', 'user_email')->ignore($userId),
             ],
             'contact_email'       => ['nullable', 'email', 'max:255'],
@@ -35,7 +34,9 @@ class UpdateUserRequest extends FormRequest
             'phone_number'        => ['nullable', 'string', 'max:20'],
             'internal_note'       => ['nullable', 'string'],
             'user_password_hash'  => ['nullable', 'string', 'min:8'],
-            'role_id'             => ['sometimes', 'required', 'integer', 'exists:roles,id'],
+            
+            // 👇 Opraveno: Ověřuje proti reálné tabulce z modelu Role
+            'role_id'             => ['sometimes', 'required', 'integer', Rule::exists(Role::class, 'id')],
         ];
     }
 }

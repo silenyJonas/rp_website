@@ -11,7 +11,7 @@ class Role extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'roles';
+    protected $table = 'core_roles';
 
     // Pokud se sloupec v migraci jmenuje 'id', primaryKey definovat nemusíš.
     // Pokud se jmenuje 'role_id', odkomentuj toto:
@@ -39,7 +39,7 @@ class Role extends Model
         // Přidáváme pátý parametr 'id', což je název klíče v tabulce permissions
         return $this->belongsToMany(
             Permission::class, 
-            'role_permissions', 
+            'core_role_permissions', 
             'role_id', 
             'permission_id', 
             'id' 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 14, 2026 at 11:55 AM
+-- Generation Time: Mar 22, 2026 at 06:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -193,7 +193,7 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (87, 'App\\Models\\User', 59, 'access-token', 'c58f7b40a4862562dc033216ec4ba476336d5cc77af42b57e8a6721e0c735545', '[\"*\"]', '2026-02-15 22:41:38', '2026-02-15 23:11:38', '2026-02-15 22:41:38', '2026-02-15 22:41:38'),
 (134, 'App\\Models\\User', 62, 'access-token', '696da6ddfce759f43fcd6c430016ffff654238b4bd746c50642599a4b68a1cd7', '[\"*\"]', '2026-02-18 02:12:13', '2026-02-18 03:12:09', '2026-02-18 02:12:09', '2026-02-18 02:12:13'),
 (172, 'App\\Models\\User', 77, 'access-token', 'f783051fdb88711a863e9ccd4e5176a5a3f2a3606204c816754c3227d07698f8', '[\"*\"]', '2026-02-25 00:08:53', '2026-02-25 00:42:29', '2026-02-24 23:42:29', '2026-02-25 00:08:53'),
-(208, 'App\\Models\\User', 25, 'access-token', '73d8b646bd2ca521940cf1f8b3718a508aeaac7d1df5210ca3f8e916094f568e', '[\"*\"]', '2026-03-14 10:54:49', '2026-03-14 11:52:37', '2026-03-14 10:52:37', '2026-03-14 10:54:49');
+(217, 'App\\Models\\User', 25, 'access-token', '4fcd0510eaa636f2539731bd63f28d647ec76bd56c2382a18f585b23b58a52a7', '[\"*\"]', '2026-03-22 17:34:24', '2026-03-22 18:33:39', '2026-03-22 17:33:39', '2026-03-22 17:34:24');
 
 -- --------------------------------------------------------
 
@@ -235,7 +235,7 @@ CREATE TABLE `refresh_tokens` (
 --
 
 INSERT INTO `refresh_tokens` (`id`, `user_id`, `token`, `expires_at`, `created_at`, `updated_at`) VALUES
-(207, 25, '9cfb1d765a2c60b8b3b3854a83abe5d13629e1105e595f61c471153958200c62', '2026-03-21 10:52:37', '2026-03-14 10:52:37', '2026-03-14 10:52:37');
+(216, 25, '82a6445a9a64deb43aa626ed37ab8b971a25f0fb3f7c50a183850a8d0658d685', '2026-03-29 16:33:39', '2026-03-22 17:33:39', '2026-03-22 17:33:39');
 
 -- --------------------------------------------------------
 
@@ -445,7 +445,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `user_email`, `contact_email`, `full_name`, `birth_date`, `personal_id_num`, `address`, `bank_account`, `health_insurance`, `commission_rate`, `dpp_hours_spent`, `has_tax_declaration`, `phone_number`, `internal_note`, `user_password_hash`, `user_password_salt`, `last_login_at`, `created_at`, `updated_at`, `deleted_at`, `is_deleted`) VALUES
-(25, 'joncl', 'jonasbucina@rpsw.cz', 'Jonáš Bučina', NULL, NULL, NULL, NULL, NULL, 10, 0, 0, NULL, NULL, '$2y$12$rV1ILe7YeW1L1XfWb5DrfuiCYTC.1FZsIU4wtNmA95GaUNwXAtYoa', NULL, '2026-03-14 11:52:37', '2026-02-14 08:12:31', '2026-03-14 11:52:37', NULL, 0),
+(25, 'joncl', 'jonasbucina@rpsw.cz', 'Jonáš Bučina', NULL, NULL, NULL, NULL, NULL, 10, 0, 0, NULL, NULL, '$2y$12$rV1ILe7YeW1L1XfWb5DrfuiCYTC.1FZsIU4wtNmA95GaUNwXAtYoa', NULL, '2026-03-22 18:33:39', '2026-02-14 08:12:31', '2026-03-22 18:33:39', NULL, 0),
 (30, 'prime_admin', NULL, 'Prime Admin', NULL, NULL, NULL, NULL, NULL, 10, 0, 0, NULL, NULL, '$2y$12$NEiDrqVCChulf9S/EUPIpeOHScIM0zwswPTxIFamRDrY4XajgHQOe', NULL, NULL, '2026-02-14 08:12:31', '2026-02-14 08:12:31', NULL, 0),
 (34, 'lindicka', 'lindicka@mazliva.cz', 'Lindička Trýbíčková Mazliva', NULL, NULL, NULL, NULL, NULL, 10, 0, 0, NULL, NULL, '$2y$12$xbMrIDwkEj.ZOnsLe7Glr..2qbca1i7XnSclNnGILENFKlL.Kw9.W', NULL, '2026-02-15 23:39:56', '2026-02-14 08:12:31', '2026-02-20 23:59:34', NULL, 0);
 
@@ -640,19 +640,19 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=209;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218;
 
 --
 -- AUTO_INCREMENT for table `raw_request_commissions`
 --
 ALTER TABLE `raw_request_commissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=208;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=217;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -688,7 +688,7 @@ ALTER TABLE `system_logs`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- Constraints for dumped tables
