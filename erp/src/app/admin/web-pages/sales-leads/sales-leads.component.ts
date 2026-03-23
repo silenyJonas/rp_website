@@ -106,7 +106,7 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
       user_id_plain: this.authService.getUserId()?.toString(),
       user_email_plain: this.authService.getUserEmail()
     };
-    this.dataHandler.post('business_logs', logData).subscribe();
+    this.dataHandler.post('web_log', logData).subscribe();
   }
 
   override refreshData(): void {

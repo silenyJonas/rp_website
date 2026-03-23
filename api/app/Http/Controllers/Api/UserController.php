@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\{User, Role};
+use App\Models\{User};
+use App\Models\Core\CoreRole;
 use App\Models\Web\WebLog;
 use App\Http\Requests\User\{StoreUserRequest, UpdateUserRequest};
 use App\Http\Requests\PasswordChangeRequest;
@@ -73,7 +74,7 @@ class UserController extends Controller
     {
         $validated = $request->validated();
         
-        if (isset($validated['role_id']) && Role::find($validated['role_id'])?->role_name === 'primeadmin') {
+        if (isset($validated['role_id']) && CoreRole::find($validated['role_id'])?->role_name === 'primeadmin') {
             return response()->json(['message' => 'Nelze vytvořit Prime Admina.'], 403);
         }
 
@@ -274,7 +275,7 @@ class UserController extends Controller
                 'current_password'
             ];
 
-            BusinessLog::create([
+            WebLog::create([
                 'origin'               => $request->ip(),
                 'event_type'           => $type,
                 'module'               => $mod,

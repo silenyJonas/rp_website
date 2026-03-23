@@ -4,7 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Models\Role; // <-- Přidán import pro Role
+use App\Models\Core\CoreRole; // <-- Přidán import pro Role
 
 class UpdateUserRequest extends FormRequest
 {
@@ -35,8 +35,8 @@ class UpdateUserRequest extends FormRequest
             'internal_note'       => ['nullable', 'string'],
             'user_password_hash'  => ['nullable', 'string', 'min:8'],
             
-            // 👇 Opraveno: Ověřuje proti reálné tabulce z modelu Role
-            'role_id'             => ['sometimes', 'required', 'integer', Rule::exists(Role::class, 'id')],
+            // 👇 Opraveno: Ověřuje proti reálné tabulce z modelu CoreRole
+            'role_id'             => ['sometimes', 'required', 'integer', Rule::exists(CoreRole::class, 'id')],
         ];
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule; // <-- Přidán import pro Rule
-use App\Models\Role; // <-- Přidán import pro Role
+use App\Models\Core\CoreRole; // <-- Přidán import pro Role
 
 class StoreUserRequest extends FormRequest
 {
@@ -18,8 +18,8 @@ class StoreUserRequest extends FormRequest
             'full_name'          => ['required', 'string', 'max:255'],
             'user_password_hash' => ['required', 'string', 'min:8'],
             
-            // 👇 Opraveno: Ověřuje proti reálné tabulce definované v modelu Role
-            'role_id'            => ['required', 'numeric', Rule::exists(Role::class, 'id')], 
+            // 👇 Opraveno: Ověřuje proti reálné tabulce definované v modelu CoreRole
+            'role_id'            => ['required', 'numeric', Rule::exists(CoreRole::class, 'id')], 
             
             'birth_date'         => ['nullable', 'date'],
             'phone_number'       => ['nullable', 'string', 'max:20'],

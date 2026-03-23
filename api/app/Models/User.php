@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Core\CoreRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -37,7 +38,7 @@ class User extends Authenticatable
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
+        return $this->belongsToMany(CoreRole::class, 'user_roles', 'user_id', 'role_id');
     }
 
     /**

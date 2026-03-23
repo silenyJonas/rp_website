@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Core\CoreRoleResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -35,7 +36,7 @@ class UserResource extends JsonResource
             'role_id'               => $this->roles->first()?->id,
             
             // Relace (pouze pokud jsou načtené)
-            'roles'                 => RoleResource::collection($this->whenLoaded('roles')),
+            'roles'                 => CoreRoleResource::collection($this->whenLoaded('roles')),
             
             // Pro Angular AuthService a PermissionService
             'user_permissions'      => $perms,
