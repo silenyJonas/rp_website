@@ -9,7 +9,6 @@ import { BusinessLogsComponent } from './web-pages/business-logs/business-logs.c
 import { PersonalInfoComponent } from './web-pages/personal-info/personal-info.component';
 import { EditWebsiteComponent } from './web-pages/edit-website/edit-website.component';
 import { KnowledgeBaseComponent } from './intranet/knowledge-base/knowledge-base.component';
-import { KbArticleComponent } from './intranet/knowledge-base/kb-article/kb-article.component';
 import { IntroductionsComponent } from './intranet/knowledge-base/pages/introductions/introductions.component';
 import { SalesRepComponent } from './intranet/knowledge-base/pages/sales-rep/sales-rep.component';
 import { SalesLeadsComponent } from './web-pages/sales-leads/sales-leads.component';
@@ -21,6 +20,15 @@ import { SalesOrdersComponent } from './web-pages/sales-orders/sales-orders.comp
 import { SupportFormComponent } from './intranet/knowledge-base/pages/support-form/support-form.component';
 import { SupportTicketsComponent } from './web-pages/support-tickets/support-tickets.component';
 import { JobApplicationsComponent } from './web-pages/job-applications/job-applications.component';
+
+// 🆕 IMPORTY PRO NOVÉ E-SHOP STRÁNKY
+import { DashboardComponent as ShopDashboardComponent } from './shop-pages/dashboard/dashboard.component';
+import { ProductsComponent } from './shop-pages/products/products.component';
+import { CategoriesComponent } from './shop-pages/categories/categories.component';
+import { OrdersComponent } from './shop-pages/orders/orders.component';
+import { CustomersComponent } from './shop-pages/customers/customers.component';
+import { CouponsComponent } from './shop-pages/coupons/coupons.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -28,17 +36,33 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent, data: { permission: 'view-dashboard' } },
-      { path: 'user-request', component: UserRequestComponent, data: { permission: 'view-user-requests' } },
-      { path: 'administrators', component: AdministratorsComponent, data: { permission: 'manage-administrators' } },
-      { path: 'business-logs', component: BusinessLogsComponent, data: { permission: 'view-business-logs' } },
-      { path: 'personal-info', component: PersonalInfoComponent, data: { permission: 'view-personal-info' } },
-      { path: 'edit-website', component: EditWebsiteComponent, data: { permission: 'view-edit-website' } },
-      { path: 'sales-leads', component: SalesLeadsComponent, data: { permission: 'view-sales-leads' } },
-      { path: 'edit-news', component: EditNewsComponent, data: { permission: 'view-news' } },
-      { path: 'sales-orders', component: SalesOrdersComponent, data: { permission: 'view-sales-orders' } },
-      { path: 'support-tickets', component: SupportTicketsComponent, data: { permission: 'view-support-tickets' } },
-      { path: 'job-applications', component: JobApplicationsComponent, data: { permission: 'view-job-applications' } },
+      
+      // 🌍 WEB STRÁNKY (Zůstávají beze změn)
+      { path: 'dashboard', component: DashboardComponent, data: { permission: 'web-view-dashboard' } },
+      { path: 'user-request', component: UserRequestComponent, data: { permission: 'web-view-user-requests' } },
+      { path: 'administrators', component: AdministratorsComponent, data: { permission: 'web-manage-administrators' } },
+      { path: 'business-logs', component: BusinessLogsComponent, data: { permission: 'web-view-web-logs' } },
+      { path: 'personal-info', component: PersonalInfoComponent, data: { permission: 'web-view-personal-info' } },
+      { path: 'edit-website', component: EditWebsiteComponent, data: { permission: 'web-view-edit-website' } },
+      { path: 'sales-leads', component: SalesLeadsComponent, data: { permission: 'web-view-sales-leads' } },
+      { path: 'edit-news', component: EditNewsComponent, data: { permission: 'web-view-news' } },
+      { path: 'sales-orders', component: SalesOrdersComponent, data: { permission: 'web-view-sales-orders' } },
+      { path: 'support-tickets', component: SupportTicketsComponent, data: { permission: 'web-view-support-tickets' } },
+      { path: 'job-applications', component: JobApplicationsComponent, data: { permission: 'web-view-job-applications' } },
+
+      // 🛒 NOVÉ E-SHOP STRÁNKY (S prefixem /shop/)
+      { 
+        path: 'shop', 
+        children: [
+          { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+          { path: 'dashboard', component: ShopDashboardComponent, data: { permission: 'shop-view-dashboard' } },
+          { path: 'products', component: ProductsComponent, data: { permission: 'shop-manage-products' } },
+          { path: 'categories', component: CategoriesComponent, data: { permission: 'shop-manage-categories' } },
+          { path: 'orders', component: OrdersComponent, data: { permission: 'shop-view-orders' } },
+          { path: 'customers', component: CustomersComponent, data: { permission: 'shop-manage-customers' } },
+          { path: 'coupons', component: CouponsComponent, data: { permission: 'shop-view-reports' } }, // nebo shop-manage-coupons
+        ] 
+      }
     ]
   },
   {

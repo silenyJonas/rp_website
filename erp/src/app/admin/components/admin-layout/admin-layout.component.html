@@ -14,6 +14,15 @@
     </div>
   </div>
 
+  <div class="module-switcher">
+    <button *appHasPermission="'view-web'" [class.active]="currentModule === 'web'" (click)="switchModule('web')">
+      🌍 Web
+    </button>
+    <button *appHasPermission="'view-eshop'" [class.active]="currentModule === 'shop'" (click)="switchModule('shop')">
+      🛒 E-Shop
+    </button>
+  </div>
+
   <div class="header-item header-right">
     <a routerLink="/admin/intranet/knowledge-base/support-form" class="bug-report-btn">
       <span class="bug-icon">🐞</span> Nahlásit bug
@@ -32,62 +41,99 @@
 
   <aside class="admin-sidebar" [style.width.px]="isMenuOpen ? sidebarWidth : 50">
     <nav class="admin-nav">
-      <ul>
-        <li *appHasPermission="'view-dashboard'">
+      
+      <ul *ngIf="currentModule === 'web'">
+        <li *appHasPermission="'web-view-dashboard'">
           <a routerLink="/admin/dashboard" routerLinkActive="active" (click)="onLinkClick()" title="Dashboard">
             <span class="nav-icon">📊</span><span class="nav-text">Dashboard</span>
           </a>
         </li>
-        <li *appHasPermission="'view-user-requests'">
+        <li *appHasPermission="'web-view-user-requests'">
           <a routerLink="/admin/user-request" routerLinkActive="active" (click)="onLinkClick()" title="Webový formulář">
             <span class="nav-icon">📝</span><span class="nav-text">Webový formulář</span>
           </a>
         </li>
-        <li *appHasPermission="'view-sales-leads'">
+        <li *appHasPermission="'web-view-sales-leads'">
           <a routerLink="/admin/sales-leads" routerLinkActive="active" (click)="onLinkClick()" title="Obchodní Leady">
             <span class="nav-icon">🎯</span><span class="nav-text">Obchodní Leady</span>
           </a>
         </li>
-        <li *appHasPermission="'view-sales-orders'">
+        <li *appHasPermission="'web-view-sales-orders'">
           <a routerLink="/admin/sales-orders" routerLinkActive="active" (click)="onLinkClick()" title="Přijaté poptávky">
             <span class="nav-icon">📦</span><span class="nav-text">Přijaté poptávky</span>
           </a>
         </li>
-        <li *appHasPermission="'manage-administrators'">
+        <li *appHasPermission="'web-manage-administrators'">
           <a routerLink="/admin/administrators" routerLinkActive="active" (click)="onLinkClick()" title="Správa účtů">
             <span class="nav-icon">🛡️</span><span class="nav-text">Správa účtů</span>
           </a>
         </li>
-        <li *appHasPermission="'view-edit-website'">
+        <li *appHasPermission="'web-view-edit-website'">
           <a routerLink="/admin/edit-website" routerLinkActive="active" (click)="onLinkClick()" title="Správa Webu">
             <span class="nav-icon">💻</span><span class="nav-text">Správa Webu</span>
           </a>
         </li>
-        <li *appHasPermission="'view-news'">
+        <li *appHasPermission="'web-view-news'">
           <a routerLink="/admin/edit-news" routerLinkActive="active" (click)="onLinkClick()" title="Správa Novinek">
             <span class="nav-icon">📰</span><span class="nav-text">Správa Novinek</span>
           </a>
         </li>
-        <li *appHasPermission="'view-job-applications'">
+        <li *appHasPermission="'web-view-job-applications'">
           <a routerLink="/admin/job-applications" routerLinkActive="active" (click)="onLinkClick()" title="Správa Uchazečů">
             <span class="nav-icon">🤝</span><span class="nav-text">Správa Uchazečů</span>
           </a>
         </li>
-        <li *appHasPermission="'view-support-tickets'">
+        <li *appHasPermission="'web-view-support-tickets'">
           <a routerLink="/admin/support-tickets" routerLinkActive="active" (click)="onLinkClick()" title="Helpdesk Tikety">
             <span class="nav-icon">🎫</span><span class="nav-text">Helpdesk Tikety</span>
           </a>
         </li>
-        <li *appHasPermission="'view-business-logs'">
+        <li *appHasPermission="'web-view-web-logs'">
           <a routerLink="/admin/business-logs" routerLinkActive="active" (click)="onLinkClick()" title="Serverové Logy">
             <span class="nav-icon">📑</span><span class="nav-text">Serverové Logy</span>
           </a>
         </li>
-        <li *appHasPermission="'view-personal-info'">
+        <li *appHasPermission="'web-view-personal-info'">
           <a routerLink="/admin/personal-info" routerLinkActive="active" (click)="onLinkClick()" title="Osobní Informace">
             <span class="nav-icon">👤</span><span class="nav-text">Osobní Informace</span>
           </a>
         </li>
+      </ul>
+
+      <ul *ngIf="currentModule === 'shop'">
+        <li *appHasPermission="'shop-view-dashboard'">
+          <a routerLink="/admin/shop/dashboard" routerLinkActive="active" (click)="onLinkClick()" title="E-shop Přehled">
+            <span class="nav-icon">📈</span><span class="nav-text">E-shop Přehled</span>
+          </a>
+        </li>
+        <li *appHasPermission="'shop-manage-products'">
+          <a routerLink="/admin/shop/products" routerLinkActive="active" (click)="onLinkClick()" title="Produkty">
+            <span class="nav-icon">🛍️</span><span class="nav-text">Produkty</span>
+          </a>
+        </li>
+        <li *appHasPermission="'shop-manage-categories'">
+          <a routerLink="/admin/shop/categories" routerLinkActive="active" (click)="onLinkClick()" title="Kategorie">
+            <span class="nav-icon">📁</span><span class="nav-text">Kategorie</span>
+          </a>
+        </li>
+        <li *appHasPermission="'shop-view-orders'">
+          <a routerLink="/admin/shop/orders" routerLinkActive="active" (click)="onLinkClick()" title="Objednávky">
+            <span class="nav-icon">💳</span><span class="nav-text">Objednávky</span>
+          </a>
+        </li>
+        <li *appHasPermission="'shop-manage-customers'">
+          <a routerLink="/admin/shop/customers" routerLinkActive="active" (click)="onLinkClick()" title="Zákazníci">
+            <span class="nav-icon">👥</span><span class="nav-text">Zákazníci</span>
+          </a>
+        </li>
+        <li *appHasPermission="'shop-view-reports'">
+          <a routerLink="/admin/shop/coupons" routerLinkActive="active" (click)="onLinkClick()" title="Slevové Kupóny">
+            <span class="nav-icon">✂️</span><span class="nav-text">Slevové Kupóny</span>
+          </a>
+        </li>
+      </ul>
+
+      <ul>
         <li>
           <a href="javascript:void(0)" (click)="logout()" title="Odhlásit se" class="logout-nav-item">
             <span class="nav-icon">🚪</span><span class="nav-text">Odhlásit se</span>

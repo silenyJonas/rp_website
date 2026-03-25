@@ -6,7 +6,7 @@ import { map, startWith } from 'rxjs/operators';
 import { AuthService } from '../../../core/auth/auth.service';
 import { PermissionService } from '../../../core/auth/services/permission.service';
 import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
-import { LoadingService } from '../../../core/services/loading.service'; // Uprav cestu dle tvé struktury
+import { LoadingService } from '../../../core/services/loading.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -14,7 +14,7 @@ import { LoadingService } from '../../../core/services/loading.service'; // Upra
   styleUrls: ['./admin-layout.component.css'],
   standalone: true,
   imports: [CommonModule, RouterModule, DatePipe, HasPermissionDirective],
-    providers: [
+  providers: [
     { provide: LOCALE_ID, useValue: 'cs-CZ' }
   ]
 })
@@ -23,6 +23,9 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   userRole: string | null = null;
   isLoggedIn: boolean = false;
   
+  // 🆕 Aktivní modul (výchozí je 'web')
+  currentModule: 'web' | 'shop' = 'web';
+
   // Globální loading stream
   isLoadingGlobal$: Observable<boolean>;
   
@@ -45,7 +48,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private permissionService: PermissionService,
     private cdr: ChangeDetectorRef,
-    private loadingService: LoadingService // Vstříknutí loading služby
+    private loadingService: LoadingService
   ) { 
     // Inicializace streamu loadingu
     this.isLoadingGlobal$ = this.loadingService.isLoading$;
@@ -58,6 +61,10 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
       
       const savedState = localStorage.getItem('admin_menu_open');
       
+      // 🆕 Načtení naposledy otevřeného modulu z paměti prohlížeče
+      const savedModule = localStorage.getItem('admin_current_module') as 'web' | 'shop';
+      if (savedModule) this.currentModule = savedModule;
+
       if (window.innerWidth <= 768) {
         this.isMenuOpen = false; 
       } else {
@@ -75,6 +82,21 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
       this.userEmail = email;
       this.cdr.markForCheck();
     });
+  }
+
+  // 🆕 Metoda pro přepnutí mezi Webem a E-Shopem
+  switchModule(module: 'web' | 'shop'): void {
+    this.currentModule = module;
+    localStorage.setItem('admin_current_module', module);
+    
+    // Automatické přesměrování na dashboard příslušného modulu
+    if (module === 'web') {
+      this.router.navigate(['/admin/dashboard']);
+    } else {
+      this.router.navigate(['/admin/shop/dashboard']);
+    }
+    
+    this.cdr.markForCheck();
   }
 
   toggleMenu(): void {
