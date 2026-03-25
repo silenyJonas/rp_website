@@ -19,7 +19,7 @@ Route::get('/sanctum/csrf-cookie', function (Request $request) {
     return response()->json([], 204);
 });
 
-// --- VEŘEJNÉ ROUTY (Public) ---
+// --- public routes ---
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/refresh', [AuthController::class, 'refresh']);
 
@@ -33,14 +33,11 @@ Route::get('/download-file/{folder}/{file}', function ($folder, $file) {
     return Storage::disk('public')->download($path);
 })->where('file', '.*');
 
-// --- ROUTY VYŽADUJÍCÍ AUTENTIZACI (Protected) ---
+// --- protected routes ---
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
-    
-    // Použijeme AuthController pro detail uživatele, aby se správně načetly role přes Resource
     Route::get('/user', [AuthController::class, 'user']);
-
     Route::post('/save-translations', [TranslationController::class, 'save']);
 
     // Job Applications
