@@ -126,9 +126,29 @@
             <span class="nav-icon">👥</span><span class="nav-text">Zákazníci</span>
           </a>
         </li>
+        <li *appHasPermission="'shop-manage-shipping-methods'">
+          <a routerLink="/admin/shop/shipping-methods" routerLinkActive="active" (click)="onLinkClick()" title="Způsoby dopravy">
+            <span class="nav-icon">🚚</span><span class="nav-text">Způsoby dopravy</span>
+          </a>
+        </li>
+        <li *appHasPermission="'shop-manage-payment-methods'">
+          <a routerLink="/admin/shop/payment-methods" routerLinkActive="active" (click)="onLinkClick()" title="Způsoby platby">
+            <span class="nav-icon">💰</span><span class="nav-text">Způsoby platby</span>
+          </a>
+        </li>
+        <li *appHasPermission="'shop-manage-suppliers'">
+          <a routerLink="/admin/shop/suppliers" routerLinkActive="active" (click)="onLinkClick()" title="Dodavatelé">
+            <span class="nav-icon">🏭</span><span class="nav-text">Dodavatelé</span>
+          </a>
+        </li>
         <li *appHasPermission="'shop-view-reports'">
           <a routerLink="/admin/shop/coupons" routerLinkActive="active" (click)="onLinkClick()" title="Slevové Kupóny">
             <span class="nav-icon">✂️</span><span class="nav-text">Slevové Kupóny</span>
+          </a>
+        </li>
+        <li *appHasPermission="'shop-view-logs'">
+          <a routerLink="/admin/shop/logs" routerLinkActive="active" (click)="onLinkClick()" title="E-shop logování">
+            <span class="nav-icon">📑</span><span class="nav-text">E-shop logování</span>
           </a>
         </li>
       </ul>

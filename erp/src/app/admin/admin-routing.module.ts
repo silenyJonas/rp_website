@@ -21,13 +21,18 @@ import { SupportFormComponent } from './intranet/knowledge-base/pages/support-fo
 import { SupportTicketsComponent } from './web-pages/support-tickets/support-tickets.component';
 import { JobApplicationsComponent } from './web-pages/job-applications/job-applications.component';
 
-// 🆕 IMPORTY PRO NOVÉ E-SHOP STRÁNKY
+// 🛒 IMPORTY PRO E-SHOP STRÁNKY
 import { DashboardComponent as ShopDashboardComponent } from './shop-pages/dashboard/dashboard.component';
 import { ProductsComponent } from './shop-pages/products/products.component';
 import { CategoriesComponent } from './shop-pages/categories/categories.component';
 import { OrdersComponent } from './shop-pages/orders/orders.component';
 import { CustomersComponent } from './shop-pages/customers/customers.component';
 import { CouponsComponent } from './shop-pages/coupons/coupons.component';
+import { ShopLogsComponent } from './shop-pages/shop-logs/shop-logs.component';
+import { ShippingMethodsComponent } from './shop-pages/shipping-methods/shipping-methods.component';
+import { SuppliersComponent } from './shop-pages/suppliers/suppliers.component';
+// 🆕 Nový import:
+import { PaymentMethodsComponent } from './shop-pages/payment-methods/payment-methods.component';
 
 const routes: Routes = [
   {
@@ -37,7 +42,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       
-      // 🌍 WEB STRÁNKY (Zůstávají beze změn)
+      // 🌍 WEB STRÁNKY
       { path: 'dashboard', component: DashboardComponent, data: { permission: 'web-view-dashboard' } },
       { path: 'user-request', component: UserRequestComponent, data: { permission: 'web-view-user-requests' } },
       { path: 'administrators', component: AdministratorsComponent, data: { permission: 'web-manage-administrators' } },
@@ -50,7 +55,7 @@ const routes: Routes = [
       { path: 'support-tickets', component: SupportTicketsComponent, data: { permission: 'web-view-support-tickets' } },
       { path: 'job-applications', component: JobApplicationsComponent, data: { permission: 'web-view-job-applications' } },
 
-      // 🛒 NOVÉ E-SHOP STRÁNKY (S prefixem /shop/)
+      // 🛒 E-SHOP STRÁNKY
       { 
         path: 'shop', 
         children: [
@@ -60,7 +65,12 @@ const routes: Routes = [
           { path: 'categories', component: CategoriesComponent, data: { permission: 'shop-manage-categories' } },
           { path: 'orders', component: OrdersComponent, data: { permission: 'shop-view-orders' } },
           { path: 'customers', component: CustomersComponent, data: { permission: 'shop-manage-customers' } },
-          { path: 'coupons', component: CouponsComponent, data: { permission: 'shop-view-reports' } }, // nebo shop-manage-coupons
+          { path: 'shipping-methods', component: ShippingMethodsComponent, data: { permission: 'shop-manage-shipping-methods' } },
+          // 🆕 Nová routa pro platební metody
+          { path: 'payment-methods', component: PaymentMethodsComponent, data: { permission: 'shop-manage-payment-methods' } },
+          { path: 'suppliers', component: SuppliersComponent, data: { permission: 'shop-manage-suppliers' } },
+          { path: 'coupons', component: CouponsComponent, data: { permission: 'shop-view-reports' } }, 
+          { path: 'logs', component: ShopLogsComponent, data: { permission: 'shop-view-logs' } }
         ] 
       }
     ]

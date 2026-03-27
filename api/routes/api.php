@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Web\WebRawRequestCommissionController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\Core\CoreRoleController;
 use App\Http\Controllers\Api\Web\WebLogController;
+use App\Http\Controllers\Api\Shop\ShopLogController; // 🆕 Import pro Shop Logy
 use App\Http\Controllers\Api\TranslationController;
 use App\Http\Controllers\Api\Web\WebSalesLeadController;
 use App\Http\Controllers\Api\Web\WebNewsController;
@@ -54,6 +55,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [WebLogController::class, 'store']);
         Route::get('/{WebLog}/details', [WebLogController::class, 'show']);
     });
+
+    // 🆕 ShopLog (Zůstává naprosto stejná struktura jako u WebLogů)
+    Route::prefix('shop_logs')->group(function () {
+        Route::get('/', [ShopLogController::class, 'index']);
+        Route::post('/', [ShopLogController::class, 'store']);
+        Route::get('/{id}/details', [ShopLogController::class, 'show']); // {id} místo {shopLog} protože nepoužíváme explicitní Route Model Binding
+    });
     
     // Support Tickets
     Route::prefix('support_tickets')->group(function () {
@@ -88,10 +96,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('news', WebNewsController::class);
 
     // --- SEKCE UŽIVATELÉ (Sjednoceno pod UserController) ---
-    // Prefix ponechán 'users' pro zpětnou kompatibilitu s Angular frontedem
     Route::prefix('users')->group(function () {
         Route::post('/', [UserController::class, 'store']);
-        // Všimni si změny parametru na {user} – Laravel provede Route Model Binding na model User
         Route::get('/{user}/details', [UserController::class, 'show']);
         Route::post('/{id}/restore', [UserController::class, 'restore']);
         Route::put('/{id}/change-password', [UserController::class, 'changePassword']);

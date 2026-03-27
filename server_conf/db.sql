@@ -365,7 +365,9 @@ CREATE TABLE `shop_logs` (
   `affected_entity_type` varchar(50) DEFAULT NULL,
   `affected_entity_id` bigint(20) UNSIGNED DEFAULT NULL,
   `user_id` int(10) UNSIGNED DEFAULT NULL,
-  `context_data` text DEFAULT NULL
+  `context_data` text DEFAULT NULL,
+  `user_id_plain` varchar(255) DEFAULT NULL,
+  `user_plain` varchar(255) DEFAULT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
