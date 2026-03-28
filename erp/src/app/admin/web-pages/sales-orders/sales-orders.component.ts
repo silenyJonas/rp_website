@@ -16,7 +16,7 @@ import * as Config from './sales-orders.config';
 export class SalesOrdersComponent extends BaseDataComponent<any> implements Core.OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
-  override apiEndpoint: string = 'sales_orders';
+  override apiEndpoint: string = 'web/sales_orders';
 
   buttons = Config.SALES_ORDER_BUTTONS;
   formFields = Config.SALES_ORDER_FORM_FIELDS;

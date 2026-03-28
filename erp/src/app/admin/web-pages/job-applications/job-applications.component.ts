@@ -16,7 +16,7 @@ import * as Config from './job-applications.config';
 export class JobApplicationsComponent extends BaseDataComponent<any> implements Core.OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
-  override apiEndpoint: string = 'job_applications';
+  override apiEndpoint: string = 'web/job_applications';
 
   buttons = Config.JOB_APPLICATION_BUTTONS.filter(b => b.action !== 'create');
   formFields = Config.JOB_APPLICATION_FORM_FIELDS;

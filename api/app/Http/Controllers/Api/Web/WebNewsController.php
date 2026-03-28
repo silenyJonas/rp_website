@@ -80,26 +80,32 @@ class WebNewsController extends Controller
     }
 
     /**
-     * Detail novinky.
+     * Detail novinky (včetně smazaných v koši).
      */
-    public function show(WebNews $news): JsonResponse
+    public function show($id): JsonResponse
     {
+        // 🔧 Ruční vyhledání podle ID (funguje i pro smazané položky v koši)
+        $news = WebNews::withTrashed()->findOrFail($id);
+        
         return response()->json(new WebNewsResource($news));
     }
 
-    /**
-     * Aktualizace novinky.
+   /**
+     * Aktualizace novinky (ruční načtení podle ID).
      */
-    public function update(UpdateWebNewsRequest $request, WebNews $news): JsonResponse
+    public function update(UpdateWebNewsRequest $request, $id): JsonResponse
     {
         try {
+            // 🔧 Ruční vyhledání podle ID (shoduje se s {id} v api.php)
+            $news = \App\Models\Web\WebNews::findOrFail($id);
+
             $news->update($request->validated());
             
             $this->logAction($request, 'update', 'WebNews', "Aktualizace novinky: {$news->title}", $news->id);
             
-            return response()->json(new WebNewsResource($news));
+            return response()->json(new \App\Http\Resources\Web\WebNewsResource($news));
         } catch (\Exception $e) {
-            $this->logAction($request, 'error', 'WebNews', "Chyba při aktualizaci novinky ID {$news->id}: " . $e->getMessage(), $news->id);
+            $this->logAction($request, 'error', 'WebNews', "Chyba při aktualizaci novinky ID {$id}: " . $e->getMessage(), $id);
             return response()->json(['message' => 'Aktualizace novinky selhala.'], 500);
         }
     }

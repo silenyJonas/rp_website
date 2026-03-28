@@ -104,12 +104,18 @@ class WebSalesOrderController extends Controller
         }
     }
 
-    /**
-     * Detail realizace.
+/**
+     * Detail realizace (včetně smazaných v koši a načtení Leadů).
      */
-    public function show(WebSalesOrder $sales_order): JsonResponse
+    public function show($id): JsonResponse
     {
-        return response()->json(new WebSalesOrderResource($sales_order->load('lead')));
+        // 🔧 Ruční vyhledání podle ID (včetně smazaných)
+        $sales_order = WebSalesOrder::withTrashed()->findOrFail($id);
+
+        // Pokud chceš zachovat eager loading relace Lead:
+        $sales_order->load('lead');
+        
+        return response()->json(new WebSalesOrderResource($sales_order));
     }
 
     /**

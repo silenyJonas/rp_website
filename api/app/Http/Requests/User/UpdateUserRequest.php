@@ -4,7 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Models\Core\CoreRole; // <-- Přidán import pro Role
+use App\Models\Core\CoreRole;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -12,14 +12,17 @@ class UpdateUserRequest extends FormRequest
 
     public function rules(): array
     {
-        $user = $this->route('user') ?? $this->route('user_login');
-        $userId = is_object($user) ? $user->id : $user;
+        // 🔧 OPRAVA: Laravel v api.php používá proměnnou {id}
+        $userId = $this->route('id') ?? $this->route('user');
+        
+        // Pokud by to byl objekt, vytáhneme ID, jinak použijeme přímo hodnotu
+        $userId = is_object($userId) ? $userId->id : $userId;
 
         return [
             'user_email' => [
                 'sometimes', 'required', 'string', 'min:3', 'max:255',
                 'regex:/^[a-zA-Z0-9._-]+$/',
-                Rule::unique('users', 'user_email')->ignore($userId),
+                Rule::unique('users', 'user_email')->ignore($userId), // ✅ Teď už ignoruje správné ID!
             ],
             'contact_email'       => ['nullable', 'email', 'max:255'],
             'full_name'           => ['sometimes', 'required', 'string', 'max:255'],
@@ -35,7 +38,6 @@ class UpdateUserRequest extends FormRequest
             'internal_note'       => ['nullable', 'string'],
             'user_password_hash'  => ['nullable', 'string', 'min:8'],
             
-            // 👇 Opraveno: Ověřuje proti reálné tabulce z modelu CoreRole
             'role_id'             => ['sometimes', 'required', 'integer', Rule::exists(CoreRole::class, 'id')],
         ];
     }

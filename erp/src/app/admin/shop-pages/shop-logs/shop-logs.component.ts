@@ -16,7 +16,7 @@ import * as Config from './shop-logs.config';
 export class ShopLogsComponent extends BaseDataComponent<any> implements Core.OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
-  override apiEndpoint: string = 'shop_logs';
+  override apiEndpoint: string = 'shop/logs';
 
   buttons = Config.BUTTONS.filter(b => b.action !== 'create' && b.action !== 'edit');
   tableColumns = Config.TABLE_COLUMNS;

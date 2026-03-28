@@ -16,7 +16,7 @@ import * as Config from './support-tickets.config';
 export class SupportTicketsComponent extends BaseDataComponent<any> implements Core.OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
-  override apiEndpoint: string = 'support_tickets';
+  override apiEndpoint: string = 'web/support_tickets';
 
   buttons = Config.SUPPORT_TICKET_BUTTONS;
   formFields = Config.SUPPORT_TICKET_FORM_FIELDS;

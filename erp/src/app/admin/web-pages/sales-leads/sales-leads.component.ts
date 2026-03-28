@@ -16,7 +16,9 @@ import * as Config from './sales-leads.config';
 export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
-  override apiEndpoint: string = 'sales_leads';
+  override apiEndpoint: string = 'web/sales_leads';
+
+  private logEndpoint: string = 'web/logs'
 
   buttons = Config.SALES_LEAD_BUTTONS;
   formFields = Config.SALES_LEAD_FORM_FIELDS;
@@ -106,7 +108,7 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
       user_id_plain: this.authService.getUserId()?.toString(),
       user_email_plain: this.authService.getUserEmail()
     };
-    this.dataHandler.post('web_log', logData).subscribe();
+    this.dataHandler.post(this.logEndpoint, logData).subscribe();
   }
 
   override refreshData(): void {

@@ -101,21 +101,33 @@ class UserController extends Controller
     }
 
     /**
-     * Zobrazení detailu.
+     * Zobrazení detailu (včetně smazaných v koši a kontroly práv).
      */
-    public function show(User $user): JsonResponse
+    public function show($id): JsonResponse
     {
+        // 🔧 1. Ruční vyhledání uživatele podle ID (včetně smazaných v koši)
+        $user = User::withTrashed()->findOrFail($id);
+
+        // 🛡️ 2. Bezpečnostní kontrola (blokace zobrazení primeadmina)
         if ($user->roles()->where('role_name', 'primeadmin')->exists()) {
             return response()->json(['message' => 'Zakázaný přístup.'], 403);
         }
+
+        // 🔗 3. Načtení relací a vrácení dat
         return response()->json(new UserResource($user->load('roles.permissions')));
     }
 
     /**
      * Aktualizace uživatele.
      */
-    public function update(UpdateUserRequest $request, User $user): JsonResponse
+  /**
+     * Aktualizace uživatele (ruční načtení podle ID).
+     */
+    public function update(UpdateUserRequest $request, $id): JsonResponse
     {
+        // 🔧 1. Ruční vyhledání uživatele podle ID (shoduje se s URL v api.php)
+        $user = User::findOrFail($id);
+
         if ($user->roles()->where('role_name', 'primeadmin')->exists()) {
             return response()->json(['message' => 'Prime Admin je nedotknutelný.'], 403);
         }
@@ -144,7 +156,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->logAction($request, 'error', 'User', "Chyba při updatu uživatele ID {$user->id}: " . $e->getMessage(), $user->id);
+            $this->logAction($request, 'error', 'User', "Chyba při updatu uživatele ID {$id}: " . $e->getMessage(), $id);
             return response()->json(['message' => 'Chyba serveru při ukládání.'], 500);
         }
     }

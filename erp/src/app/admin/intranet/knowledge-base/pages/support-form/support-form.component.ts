@@ -18,7 +18,7 @@ export class SupportFormComponent extends BaseDataComponent<any> implements OnIn
   // Propojení na globální loading stav
   public override loadingService = inject(LoadingService);
   
-  override apiEndpoint: string = 'support_tickets';
+  override apiEndpoint: string = 'web/support_tickets';
   
   supportForm!: FormGroup;
   isSubmitted = false;

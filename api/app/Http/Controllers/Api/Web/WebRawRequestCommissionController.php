@@ -84,27 +84,36 @@ class WebRawRequestCommissionController extends Controller
         }
     }
 
-    /**
-     * Detail požadavku.
+/**
+     * Detail požadavku (včetně smazaných v koši).
      */
-    public function show(WebRawRequestCommission $rawRequestCommission): JsonResponse
+    public function show($id): JsonResponse
     {
+        // 🔧 Ruční vyhledání podle ID (funguje i pro smazané položky v koši)
+        $rawRequestCommission = WebRawRequestCommission::withTrashed()->findOrFail($id);
+        
         return response()->json(new WebRawRequestCommissionResource($rawRequestCommission));
     }
 
     /**
      * Aktualizace požadavku.
      */
-    public function update(UpdateWebRawRequestCommissionRequest $request, WebRawRequestCommission $rawRequestCommission): JsonResponse
+   /**
+     * Aktualizace požadavku (ruční načtení podle ID).
+     */
+    public function update(UpdateWebRawRequestCommissionRequest $request, $id): JsonResponse
     {
         try {
+            // 🔧 Ruční vyhledání podle ID (shoduje se s {id} v api.php)
+            $rawRequestCommission = WebRawRequestCommission::findOrFail($id);
+            
             $rawRequestCommission->update($request->validated());
             
             $this->logAction($request, 'update', 'WebRawRequestCommission', "Aktualizace požadavku ID: {$rawRequestCommission->id}", $rawRequestCommission->id);
             
             return response()->json(new WebRawRequestCommissionResource($rawRequestCommission));
         } catch (\Exception $e) {
-            $this->logAction($request, 'error', 'WebRawRequestCommission', "Chyba při aktualizaci požadavku ID {$rawRequestCommission->id}: " . $e->getMessage(), $rawRequestCommission->id);
+            $this->logAction($request, 'error', 'WebRawRequestCommission', "Chyba při aktualizaci požadavku ID {$id}: " . $e->getMessage(), $id);
             return response()->json(['message' => 'Aktualizace požadavku selhala.'], 500);
         }
     }

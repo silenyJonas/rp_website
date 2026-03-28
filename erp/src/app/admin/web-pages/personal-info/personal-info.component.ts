@@ -21,7 +21,7 @@ import { GenericTableService } from '../../../core/services/generic-table.servic
 })
 export class PersonalInfoComponent extends BaseDataComponent<UserLogin> implements OnInit, OnDestroy {
   passwordForm: FormGroup;
-  override apiEndpoint = 'users'; 
+  override apiEndpoint = 'core/users'; 
   userData: UserLogin | null = null;
 
   constructor(

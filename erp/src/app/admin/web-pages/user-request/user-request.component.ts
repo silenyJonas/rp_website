@@ -16,7 +16,7 @@ import * as Config from './user-request.config';
 export class UserRequestComponent extends BaseDataComponent<any> implements Core.OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
-  override apiEndpoint: string = 'raw_request_commissions';
+  override apiEndpoint: string = 'web/raw_request_commissions';
 
   buttons = Config.USER_REQUEST_BUTTONS;
   formFields = Config.USER_REQUEST_FORM_FIELDS;

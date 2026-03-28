@@ -90,24 +90,35 @@ class WebJobApplicationController extends Controller
     }
 
     /**
-     * Detail uchazeče.
+     * Detail uchazeče (včetně smazaných v koši).
      */
-    public function show(WebJobApplication $jobApplication): JsonResponse
+    public function show($id): JsonResponse
     {
+        // 🔧 Ruční vyhledání podle ID (funguje i pro smazané položky v koši)
+        $jobApplication = WebJobApplication::withTrashed()->findOrFail($id);
+        
         return response()->json(new WebJobApplicationResource($jobApplication));
     }
 
     /**
      * Aktualizace uchazeče.
      */
-    public function update(UpdateWebJobApplicationRequest $request, WebJobApplication $jobApplication): JsonResponse
+    /**
+     * Aktualizace uchazeče (ruční načtení podle ID).
+     */
+    public function update(UpdateWebJobApplicationRequest $request, $id): JsonResponse
     {
         try {
+            // 🔧 Ruční načtení modelu (včetně smazaných, pokud bys je chtěl editovat v koši)
+            $jobApplication = \App\Models\Web\WebJobApplication::withTrashed()->findOrFail($id);
+
             $validated = $request->validated();
 
+            // Zpracování souboru CV
             if ($request->hasFile('cv_file')) {
+                // Smazání starého souboru, pokud existuje
                 if ($jobApplication->cv_path) {
-                    Storage::disk('public')->delete($jobApplication->cv_path);
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($jobApplication->cv_path);
                 }
                 $path = $request->file('cv_file')->store('cv_files', 'public');
                 $validated['cv_path'] = $path;
@@ -115,11 +126,23 @@ class WebJobApplicationController extends Controller
 
             $jobApplication->update($validated);
             
-            $this->logAction($request, 'update', 'WebJobApplication', "Aktualizace uchazeče ID: {$jobApplication->id}. Stav: " . ($validated['state'] ?? 'beze změny'), $jobApplication->id);
+            $this->logAction(
+                $request, 
+                'update', 
+                'WebJobApplication', 
+                "Aktualizace uchazeče ID: {$id}. Stav: " . ($validated['state'] ?? 'beze změny'), 
+                $id
+            );
             
-            return response()->json(new WebJobApplicationResource($jobApplication->fresh()));
+            return response()->json(new \App\Http\Resources\Web\WebJobApplicationResource($jobApplication->fresh()));
         } catch (\Exception $e) {
-            $this->logAction($request, 'error', 'WebJobApplication', "Chyba při aktualizaci uchazeče ID: {$jobApplication->id}. Chyba: " . $e->getMessage(), $jobApplication->id);
+            $this->logAction(
+                $request, 
+                'error', 
+                'WebJobApplication', 
+                "Chyba při aktualizaci uchazeče ID: {$id}. Chyba: " . $e->getMessage(), 
+                $id
+            );
             return response()->json(['message' => 'Aktualizace se nezdařila.'], 500);
         }
     }

@@ -19,7 +19,7 @@ export class EditNewsComponent extends BaseDataComponent<any> implements Core.On
 
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
-  override apiEndpoint: string = 'news';
+  override apiEndpoint: string = 'web/news';
 
   buttons = Config.NEWS_BUTTONS;
   formFields = Config.NEWS_FORM_FIELDS;

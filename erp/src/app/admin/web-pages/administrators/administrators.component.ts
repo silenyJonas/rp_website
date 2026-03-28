@@ -15,7 +15,7 @@ import * as Config from './administrators.config';
 export class AdministratorsComponent extends BaseDataComponent<any> implements OnInit {
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
-  override apiEndpoint: string = 'users';
+  override apiEndpoint: string = 'core/users';
 
   buttons = Config.TABLE_BUTTONS;
   formFields = Config.FORM_FIELDS;
@@ -121,7 +121,7 @@ export class AdministratorsComponent extends BaseDataComponent<any> implements O
 
   handleResetPasswordFormSubmitted(formData: any): void {
     const payload = { old_password: formData.old_password, new_password: formData.new_password, new_password_confirmation: formData.new_password };
-    this.dataHandler.put(`users/${formData.id}/change-password`, payload)
+    this.dataHandler.put(`core/users/${formData.id}/change-password`, payload)
       .pipe(Core.finalize(() => { this.showResetPasswordForm = false; this.cd.markForCheck(); }))
       .subscribe({
         next: () => this.alertDialogService.open('Úspěch', 'Heslo bylo změněno.', 'success'),

@@ -20,7 +20,7 @@ export class EditWebsiteComponent extends BaseDataComponent<any> implements Core
   // Přidáno pro propojení s HTML a automatický loading
   public override loadingService = inject(LoadingService);
 
-  override apiEndpoint = 'save-translations'; 
+  override apiEndpoint = 'save_translations'; 
 
   currentLang: string = 'cz';
   translations: any = {}; 

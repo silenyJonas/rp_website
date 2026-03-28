@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 // Import tvého Core namespace
 import * as Core from '../../../shared/imports/core-providers';
@@ -18,15 +19,17 @@ import { LoadingService } from '../../../core/services/loading.service';
   styleUrl: './dashboard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-// OPRAVA: Používáme Core.OnInit přímo v implements. 
-// Pokud chyba přetrvává, ujisti se, že v core-providers.ts máš: export type { OnInit ... }
-export class DashboardComponent extends BaseDataComponent<UserLogin> implements Core.OnInit {
+export class DashboardComponent extends BaseDataComponent<UserLogin> implements Core.OnInit, OnDestroy {
   
-  // Přístup k loading stavu pro šablonu (pomocí async pipe)
   public override loadingService = inject(LoadingService);
   
-  override apiEndpoint = 'users';
+  override apiEndpoint = 'core/users';
   userData: UserLogin | null = null;
+
+  // 🔐 Vlastnosti tahající data přímo z Auth systému bez čekání na API
+  userEmail: string | null = null;
+  userRole: string | null = null;
+  private emailSubscription: Subscription | undefined;
 
   constructor(
     protected override dataHandler: Core.DataHandler,
@@ -35,8 +38,20 @@ export class DashboardComponent extends BaseDataComponent<UserLogin> implements 
   ) {
     super(dataHandler, cd, genericTableService);
   }
+
   override ngOnInit(): void {
-    // Voláme init z BaseDataComponent pokud je potřeba, jinak vlastní logiku
+    super.ngOnInit();
+
+    // 1. Získáme roli ihned
+    this.userRole = this.authService.getUserRole();
+
+    // 2. Přihlásíme se k odběru e-mailu ihned (stejně jako admin-layout)
+    this.emailSubscription = this.authService.userEmail$.subscribe(email => {
+      this.userEmail = email;
+      this.cd.markForCheck();
+    });
+
+    // 3. Spustíme HTTP volání z API pro zbytek dat (např. full_name)
     this.loadUserProfile();
   }
 
@@ -44,17 +59,17 @@ export class DashboardComponent extends BaseDataComponent<UserLogin> implements 
     const userId = this.authService.getUserId();
     if (!userId) return;
 
-    // Snapshot kontrola proti double-clicku během 300ms prodlevy interceptoru
     if (this.loadingService.isLoadingSnapshot) return;
 
     this.getItemDetails(parseInt(userId, 10))
       .subscribe({
-        next: (data) => {
-          this.userData = data;
+        next: (response: any) => {
+          // Laravel Resource obal
+          this.userData = response.data ? response.data : response;
           this.cd.markForCheck();
         },
         error: (err) => {
-          this.errorMessage = 'Nepodařilo se načíst profil uživatele.';
+          this.errorMessage = 'Nepodařilo se načíst detailní profil.';
           this.cd.markForCheck();
           console.error('Dashboard Error:', err);
         }
@@ -62,6 +77,12 @@ export class DashboardComponent extends BaseDataComponent<UserLogin> implements 
   }
 
   get welcomeMessage(): string {
-    return this.userData ? `Vítejte zpět, ${this.userData.user_email}!` : 'Vítejte v systému!';
+    return this.userEmail ? `Vítejte zpět, ${this.userEmail}!` : 'Vítejte v systému!';
+  }
+
+  override ngOnDestroy(): void {
+    if (this.emailSubscription) {
+      this.emailSubscription.unsubscribe();
+    }
   }
 }

@@ -97,37 +97,58 @@ class WebSupportTicketController extends Controller
         }
     }
 
-    /**
-     * Detail tiketu.
+/**
+     * Detail tiketu (včetně smazaných v koši).
      */
-    public function show(WebSupportTicket $WebSupportTicket): JsonResponse
+    public function show($id): JsonResponse
     {
-        return response()->json(new WebSupportTicketResource($WebSupportTicket));
+        // 🔧 Ruční vyhledání podle ID (včetně smazaných v koši)
+        $supportTicket = WebSupportTicket::withTrashed()->findOrFail($id);
+        
+        return response()->json(new WebSupportTicketResource($supportTicket));
     }
 
-    /**
-     * Aktualizace tiketu.
+   /**
+     * Aktualizace support ticketu (ruční načtení podle ID).
      */
-    public function update(UpdateWebSupportTicketRequest $request, WebSupportTicket $WebSupportTicket): JsonResponse
+    public function update(UpdateWebSupportTicketRequest $request, $id): JsonResponse
     {
         try {
+            // 🔧 Ruční načtení podle ID (konzistentní s api.php {id})
+            // Používáme withTrashed(), aby admin mohl reagovat i na tikety v koši
+            $ticket = \App\Models\Web\WebSupportTicket::withTrashed()->findOrFail($id);
+
             $validated = $request->validated();
 
+            // Zpracování přílohy (attachment)
             if ($request->hasFile('attachment')) {
-                if ($WebSupportTicket->attachment_path) {
-                    Storage::disk('public')->delete($WebSupportTicket->attachment_path);
+                // Smazání staré přílohy, pokud existuje
+                if ($ticket->attachment_path) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($ticket->attachment_path);
                 }
                 $path = $request->file('attachment')->store('tickets', 'public');
                 $validated['attachment_path'] = $path;
             }
 
-            $WebSupportTicket->update($validated);
+            $ticket->update($validated);
 
-            $this->logAction($request, 'update', 'WebSupportTicket', "Aktualizace ticketu ID: {$WebSupportTicket->id}", $WebSupportTicket->id);
+            $this->logAction(
+                $request, 
+                'update', 
+                'WebSupportTicket', 
+                "Aktualizace ticketu ID: {$id}", 
+                $id
+            );
             
-            return response()->json(new WebSupportTicketResource($WebSupportTicket));
+            return response()->json(new \App\Http\Resources\Web\WebSupportTicketResource($ticket->fresh()));
         } catch (\Exception $e) {
-            $this->logAction($request, 'error', 'WebSupportTicket', "Chyba při aktualizaci ticketu ID {$WebSupportTicket->id}: " . $e->getMessage(), $WebSupportTicket->id);
+            $this->logAction(
+                $request, 
+                'error', 
+                'WebSupportTicket', 
+                "Chyba při aktualizaci ticketu ID {$id}: " . $e->getMessage(), 
+                $id
+            );
             return response()->json(['message' => 'Aktualizace ticketu selhala.'], 500);
         }
     }

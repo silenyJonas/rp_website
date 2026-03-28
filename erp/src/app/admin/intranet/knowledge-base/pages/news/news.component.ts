@@ -17,7 +17,7 @@ export class NewsComponent extends BaseDataComponent<any> implements OnInit {
   // Propojení na globální loading službu
   public override loadingService = inject(LoadingService);
 
-  override apiEndpoint: string = 'news';
+  override apiEndpoint: string = 'web/news';
   override itemsPerPage: number = 5; 
   
   accumulatedNews: any[] = [];

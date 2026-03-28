@@ -1,7 +1,7 @@
 <div class="dashboard-container">
   <div class="dashboard-content">
     <div class="welcome-section">
-      <h1>Dobrý den, {{ userData?.full_name ?? 'uživateli' }}</h1>
+      <h1>Dobrý den, {{ userData?.full_name ?? userEmail ?? 'uživateli' }}</h1>
       <p>Vítejte v administračním systému. Zde máte přehled o svém účtu.</p>
     </div>
 
@@ -13,11 +13,11 @@
         <div class="card-content">
           <div class="display-item">
             <label>Přihlášen jako</label>
-            <div class="static-value">{{ userData?.user_email }}</div>
+            <div class="static-value">{{ userEmail }}</div>
           </div>
           <div class="display-item">
             <label>Role systému</label>
-            <div class="static-value">{{ userData?.roles?.[0]?.role_name ?? 'Administrátor' }}</div>
+            <div class="static-value">{{ userRole ?? 'Administrátor' }}</div>
           </div>
         </div>
       </div>
