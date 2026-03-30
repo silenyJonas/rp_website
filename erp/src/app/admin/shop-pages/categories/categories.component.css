@@ -1,0 +1,198 @@
+/* --- Základní struktura stromu --- */
+.container {
+  padding: 7px;
+}
+
+.tree-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tree-node {
+  position: relative;
+  margin: 2px 0;
+}
+
+/* Vodicí linky pro podkategorie */
+.node-children {
+  margin-left: 10px;
+  padding-left: 8px;
+  border-left: 1px solid #f1f5f9;
+}
+
+/* --- Řádek kategorie --- */
+.category-row {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  min-height: 38px;
+  transition: all 0.1s ease;
+}
+
+.category-row:hover {
+  background: #f8fafc;
+  border-color: #f1f5f9;
+}
+
+/* Aktivní stav při editaci */
+.category-row.is-editing {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Specifický styl pro úplně novou kategorii */
+.category-row.is-new {
+  background: #fffbeb;
+  border-color: #fcd34d;
+}
+
+.expand-trigger {
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #cbd5e1;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-right: 4px;
+  transition: color 0.2s;
+  user-select: none;
+}
+
+.expand-trigger:hover {
+  color: #64748b;
+}
+
+.node-name {
+  flex-grow: 1;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 8px;
+}
+
+.node-name.inactive {
+  color: #94a3b8;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Počítadlo (Badge) */
+.count-badge {
+  font-size: 10px;
+  font-weight: 600;
+  color: #94a3b8;
+  background: #f1f5f9;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+/* --- Kontejner pro akce vpravo --- */
+.actions {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Hover efekt pro zobrazení akcí na desktopu */
+@media (min-width: 768px) {
+  .actions {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    pointer-events: none; /* Zabrání interakci, když jsou schované */
+  }
+
+  /* Zobrazit akce POUZE pokud se nejedná o editaci nebo novou položku */
+  .category-row:not(.is-editing):not(.is-new):hover .actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* Skrytí akcí v editačním módu na mobilu */
+@media (max-width: 767px) {
+  .category-row.is-editing .actions,
+  .category-row.is-new .actions {
+    display: none;
+  }
+}
+
+/* --- Editace (Wrapper a Input) --- */
+.edit-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-grow: 1;
+  max-width: 450px;
+}
+
+.input-container {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-input {
+  width: 100%;
+  height: 28px;
+  font-size: 13px;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  padding: 0 8px;
+  outline: none;
+  background: #ffffff;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Chybový stav inputu (duplicita) */
+.edit-input.error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.error-msg {
+  position: absolute;
+  top: -16px;
+  left: 30px;
+  font-size: 10px;
+  color: #ef4444;
+  font-weight: bold;
+}
+
+.table-header {
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+}
+
+/* --- Styl pro zablokovaná tlačítka (např. při duplicitě názvu) --- */
+::ng-deep .small-btn:disabled,
+::ng-deep .small-btn[disabled] {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(1);
+  pointer-events: none;
+}

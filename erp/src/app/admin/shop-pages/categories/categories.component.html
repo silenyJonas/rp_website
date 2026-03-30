@@ -1,1 +1,90 @@
-<p>categories works!</p>
+<div class="container mx-auto p-4 max-w-5xl">
+  <div class="flex flex-wrap gap-2 justify-between items-center mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
+    <div class="table-header text-xl font-bold text-gray-800">Správa kategorií</div>
+    <app-button-builder 
+      [configs]="toolbarButtons" 
+      (actionTriggered)="handleToolbarAction($event)">
+    </app-button-builder>
+  </div>
+
+  <div class="tree-wrapper bg-white border rounded-xl shadow-sm overflow-hidden">
+  <div class="p-3">
+    @if (categories.length > 0) {
+      <ng-container *ngTemplateOutlet="treeRef; context:{ $implicit: categories }"></ng-container>
+    } @else {
+      <div class="p-10 text-center text-gray-400">Žádné kategorie k zobrazení.</div>
+    }
+  </div>
+</div>
+</div>
+
+<ng-template #treeRef let-list>
+  <ul class="tree-list">
+    @for (node of list; track node.id) {
+      <li class="tree-node">
+        <div class="category-row" 
+             [class.is-editing]="node.isEditing" 
+             [class.is-new]="node.id === 0"
+             [style.cursor]="node.children?.length ? 'pointer' : 'default'"
+             (click)="node.children?.length && (node.isExpanded = !node.isExpanded)">
+          
+          <button (click)="$event.stopPropagation(); node.isExpanded = !node.isExpanded" 
+                  class="expand-trigger" 
+                  [style.visibility]="node.children?.length ? 'visible' : 'hidden'">
+            {{ node.isExpanded ? '⌄' : '›' }}
+          </button>
+
+          <div class="flex items-center flex-grow min-w-0 mr-4">
+            <span class="mr-3 text-sm opacity-60">
+              {{ node.children?.length ? (node.isExpanded ? '📂' : '📁') : '📄' }}
+            </span>
+
+            @if (node.isEditing) {
+              <div class="edit-wrapper" (click)="$event.stopPropagation()">
+                <div class="input-container">
+                  <input [(ngModel)]="node.name" 
+                        (keyup.enter)="handleEditAction('submit', node)" 
+                        (keyup.escape)="handleEditAction('cancel', node)" 
+                        [placeholder]="node.id === 0 ? 'Zadejte název...' : ''"
+                        class="edit-input" 
+                        [class.error]="isDuplicateName(node) || (node.name.length === 0)" 
+                        #editInput>
+                  
+                  @if (isDuplicateName(node)) {
+                    <span class="error-msg">Název již existuje</span>
+                  } @else if (!node.name || node.name.trim().length === 0) {
+                    <span class="error-msg">Název nesmí být prázdný</span>
+                  }
+                </div>
+                <app-button-builder 
+                  [configs]="getEditButtons(node)" 
+                  (actionTriggered)="handleEditAction($event, node)">
+                </app-button-builder>
+              </div>
+            } @else {
+              <span (dblclick)="startEdit(node)" class="node-name" [class.inactive]="!node.is_active">
+                {{ node.name }}
+              </span>
+              @if (node.children?.length) {
+                <span class="count-badge">{{ node.directChildrenCount }} / {{ node.totalRecursiveCount }}</span>
+              }
+            }
+          </div>
+
+          <div class="actions" (click)="$event.stopPropagation()">
+            <app-button-builder 
+              [configs]="getRowButtons(node)" 
+              (actionTriggered)="handleRowAction($event, node)">
+            </app-button-builder>
+          </div>
+        </div>
+
+        @if (node.children?.length && node.isExpanded) {
+          <div class="node-children">
+            <ng-container *ngTemplateOutlet="treeRef; context:{ $implicit: node.children }"></ng-container>
+          </div>
+        }
+      </li>
+    }
+  </ul>
+</ng-template>

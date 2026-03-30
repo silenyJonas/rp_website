@@ -1,0 +1,2 @@
+ng generate @angular/core:control-flow
+//prepise na @for syntag

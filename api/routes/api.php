@@ -21,6 +21,8 @@ use App\Http\Controllers\Api\Web\WebJobApplicationController;
 
 use App\Http\Controllers\Api\Shop\ShopLogController;
 use App\Http\Controllers\Api\Shop\ShopSupplierController;
+use App\Http\Controllers\Api\Shop\ShopCouponController;
+use App\Http\Controllers\Api\Shop\ShopCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,8 +114,22 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/{id}/details', [ShopLogController::class, 'show']);
         });
 
-    });
+        // Coupons (Slevové kupóny)
+        Route::prefix('coupons')->group(function () {
+            Route::get('/{id}/details', [ShopCouponController::class, 'show']);
+            Route::post('/{id}/restore', [ShopCouponController::class, 'restore']);
+            Route::delete('/force-delete-all', [ShopCouponController::class, 'forceDeleteAllTrashed']);
+        });
+        Route::apiResource('coupons', ShopCouponController::class)
+            ->parameters(['coupons' => 'id']);
 
+        // Categories (Kategorie)
+        Route::prefix('categories')->group(function () {
+            Route::get('/{id}/details', [ShopCategoryController::class, 'show']);
+        });
+            Route::apiResource('categories', ShopCategoryController::class)
+                ->parameters(['categories' => 'id']);
+        });
 
     /*
     |--------------------------------------------------------------------------
@@ -129,7 +145,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/force-delete-all', [WebJobApplicationController::class, 'forceDeleteAllTrashed']);
         });
         Route::apiResource('job_applications', WebJobApplicationController::class)
-            ->parameters(['job_applications' => 'id']); // ✅ Odstraněno except(['store']) -> funguje z adminu!
+            ->parameters(['job_applications' => 'id']);
 
         // Web Logs
         Route::prefix('logs')->group(function () {
@@ -154,7 +170,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/force-delete-all', [WebRawRequestCommissionController::class, 'forceDeleteAllTrashed']);
         });
         Route::apiResource('raw_request_commissions', WebRawRequestCommissionController::class)
-            ->parameters(['raw_request_commissions' => 'id']); // ✅ Odstraněno except(['store']) -> funguje z adminu!
+            ->parameters(['raw_request_commissions' => 'id']); 
 
         // SalesOrder
         Route::prefix('sales_orders')->group(function () {
@@ -163,7 +179,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/force-delete-all', [WebSalesOrderController::class, 'forceDeleteAllTrashed']);
         });
         Route::apiResource('sales_orders', WebSalesOrderController::class)
-            ->parameters(['sales_orders' => 'id']); // ✅ Odstraněno except(['store']) -> funguje z adminu!
+            ->parameters(['sales_orders' => 'id']); 
 
         // News
         Route::prefix('news')->group(function () {
@@ -182,7 +198,5 @@ Route::middleware('auth:sanctum')->group(function () {
         });
         Route::apiResource('sales_leads', WebSalesLeadController::class)
             ->parameters(['sales_leads' => 'id']);
-
     });
-
 });

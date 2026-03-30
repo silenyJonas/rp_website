@@ -3,13 +3,11 @@
 namespace App\Models\Shop;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ShopCategory extends Model
 {
-    use SoftDeletes;
 
     protected $table = 'shop_categories';
 
@@ -30,15 +28,7 @@ class ShopCategory extends Model
     ];
 
     /**
-     * Relace na produkty v této kategorii.
-     */
-    public function products(): HasMany
-    {
-        return $this->hasMany(ShopProduct::class, 'category_id');
-    }
-
-    /**
-     * Relace na nadřazenou kategorii (pokud existuje).
+     * Relace na nadřazenou kategorii.
      */
     public function parent(): BelongsTo
     {
@@ -50,6 +40,6 @@ class ShopCategory extends Model
      */
     public function children(): HasMany
     {
-        return $this->hasMany(ShopCategory::class, 'parent_id')->orderBy('sort_order');
+        return $this->hasMany(ShopCategory::class, 'parent_id')->orderBy('sort_order', 'asc');
     }
 }

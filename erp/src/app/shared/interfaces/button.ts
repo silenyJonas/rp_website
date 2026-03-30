@@ -4,10 +4,11 @@ export interface Button {
   label: string;
   icon?: string;
   class: string;
-  isActive?: boolean; // Pro přepínače (např. filtr je otevřený)
-  showIf?: boolean;   // Podmínka zobrazení (např. !showTrashTable)
-  permission?: string; // Pro direktivu *appHasPermission
-  toggleStates?: {     // Pro tlačítka co se mění (Koš vs Aktivní)
+  isActive?: boolean; 
+  disabled?: boolean;  // <--- TENTO ŘÁDEK MUSÍŠ PŘIDAT SEM
+  showIf?: boolean;   
+  permission?: string; 
+  toggleStates?: {     
     activeLabel: string;
     activeIcon: string;
     activeClass: string;

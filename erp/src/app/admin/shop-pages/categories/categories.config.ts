@@ -1,0 +1,31 @@
+import { Button } from '../../../shared/interfaces/button';
+
+// 🛠️ Horní lišta - akce pro celý strom
+export const CATEGORY_TOOLBAR_BUTTONS: Button[] = [
+  {
+    action: 'expandAll',
+    label: 'Rozbalit vše',
+    icon: '📂',
+    class: 'btn-filter' 
+  },
+  {
+    action: 'collapseAll',
+    label: 'Sbalit vše',
+    icon: '📁',
+    class: 'btn-filter'
+  },
+  {
+    action: 'addMain',
+    label: 'Hlavní kategorie',
+    icon: '✨',
+    class: 'btn-create'
+  }
+];
+
+// 📑 Tlačítka v řádku - akce pro konkrétní uzel
+export const CATEGORY_ROW_BUTTONS: Button[] = [
+  { action: 'addChild', label: '', icon: '➕', class: 'btn-create' },
+  { action: 'edit', label: '', icon: '📝', class: 'btn-export' },
+  { action: 'toggleStatus', label: '', icon: '🟢', class: 'btn-filter' },
+  { action: 'delete', label: '', icon: '🗑️', class: 'btn-trash' }
+];

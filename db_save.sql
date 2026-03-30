@@ -294,8 +294,9 @@ CREATE TABLE `sessions` (
 --
 -- Table structure for table `shop_categories`
 --
+
 CREATE TABLE `shop_categories` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(150) NOT NULL,
   `slug` varchar(150) NOT NULL,
   `description` text DEFAULT NULL,
@@ -305,13 +306,9 @@ CREATE TABLE `shop_categories` (
   `sort_order` int(11) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  /* TENTO KLÍČ DOVOLUJE: /panske/boty i /damske/boty */
-  CONSTRAINT `unique_slug_per_level` UNIQUE (`slug`, `parent_id`),
-  /* TENTO KLÍČ ZAKAZUJE: Smazat kategorii, pokud má děti */
-  CONSTRAINT `fk_shop_categories_parent` FOREIGN KEY (`parent_id`) 
-    REFERENCES `shop_categories`(`id`) ON DELETE RESTRICT
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -903,10 +900,9 @@ ALTER TABLE `sessions`
 -- Indexes for table `shop_categories`
 --
 ALTER TABLE `shop_categories`
-  -- Primární klíč už je v CREATE, zde ho nepřidáváme (vyhneme se chybě #1068)
-  -- Samotný unikátní slug zde nesmí být, aby fungoval 'unique_slug_per_level'
-  ADD KEY `idx_shop_categories_parent` (`parent_id`),
-  ADD KEY `idx_shop_categories_active_sort` (`is_active`, `sort_order`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `fk_shop_categories_parent` (`parent_id`);
 
 --
 -- Indexes for table `shop_coupons`
@@ -1257,13 +1253,8 @@ ALTER TABLE `refresh_tokens`
 -- Constraints for table `shop_categories`
 --
 ALTER TABLE `shop_categories`
-  -- Nejdříve odstraníme starý constraint, pokud existuje, abychom se vyhnuli chybě
-  DROP FOREIGN KEY IF EXISTS `fk_shop_categories_parent`;
+  ADD CONSTRAINT `fk_shop_categories_parent` FOREIGN KEY (`parent_id`) REFERENCES `shop_categories` (`id`) ON DELETE SET NULL;
 
-ALTER TABLE `shop_categories`
-  ADD CONSTRAINT `fk_shop_categories_parent` 
-  FOREIGN KEY (`parent_id`) REFERENCES `shop_categories` (`id`) 
-  ON DELETE RESTRICT;
 --
 -- Constraints for table `shop_customers`
 --
