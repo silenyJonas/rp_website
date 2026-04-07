@@ -10,8 +10,6 @@ class RefreshToken extends Model
 {
     use HasFactory;
 
-    protected $table = 'refresh_tokens';
-
     protected $fillable = [
         'user_id',    // Změněno z user_login_id na user_id
         'token',

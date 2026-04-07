@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class CorePermission extends Model
 {
-    protected $table = 'core_permissions';
-
     public $timestamps = false;
 
     protected $fillable = [

@@ -10,8 +10,6 @@ class ShopProduct extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'shop_products';
-
     protected $fillable = [
         'category_id',
         'supplier_id',

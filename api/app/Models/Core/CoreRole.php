@@ -11,8 +11,6 @@ class CoreRole extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'core_roles';
-
     // Pokud se sloupec v migraci jmenuje 'id', primaryKey definovat nemusíš.
     // Pokud se jmenuje 'role_id', odkomentuj toto:
     // protected $primaryKey = 'role_id';

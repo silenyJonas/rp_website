@@ -1,182 +1,13 @@
-/* --- Základní struktura stromu --- */
-.container {
-  padding: 7px;
-}
-
-.tree-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.tree-node {
-  position: relative;
-  margin: 2px 0;
-}
-
-/* Vodicí linky pro podkategorie */
-.node-children {
-  margin-left: 10px;
-  padding-left: 8px;
-  border-left: 1px solid #f1f5f9;
-}
-
-/* --- Řádek kategorie --- */
-.category-row {
+/* --- Horní lišta (Toolbar) dle vzoru --- */
+.toolbar-actions {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 0.25rem 0.75rem;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  min-height: 38px;
-  transition: all 0.1s ease;
-}
-
-.category-row:hover {
-  background: #f8fafc;
-  border-color: #f1f5f9;
-}
-
-/* Aktivní stav při editaci */
-.category-row.is-editing {
-  background: #ffffff;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-/* Specifický styl pro úplně novou kategorii */
-.category-row.is-new {
-  background: #fffbeb;
-  border-color: #fcd34d;
-}
-
-.expand-trigger {
-  width: 24px;
-  height: 24px;
-  font-size: 16px;
-  font-family: monospace;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #cbd5e1;
-  background: none;
-  border: none;
-  padding: 0;
-  margin-right: 4px;
-  transition: color 0.2s;
-  user-select: none;
-}
-
-.expand-trigger:hover {
-  color: #64748b;
-}
-
-.node-name {
-  flex-grow: 1;
-  font-size: 13.5px;
-  font-weight: 500;
-  color: #334155;
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-right: 8px;
-}
-
-.node-name.inactive {
-  color: #94a3b8;
-  text-decoration: line-through;
-  opacity: 0.7;
-}
-
-/* Počítadlo (Badge) */
-.count-badge {
-  font-size: 10px;
-  font-weight: 600;
-  color: #94a3b8;
-  background: #f1f5f9;
-  padding: 1px 6px;
-  border-radius: 4px;
-  border: 1px solid #e2e8f0;
-  margin-right: 12px;
-  flex-shrink: 0;
-}
-
-/* --- Kontejner pro akce vpravo --- */
-.actions {
-  display: flex;
-  gap: 2px;
-  align-items: center;
-  margin-left: auto;
-  flex-shrink: 0;
-}
-
-/* Hover efekt pro zobrazení akcí na desktopu */
-@media (min-width: 768px) {
-  .actions {
-    opacity: 0;
-    transition: opacity 0.15s ease;
-    pointer-events: none; /* Zabrání interakci, když jsou schované */
-  }
-
-  /* Zobrazit akce POUZE pokud se nejedná o editaci nebo novou položku */
-  .category-row:not(.is-editing):not(.is-new):hover .actions {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-/* Skrytí akcí v editačním módu na mobilu */
-@media (max-width: 767px) {
-  .category-row.is-editing .actions,
-  .category-row.is-new .actions {
-    display: none;
-  }
-}
-
-/* --- Editace (Wrapper a Input) --- */
-.edit-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-grow: 1;
-  max-width: 450px;
-}
-
-.input-container {
-  position: relative;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.edit-input {
-  width: 100%;
-  height: 28px;
-  font-size: 13px;
-  border: 1px solid #3b82f6;
-  border-radius: 4px;
-  padding: 0 8px;
-  outline: none;
-  background: #ffffff;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-/* Chybový stav inputu (duplicita) */
-.edit-input.error {
-  border-color: #ef4444;
-  background-color: #fef2f2;
-}
-
-.error-msg {
-  position: absolute;
-  top: -16px;
-  left: 30px;
-  font-size: 10px;
-  color: #ef4444;
-  font-weight: bold;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 0 7px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 .table-header {
@@ -188,11 +19,333 @@
   align-items: center;
 }
 
-/* --- Styl pro zablokovaná tlačítka (např. při duplicitě názvu) --- */
-::ng-deep .small-btn:disabled,
-::ng-deep .small-btn[disabled] {
-  opacity: 0.5 !important;
-  cursor: not-allowed !important;
-  filter: grayscale(1);
-  pointer-events: none;
+.toolbar-actions-in {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
 }
+
+/* --- Struktura stromu --- */
+.tree-list { list-style: none; padding: 0; margin: 0; }
+.tree-node { 
+  position: relative; 
+  margin: 2px 0; 
+  border-bottom: 1px solid #f1f5f9; 
+}
+.tree-node:last-child { border-bottom: none; }
+
+.node-children {
+  margin-left: 6px;
+  padding-left: 8px;
+  border-left: 1px solid #f1f5f9;
+}
+
+/* --- Řádek kategorie --- */
+.category-row {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  min-height: 36px;
+  transition: all 0.1s ease;
+  gap: 2px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.category-row:hover { background: #f8fafc; border-color: #f1f5f9; }
+.category-row.is-editing { 
+  background: #ffffff; 
+  border-color: #3b82f6; 
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); 
+}
+
+.expand-trigger {
+  width: 20px; height: 20px; min-width: 20px;
+  font-size: 14px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #cbd5e1; background: none; border: none;
+  padding: 0; margin: 0;
+}
+
+.node-name {
+  flex-grow: 1; font-size: 13px; font-weight: 500; color: #334155;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  min-width: 0; 
+}
+
+.node-name.inactive {
+  color: #ef4444 !important;
+  font-weight: 700;
+}
+
+.count-badge { 
+  font-size: 9px; font-weight: 600; color: #94a3b8; background: #f1f5f9; 
+  padding: 2px 5px; border-radius: 3px; border: 1px solid #e2e8f0; 
+}
+
+/* --- Akce v řádku --- */
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .actions { 
+    opacity: 0; 
+    transition: opacity 0.15s ease; 
+    pointer-events: none; 
+  }
+  .category-row:not(.is-editing):not(.is-new):hover .actions { 
+    opacity: 1; 
+    pointer-events: auto; 
+  }
+}
+
+/* --- MOBILNÍ ROZLOŽENÍ --- */
+@media (max-width: 767px) {
+  .toolbar-actions { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .toolbar-actions-in { width: 100%; justify-content: flex-start; }
+  
+  .category-row { 
+    min-height: auto; 
+    padding: 0.75rem 0.5rem; 
+    gap: 8px; 
+    align-items: flex-start;
+  }
+  
+  .actions {
+    display: grid !important;
+    grid-template-columns: 1fr; /* Sloupec zůstává */
+    gap: 4px;
+    opacity: 1;
+    pointer-events: auto;
+    /* ODEBRÁNO width: 34px - nyní se šířka přizpůsobí tlačítku s textem */
+    min-width: 80px; /* Volitelné: minimální šířka, aby text nebyl moc zmáčknutý */
+  }
+  
+  .actions app-button-builder { 
+    display: block; 
+    width: 100%;
+  }
+
+
+  /* ODEBRÁNO display: none pro .btn-label - label nyní chceme vidět */
+}
+
+/* --- Editace --- */
+.edit-wrapper { 
+  display: flex; 
+  align-items: center; 
+  gap: 6px; 
+  flex-grow: 1; 
+  min-width: 0;
+}
+
+.input-container { 
+  position: relative; 
+  flex-grow: 1; 
+  min-width: 0; 
+}
+
+.edit-input { 
+  width: 100%; 
+  height: 26px; 
+  font-size: 12px; 
+  border: 1px solid #3b82f6; 
+  border-radius: 4px; 
+  padding: 0 6px; 
+}
+
+.error-msg { 
+  position: absolute; 
+  top: -16px; 
+  left: 30px; 
+  font-size: 9px; 
+  color: #ef4444; 
+  font-weight: bold; 
+}
+
+::ng-deep .btn-filter { background: #f3f4f6; color: #374151; border-color: #d1d5db; }
+::ng-deep .btn-trash { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+::ng-deep .btn-create { background: #ecfdf5; color: #059669; border-color: #a7f3d0; }
+::ng-deep .btn-export { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }/* --- Horní lišta (Toolbar) dle vzoru --- */
+.toolbar-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 0 7px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.table-header {
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+}
+
+.toolbar-actions-in {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* --- Struktura stromu --- */
+.tree-list { list-style: none; padding: 0; margin: 0; }
+.tree-node { 
+  position: relative; 
+  margin: 2px 0; 
+  border-bottom: 1px solid #f1f5f9; 
+}
+.tree-node:last-child { border-bottom: none; }
+
+.node-children {
+  margin-left: 6px;
+  padding-left: 8px;
+  border-left: 1px solid #f1f5f9;
+}
+
+/* --- Řádek kategorie --- */
+.category-row {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  min-height: 36px;
+  transition: all 0.1s ease;
+  gap: 2px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.category-row:hover { background: #f8fafc; border-color: #f1f5f9; }
+.category-row.is-editing { 
+  background: #ffffff; 
+  border-color: #3b82f6; 
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); 
+}
+
+.expand-trigger {
+  width: 20px; height: 20px; min-width: 20px;
+  font-size: 14px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #cbd5e1; background: none; border: none;
+  padding: 0; margin: 0;
+}
+
+.node-name {
+  flex-grow: 1; font-size: 13px; font-weight: 500; color: #334155;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  min-width: 0; 
+}
+
+.node-name.inactive {
+  color: #ef4444 !important;
+  font-weight: 700;
+}
+
+.count-badge { 
+  font-size: 9px; font-weight: 600; color: #94a3b8; background: #f1f5f9; 
+  padding: 2px 5px; border-radius: 3px; border: 1px solid #e2e8f0; 
+}
+
+/* --- Akce v řádku --- */
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .actions { 
+    opacity: 0; 
+    transition: opacity 0.15s ease; 
+    pointer-events: none; 
+  }
+  .category-row:not(.is-editing):not(.is-new):hover .actions { 
+    opacity: 1; 
+    pointer-events: auto; 
+  }
+}
+
+/* --- MOBILNÍ ROZLOŽENÍ --- */
+@media (max-width: 767px) {
+  .toolbar-actions { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .toolbar-actions-in { width: 100%; justify-content: flex-start; }
+  
+  .category-row { 
+    min-height: auto; 
+    padding: 0.75rem 0.5rem; 
+    gap: 8px; 
+    align-items: flex-start;
+  }
+  
+  .actions {
+    display: grid !important;
+    grid-template-columns: 1fr; /* Sloupec zůstává */
+    gap: 4px;
+    opacity: 1;
+    pointer-events: auto;
+    /* ODEBRÁNO width: 34px - nyní se šířka přizpůsobí tlačítku s textem */
+    min-width: 80px; /* Volitelné: minimální šířka, aby text nebyl moc zmáčknutý */
+  }
+  
+  .actions app-button-builder { 
+    display: block; 
+    width: 100%;
+  }
+
+}
+
+/* --- Editace --- */
+.edit-wrapper { 
+  display: flex; 
+  align-items: center; 
+  gap: 6px; 
+  flex-grow: 1; 
+  min-width: 0;
+}
+
+.input-container { 
+  position: relative; 
+  flex-grow: 1; 
+  min-width: 0; 
+}
+
+.edit-input { 
+  width: 100%; 
+  height: 26px; 
+  font-size: 12px; 
+  border: 1px solid #3b82f6; 
+  border-radius: 4px; 
+  padding: 0 6px; 
+}
+
+.error-msg { 
+  position: absolute; 
+  top: -16px; 
+  left: 30px; 
+  font-size: 9px; 
+  color: #ef4444; 
+  font-weight: bold; 
+}
+
+::ng-deep .btn-filter { background: #f3f4f6; color: #374151; border-color: #d1d5db; }
+::ng-deep .btn-trash { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+::ng-deep .btn-create { background: #ecfdf5; color: #059669; border-color: #a7f3d0; }
+::ng-deep .btn-export { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }

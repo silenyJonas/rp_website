@@ -10,8 +10,6 @@ class ShopSupplier extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'shop_suppliers';
-
     protected $fillable = [
         'name',
         'ico',

@@ -11,8 +11,6 @@ class WebSalesOrder extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'web_sales_orders';
-
     protected $fillable = [
         'lead_id',
         'client_name',

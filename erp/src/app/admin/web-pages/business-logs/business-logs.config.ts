@@ -64,7 +64,7 @@ export const DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'description', displayName: 'Podrobný popis', type: 'text' },
   { key: 'affected_entity_type', displayName: 'Tabulka / Entita', type: 'text' },
   { key: 'affected_entity_id', displayName: 'ID záznamu entity', type: 'text' },
-  { key: 'user_id_plain', displayName: 'ID uživatele (Plain)', type: 'text' },
-  { key: 'user_email_plain', displayName: 'Uživatel (Plain Email)', type: 'text' },
+  { key: 'user_id_plain', displayName: 'ID uživatele', type: 'text' },
+  { key: 'user_email_plain', displayName: 'Uživatel', type: 'text' },
   { key: 'context_data', displayName: 'Payload / JSON Data', type: 'text' }
 ];

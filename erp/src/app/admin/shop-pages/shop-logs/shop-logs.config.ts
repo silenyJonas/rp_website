@@ -62,9 +62,9 @@ export const DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'event_type', displayName: 'Typ události', type: 'text' },
   { key: 'module', displayName: 'Systémový modul', type: 'text' },
   { key: 'description', displayName: 'Podrobný popis', type: 'text' },
-  { key: 'affected_entity_type', displayName: 'Entita (Tabulka)', type: 'text' },
+  { key: 'affected_entity_type', displayName: 'Tabulka / Entita', type: 'text' },
   { key: 'affected_entity_id', displayName: 'ID entity', type: 'text' },
-  { key: 'user_id_plain', displayName: 'ID uživatele (Plain)', type: 'text' },
-  { key: 'user_plain', displayName: 'Uživatel (Plain text)', type: 'text' },
+  { key: 'user_id_plain', displayName: 'ID uživatele', type: 'text' },
+  { key: 'user_plain', displayName: 'Uživatel', type: 'text' },
   { key: 'context_data', displayName: 'Payload / JSON Data', type: 'text' }
 ];

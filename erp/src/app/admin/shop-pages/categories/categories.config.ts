@@ -24,8 +24,8 @@ export const CATEGORY_TOOLBAR_BUTTONS: Button[] = [
 
 // 📑 Tlačítka v řádku - akce pro konkrétní uzel
 export const CATEGORY_ROW_BUTTONS: Button[] = [
-  { action: 'addChild', label: '', icon: '➕', class: 'btn-create' },
-  { action: 'edit', label: '', icon: '📝', class: 'btn-export' },
-  { action: 'toggleStatus', label: '', icon: '🟢', class: 'btn-filter' },
-  { action: 'delete', label: '', icon: '🗑️', class: 'btn-trash' }
+  { action: 'addChild', label: '', icon: 'Podkategorie ➕', class: 'btn-create' },
+  { action: 'edit', label: '', icon: 'Upravit 📝', class: 'btn-export' },
+  { action: 'toggleStatus', label: '', icon: 'Aktivní 🟢', class: 'btn-filter' },
+  { action: 'delete', label: '', icon: 'Smazat 🗑️', class: 'btn-trash' }
 ];

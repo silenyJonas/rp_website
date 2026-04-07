@@ -9,8 +9,6 @@ class ShopCoupon extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'shop_coupons';
-
     protected $fillable = [
         'code',
         'description',

@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ShopCategory extends Model
 {
 
-    protected $table = 'shop_categories';
-
     protected $fillable = [
         'name',
         'slug',

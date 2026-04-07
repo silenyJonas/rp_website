@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as Core from '../../../shared/imports/core-providers';
@@ -7,28 +7,45 @@ import { CategoryNode } from '../components/interfaces/category-node';
 import { Button } from '../../../shared/interfaces/button';
 import { CATEGORY_TOOLBAR_BUTTONS, CATEGORY_ROW_BUTTONS } from './categories.config';
 import { ConfirmDialogService } from '../../../core/services/confirm-dialog.service';
+import { BaseDataComponent } from '../../components/base-data/base-data.component';
+
 @Component({
   selector: 'app-categories',
   standalone: true,
   imports: [CommonModule, FormsModule, SHARED_UI_BUILDERS],
   templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.css']
+  styleUrls: ['./categories.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CategoriesComponent implements OnInit {
+export class CategoriesComponent extends BaseDataComponent<CategoryNode> implements OnInit {
   @ViewChildren('editInput') editInputs!: QueryList<ElementRef>;
 
-  apiEndpoint = 'shop/categories';
+  override apiEndpoint = 'shop/categories';
   categories: CategoryNode[] = [];
+  
   private backupNames: Map<number, string> = new Map();
+  private expandedStates: Set<number> = new Set();
 
   constructor(
-    private dataHandler: Core.DataHandler,
-    private cd: Core.ChangeDetectorRef,
-    private alertDialogService: Core.AlertDialogService,
-    private confirmDialogService: ConfirmDialogService
-  ) {}
+    protected override dataHandler: Core.DataHandler,
+    protected override cd: Core.ChangeDetectorRef,
+    protected override genericTableService: Core.GenericTableService,
+    private confirmDialogService: ConfirmDialogService,
+    private router: Core.Router
+  ) {
+    super(dataHandler, cd, genericTableService);
+  }
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.loadExpandedStates();
+    this.initWithAuthCheck(this.router);
+  }
+
+  /**
+   * Refresh dat volaný automaticky z BaseDataComponent po ověření přihlášení
+   */
+  override refreshData(): void {
     this.loadTree();
   }
 
@@ -40,7 +57,7 @@ export class CategoriesComponent implements OnInit {
     return CATEGORY_ROW_BUTTONS.map(btn => {
       const updatedBtn = { ...btn };
       if (btn.action === 'toggleStatus') {
-        updatedBtn.icon = node.is_active ? '🟢' : '⚪';
+        updatedBtn.icon = node.is_active ? 'Aktivní 🟢' : ' Neaktivní ⚪';
         updatedBtn.class = node.is_active ? 'btn-export' : 'btn-filter';
       }
       return updatedBtn;
@@ -53,7 +70,7 @@ export class CategoriesComponent implements OnInit {
 
     return [
       { action: 'submit', label: 'Uložit', icon: '✅', class: 'btn-create', disabled: isDuplicate || isEmpty },
-      { action: 'cancel', label: '', icon: '❌', class: 'btn-trash' }
+      { action: 'cancel', label: 'Zrušit', icon: '❌', class: 'btn-trash' }
     ];
   }
 
@@ -88,43 +105,71 @@ export class CategoriesComponent implements OnInit {
       if (!node.name || node.name.trim().length === 0 || this.isDuplicateName(node)) return; 
       if (node.id === 0) this.confirmAdd(node); else this.saveNode(node);
     } else {
-      if (node.id === 0) this.loadTree(node.parent_id); else this.cancelEdit(node);
+      if (node.id === 0) this.loadTree(); else this.cancelEdit(node);
     }
   }
 
   initAddCategory(parentId: number | null): void {
-    const newNode: any = { id: 0, name: '', parent_id: parentId, isEditing: true, is_active: true, children: [] };
+    const newNode: any = { id: 0, name: '', parent_id: parentId, isEditing: true, is_active: false, children: [] };
     if (!parentId) {
       this.categories = [newNode, ...this.categories];
     } else {
       const findAndAdd = (list: CategoryNode[]) => {
         for (const n of list) {
-          if (n.id === parentId) { n.isExpanded = true; n.children = [newNode, ...(n.children || [])]; return; }
+          if (n.id === parentId) {
+            n.isExpanded = true;
+            this.expandedStates.add(n.id);
+            n.children = [newNode, ...(n.children || [])];
+            return;
+          }
           if (n.children) findAndAdd(n.children);
         }
       };
       findAndAdd(this.categories);
     }
     this.cd.detectChanges();
-    setTimeout(() => this.editInputs.first?.nativeElement.focus(), 50);
   }
 
   confirmAdd(node: CategoryNode): void {
-    this.dataHandler.post(this.apiEndpoint, { name: node.name, parent_id: node.parent_id, is_active: true })
+    // Optimistická aktualizace - odstranit nový uzel z UI během odesílání
+    const parentId = node.parent_id;
+    if (!parentId) {
+      this.categories = this.categories.filter(c => c.id !== 0);
+    } else {
+      this.removeNewNodeFromParent(this.categories, parentId);
+    }
+    this.cd.markForCheck();
+
+    this.postData({ name: node.name, parent_id: node.parent_id, is_active: false } as CategoryNode)
       .subscribe({
         next: () => {
           this.alertDialogService.open('Úspěch', 'Kategorie byla vytvořena.', 'success');
-          this.loadTree(node.parent_id);
+          this.loadTree();
         },
-        error: (err) => this.alertDialogService.open('Chyba', err.error?.message || 'Vytvoření selhalo.', 'danger')
+        error: (err) => {
+          this.alertDialogService.open('Chyba', err.error?.message || 'Vytvoření selhalo.', 'danger');
+          this.loadTree();
+        }
       });
+  }
+
+  private removeNewNodeFromParent(nodes: CategoryNode[], parentId: number): void {
+    for (const node of nodes) {
+      if (node.id === parentId) {
+        node.children = node.children?.filter(c => c.id !== 0) || [];
+        return;
+      }
+      if (node.children?.length) {
+        this.removeNewNodeFromParent(node.children, parentId);
+      }
+    }
   }
 
   startEdit(node: CategoryNode): void {
     this.backupNames.set(node.id, node.name);
     node.isEditing = true;
     this.cd.detectChanges();
-    setTimeout(() => this.editInputs.last?.nativeElement.focus(), 50);
+    setTimeout(() => this.editInputs.last?.nativeElement.focus(), 0);
   }
 
   cancelEdit(node: CategoryNode): void {
@@ -136,10 +181,15 @@ export class CategoriesComponent implements OnInit {
   }
 
   loadTree(forceExpandId?: number | null): void {
-    this.dataHandler.get<CategoryNode[]>(`${this.apiEndpoint}?no_pagination=true`).subscribe({
+    this.loadingService.show();
+    this.loadAllData().subscribe({
       next: (res) => {
         this.categories = this.buildTree(res, null, forceExpandId);
         this.cd.markForCheck();
+        this.loadingService.hide();
+      },
+      error: () => {
+        this.loadingService.hide();
       }
     });
   }
@@ -154,41 +204,66 @@ export class CategoriesComponent implements OnInit {
           children,
           directChildrenCount: children.length,
           totalRecursiveCount: children.reduce((acc, child) => acc + 1 + (child.totalRecursiveCount || 0), 0),
-          isExpanded: item.isExpanded || item.id === forceExpandId
+          isExpanded: this.expandedStates.has(item.id) || item.id === forceExpandId
         };
       });
   }
 
   expandAll(state: boolean): void {
     const toggle = (nodes: CategoryNode[]) => {
-      nodes.forEach(n => { n.isExpanded = state; if (n.children) toggle(n.children); });
+      nodes.forEach(n => {
+        n.isExpanded = state;
+        if (state) {
+          this.expandedStates.add(n.id);
+        } else {
+          this.expandedStates.delete(n.id);
+        }
+        if (n.children) toggle(n.children);
+      });
     };
     toggle(this.categories);
+    this.saveExpandedStates();
     this.cd.markForCheck();
   }
 
   saveNode(node: CategoryNode): void {
-    this.dataHandler.put(`${this.apiEndpoint}/${node.id}`, { name: node.name, parent_id: node.parent_id })
+    // Optimistická aktualizace - okamžitě skrýt edit mode
+    node.isEditing = false;
+    this.cd.markForCheck();
+
+    this.updateData(node.id, { name: node.name, parent_id: node.parent_id } as CategoryNode)
       .subscribe({
         next: () => {
           this.alertDialogService.open('Aktualizováno', 'Změny byly uloženy.', 'success');
-          node.isEditing = false; 
           this.backupNames.delete(node.id);
           this.cd.markForCheck(); 
         },
-        error: (err) => this.alertDialogService.open('Chyba', err.error?.message || 'Uložení selhalo.', 'danger')
+        error: (err) => {
+          // Vrátit do edit módu v případě chyby
+          node.isEditing = true;
+          this.cd.markForCheck();
+          this.alertDialogService.open('Chyba', err.error?.message || 'Uložení selhalo.', 'danger')
+        }
       });
   }
 
   toggleStatus(node: CategoryNode): void {
     const newStatus = !node.is_active;
-    this.dataHandler.put(`${this.apiEndpoint}/${node.id}`, { ...node, is_active: newStatus })
+    // Optimistická aktualizace - okamžitě změnit UI
+    node.is_active = newStatus;
+    this.cd.markForCheck();
+
+    this.updateData(node.id, { ...node, is_active: newStatus })
       .subscribe({
         next: () => {
-          node.is_active = newStatus;
-          this.cd.markForCheck();
+          // UI je už aktuální, stačí jen potvrzení
         },
-        error: () => this.alertDialogService.open('Chyba', 'Změna stavu selhala.', 'danger')
+        error: () => {
+          // Vrátit do původního stavu v případě chyby
+          node.is_active = !newStatus;
+          this.cd.markForCheck();
+          this.alertDialogService.open('Chyba', 'Změna stavu selhala.', 'danger')
+        }
       });
   }
 
@@ -204,15 +279,65 @@ export class CategoriesComponent implements OnInit {
     );
 
     if (confirmed) {
-      this.dataHandler.delete(`${this.apiEndpoint}/${node.id}`).subscribe({
+      // Optimistická aktualizace - okamžitě odstranit z UI
+      this.removeNodeFromTree(node.id);
+      this.expandedStates.delete(node.id);
+      this.cd.markForCheck();
+
+      this.deleteData(node.id).subscribe({
         next: () => {
           this.alertDialogService.open('Smazáno', 'Kategorie byla odstraněna.', 'success');
-          this.loadTree(node.parent_id);
+          this.saveExpandedStates();
         },
         error: (err) => {
+          // Vrátit kompletní strom v případě chyby
           this.alertDialogService.open('Chyba', err.error?.message || 'Smazání selhalo.', 'danger');
+          this.loadTree();
         }
       });
+    }
+  }
+
+  private removeNodeFromTree(nodeId: number): void {
+    const removeRecursive = (nodes: CategoryNode[]): boolean => {
+      for (let i = 0; i < nodes.length; i++) {
+        if (nodes[i].id === nodeId) {
+          nodes.splice(i, 1);
+          return true;
+        }
+        if (nodes[i].children?.length && removeRecursive(nodes[i].children)) {
+          return true;
+        }
+      }
+      return false;
+    };
+    removeRecursive(this.categories);
+  }
+
+  toggleExpanded(node: CategoryNode, event?: Event): void {
+    if (event) event.stopPropagation();
+    if (!node.children?.length) return;
+    
+    node.isExpanded = !node.isExpanded;
+    
+    if (node.isExpanded) {
+      this.expandedStates.add(node.id);
+    } else {
+      this.expandedStates.delete(node.id);
+    }
+    
+    this.saveExpandedStates();
+    this.cd.markForCheck();
+  }
+
+  private saveExpandedStates(): void {
+    localStorage.setItem('categoryExpandedStates', JSON.stringify(Array.from(this.expandedStates)));
+  }
+
+  private loadExpandedStates(): void {
+    const saved = localStorage.getItem('categoryExpandedStates');
+    if (saved) {
+      this.expandedStates = new Set(JSON.parse(saved));
     }
   }
 }
