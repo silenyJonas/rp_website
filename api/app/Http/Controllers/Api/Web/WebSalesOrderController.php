@@ -259,7 +259,7 @@ public function update(Request $request, $id): JsonResponse // 👈 Změna na Re
                 'user_id'              => $user?->id,
                 'context_data'         => json_encode($request->except(['attachment']), JSON_UNESCAPED_UNICODE),
                 'user_id_plain'        => (string)($user?->id ?? '0'),
-                'user_email_plain'     => $user ? $user->user_email : 'system/public'
+                'user_plain'     => $user ? $user->user_email : 'system/public'
             ]);
         } catch (\Exception $e) {
             Log::error("Log error (WebSalesOrder): " . $e->getMessage());

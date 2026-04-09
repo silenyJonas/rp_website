@@ -14,7 +14,7 @@ class WebSupportTicket extends Model
     protected $fillable = [
         'user_id',
         'user_name_plain',
-        'user_email_plain',
+        'user_plain',
         'category',
         'priority',
         'state',

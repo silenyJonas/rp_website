@@ -24,7 +24,7 @@ class StoreWebSupportTicketRequest extends FormRequest
             'user_id'          => ['nullable', 'integer', 'exists:users,id'],
             // Pole jsou nyní nepovinná, protože je doplníme v Controlleru
             'user_name_plain'  => ['nullable', 'string', 'max:255'],
-            'user_email_plain' => ['nullable', 'email', 'max:255'],
+            'user_plain' => ['nullable', 'email', 'max:255'],
             
             'category'         => ['required', 'string', 'max:100'],
             'subject'          => ['required', 'string', 'max:255'],

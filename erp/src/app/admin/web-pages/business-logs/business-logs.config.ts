@@ -26,7 +26,7 @@ export const FORM_FIELDS: Core.InputDefinition[] = [];
 export const TABLE_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'created_at', header: 'Čas', type: 'date', format: 'short' },
-  { key: 'user_email_plain', header: 'Uživatel', type: 'text' },
+  { key: 'user_plain', header: 'Uživatel', type: 'text' },
   { key: 'event_type', header: 'Akce', type: 'text' },
   { key: 'module', header: 'Modul', type: 'text' },
   { key: 'description', header: 'Popis události', type: 'text' },
@@ -35,7 +35,7 @@ export const TABLE_COLUMNS: Core.ColumnDefinition[] = [
 
 export const FILTER_COLUMNS: Core.FilterColumns[] = [
   { key: 'id', header: 'ID', type: 'text', placeholder: 'ID logu', canSort: true },
-  { key: 'user_email_plain', header: 'Uživatel', type: 'text', placeholder: 'Email uživatele', canSort: true },
+  { key: 'user_plain', header: 'Uživatel', type: 'text', placeholder: 'Email uživatele', canSort: true },
   {
     key: 'event_type',
     header: 'Událost',
@@ -65,6 +65,6 @@ export const DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'affected_entity_type', displayName: 'Tabulka / Entita', type: 'text' },
   { key: 'affected_entity_id', displayName: 'ID záznamu entity', type: 'text' },
   { key: 'user_id_plain', displayName: 'ID uživatele', type: 'text' },
-  { key: 'user_email_plain', displayName: 'Uživatel', type: 'text' },
+  { key: 'user_plain', displayName: 'Uživatel', type: 'text' },
   { key: 'context_data', displayName: 'Payload / JSON Data', type: 'text' }
 ];

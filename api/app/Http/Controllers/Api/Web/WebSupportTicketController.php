@@ -30,7 +30,7 @@ class WebSupportTicketController extends Controller
         if ($s = $request->input('search')) {
             $query->where(fn($q) => $q->where('subject', 'like', "%$s%")
                 ->orWhere('description', 'like', "%$s%")
-                ->orWhere('user_email_plain', 'like', "%$s%"));
+                ->orWhere('user_plain', 'like', "%$s%"));
         }
 
         // Přesná shoda
@@ -78,7 +78,7 @@ class WebSupportTicketController extends Controller
             if ($user) {
                 $data['user_id'] = $user->id;
                 $data['user_name_plain'] = $data['user_name_plain'] ?? ($user->full_name ?? $user->user_email);
-                $data['user_email_plain'] = $data['user_email_plain'] ?? $user->user_email;
+                $data['user_plain'] = $data['user_plain'] ?? $user->user_email;
             }
             
             if ($request->hasFile('attachment')) {
@@ -239,7 +239,7 @@ class WebSupportTicketController extends Controller
                 'user_id'              => $user?->id,
                 'context_data'         => json_encode($request->except(['attachment']), JSON_UNESCAPED_UNICODE),
                 'user_id_plain'        => (string)($user?->id ?? '0'),
-                'user_email_plain'     => $user ? $user->user_email : 'system/anonymous'
+                'user_plain'     => $user ? $user->user_email : 'system/anonymous'
             ]);
         } catch (\Exception $e) {
             Log::error("Log error (WebSupportTicket): " . $e->getMessage());

@@ -17,7 +17,7 @@ class WebLog extends Model
     protected $fillable = [
         'origin', 'event_type', 'module', 'description', 
         'affected_entity_type', 'affected_entity_id', 'user_id', 
-        'context_data', 'user_id_plain', 'user_email_plain' // Opraveno z user_login_plain
+        'context_data', 'user_id_plain', 'user_plain' // Opraveno z user_login_plain
     ];
 
     protected $casts = [

@@ -27,7 +27,7 @@ class UpdateWebSupportTicketRequest extends FormRequest
             'subject'          => ['sometimes', 'required', 'string', 'max:255'],
             'description'      => ['sometimes', 'required', 'string'],
             'user_name_plain'  => ['sometimes', 'required', 'string', 'max:255'],
-            'user_email_plain' => ['sometimes', 'required', 'string', 'max:255'],
+            'user_plain' => ['sometimes', 'required', 'string', 'max:255'],
             
             'attachment'       => [
                 'nullable', 

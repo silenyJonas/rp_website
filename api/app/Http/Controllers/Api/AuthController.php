@@ -134,7 +134,7 @@ class AuthController extends Controller
                     'user_agent' => $request->userAgent()
                 ], JSON_UNESCAPED_UNICODE),
                 'user_id_plain'        => (string)($activeUser?->id ?? '0'),
-                'user_email_plain'     => $activeUser?->user_email ?? ($request->email ?? 'Neznámý/Nepřihlášený')
+                'user_plain'     => $activeUser?->user_email ?? ($request->email ?? 'Neznámý/Nepřihlášený')
             ]);
         } catch (\Exception $e) {
             Log::error("Log error (Auth): " . $e->getMessage());

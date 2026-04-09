@@ -11,7 +11,7 @@ class StoreWebLogRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'origin'                 => 'required|string|max:255',
+            'origin'                 => 'nullable|string|max:255',
             'event_type'             => 'required|string|max:50',
             'module'                 => 'required|string|max:100',
             'description'            => 'nullable|string|max:1000',
@@ -19,7 +19,7 @@ class StoreWebLogRequest extends FormRequest
             'affected_entity_id'     => 'nullable|integer',
             'context_data'           => 'nullable|string',
             'user_id_plain'    => 'nullable|string|max:255',
-            'user_email_plain' => 'nullable|string|max:255',
+            'user_plain' => 'nullable|string|max:255',
         ];
     }
 }

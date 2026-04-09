@@ -137,7 +137,7 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
       description: `Uživatel exportoval ${rowCount} záznamů z tabulky: ${this.tableCaption || this.apiEndpoint}.`,
       affected_entity_type: 'collection',
       user_id_plain: this.authService.getUserId()?.toString(),
-      user_email_plain: this.authService.getUserEmail()
+      user_plain: this.authService.getUserEmail()
     };
 
     this.dataHandler.post('business_logs', logData).subscribe({

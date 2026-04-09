@@ -45,7 +45,7 @@ export const SUPPORT_TICKET_FORM_FIELDS: Core.InputDefinition[] = [
     show_in_edit: true, show_in_create: false, 
   },
   {
-    column_name: 'user_email_plain',
+    column_name: 'user_plain',
     label: 'E-mail pro odpověď',
     type: 'text',
     required: false,
@@ -166,7 +166,7 @@ export const SUPPORT_TICKET_DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'state', displayName: 'Stav', type: 'text' },
   { key: 'subject', displayName: 'Předmět', type: 'text' },
   { key: 'user_name_plain', displayName: 'Žadatel', type: 'text' },
-  { key: 'user_email_plain', displayName: 'Email', type: 'text' },
+  { key: 'user_plain', displayName: 'Email', type: 'text' },
   { key: 'category', displayName: 'Kategorie', type: 'text' },
   { key: 'priority', displayName: 'Priorita', type: 'text' },
   { key: 'description', displayName: 'Popis problému', type: 'text' },

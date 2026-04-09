@@ -23,7 +23,7 @@ class WebLogResource extends JsonResource
             'context_data'           => $this->context_data,
             'created_at'             => $this->created_at?->format('Y-m-d H:i:s'),
             'user_id_plain'          => $this->user_id_plain,
-            'user_email_plain'       => $this->user_email_plain,
+            'user_plain'       => $this->user_plain,
         ];
     }
 }

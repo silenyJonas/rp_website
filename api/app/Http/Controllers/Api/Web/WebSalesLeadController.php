@@ -199,7 +199,7 @@ class WebSalesLeadController extends Controller
                 'user_id'              => $user?->id,
                 'context_data'         => json_encode($request->all(), JSON_UNESCAPED_UNICODE),
                 'user_id_plain'        => (string)($user?->id ?? '0'),
-                'user_email_plain'     => $user?->user_email ?? 'System/Automated'
+                'user_plain'     => $user?->user_email ?? 'System/Automated'
             ]);
         } catch (\Exception $e) {
             Log::error("Log error (WebSalesLead): " . $e->getMessage());

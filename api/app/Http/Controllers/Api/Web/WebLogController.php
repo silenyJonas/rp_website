@@ -40,7 +40,7 @@ class WebLogController extends Controller
             $query->where("$table.module", $request->module);
         }
 
-        $textFields = ['origin', 'description', 'affected_entity_type', 'user_id_plain', 'user_email_plain'];
+        $textFields = ['origin', 'description', 'affected_entity_type', 'user_id_plain', 'user_plain'];
         foreach ($textFields as $field) {
             if ($request->filled($field)) {
                 $query->where("$table.$field", 'like', '%' . $request->input($field) . '%');
@@ -83,6 +83,21 @@ class WebLogController extends Controller
         return response()->json(new WebLogResource($log));
     }
 
+    // public function store(StoreWebLogRequest $request): JsonResponse
+    // {
+    //     try {
+    //         $user = $request->user();
+    //         $logData = array_merge($request->validated(), [
+    //             'user_id' => $user?->id,
+    //             'created_at' => now(), 
+    //         ]);
+    //         $log = WebLog::create($logData);
+    //         return response()->json(new WebLogResource($log), 201);
+    //     } catch (\Exception $e) {
+    //         Log::error('Chyba při vytváření business logu: ' . $e->getMessage());
+    //         return response()->json(['message' => 'Chyba serveru'], 500);
+    //     }
+    // }
     public function store(StoreWebLogRequest $request): JsonResponse
     {
         try {
@@ -90,6 +105,8 @@ class WebLogController extends Controller
             $logData = array_merge($request->validated(), [
                 'user_id' => $user?->id,
                 'created_at' => now(), 
+                // Pokud Angular neposlal origin, vezmi IP adresu z requestu
+                'origin' => $request->input('origin') ?? $request->ip(),
             ]);
             $log = WebLog::create($logData);
             return response()->json(new WebLogResource($log), 201);

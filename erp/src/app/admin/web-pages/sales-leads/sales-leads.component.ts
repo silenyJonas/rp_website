@@ -17,8 +17,9 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
   @ViewChild('activeTable') activeTable!: TableBuilderComponent;
 
   override apiEndpoint: string = 'web/sales_leads';
-
-  private logEndpoint: string = 'web/logs'
+  // Endpoint pro logy je definován zde pro metodu postData, 
+  // kterou využijeme v logAction
+  private logEndpoint: string = 'web/logs';
 
   buttons = Config.SALES_LEAD_BUTTONS;
   formFields = Config.SALES_LEAD_FORM_FIELDS;
@@ -83,9 +84,11 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
   }
 
   override ngOnInit(): void {
-  super.ngOnInit();
-  this.initWithAuthCheck(this.router);
-}
+    // BaseDataComponent ngOnInit inicializuje destroy$ Subject
+    super.ngOnInit();
+    // Automaticky zavolá refreshData() po ověření přihlášení
+    this.initWithAuthCheck(this.router);
+  }
 
   handleGenerateFormLink(item: any): void {
     const url = `${window.location.origin}/order_form/lead_id=${item.id}`;
@@ -99,16 +102,19 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
 
   private logAction(item: any): void {
     const logData = {
-      origin: 'SalesLeads',
       event_type: 'LINK_GENERATED',
       module: 'SalesLead',
       description: `Generován odkaz pro lead ID: ${item.id} (Email: ${item.contact_email || 'N/A'})`,
       affected_entity_type: 'sales_lead',
       affected_entity_id: item.id,
       user_id_plain: this.authService.getUserId()?.toString(),
-      user_email_plain: this.authService.getUserEmail()
+      user_plain: this.authService.getUserEmail(),
+      context_data: JSON.stringify({ component: 'SalesLeads' }) 
     };
-    this.dataHandler.post(this.logEndpoint, logData).subscribe();
+
+    this.dataHandler.post(this.logEndpoint, logData)
+      .pipe(Core.takeUntil(this.destroy$))
+      .subscribe();
   }
 
   override refreshData(): void {
@@ -122,7 +128,7 @@ export class SalesLeadsComponent extends BaseDataComponent<any> implements Core.
   }
 
   clearFilters(): void {
-    this.filters = { sort_by: 'id', sort_direction: 'desc' };
+    this.filters = { ...this.defaultFilters };
     this.refreshData();
   }
 

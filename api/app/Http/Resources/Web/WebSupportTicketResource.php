@@ -13,7 +13,7 @@ class WebSupportTicketResource extends JsonResource
             'id'                => $this->id,
             'user_id'           => $this->user_id, // Opraveno
             'user_name_plain'   => $this->user_name_plain,
-            'user_email_plain'  => $this->user_email_plain,
+            'user_plain'        => $this->user_plain,
             'category'          => $this->category,
             'priority'          => $this->priority,
             'state'             => $this->state,
