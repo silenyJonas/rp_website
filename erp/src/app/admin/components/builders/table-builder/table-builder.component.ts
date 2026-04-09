@@ -55,7 +55,8 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
       case 'date':
         return value ? (new DatePipe('cs-CZ')).transform(value, column.format || 'd.M.yyyy') : '';
       case 'boolean':
-        return value ? 'Ano' : 'Ne';
+        // value == true pokryje true, "true", 1 i "1"
+        return (value == true || value === 'true') ? 'Ano' : 'Ne';
       case 'image':
         return value ? `${this.uploadsBaseUrl}${value}` : '';
       default:

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 28, 2026 at 09:02 AM
+-- Generation Time: Apr 09, 2026 at 10:19 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -250,7 +250,7 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (87, 'App\\Models\\User', 59, 'access-token', 'c58f7b40a4862562dc033216ec4ba476336d5cc77af42b57e8a6721e0c735545', '[\"*\"]', '2026-02-15 22:41:38', '2026-02-15 23:11:38', '2026-02-15 22:41:38', '2026-02-15 22:41:38'),
 (134, 'App\\Models\\User', 62, 'access-token', '696da6ddfce759f43fcd6c430016ffff654238b4bd746c50642599a4b68a1cd7', '[\"*\"]', '2026-02-18 02:12:13', '2026-02-18 03:12:09', '2026-02-18 02:12:09', '2026-02-18 02:12:13'),
 (172, 'App\\Models\\User', 77, 'access-token', 'f783051fdb88711a863e9ccd4e5176a5a3f2a3606204c816754c3227d07698f8', '[\"*\"]', '2026-02-25 00:08:53', '2026-02-25 00:42:29', '2026-02-24 23:42:29', '2026-02-25 00:08:53'),
-(250, 'App\\Models\\User', 25, 'access-token', '06f283cdbf908dc28eed07bdf7a841a0ea2158933bc087dcf06d43b1925f7fc4', '[\"*\"]', '2026-03-28 08:01:57', '2026-03-28 08:10:00', '2026-03-28 07:10:00', '2026-03-28 08:01:57');
+(272, 'App\\Models\\User', 25, 'access-token', 'c50dbb0923c5b31e6c6c746c51ea45fcaa2c2b62a558e2aac8e9286385db8943', '[\"*\"]', '2026-04-09 20:18:47', '2026-04-09 21:14:20', '2026-04-09 20:14:20', '2026-04-09 20:18:47');
 
 -- --------------------------------------------------------
 
@@ -272,7 +272,7 @@ CREATE TABLE `refresh_tokens` (
 --
 
 INSERT INTO `refresh_tokens` (`id`, `user_id`, `token`, `expires_at`, `created_at`, `updated_at`) VALUES
-(249, 25, 'd8d7fb39a6732a069c7ae0b6585290f1c28aa5eb0d2cbebc0b86dd5127290d0a', '2026-04-04 06:10:00', '2026-03-28 07:10:00', '2026-03-28 07:10:00');
+(271, 25, 'a32f1f7ecf050b5374564bb6c0004573e9f559b4179dbce3e384644265c1301b', '2026-04-16 20:14:20', '2026-04-09 20:14:20', '2026-04-09 20:14:20');
 
 -- --------------------------------------------------------
 
@@ -305,8 +305,7 @@ CREATE TABLE `shop_categories` (
   `is_active` tinyint(1) DEFAULT 1,
   `sort_order` int(11) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `deleted_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -631,7 +630,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `user_email`, `contact_email`, `full_name`, `birth_date`, `personal_id_num`, `address`, `bank_account`, `health_insurance`, `commission_rate`, `dpp_hours_spent`, `has_tax_declaration`, `phone_number`, `internal_note`, `user_password_hash`, `user_password_salt`, `last_login_at`, `created_at`, `updated_at`, `deleted_at`, `is_deleted`) VALUES
-(25, 'joncl', 'jonasbucina@rpsw.cz', 'Jonáš Bučina', NULL, NULL, NULL, NULL, NULL, 10, 0, 0, NULL, NULL, '$2y$12$rV1ILe7YeW1L1XfWb5DrfuiCYTC.1FZsIU4wtNmA95GaUNwXAtYoa', NULL, '2026-03-27 19:37:27', '2026-02-14 08:12:31', '2026-03-27 19:37:27', NULL, 0),
+(25, 'joncl', 'jonasbucina@rpsw.cz', 'Jonáš Bučina', NULL, NULL, NULL, NULL, NULL, 10, 0, 0, NULL, NULL, '$2y$12$rV1ILe7YeW1L1XfWb5DrfuiCYTC.1FZsIU4wtNmA95GaUNwXAtYoa', NULL, '2026-04-06 23:46:37', '2026-02-14 08:12:31', '2026-04-06 23:46:37', NULL, 0),
 (30, 'prime_admin', NULL, 'Prime Admin', NULL, NULL, NULL, NULL, NULL, 10, 0, 0, NULL, NULL, '$2y$12$NEiDrqVCChulf9S/EUPIpeOHScIM0zwswPTxIFamRDrY4XajgHQOe', NULL, NULL, '2026-02-14 08:12:31', '2026-02-14 08:12:31', NULL, 0),
 (34, 'lindicka', 'lindicka@mazliva.cz', 'Lindička Trýbíčková Mazliva', NULL, NULL, NULL, NULL, NULL, 10, 0, 0, NULL, NULL, '$2y$12$xbMrIDwkEj.ZOnsLe7Glr..2qbca1i7XnSclNnGILENFKlL.Kw9.W', NULL, '2026-02-15 23:39:56', '2026-02-14 08:12:31', '2026-02-20 23:59:34', NULL, 0);
 
@@ -695,7 +694,7 @@ CREATE TABLE `web_logs` (
   `user_id` int(10) UNSIGNED DEFAULT NULL,
   `context_data` text DEFAULT NULL,
   `user_id_plain` varchar(255) DEFAULT NULL,
-  `user_email_plain` varchar(255) DEFAULT NULL
+  `user_plain` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -801,7 +800,7 @@ CREATE TABLE `web_support_tickets` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED DEFAULT NULL,
   `user_name_plain` varchar(255) NOT NULL,
-  `user_email_plain` varchar(255) NOT NULL,
+  `user_plain` varchar(255) NOT NULL,
   `category` varchar(100) NOT NULL,
   `priority` varchar(50) DEFAULT 'medium',
   `state` varchar(50) DEFAULT 'new',
@@ -812,6 +811,14 @@ CREATE TABLE `web_support_tickets` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `web_support_tickets`
+--
+
+INSERT INTO `web_support_tickets` (`id`, `user_id`, `user_name_plain`, `user_plain`, `category`, `priority`, `state`, `subject`, `description`, `attachment_path`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(2, 25, 'Jonáš Bučina', 'joncl', 'it', 'low', 'new', 'ams,nda,smd', 'asdsd', NULL, '2026-04-07 21:36:00', '2026-04-09 20:18:45', '2026-04-09 20:18:45'),
+(3, 25, 'Jonáš Bučina', 'joncl', 'it', 'low', 'new', 'asmdnasm,d', 'asdasd', NULL, '2026-04-09 19:47:05', '2026-04-09 20:18:41', '2026-04-09 20:18:41');
 
 -- --------------------------------------------------------
 
@@ -901,8 +908,9 @@ ALTER TABLE `sessions`
 --
 ALTER TABLE `shop_categories`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `slug` (`slug`),
-  ADD KEY `fk_shop_categories_parent` (`parent_id`);
+  ADD UNIQUE KEY `unique_slug_per_level` (`slug`,`parent_id`),
+  ADD KEY `idx_shop_categories_parent` (`parent_id`),
+  ADD KEY `idx_shop_categories_active_sort` (`is_active`,`sort_order`);
 
 --
 -- Indexes for table `shop_coupons`
@@ -1092,19 +1100,19 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=251;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=273;
 
 --
 -- AUTO_INCREMENT for table `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=250;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=272;
 
 --
 -- AUTO_INCREMENT for table `shop_categories`
 --
 ALTER TABLE `shop_categories`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `shop_coupons`
@@ -1212,19 +1220,19 @@ ALTER TABLE `web_raw_request_commissions`
 -- AUTO_INCREMENT for table `web_sales_leads`
 --
 ALTER TABLE `web_sales_leads`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `web_sales_orders`
 --
 ALTER TABLE `web_sales_orders`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `web_support_tickets`
 --
 ALTER TABLE `web_support_tickets`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `web_system_logs`
@@ -1253,7 +1261,7 @@ ALTER TABLE `refresh_tokens`
 -- Constraints for table `shop_categories`
 --
 ALTER TABLE `shop_categories`
-  ADD CONSTRAINT `fk_shop_categories_parent` FOREIGN KEY (`parent_id`) REFERENCES `shop_categories` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `fk_shop_categories_parent` FOREIGN KEY (`parent_id`) REFERENCES `shop_categories` (`id`);
 
 --
 -- Constraints for table `shop_customers`

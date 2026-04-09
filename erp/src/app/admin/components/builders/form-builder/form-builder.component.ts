@@ -1,9 +1,8 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm, FormControl } from '@angular/forms';
-import { AlertDialogService } from '../../../../core/services/alert-dialog.service'; // Import service
+import { AlertDialogService } from '../../../../core/services/alert-dialog.service';
 import { InputDefinition } from '../../../../shared/interfaces/input-definiton';
-
 
 @Component({
   selector: 'app-form-builder',
@@ -30,7 +29,7 @@ export class FormBuilderComponent implements OnInit, OnDestroy {
 
   constructor(
     private cd: ChangeDetectorRef,
-    private alertDialogService: AlertDialogService // Inject service
+    private alertDialogService: AlertDialogService
   ) {}
 
   ngOnInit(): void {
@@ -38,18 +37,38 @@ export class FormBuilderComponent implements OnInit, OnDestroy {
 
     if (this.formDataToEdit) {
       this.formData = { ...this.formDataToEdit };
-      this.visibleInputDefinitions = this.inputDefinitions.filter(input =>
-        input.show_in_edit !== false
-      );
+      this.visibleInputDefinitions = this.inputDefinitions.filter(input => input.show_in_edit !== false);
+      
+      // Čistá normalizace dat po načtení
+      this.normalizeSelectValues();
     } else {
       this.formData = {};
-      this.visibleInputDefinitions = this.inputDefinitions.filter(input =>
-        input.show_in_create !== false
-      );
+      this.visibleInputDefinitions = this.inputDefinitions.filter(input => input.show_in_create !== false);
       this.visibleInputDefinitions.forEach(input => {
-        this.formData[input.column_name] = input.defaultValue || '';
+        this.formData[input.column_name] = input.defaultValue ?? '';
       });
     }
+  }
+
+  /**
+   * Zajišťuje, aby hodnoty v formData odpovídaly typům v options (string vs number/boolean).
+   * Prochází pouze viditelné selecty a mapuje existující hodnoty na stringy, pokud je select tak definován.
+   */
+  private normalizeSelectValues(): void {
+    this.visibleInputDefinitions.forEach(input => {
+      if (input.type === 'select' && input.options) {
+        const currentValue = this.formData[input.column_name];
+        
+        // Převedeme boolean/number na string pouze pokud daný string existuje v options
+        // To zabrání rozbití formulářů, které pracují s ID (čísly)
+        const valueAsString = String(currentValue === true ? '1' : currentValue === false ? '0' : currentValue);
+        const optionExists = input.options.some(opt => String(opt.value) === valueAsString);
+
+        if (optionExists) {
+          this.formData[input.column_name] = valueAsString;
+        }
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -98,12 +117,10 @@ export class FormBuilderComponent implements OnInit, OnDestroy {
     event?.preventDefault();
     if (this.isSubmitting) return;
 
-    // Označit pole jako dotčená pro zobrazení chyb
     Object.keys(form.controls).forEach(field => {
       form.controls[field]?.markAsTouched();
     });
 
-    // Kontrola potvrzovacích polí
     this.visibleInputDefinitions.forEach(input => {
       if (input.type === 'confirm-password') {
         this.checkPasswordMatch(input.column_name);
@@ -135,11 +152,8 @@ export class FormBuilderComponent implements OnInit, OnDestroy {
         payload = { ...this.formData };
       }
 
-      // Emitujeme data rodiči. 
-      // Předpokládáme, že rodič zavře formulář při úspěchu.
       this.formSubmitted.emit(payload);
 
-      // Zobrazíme informační popup o odeslání (podobně jako u exportu v tabulce)
       const actionText = this.formDataToEdit ? 'aktualizován' : 'vytvořen';
       this.alertDialogService.open('Informace', `Záznam byl úspěšně ${actionText}.`, 'success');
       

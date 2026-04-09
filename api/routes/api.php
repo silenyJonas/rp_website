@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\Shop\ShopLogController;
 use App\Http\Controllers\Api\Shop\ShopSupplierController;
 use App\Http\Controllers\Api\Shop\ShopCouponController;
 use App\Http\Controllers\Api\Shop\ShopCategoryController;
+use App\Http\Controllers\Api\Shop\ShopShippingMethodController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,7 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     */
     Route::prefix('core')->group(function () {
         
-        // Users (přesunuto sem)
+        // Users
         Route::prefix('users')->group(function () {
             Route::post('/', [UserController::class, 'store']);
             Route::get('/{id}/details', [UserController::class, 'show']);
@@ -127,9 +128,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('categories')->group(function () {
             Route::get('/{id}/details', [ShopCategoryController::class, 'show']);
         });
-            Route::apiResource('categories', ShopCategoryController::class)
-                ->parameters(['categories' => 'id']);
+        Route::apiResource('categories', ShopCategoryController::class)
+            ->parameters(['categories' => 'id']);
+
+        // Shipping Methods (Doprava)
+        Route::prefix('shipping_methods')->group(function () {
+            Route::get('/{id}/details', [ShopShippingMethodController::class, 'show']);
+            Route::post('/{id}/restore', [ShopShippingMethodController::class, 'restore']);
+            Route::delete('/force-delete-all', [ShopShippingMethodController::class, 'forceDeleteAllTrashed']);
         });
+        Route::apiResource('shipping_methods', ShopShippingMethodController::class)
+            ->parameters(['shipping_methods' => 'id']);
+    });
 
     /*
     |--------------------------------------------------------------------------
