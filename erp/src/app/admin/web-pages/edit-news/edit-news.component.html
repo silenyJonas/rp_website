@@ -27,6 +27,7 @@
           [data]="data"
           [columns]="newsColumns"
           [currentFilters]="filters"
+          [inputDefinitions]="formFields"
           [isFullWidth]="isTableFullWidth"
           [tableCaption]="'Seznam aktualit a novinek'"
           [apiEndpoint]="apiEndpoint"
@@ -66,6 +67,7 @@
 </app-form-builder>
 <app-details-builder 
   *ngIf="showDetails" 
+  [inputDefinitions]="formFields"
   [itemData]="selectedItemForDetails"
   [itemDetailColumns]="detailsColumns"
   (closeDetails)="handleCloseDetails()">

@@ -30,6 +30,7 @@
           [data]="data"
           [columns]="couponColumns"
           [currentFilters]="filters"
+          [inputDefinitions]="formFields"
           [isFullWidth]="isTableFullWidth"
           [tableCaption]="'Seznam aktivních kupónů'"
           [apiEndpoint]="apiEndpoint"
@@ -73,6 +74,7 @@
 
 <app-details-builder 
   *ngIf="showDetails" 
+  [inputDefinitions]="formFields"
   [itemDetailColumns]="detailsColumns"
   [itemData]="selectedItemForDetails"
   (closeDetails)="handleCloseDetails()">

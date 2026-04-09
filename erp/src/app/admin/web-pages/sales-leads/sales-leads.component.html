@@ -27,6 +27,7 @@
           [currentFilters]="filters"
           [data]="data"
           [columns]="salesLeadColumns"
+          [inputDefinitions]="formFields"
           [isFullWidth]="isTableFullWidth"
           [tableCaption]="'Seznam obchodních příležitostí'"
           [apiEndpoint]="apiEndpoint"
@@ -69,5 +70,6 @@
   *ngIf="showDetails" 
   [itemDetailColumns]="detailsColumns"
   [itemData]="selectedItemForDetails"
+  [inputDefinitions]="formFields"
   (closeDetails)="handleCloseDetails()">
 </app-details-builder>

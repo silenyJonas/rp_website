@@ -28,6 +28,7 @@
         <app-table-builder #activeTable *ngIf="!showTrashTable"
           [buttons]="buttons"
           [data]="data"
+          [inputDefinitions]="formFields"
           [columns]="shippingColumns"
           [currentFilters]="filters"
           [isFullWidth]="isTableFullWidth"
@@ -75,5 +76,6 @@
   *ngIf="showDetails" 
   [itemDetailColumns]="detailsColumns"
   [itemData]="selectedItemForDetails"
+  [inputDefinitions]="formFields"
   (closeDetails)="handleCloseDetails()">
 </app-details-builder>

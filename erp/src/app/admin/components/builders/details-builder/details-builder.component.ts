@@ -1,7 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
 import { ItemDetailsColumns } from '../../../../shared/interfaces/item-details-columns';
+import { InputDefinition } from '../../../../shared/interfaces/input-definiton';
 import { environment } from '../../../../../environments/environment';
+
 @Component({
   selector: 'app-details-builder',
   standalone: true,
@@ -13,6 +15,7 @@ import { environment } from '../../../../../environments/environment';
 export class DetailsBuilderComponent implements OnInit, OnDestroy {
   @Input() itemData: any;
   @Input() itemDetailColumns: ItemDetailsColumns[] = [];
+  @Input() inputDefinitions: InputDefinition[] = []; // Nový input pro překlady
   @Output() closeDetails = new EventEmitter<void>();
 
   constructor(
@@ -50,7 +53,6 @@ export class DetailsBuilderComponent implements OnInit, OnDestroy {
       window.open(fullUrl, '_blank');
       return;
     }
-    
     const storagePath = pathParts[1];
     const downloadUrl = `${environment.base_api_url}/download-file/${storagePath}`;
     window.location.href = downloadUrl;
@@ -67,8 +69,14 @@ export class DetailsBuilderComponent implements OnInit, OnDestroy {
             const date = new Date(value);
             return isNaN(date.getTime()) ? value : this.datePipe.transform(date, columnDef.format || 'dd.MM.yyyy HH:mm', 'cs-CZ');
         case 'boolean':
-            return value ? 'Ano' : 'Ne';
+            return (value == true || value == 1) ? 'Ano' : 'Ne';
         default:
+            // PŘIDÁNO: Překlad technického kódu na label v Detailu
+            const fieldDef = this.inputDefinitions.find(i => i.column_name === columnDef.key);
+            if (fieldDef?.options) {
+              const option = fieldDef.options.find(opt => String(opt.value) === String(value));
+              return option ? option.label : value;
+            }
             return value;
     }
   }
@@ -81,7 +89,6 @@ export class DetailsBuilderComponent implements OnInit, OnDestroy {
       if (current === null || current === undefined) return '';
       current = current[key];
     }
-    console.log(current);
     return current;
   }
 }

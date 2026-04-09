@@ -27,6 +27,7 @@
           [data]="data"
           [columns]="userRequestColumns"
           [currentFilters]="filters"
+          [inputDefinitions]="formFields"
           [isFullWidth]="isTableFullWidth"
           [tableCaption]="'Seznam aktivních požadavků'"
           [apiEndpoint]="apiEndpoint"
@@ -67,6 +68,7 @@
 <app-details-builder 
   *ngIf="showDetails" 
   [itemDetailColumns]="detailsColumns"
+  [inputDefinitions]="formFields"
   [itemData]="selectedItemForDetails"
   (closeDetails)="handleCloseDetails()">
 </app-details-builder>

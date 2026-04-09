@@ -29,6 +29,7 @@
           [buttons]="buttons"
           [data]="data"
           [currentFilters]="filters"
+          [inputDefinitions]="formFields"
           [columns]="columns"
           [isFullWidth]="isTableFullWidth"
           [tableCaption]="'Seznam aktivních realizací'"
@@ -70,5 +71,6 @@
   *ngIf="showDetails" 
   [itemDetailColumns]="detailsColumns"
   [itemData]="selectedItemForDetails"
+  [inputDefinitions]="formFields"
   (closeDetails)="showDetails = false">
 </app-details-builder>

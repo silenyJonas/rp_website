@@ -30,6 +30,7 @@
           [data]="data"
           [currentFilters]="filters"
           [columns]="columns"
+          [inputDefinitions]="formFields"
           [isFullWidth]="isTableFullWidth"
           [tableCaption]="'Seznam aktivních uchazečů'"
           [apiEndpoint]="apiEndpoint"
@@ -70,5 +71,6 @@
   *ngIf="showDetails" 
   [itemDetailColumns]="detailsColumns"
   [itemData]="selectedItemForDetails"
+  [inputDefinitions]="formFields"
   (closeDetails)="showDetails = false">
 </app-details-builder>

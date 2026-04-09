@@ -28,6 +28,7 @@
           [currentFilters]="filters"
           [columns]="columns"
           [isFullWidth]="isTableFullWidth"
+          [inputDefinitions]="formFields"
           [tableCaption]="'Seznam Support Ticketů'"
           [apiEndpoint]="apiEndpoint"
           (itemDeleted)="refreshData()"
@@ -67,5 +68,6 @@
   *ngIf="showDetails" 
   [itemDetailColumns]="detailsColumns" 
   [itemData]="selectedItemForDetails" 
+  [inputDefinitions]="formFields"
   (closeDetails)="showDetails = false">
 </app-details-builder>

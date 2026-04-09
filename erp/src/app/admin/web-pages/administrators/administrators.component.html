@@ -29,6 +29,7 @@
           [data]="data"
           [tableCaption]="'Seznam Administrátorksých účtů'"
           [columns]="tableColumns"
+          [inputDefinitions]="formFields"
           [isFullWidth]="isTableFullWidth"
           [apiEndpoint]="apiEndpoint"
           (itemDeleted)="handleItemDeleted()"
@@ -69,6 +70,7 @@
 
 <app-form-builder
   *ngIf="showResetPasswordForm"
+  [inputDefinitions]="formFields"
   [headerText]="resetPasswordTitle"
   [inputDefinitions]="resetPasswordFormFields"
   [formDataToEdit]="selectedItemForEdit"

@@ -7,6 +7,7 @@ import { ColumnDefinition } from '../../../../shared/interfaces/generic-form-col
 import { BaseDataComponent } from '../../base-data/base-data.component';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
 import { TableButtons } from '../../../../shared/interfaces/table-buttons';
+import { InputDefinition } from '../../../../shared/interfaces/input-definiton';
 
 @Component({
   selector: 'app-table-builder',
@@ -19,6 +20,7 @@ import { TableButtons } from '../../../../shared/interfaces/table-buttons';
 export class TableBuilderComponent extends BaseDataComponent<any> implements Core.OnInit, Core.OnChanges {
   @Input() override data: any[] = [];
   @Input('columns') columnDefinitions: ColumnDefinition[] = [];
+  @Input() inputDefinitions: InputDefinition[] = []; // Nový input pro překlady
   @Input() tableCaption?: string;
   @Input() override apiEndpoint: string = '';
   @Input() uploadsBaseUrl: string = '';
@@ -49,17 +51,23 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
   getCellValue(item: any, column: ColumnDefinition): any {
     const keys = column.key.split('.');
     const value = keys.reduce((obj, key) => obj?.[key], item);
+    
     switch (column.type) {
       case 'currency':
         return value ? (new CurrencyPipe('cs-CZ')).transform(value, 'CZK', 'symbol-narrow', '1.2-2') : '';
       case 'date':
         return value ? (new DatePipe('cs-CZ')).transform(value, column.format || 'd.M.yyyy') : '';
       case 'boolean':
-        // value == true pokryje true, "true", 1 i "1"
-        return (value == true || value === 'true') ? 'Ano' : 'Ne';
+        return (value == true || value === 'true' || value == 1) ? 'Ano' : 'Ne';
       case 'image':
         return value ? `${this.uploadsBaseUrl}${value}` : '';
       default:
+        // Pokus o automatický překlad z dropdownu (selectu)
+        const fieldDef = this.inputDefinitions.find(i => i.column_name === column.key);
+        if (fieldDef?.options) {
+          const option = fieldDef.options.find(opt => String(opt.value) === String(value));
+          return option ? option.label : value;
+        }
         return value;
     }
   }
@@ -101,24 +109,19 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
   async exportToCSV() {
     try {
       this.cd.markForCheck();
-      
       const responseData = await firstValueFrom(this.loadDataAsCollection());
       const allData: any[] = Array.isArray(responseData) ? responseData : [];
-      
       if (allData.length > 0) {
         let csv = this.columnDefinitions.map(col => col.header || col.key).join(';') + '\n';
         allData.forEach(item => {
           csv += this.columnDefinitions.map(col => `"${String(this.getCellValue(item, col) || '').replace(/"/g, '""')}"`).join(';') + '\n';
         });
-
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = `${this.tableCaption || 'export'}.csv`;
         link.click();
-
         this.logExportActivity(allData.length);
-
       } else {
         this.alertDialogService.open('Export', 'Žádná data k exportu.', 'warning');
       }
@@ -140,7 +143,6 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
       user_id_plain: this.authService.getUserId()?.toString(),
       user_plain: this.authService.getUserEmail()
     };
-
     this.dataHandler.post('business_logs', logData).subscribe({
       error: (err) => console.error('Nepodařilo se zalogovat export:', err)
     });
