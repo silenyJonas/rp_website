@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\Shop\ShopSupplierController;
 use App\Http\Controllers\Api\Shop\ShopCouponController;
 use App\Http\Controllers\Api\Shop\ShopCategoryController;
 use App\Http\Controllers\Api\Shop\ShopShippingMethodController;
+use App\Http\Controllers\Api\Shop\ShopPaymentMethodController; // 💳 Přidán import
 
 /*
 |--------------------------------------------------------------------------
@@ -62,7 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | ⚙️ SECTION: CORE (Sjednocení uživatelů a rolí pod jeden prefix)
+    | ⚙️ SECTION: CORE
     |--------------------------------------------------------------------------
     */
     Route::prefix('core')->group(function () {
@@ -88,7 +89,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('roles', CoreRoleController::class)
             ->except(['store', 'create', 'edit'])
             ->parameters(['roles' => 'id']);
-        
     });
 
 
@@ -139,6 +139,15 @@ Route::middleware('auth:sanctum')->group(function () {
         });
         Route::apiResource('shipping_methods', ShopShippingMethodController::class)
             ->parameters(['shipping_methods' => 'id']);
+
+        // Payment Methods (Platba) 💳
+        Route::prefix('payment_methods')->group(function () {
+            Route::get('/{id}/details', [ShopPaymentMethodController::class, 'show']);
+            Route::post('/{id}/restore', [ShopPaymentMethodController::class, 'restore']);
+            Route::delete('/force-delete-all', [ShopPaymentMethodController::class, 'forceDeleteAllTrashed']);
+        });
+        Route::apiResource('payment_methods', ShopPaymentMethodController::class)
+            ->parameters(['payment_methods' => 'id']);
     });
 
     /*

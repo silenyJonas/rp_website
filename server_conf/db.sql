@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 09, 2026 at 10:51 PM
+-- Generation Time: Apr 09, 2026 at 11:27 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -250,7 +250,7 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (87, 'App\\Models\\User', 59, 'access-token', 'c58f7b40a4862562dc033216ec4ba476336d5cc77af42b57e8a6721e0c735545', '[\"*\"]', '2026-02-15 22:41:38', '2026-02-15 23:11:38', '2026-02-15 22:41:38', '2026-02-15 22:41:38'),
 (134, 'App\\Models\\User', 62, 'access-token', '696da6ddfce759f43fcd6c430016ffff654238b4bd746c50642599a4b68a1cd7', '[\"*\"]', '2026-02-18 02:12:13', '2026-02-18 03:12:09', '2026-02-18 02:12:09', '2026-02-18 02:12:13'),
 (172, 'App\\Models\\User', 77, 'access-token', 'f783051fdb88711a863e9ccd4e5176a5a3f2a3606204c816754c3227d07698f8', '[\"*\"]', '2026-02-25 00:08:53', '2026-02-25 00:42:29', '2026-02-24 23:42:29', '2026-02-25 00:08:53'),
-(273, 'App\\Models\\User', 25, 'access-token', '7d360f5f4102e01fca07a91bf9bc0340702b53cfb3f1faaf931626c8b1724412', '[\"*\"]', '2026-04-09 20:50:17', '2026-04-09 21:34:20', '2026-04-09 20:34:20', '2026-04-09 20:50:17');
+(273, 'App\\Models\\User', 25, 'access-token', '7d360f5f4102e01fca07a91bf9bc0340702b53cfb3f1faaf931626c8b1724412', '[\"*\"]', '2026-04-09 21:26:17', '2026-04-09 21:34:20', '2026-04-09 20:34:20', '2026-04-09 21:26:17');
 
 -- --------------------------------------------------------
 
@@ -379,6 +379,20 @@ CREATE TABLE `shop_logs` (
   `user_plain` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `shop_logs`
+--
+
+INSERT INTO `shop_logs` (`id`, `created_at`, `origin`, `event_type`, `module`, `description`, `affected_entity_type`, `affected_entity_id`, `user_id`, `context_data`, `user_id_plain`, `user_plain`) VALUES
+(1, '2026-04-09 22:52:57', '127.0.0.1', 'update', 'ShopShippingMethod', 'Aktualizace dopravy: Standardní doprava', 'ShopShippingMethod', 1, 25, '\"{\\\"id\\\":1,\\\"code\\\":\\\"standard\\\",\\\"name\\\":\\\"Standardn\\u00ed doprava\\\",\\\"description\\\":null,\\\"shipping_type\\\":\\\"address\\\",\\\"base_price\\\":\\\"100.00\\\",\\\"free_shipping_threshold\\\":null,\\\"max_weight\\\":null,\\\"requires_pickup_point\\\":false,\\\"tracking_url\\\":null,\\\"logo_path\\\":null,\\\"delivery_days_min\\\":3,\\\"delivery_days_max\\\":5,\\\"is_active\\\":\\\"1\\\",\\\"sort_order\\\":1,\\\"created_at\\\":\\\"2026-03-24T18:14:02+01:00\\\",\\\"updated_at\\\":\\\"2026-03-24T18:14:02+01:00\\\",\\\"deleted_at\\\":null}\"', '25', 'Jonáš Bučina'),
+(2, '2026-04-09 22:59:54', '127.0.0.1', 'update', 'ShopShippingMethod', 'Aktualizace dopravy: Standardní doprava', 'ShopShippingMethod', 1, 25, '\"{\\\"id\\\":1,\\\"code\\\":\\\"standard\\\",\\\"name\\\":\\\"Standardn\\u00ed doprava\\\",\\\"description\\\":null,\\\"shipping_type\\\":\\\"address\\\",\\\"base_price\\\":\\\"100.00\\\",\\\"allows_cod\\\":\\\"0\\\",\\\"cod_price\\\":\\\"0.00\\\",\\\"free_shipping_threshold\\\":null,\\\"max_weight\\\":null,\\\"requires_pickup_point\\\":false,\\\"tracking_url\\\":null,\\\"logo_path\\\":null,\\\"delivery_days_min\\\":3,\\\"delivery_days_max\\\":5,\\\"is_active\\\":true,\\\"sort_order\\\":1,\\\"created_at\\\":\\\"2026-03-24T18:14:02+01:00\\\",\\\"updated_at\\\":\\\"2026-03-24T18:14:02+01:00\\\",\\\"deleted_at\\\":null}\"', '25', 'Jonáš Bučina'),
+(3, '2026-04-09 23:01:44', '127.0.0.1', 'create', 'ShopShippingMethod', 'Vytvořen způsob dopravy: Fonetický Express', 'ShopShippingMethod', 5, 25, '\"{\\\"code\\\":\\\"foneticke_sluzby\\\",\\\"name\\\":\\\"Fonetick\\u00fd Express\\\",\\\"shipping_type\\\":\\\"address\\\",\\\"base_price\\\":\\\"199\\\",\\\"allows_cod\\\":\\\"0\\\",\\\"cod_price\\\":\\\"0\\\",\\\"free_shipping_threshold\\\":\\\"1999\\\",\\\"max_weight\\\":\\\"10\\\",\\\"requires_pickup_point\\\":\\\"0\\\",\\\"delivery_days_min\\\":\\\"5\\\",\\\"delivery_days_max\\\":\\\"14\\\",\\\"tracking_url\\\":null,\\\"sort_order\\\":\\\"2\\\",\\\"is_active\\\":\\\"1\\\",\\\"description\\\":null}\"', '25', 'Jonáš Bučina'),
+(4, '2026-04-09 23:07:17', '127.0.0.1', 'update', 'ShopShippingMethod', 'Aktualizace dopravy: Fonetický Express', 'ShopShippingMethod', 5, 25, '\"{\\\"id\\\":5,\\\"code\\\":\\\"foneticke_sluzby\\\",\\\"name\\\":\\\"Fonetick\\u00fd Express\\\",\\\"description\\\":null,\\\"shipping_type\\\":\\\"address\\\",\\\"base_price\\\":\\\"199.00\\\",\\\"allows_cod\\\":false,\\\"cod_price\\\":\\\"0.00\\\",\\\"free_shipping_threshold\\\":\\\"1999.00\\\",\\\"max_weight\\\":\\\"10.00\\\",\\\"requires_pickup_point\\\":false,\\\"tracking_url\\\":null,\\\"logo_path\\\":null,\\\"delivery_days_min\\\":5,\\\"delivery_days_max\\\":14,\\\"is_active\\\":\\\"0\\\",\\\"sort_order\\\":2,\\\"created_at\\\":\\\"2026-04-09T23:01:44+02:00\\\",\\\"updated_at\\\":\\\"2026-04-09T23:01:44+02:00\\\",\\\"deleted_at\\\":null}\"', '25', 'Jonáš Bučina'),
+(5, '2026-04-09 23:07:56', '127.0.0.1', 'update', 'ShopShippingMethod', 'Aktualizace dopravy: Standardní doprava', 'ShopShippingMethod', 1, 25, '\"{\\\"id\\\":1,\\\"code\\\":\\\"standard\\\",\\\"name\\\":\\\"Standardn\\u00ed doprava\\\",\\\"description\\\":null,\\\"shipping_type\\\":\\\"address\\\",\\\"base_price\\\":\\\"100.00\\\",\\\"allows_cod\\\":\\\"1\\\",\\\"cod_price\\\":\\\"0.00\\\",\\\"free_shipping_threshold\\\":null,\\\"max_weight\\\":null,\\\"requires_pickup_point\\\":false,\\\"tracking_url\\\":null,\\\"logo_path\\\":null,\\\"delivery_days_min\\\":3,\\\"delivery_days_max\\\":5,\\\"is_active\\\":true,\\\"sort_order\\\":1,\\\"created_at\\\":\\\"2026-03-24T18:14:02+01:00\\\",\\\"updated_at\\\":\\\"2026-03-24T18:14:02+01:00\\\",\\\"deleted_at\\\":null}\"', '25', 'Jonáš Bučina'),
+(6, '2026-04-09 23:14:42', '127.0.0.1', 'update', 'ShopShippingMethod', 'Aktualizace dopravy: Standardní doprava', 'ShopShippingMethod', 1, 25, '\"{\\\"id\\\":1,\\\"code\\\":\\\"standard\\\",\\\"name\\\":\\\"Standardn\\u00ed doprava\\\",\\\"description\\\":null,\\\"shipping_type\\\":\\\"address\\\",\\\"base_price\\\":\\\"100.00\\\",\\\"allows_cod\\\":\\\"0\\\",\\\"cod_price\\\":\\\"0.00\\\",\\\"free_shipping_threshold\\\":null,\\\"max_weight\\\":null,\\\"requires_pickup_point\\\":\\\"0\\\",\\\"tracking_url\\\":null,\\\"logo_path\\\":null,\\\"delivery_days_min\\\":3,\\\"delivery_days_max\\\":5,\\\"is_active\\\":\\\"1\\\",\\\"sort_order\\\":1,\\\"created_at\\\":\\\"2026-03-24T18:14:02+01:00\\\",\\\"updated_at\\\":\\\"2026-04-09T23:07:56+02:00\\\",\\\"deleted_at\\\":null}\"', '25', 'Jonáš Bučina'),
+(7, '2026-04-09 23:14:51', '127.0.0.1', 'update', 'ShopShippingMethod', 'Aktualizace dopravy: Standardní doprava', 'ShopShippingMethod', 1, 25, '\"{\\\"id\\\":1,\\\"code\\\":\\\"standard\\\",\\\"name\\\":\\\"Standardn\\u00ed doprava\\\",\\\"description\\\":null,\\\"shipping_type\\\":\\\"address\\\",\\\"base_price\\\":\\\"100.00\\\",\\\"allows_cod\\\":\\\"0\\\",\\\"cod_price\\\":\\\"0.00\\\",\\\"free_shipping_threshold\\\":null,\\\"max_weight\\\":null,\\\"requires_pickup_point\\\":\\\"0\\\",\\\"tracking_url\\\":null,\\\"logo_path\\\":null,\\\"delivery_days_min\\\":3,\\\"delivery_days_max\\\":5,\\\"is_active\\\":\\\"0\\\",\\\"sort_order\\\":1,\\\"created_at\\\":\\\"2026-03-24T18:14:02+01:00\\\",\\\"updated_at\\\":\\\"2026-04-09T23:14:42+02:00\\\",\\\"deleted_at\\\":null}\"', '25', 'Jonáš Bučina'),
+(8, '2026-04-09 23:16:43', '127.0.0.1', 'update', 'ShopShippingMethod', 'Aktualizace dopravy: Standardní doprava', 'ShopShippingMethod', 1, 25, '\"{\\\"id\\\":1,\\\"code\\\":\\\"standard\\\",\\\"name\\\":\\\"Standardn\\u00ed doprava\\\",\\\"description\\\":null,\\\"shipping_type\\\":\\\"pickup_point\\\",\\\"base_price\\\":\\\"100.00\\\",\\\"allows_cod\\\":\\\"0\\\",\\\"cod_price\\\":\\\"0.00\\\",\\\"free_shipping_threshold\\\":null,\\\"max_weight\\\":null,\\\"requires_pickup_point\\\":\\\"0\\\",\\\"tracking_url\\\":null,\\\"logo_path\\\":null,\\\"delivery_days_min\\\":3,\\\"delivery_days_max\\\":5,\\\"is_active\\\":\\\"0\\\",\\\"sort_order\\\":1,\\\"created_at\\\":\\\"2026-03-24T18:14:02+01:00\\\",\\\"updated_at\\\":\\\"2026-04-09T23:14:51+02:00\\\",\\\"deleted_at\\\":null}\"', '25', 'Jonáš Bučina');
+
 -- --------------------------------------------------------
 
 --
@@ -435,26 +449,55 @@ CREATE TABLE `shop_order_items` (
 --
 
 CREATE TABLE `shop_payment_methods` (
+  /* Základní údaje */
   `id` int(10) UNSIGNED NOT NULL,
-  `code` varchar(50) NOT NULL COMMENT 'např. credit_card, bank_transfer, paypal',
-  `name` varchar(100) NOT NULL,
+  `code` varchar(50) NOT NULL COMMENT 'např. stripe, bank_transfer, cod',
+  `name` varchar(100) NOT NULL COMMENT 'Název pro zákazníka',
   `description` text DEFAULT NULL,
-  `is_active` tinyint(1) DEFAULT 1,
-  `sort_order` int(11) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `price` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT 'Poplatek za platbu',
+  
+  /* Logika a Poskytovatel */
+  `provider` varchar(50) NOT NULL DEFAULT 'manual' COMMENT 'stripe, paypal, manual, atd.',
+  `is_external` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0 = manuální/v e-shopu, 1 = přesměrování na bránu',
 
+  /* Blbuvzdorná pole pro Bankovní převod (přehledné a validovatelné) */
+  `bank_account_number` varchar(50) DEFAULT NULL COMMENT 'Číslo účtu bez kódu banky',
+  `bank_account_code` varchar(10) DEFAULT NULL COMMENT 'Kód banky (např. 0100)',
+  `bank_iban` varchar(34) DEFAULT NULL COMMENT 'Pro mezinárodní platby',
+  `bank_swift_bic` varchar(11) DEFAULT NULL,
+  `variable_symbol_type` enum('order_number', 'phone_number', 'none') DEFAULT 'order_number',
+
+  /* Správa a řazení */
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  
+  /* Auditní a časové údaje */
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL COMMENT 'Soft Delete pro koš'
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 --
 -- Dumping data for table `shop_payment_methods`
 --
 
-INSERT INTO `shop_payment_methods` (`id`, `code`, `name`, `description`, `is_active`, `sort_order`, `created_at`, `updated_at`) VALUES
-(1, 'credit_card', 'Kreditní karta', NULL, 1, 1, '2026-03-24 17:14:02', '2026-03-24 17:14:02'),
-(2, 'bank_transfer', 'Bankovní převod', NULL, 1, 2, '2026-03-24 17:14:02', '2026-03-24 17:14:02'),
-(3, 'paypal', 'PayPal', NULL, 1, 3, '2026-03-24 17:14:02', '2026-03-24 17:14:02'),
-(4, 'cash_on_delivery', 'Platba při převzetí', NULL, 1, 4, '2026-03-24 17:14:02', '2026-03-24 17:14:02');
+INSERT INTO `shop_payment_methods` 
+(`id`, `code`, `name`, `description`, `price`, `provider`, `is_external`, `bank_account_number`, `bank_account_code`, `variable_symbol_type`, `is_active`, `sort_order`, `created_at`, `updated_at`) 
+VALUES
+/* 1. Karta přes Stripe (External) */
+(1, 'stripe_card', 'Platební karta', 'Rychlá platba kartou přes zabezpečenou bránu Stripe', 0.00, 'stripe', 1, NULL, NULL, 'none', 1, 1, NOW(), NOW()),
 
+/* 2. Klasický převod (Manual) - Tady vyplňujeme bankovní pole */
+(2, 'bank_transfer', 'Bankovní převod', 'Platba předem na náš bankovní účet. Zboží odesíláme po připsání platby.', 0.00, 'manual', 0, '2201992201', '2010', 'order_number', 1, 2, NOW(), NOW()),
+
+/* 3. PayPal (External) */
+(3, 'paypal', 'PayPal', 'Platba přes PayPal účet nebo kartou', 0.00, 'paypal', 1, NULL, NULL, 'none', 1, 3, NOW(), NOW()),
+
+/* 4. Dobírka (Manual) - Tady přidáváme cenu za službu */
+(4, 'cash_on_delivery', 'Platba při převzetí (Dobírka)', 'Zaplatíte hotově nebo kartou kurýrovi při převzetí zásilky.', 49.00, 'manual', 0, NULL, NULL, 'none', 1, 4, NOW(), NOW()),
+
+/* 5. Apple Pay / Google Pay (Stripe) */
+(5, 'apple_google_pay', 'Apple Pay / Google Pay', 'Moderní a rychlá platba mobilním telefonem', 0.00, 'stripe', 1, NULL, NULL, 'none', 1, 5, NOW(), NOW());
 -- --------------------------------------------------------
 
 --
@@ -555,6 +598,8 @@ CREATE TABLE `shop_shipping_methods` (
   `free_shipping_threshold` decimal(10,2) DEFAULT NULL,
   `max_weight` decimal(8,2) DEFAULT NULL,
   `requires_pickup_point` tinyint(1) DEFAULT 0 COMMENT '1 = vyžaduje výběr pobočky (mapu)',
+  `allows_cod` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0 = nepodporuje dobírku',
+  `cod_price` decimal(8,2) NOT NULL DEFAULT 0.00 COMMENT 'Příplatek za dobírku',
   `tracking_url` varchar(255) DEFAULT NULL COMMENT 'Např. https://www.ppl.cz/vyhledat-balik?slug={T}',
   `logo_path` varchar(255) DEFAULT NULL,
   `delivery_days_min` int(11) DEFAULT NULL,
@@ -570,11 +615,12 @@ CREATE TABLE `shop_shipping_methods` (
 -- Dumping data for table `shop_shipping_methods`
 --
 
-INSERT INTO `shop_shipping_methods` (`id`, `code`, `name`, `description`, `shipping_type`, `base_price`, `free_shipping_threshold`, `max_weight`, `requires_pickup_point`, `tracking_url`, `logo_path`, `delivery_days_min`, `delivery_days_max`, `is_active`, `sort_order`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'standard', 'Standardní doprava', NULL, 'address', 100.00, NULL, NULL, 0, NULL, NULL, 3, 5, 1, 1, '2026-03-24 17:14:02', '2026-03-24 17:14:02', NULL),
-(2, 'express', 'Expresní doprava', NULL, 'address', 250.00, NULL, NULL, 0, NULL, NULL, 1, 2, 1, 2, '2026-03-24 17:14:02', '2026-03-24 17:14:02', NULL),
-(3, 'dhl', 'DHL kurýr', NULL, 'address', 300.00, NULL, NULL, 0, NULL, NULL, 1, 1, 1, 3, '2026-03-24 17:14:02', '2026-03-24 17:14:02', NULL),
-(4, 'pickup', 'Vyzvednutí na pobočce', NULL, 'address', 0.00, NULL, NULL, 0, NULL, NULL, 1, 3, 1, 4, '2026-03-24 17:14:02', '2026-03-24 17:14:02', NULL);
+INSERT INTO `shop_shipping_methods` (`id`, `code`, `name`, `description`, `shipping_type`, `base_price`, `free_shipping_threshold`, `max_weight`, `requires_pickup_point`, `allows_cod`, `cod_price`, `tracking_url`, `logo_path`, `delivery_days_min`, `delivery_days_max`, `is_active`, `sort_order`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'standard', 'Standardní doprava', NULL, 'pickup_point', 100.00, NULL, NULL, 0, 0, 0.00, NULL, NULL, 3, 5, 0, 1, '2026-03-24 17:14:02', '2026-04-09 21:16:43', NULL),
+(2, 'express', 'Expresní doprava', NULL, 'address', 250.00, NULL, NULL, 0, 0, 0.00, NULL, NULL, 1, 2, 1, 2, '2026-03-24 17:14:02', '2026-03-24 17:14:02', NULL),
+(3, 'dhl', 'DHL kurýr', NULL, 'address', 300.00, NULL, NULL, 0, 0, 0.00, NULL, NULL, 1, 1, 1, 3, '2026-03-24 17:14:02', '2026-03-24 17:14:02', NULL),
+(4, 'pickup', 'Vyzvednutí na pobočce', NULL, 'address', 0.00, NULL, NULL, 0, 0, 0.00, NULL, NULL, 1, 3, 1, 4, '2026-03-24 17:14:02', '2026-03-24 17:14:02', NULL),
+(5, 'foneticke_sluzby', 'Fonetický Express', NULL, 'address', 199.00, 1999.00, 10.00, 0, 0, 0.00, NULL, NULL, 5, 14, 0, 2, '2026-04-09 21:01:44', '2026-04-09 21:07:17', NULL);
 
 -- --------------------------------------------------------
 
@@ -1136,7 +1182,7 @@ ALTER TABLE `shop_customers`
 -- AUTO_INCREMENT for table `shop_logs`
 --
 ALTER TABLE `shop_logs`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `shop_orders`
@@ -1184,7 +1230,7 @@ ALTER TABLE `shop_reviews`
 -- AUTO_INCREMENT for table `shop_shipping_methods`
 --
 ALTER TABLE `shop_shipping_methods`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `shop_suppliers`
