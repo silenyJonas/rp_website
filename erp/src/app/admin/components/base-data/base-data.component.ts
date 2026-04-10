@@ -188,7 +188,7 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
 
   getItemDetails(id: number | undefined): Core.Observable<T> {
     if (!id) return Core.throwError(() => new Error('ID není definováno.'));
-    const url = `${this.apiEndpoint}/${id}/details`;
+    const url = `${this.apiEndpoint}/${id}`;
     return this.dataHandler.get<T>(url).pipe(
       Core.takeUntil(this.destroy$),
       Core.finalize(() => { this.cd.markForCheck(); })

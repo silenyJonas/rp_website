@@ -71,7 +71,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Users
         Route::prefix('users')->group(function () {
             Route::post('/', [UserController::class, 'store']);
-            Route::get('/{id}/details', [UserController::class, 'show']);
+            Route::get('/{id}', [UserController::class, 'show']);
             Route::post('/{id}/restore', [UserController::class, 'restore']);
             Route::put('/{id}/change-password', [UserController::class, 'changePassword']);
             Route::delete('/force-delete-all', [UserController::class, 'forceDeleteAllTrashed']);
@@ -84,7 +84,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('roles')->group(function () {
             Route::post('/{id}/restore', [CoreRoleController::class, 'restore']);
             Route::delete('/force-delete-all', [CoreRoleController::class, 'forceDeleteAllTrashed']);
-            Route::get('/{id}/details', [CoreRoleController::class, 'show']);
+            Route::get('/{id}', [CoreRoleController::class, 'show']);
         });
         Route::apiResource('roles', CoreRoleController::class)
             ->except(['store', 'create', 'edit'])
@@ -101,7 +101,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Suppliers (Dodavatelé)
         Route::prefix('suppliers')->group(function () {
-            Route::get('/{id}/details', [ShopSupplierController::class, 'show']);
+            Route::get('/{id}', [ShopSupplierController::class, 'show']);
             Route::post('/{id}/restore', [ShopSupplierController::class, 'restore']);
             Route::delete('/force-delete-all', [ShopSupplierController::class, 'forceDeleteAllTrashed']);
         });
@@ -112,12 +112,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('logs')->group(function () {
             Route::get('/', [ShopLogController::class, 'index']);
             Route::post('/', [ShopLogController::class, 'store']);
-            Route::get('/{id}/details', [ShopLogController::class, 'show']);
+            Route::get('/{id}', [ShopLogController::class, 'show']);
         });
 
         // Coupons (Slevové kupóny)
         Route::prefix('coupons')->group(function () {
-            Route::get('/{id}/details', [ShopCouponController::class, 'show']);
+            Route::get('/{id}', [ShopCouponController::class, 'show']);
             Route::post('/{id}/restore', [ShopCouponController::class, 'restore']);
             Route::delete('/force-delete-all', [ShopCouponController::class, 'forceDeleteAllTrashed']);
         });
@@ -126,14 +126,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Categories (Kategorie)
         Route::prefix('categories')->group(function () {
-            Route::get('/{id}/details', [ShopCategoryController::class, 'show']);
+            Route::get('/{id}', [ShopCategoryController::class, 'show']);
         });
         Route::apiResource('categories', ShopCategoryController::class)
             ->parameters(['categories' => 'id']);
 
         // Shipping Methods (Doprava)
         Route::prefix('shipping_methods')->group(function () {
-            Route::get('/{id}/details', [ShopShippingMethodController::class, 'show']);
+            Route::get('/{id}', [ShopShippingMethodController::class, 'show']);
             Route::post('/{id}/restore', [ShopShippingMethodController::class, 'restore']);
             Route::delete('/force-delete-all', [ShopShippingMethodController::class, 'forceDeleteAllTrashed']);
         });
@@ -142,7 +142,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Payment Methods (Platba) 💳
         Route::prefix('payment_methods')->group(function () {
-            Route::get('/{id}/details', [ShopPaymentMethodController::class, 'show']);
+            Route::get('/{id}', [ShopPaymentMethodController::class, 'show']);
             Route::post('/{id}/restore', [ShopPaymentMethodController::class, 'restore']);
             Route::delete('/force-delete-all', [ShopPaymentMethodController::class, 'forceDeleteAllTrashed']);
         });
@@ -159,7 +159,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Job Applications
         Route::prefix('job_applications')->group(function () {
-            Route::get('/{id}/details', [WebJobApplicationController::class, 'show']); 
+            Route::get('/{id}', [WebJobApplicationController::class, 'show']); 
             Route::post('/{id}/restore', [WebJobApplicationController::class, 'restore']);
             Route::delete('/force-delete-all', [WebJobApplicationController::class, 'forceDeleteAllTrashed']);
         });
@@ -170,12 +170,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('logs')->group(function () {
             Route::get('/', [WebLogController::class, 'index']);
             Route::post('/', [WebLogController::class, 'store']);
-            Route::get('/{id}/details', [WebLogController::class, 'show']);
+            Route::get('/{id}', [WebLogController::class, 'show']);
         });
 
         // Support Tickets
         Route::prefix('support_tickets')->group(function () {
-            Route::get('/{id}/details', [WebSupportTicketController::class, 'show']); 
+            Route::get('/{id}', [WebSupportTicketController::class, 'show']); 
             Route::post('/{id}/restore', [WebSupportTicketController::class, 'restore']);
             Route::delete('/force-delete-all', [WebSupportTicketController::class, 'forceDeleteAllTrashed']);
         });
@@ -184,7 +184,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // RawRequestCommission
         Route::prefix('raw_request_commissions')->group(function () {
-            Route::get('/{id}/details', [WebRawRequestCommissionController::class, 'show']);
+            Route::get('/{id}', [WebRawRequestCommissionController::class, 'show']);
             Route::post('/{id}/restore', [WebRawRequestCommissionController::class, 'restore']);
             Route::delete('/force-delete-all', [WebRawRequestCommissionController::class, 'forceDeleteAllTrashed']);
         });
@@ -193,7 +193,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // SalesOrder
         Route::prefix('sales_orders')->group(function () {
-            Route::get('/{id}/details', [WebSalesOrderController::class, 'show']); 
+            Route::get('/{id}', [WebSalesOrderController::class, 'show']); 
             Route::post('/{id}/restore', [WebSalesOrderController::class, 'restore']);
             Route::delete('/force-delete-all', [WebSalesOrderController::class, 'forceDeleteAllTrashed']);
         });
@@ -202,7 +202,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // News
         Route::prefix('news')->group(function () {
-            Route::get('/{id}/details', [WebNewsController::class, 'show']);
+            Route::get('/{id}', [WebNewsController::class, 'show']);
             Route::post('/{id}/restore', [WebNewsController::class, 'restore']);
             Route::delete('/force-delete-all', [WebNewsController::class, 'forceDeleteAllTrashed']);
         });
@@ -211,7 +211,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // SalesLeads
         Route::prefix('sales_leads')->group(function () {
-            Route::get('/{id}/details', [WebSalesLeadController::class, 'show']);
+            Route::get('/{id}', [WebSalesLeadController::class, 'show']);
             Route::post('/{id}/restore', [WebSalesLeadController::class, 'restore']);
             Route::delete('/force-delete-all', [WebSalesLeadController::class, 'forceDeleteAllTrashed']);
         });
