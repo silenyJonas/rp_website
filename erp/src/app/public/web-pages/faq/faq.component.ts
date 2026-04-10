@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 // Tvůj hromadný import pro služby a RxJS nástroje
 import * as Web from '../../../shared/imports/web-providers';
 
-import { FaqItem } from '../../../shared/interfaces/faq-item';
+import { FaqItem } from '../components/interfaces/faq-item';
 
 @Component({
   selector: 'app-faq',
@@ -14,6 +14,7 @@ import { FaqItem } from '../../../shared/interfaces/faq-item';
   styleUrls: ['./faq.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush 
 })
+
 export class FaqComponent implements Web.OnInit, Web.OnDestroy {
   t: any = null;
   faqItems: FaqItem[] = [];

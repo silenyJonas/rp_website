@@ -2,8 +2,8 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/
 import { CommonModule } from '@angular/common';
 import * as Web from '../../../shared/imports/web-providers';
 import { GenericFormComponent } from '../components/generic-form/generic-form.component';
-import { TimelineItemKeys } from '../../../shared/interfaces/timeline-item-keys';
-import { TimelineItem } from '../../../shared/interfaces/timeline-item';
+import { TimelineItemKeys } from '../components/interfaces/timeline-item-keys';
+import { TimelineItem } from '../components/interfaces/timeline-item';
 
 @Component({
   selector: 'app-academy',

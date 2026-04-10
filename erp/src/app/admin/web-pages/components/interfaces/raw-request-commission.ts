@@ -1,4 +1,5 @@
 //rozhraní pro open form na webu z API
+//NEPOUZIVA SE ZDA SE 
 export interface RawRequestCommission {
   id?: number;
   thema: string;

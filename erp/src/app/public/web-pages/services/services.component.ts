@@ -4,8 +4,8 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import * as Web from '../../../shared/imports/web-providers';
 import { GenericFormComponent } from '../components/generic-form/generic-form.component';
-import { Technology } from '../../../shared/interfaces/technology';
-import { Item } from '../../../shared/interfaces/item';
+import { Technology } from '../components/interfaces/technology';
+import { Item } from '../components/interfaces/item';
 
 @Component({
     selector: 'app-main-content',

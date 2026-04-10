@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 
 // Tvůj hromadný import pro služby a RxJS nástroje
 import * as Web from '../../../../shared/imports/web-providers';
-import { JobItem } from '../../../../shared/interfaces/job-item';
+import { JobItem } from '../../components/interfaces/job-item';
 
 
 @Component({
