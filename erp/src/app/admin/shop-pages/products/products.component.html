@@ -84,22 +84,6 @@
               </td>
             </tr>
             <tr *ngFor="let product of data" [class.low-stock]="product.stock_quantity <= product.stock_warning_level">
-              <!-- Standard columns -->
-              <!-- <td *ngFor="let col of columns">
-                <ng-container [ngSwitch]="col.type">
-                  <ng-container *ngSwitchCase="'currency'">
-                    {{ formatCurrency(product[col.key]) }}
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'boolean'">
-                    <span [class.badge-active]="product[col.key]" [class.badge-inactive]="!product[col.key]">
-                      {{ product[col.key] ? '✓ Ano' : '✗ Ne' }}
-                    </span>
-                  </ng-container>
-                  <ng-container *ngSwitchDefault>
-                    {{ product[col.key] || '-' }}
-                  </ng-container>
-                </ng-container>
-              </td> -->
             <td *ngFor="let col of columns">
                 <ng-container [ngSwitch]="col.type">
                     

@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Shop\ShopProduct;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class UpdateShopProductRequest extends FormRequest
 {
@@ -13,7 +15,8 @@ class UpdateShopProductRequest extends FormRequest
 
     public function rules(): array
     {
-        $productId = $this->route('id');
+        // Získání ID produktu z routy (zkouší 'product' i 'id' podle toho, jak máš definovanou route)
+        $productId = $this->route('product') ?: $this->route('id');
 
         return [
             // Základní informace
@@ -27,7 +30,10 @@ class UpdateShopProductRequest extends FormRequest
             // Ceny a skladové zásoby
             'price' => 'required|numeric|min:0',
             'cost_price' => 'nullable|numeric|min:0',
+            
+            // OPRAVA: Ignoruje aktuální produkt při kontrole unikátnosti SKU
             'sku' => 'nullable|string|max:50|unique:shop_products,sku,' . $productId,
+            
             'stock_quantity' => 'nullable|integer|min:0',
             'stock_warning_level' => 'nullable|integer|min:0',
 
@@ -53,7 +59,28 @@ class UpdateShopProductRequest extends FormRequest
             'variants.*.attribute_1_value' => 'nullable|string|max:100',
             'variants.*.attribute_2_name' => 'nullable|string|max:50',
             'variants.*.attribute_2_value' => 'nullable|string|max:100',
-            'variants.*.sku_variant' => 'nullable|string|max:50|unique:shop_product_variants,sku_variant,id',
+            
+            // OPRAVA: Dynamická kontrola unikátnosti SKU varianty
+            'variants.*.sku_variant' => [
+                'nullable',
+                'string',
+                'max:50',
+                function ($attribute, $value, $fail) {
+                    preg_match('/variants\.(\d+)\.sku_variant/', $attribute, $matches);
+                    $index = $matches[1] ?? null;
+                    $variantId = $this->input("variants.{$index}.id");
+
+                    $exists = DB::table('shop_product_variants')
+                        ->where('sku_variant', $value)
+                        ->when($variantId, fn($q) => $q->where('id', '!=', $variantId))
+                        ->exists();
+
+                    if ($exists) {
+                        $fail('Varianta SKU "' . $value . '" již existuje.');
+                    }
+                },
+            ],
+
             'variants.*.price_modifier' => 'nullable|numeric',
             'variants.*.stock_quantity' => 'nullable|integer|min:0',
             'delete_variants' => 'nullable|array',
@@ -69,6 +96,7 @@ class UpdateShopProductRequest extends FormRequest
             'name.required' => 'Název produktu je povinný.',
             'price.required' => 'Cena je povinná.',
             'price.numeric' => 'Cena musí být číslo.',
+            'sku.unique' => 'Tento SKU kód již používá jiný produkt.',
             'images.*.file.image' => 'Soubor musí být obrázek.',
             'images.*.file.max' => 'Obrázek je příliš velký (max 5MB).',
             'variants.*.sku_variant.unique' => 'Varianta SKU už existuje.',
@@ -77,25 +105,20 @@ class UpdateShopProductRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        // Automaticky generovat slug z názvu, pokud se změní
         if ($this->filled('name') && (!$this->filled('slug') || $this->has('auto_slug'))) {
             $this->merge([
                 'slug' => $this->generateSlug($this->input('name')),
             ]);
         }
 
-        // Nastav výchozí hodnoty
         $this->merge([
             'is_active' => $this->boolean('is_active'),
             'is_featured' => $this->boolean('is_featured'),
-            'stock_quantity' => $this->input('stock_quantity', 0),
+            // Odstraněno natvrdo nastavené stock_quantity na 0, aby se mohl projevit součet variant
             'stock_warning_level' => $this->input('stock_warning_level', 10),
         ]);
     }
 
-    /**
-     * Generuje slug z názvu
-     */
     private function generateSlug(string $name): string
     {
         return \Illuminate\Support\Str::slug($name, '-');

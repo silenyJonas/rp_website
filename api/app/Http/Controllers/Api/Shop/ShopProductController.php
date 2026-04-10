@@ -91,100 +91,92 @@ class ShopProductController extends Controller
     /**
      * Uložení nového produktu
      */
-    public function store(StoreShopProductRequest $request): JsonResponse
-    {
-        try {
-            $validated = $request->validated();
+public function store(StoreShopProductRequest $request): JsonResponse
+{
+    try {
+        $validated = $request->validated();
 
-            // Vytvořit produkt
-            $product = ShopProduct::create($validated);
+        // Vytvořit produkt
+        $product = ShopProduct::create($validated);
 
-            // Uložit obrázky
-            if ($request->has('images')) {
-                $this->storeImages($product, $request->input('images'));
-            }
-
-            // Uložit varianty
-            if ($request->has('variants')) {
-                $this->storeVariants($product, $request->input('variants'));
-            }
-
-            $product->load(['category', 'supplier', 'primaryImage', 'images', 'variants']);
-
-            $this->logAction(
-                $request,
-                'create',
-                'ShopProduct',
-                "Vytvořen produkt: {$product->name} (SKU: {$product->sku})",
-                $product->id
-            );
-
-            return response()->json(new ShopProductResource($product), 201);
-        } catch (\Exception $e) {
-            Log::error("ShopProduct creation error: " . $e->getMessage());
-            $this->logAction($request, 'error', 'ShopProduct', "Chyba při vytváření: " . $e->getMessage());
-            return response()->json(['message' => 'Vytvoření produktu selhalo.'], 500);
+        // Uložit obrázky
+        if ($request->has('images')) {
+            $this->storeImages($product, $request->input('images'));
         }
+
+        // Uložit varianty
+        if ($request->has('variants')) {
+            $this->storeVariants($product, $request->input('variants'));
+            // POZOR: Tady přepočítáme sklad po uložení variant
+            $this->syncProductStock($product);
+        }
+
+        $product->load(['category', 'supplier', 'primaryImage', 'images', 'variants']);
+
+        $this->logAction($request, 'create', 'ShopProduct', "Vytvořen produkt: {$product->name}", $product->id);
+
+        return response()->json(new ShopProductResource($product), 201);
+    } catch (\Exception $e) {
+        Log::error("ShopProduct creation error: " . $e->getMessage());
+        return response()->json(['message' => 'Vytvoření produktu selhalo.'], 500);
     }
+}
 
     /**
      * Detail produktu
      */
     public function show($id): JsonResponse
     {
-        $product = ShopProduct::with(['category', 'supplier', 'images', 'variants', 'reviews'])->findOrFail($id);
+        $product = ShopProduct::with(['category', 'supplier', 'images', 'variants'])->findOrFail($id);
         return response()->json(new ShopProductResource($product));
     }
 
     /**
      * Aktualizace produktu
      */
-    public function update(UpdateShopProductRequest $request, $id): JsonResponse
-    {
-        try {
-            $product = ShopProduct::findOrFail($id);
-            $validated = $request->validated();
+public function update(UpdateShopProductRequest $request, $id): JsonResponse
+{
+    try {
+        $product = ShopProduct::findOrFail($id);
+        $validated = $request->validated();
 
-            // Odstranit klíče, které nejsou v fillable
-            $updateData = collect($validated)
-                ->except(['images', 'variants', 'delete_images', 'delete_variants'])
-                ->toArray();
+        // Odstranit klíče, které nejsou v fillable
+        $updateData = collect($validated)
+            ->except(['images', 'variants', 'delete_images', 'delete_variants'])
+            ->toArray();
 
-            $product->update($updateData);
+        $product->update($updateData);
 
-            // Spravovat obrázky
-            if ($request->has('delete_images')) {
-                $this->deleteImages($request->input('delete_images'));
-            }
-            if ($request->has('images')) {
-                $this->storeImages($product, $request->input('images'));
-            }
-
-            // Spravovat varianty
-            if ($request->has('delete_variants')) {
-                ShopProductVariant::whereIn('id', $request->input('delete_variants'))->delete();
-            }
-            if ($request->has('variants')) {
-                $this->updateVariants($product, $request->input('variants'));
-            }
-
-            $product->load(['category', 'supplier', 'primaryImage', 'images', 'variants']);
-
-            $this->logAction(
-                $request,
-                'update',
-                'ShopProduct',
-                "Aktualizace produktu: {$product->name}",
-                $product->id
-            );
-
-            return response()->json(new ShopProductResource($product));
-        } catch (\Exception $e) {
-            Log::error("ShopProduct update error: " . $e->getMessage());
-            $this->logAction($request, 'error', 'ShopProduct', "Chyba při aktualizaci: " . $e->getMessage(), $id);
-            return response()->json(['message' => 'Aktualizace produktu selhala.'], 500);
+        // Spravovat obrázky
+        if ($request->has('delete_images')) {
+            $this->deleteImages($request->input('delete_images'));
         }
+        if ($request->has('images')) {
+            $this->storeImages($product, $request->input('images'));
+        }
+
+        // Spravovat varianty
+        if ($request->has('delete_variants')) {
+            ShopProductVariant::whereIn('id', $request->input('delete_variants'))->delete();
+        }
+        if ($request->has('variants')) {
+            $this->updateVariants($product, $request->input('variants'));
+        }
+
+        // POZOR: Přepočítáme sklad po jakékoliv změně variant (update i smazání)
+        $this->syncProductStock($product);
+
+        $product->load(['category', 'supplier', 'primaryImage', 'images', 'variants']);
+
+        $this->logAction($request, 'update', 'ShopProduct', "Aktualizace produktu: {$product->name}", $product->id);
+
+        return response()->json(new ShopProductResource($product));
+    } catch (\Exception $e) {
+        Log::error("ShopProduct update error: " . $e->getMessage());
+        // Přidali jsme zobrazení chyby pro lepší debugování SKU
+        return response()->json(['message' => 'Aktualizace selhala: ' . $e->getMessage()], 500);
     }
+}
 
     /**
      * Smazání produktu (Soft/Hard)
@@ -340,6 +332,18 @@ class ShopProductController extends Controller
                 'stock_quantity' => $variantData['stock_quantity'] ?? 0,
             ]);
         }
+    }
+
+    /**
+     * Pomocná metoda pro synchronizaci celkového skladu z variant
+     */
+    private function syncProductStock(ShopProduct $product): void
+    {
+        // Sečte stock_quantity všech variant daného produktu v databázi
+        $totalStock = ShopProductVariant::where('product_id', $product->id)->sum('stock_quantity');
+        
+        // Aktualizuje hlavní produkt
+        $product->update(['stock_quantity' => $totalStock]);
     }
 
     /**

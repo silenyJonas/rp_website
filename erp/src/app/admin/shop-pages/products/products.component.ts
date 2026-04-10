@@ -242,6 +242,10 @@ getFieldValue(item: any, key: string): any {
   /**
    * Uložit produkt (vytvoření nebo aktualizace)
    */
+/**
+   * Uložit produkt (vytvoření nebo aktualizace)
+   * Upraveno pro správné odesílání polí a souborů bez JSON.stringify
+   */
   saveProduct(): void {
     if (!this.editingProduct || !this.validateProduct()) {
       return;
@@ -249,7 +253,7 @@ getFieldValue(item: any, key: string): any {
 
     const formData = new FormData();
 
-    // Základní data
+    // --- 1. Základní data produktu ---
     formData.append('category_id', this.editingProduct.category_id.toString());
     formData.append('supplier_id', (this.editingProduct.supplier_id || '').toString());
     formData.append('name', this.editingProduct.name);
@@ -264,37 +268,57 @@ getFieldValue(item: any, key: string): any {
     formData.append('is_active', this.editingProduct.is_active ? '1' : '0');
     formData.append('is_featured', this.editingProduct.is_featured ? '1' : '0');
 
-    // Obrázky
-    const imagesToAdd = (this.editingProduct.images || []).filter(img => img.file || !img.id);
-    imagesToAdd.forEach((img, idx) => {
+    // --- 2. Obrázky (Přidání/Update) ---
+    // Filtrujeme obrázky, které nejsou smazané
+    const activeImages = (this.editingProduct.images || []).filter(img => !img._delete);
+    activeImages.forEach((img, idx) => {
+      // Pokud je to nový soubor
       if (img.file) {
         formData.append(`images[${idx}][file]`, img.file);
       }
-      formData.append(`images[${idx}][alt_text]`, img.alt_text);
+      // Pokud editujeme existující, pošleme ID (aby backend věděl, co updatovat)
+      if (img.id) {
+        formData.append(`images[${idx}][id]`, img.id.toString());
+      }
+      formData.append(`images[${idx}][alt_text]`, img.alt_text || '');
       formData.append(`images[${idx}][is_primary]`, img.is_primary ? '1' : '0');
       formData.append(`images[${idx}][sort_order]`, img.sort_order.toString());
     });
 
-    // Smazané obrázky
+    // --- 3. Smazané obrázky (Pole IDček) ---
     const imagesToDelete = (this.editingProduct.images || []).filter(img => img._delete && img.id);
-    if (imagesToDelete.length > 0) {
-      formData.append('delete_images', JSON.stringify(imagesToDelete.map(img => img.id)));
-    }
+    imagesToDelete.forEach((img, idx) => {
+      formData.append(`delete_images[${idx}]`, img.id!.toString());
+    });
 
-    // Varianty
-    const variants = (this.editingProduct.variants || []).filter(v => !v._delete);
-    formData.append('variants', JSON.stringify(variants));
+    // --- 4. Varianty (Přidání/Update) ---
+    const activeVariants = (this.editingProduct.variants || []).filter(v => !v._delete);
+    activeVariants.forEach((v, idx) => {
+      if (v.id) {
+        formData.append(`variants[${idx}][id]`, v.id.toString());
+      }
+      formData.append(`variants[${idx}][variant_name]`, v.variant_name);
+      formData.append(`variants[${idx}][attribute_1_name]`, v.attribute_1_name || '');
+      formData.append(`variants[${idx}][attribute_1_value]`, v.attribute_1_value || '');
+      formData.append(`variants[${idx}][attribute_2_name]`, v.attribute_2_name || '');
+      formData.append(`variants[${idx}][attribute_2_value]`, v.attribute_2_value || '');
+      formData.append(`variants[${idx}][sku_variant]`, v.sku_variant || '');
+      formData.append(`variants[${idx}][price_modifier]`, v.price_modifier.toString());
+      formData.append(`variants[${idx}][stock_quantity]`, v.stock_quantity.toString());
+    });
 
-    // Varianty k smazání
+    // --- 5. Smazané varianty (Pole IDček) ---
     const variantsToDelete = (this.editingProduct.variants || []).filter(v => v._delete && v.id);
-    if (variantsToDelete.length > 0) {
-      formData.append('delete_variants', JSON.stringify(variantsToDelete.map(v => v.id)));
-    }
+    variantsToDelete.forEach((v, idx) => {
+      formData.append(`delete_variants[${idx}]`, v.id!.toString());
+    });
 
     this.loadingService.show();
 
+    // Logika požadavku
     let request;
     if (this.editingProduct.id) {
+      // Laravel vyžaduje u Multipart dat _method=PUT, i když je to POST request
       formData.append('_method', 'PUT');
       request = this.dataHandler.post(`${this.apiEndpoint}/${this.editingProduct.id}`, formData);
     } else {
@@ -315,6 +339,7 @@ getFieldValue(item: any, key: string): any {
         this.refreshData();
       },
       error: (err) => {
+        // Získání chybové hlášky z backendu
         const message = err.error?.message || 'Chyba při ukládání produktu.';
         this.alertDialogService.open('Chyba', message, 'danger');
       }
