@@ -24,7 +24,8 @@ use App\Http\Controllers\Api\Shop\ShopSupplierController;
 use App\Http\Controllers\Api\Shop\ShopCouponController;
 use App\Http\Controllers\Api\Shop\ShopCategoryController;
 use App\Http\Controllers\Api\Shop\ShopShippingMethodController;
-use App\Http\Controllers\Api\Shop\ShopPaymentMethodController; // 💳 Přidán import
+use App\Http\Controllers\Api\Shop\ShopPaymentMethodController;
+use App\Http\Controllers\Api\Shop\ShopProductController; // 📦 Přidán import produktu
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +99,15 @@ Route::middleware('auth:sanctum')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::prefix('shop')->group(function () {
+
+        // Products (Produkty) 📦
+        Route::prefix('products')->group(function () {
+            Route::get('/{id}', [ShopProductController::class, 'show']);
+            Route::post('/{id}/restore', [ShopProductController::class, 'restore']);
+            Route::delete('/force-delete-all', [ShopProductController::class, 'forceDeleteAllTrashed']);
+        });
+        Route::apiResource('products', ShopProductController::class)
+            ->parameters(['products' => 'id']);
 
         // Suppliers (Dodavatelé)
         Route::prefix('suppliers')->group(function () {
