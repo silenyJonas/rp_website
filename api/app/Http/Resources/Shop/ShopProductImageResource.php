@@ -12,6 +12,7 @@ class ShopProductImageResource extends JsonResource
         return [
             'id' => $this->id,
             'product_id' => $this->product_id,
+            'variant_id' => $this->variant_id,
             'image_path' => $this->image_path,
             'url' => $this->getUrl(),
             'alt_text' => $this->alt_text,

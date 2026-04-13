@@ -59,6 +59,9 @@ class UpdateShopProductRequest extends FormRequest
             'variants.*.attribute_1_value' => 'nullable|string|max:100',
             'variants.*.attribute_2_name' => 'nullable|string|max:50',
             'variants.*.attribute_2_value' => 'nullable|string|max:100',
+
+            // PŘIDÁNO: Nová cenová pole pro update variant
+            'variants.*.vat_rate' => 'required_with:variants|numeric|min:0',
             
             // OPRAVA: Dynamická kontrola unikátnosti SKU varianty
             'variants.*.sku_variant' => [

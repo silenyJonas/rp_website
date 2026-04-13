@@ -50,6 +50,9 @@ class StoreShopProductRequest extends FormRequest
             'variants.*.sku_variant' => 'nullable|string|max:50|unique:shop_product_variants,sku_variant',
             'variants.*.price_modifier' => 'nullable|numeric',
             'variants.*.stock_quantity' => 'nullable|integer|min:0',
+
+            // PŘIDÁNO: Nová cenová pole pro varianty
+            'variants.*.vat_rate' => 'required_with:variants|numeric|min:0',
         ];
     }
 

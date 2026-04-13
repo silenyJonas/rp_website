@@ -210,10 +210,17 @@ export abstract class BaseDataComponent<T extends { id?: number; deleted_at?: st
     );
   }
   
-  deleteData(id: number | undefined, forceDelete: boolean = false): Core.Observable<void> {
+  deleteData(id: number | undefined, forceDelete?: boolean | undefined, params?: any): Core.Observable<void> {
     if (!id) return Core.throwError(() => new Error('ID není definováno.'));
     let url = `${this.apiEndpoint}/${id}`;
-    if (forceDelete) url += '?force_delete=true';
+    
+    // Support pro params object (force_delete: true)
+    if (params && params.force_delete === 'true') {
+      url += '?force_delete=true';
+    } else if (forceDelete === true) {
+      url += '?force_delete=true';
+    }
+    
     return this.dataHandler.delete(url).pipe(
       Core.takeUntil(this.destroy$),
       Core.finalize(() => { this.cd.markForCheck(); })

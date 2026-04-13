@@ -5,6 +5,7 @@ namespace App\Models\Shop;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ShopProductVariant extends Model
 {
@@ -20,12 +21,16 @@ class ShopProductVariant extends Model
         'attribute_2_name',
         'attribute_2_value',
         'sku_variant',
-        'price_modifier',
+        'price_with_vat',      // Cena S DPH
+        'price_without_vat',   // Cena BEZ DPH
+        'vat_rate',             // DPH sazba (%)
         'stock_quantity',
     ];
 
     protected $casts = [
-        'price_modifier' => 'decimal:2',
+        'price_with_vat' => 'decimal:2',
+        'price_without_vat' => 'decimal:2',
+        'vat_rate' => 'decimal:2',
         'stock_quantity' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -41,11 +46,35 @@ class ShopProductVariant extends Model
     }
 
     /**
-     * Vrátí finalní cenu s modifikátorem
+     * Obrázky specifické této variantě
      */
-    public function getFinalPrice(float $basePrice): float
+    public function images(): HasMany
     {
-        return $basePrice + $this->price_modifier;
+        return $this->hasMany(ShopProductImage::class, 'variant_id');
+    }
+
+    /**
+     * Vrátí finalní cenu S DPH
+     */
+    public function getPriceWithVAT(): float
+    {
+        return (float)$this->price_with_vat;
+    }
+
+    /**
+     * Vrátí cenu BEZ DPH
+     */
+    public function getPriceWithoutVAT(): float
+    {
+        return (float)$this->price_without_vat;
+    }
+
+    /**
+     * Vrátí DPH sazbu
+     */
+    public function getVATRate(): float
+    {
+        return (float)$this->vat_rate;
     }
 
     /**

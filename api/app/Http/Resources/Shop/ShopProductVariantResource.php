@@ -18,7 +18,12 @@ class ShopProductVariantResource extends JsonResource
             'attribute_2_name' => $this->attribute_2_name,
             'attribute_2_value' => $this->attribute_2_value,
             'sku_variant' => $this->sku_variant,
-            'price_modifier' => (float)$this->price_modifier,
+            // NOVÉ: DPH fields
+            'price_with_vat' => (float)$this->price_with_vat,
+            'price_without_vat' => (float)$this->price_without_vat,
+            'vat_rate' => (float)$this->vat_rate,
+            // Obrázky (pokud jsou načteny)
+            'images' => $this->whenLoaded('images', ShopProductImageResource::collection($this->images)),
             'stock_quantity' => $this->stock_quantity,
             'created_at' => $this->created_at->toIso8601String(),
             'updated_at' => $this->updated_at->toIso8601String(),
