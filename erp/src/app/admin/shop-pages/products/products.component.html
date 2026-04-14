@@ -18,36 +18,96 @@
 
       <!-- FILTERS PANEL (Collapsible) -->
       <div class="filters-panel" *ngIf="showFiltersPanel">
-        <div class="filter-row">
-          <input 
-            type="text" 
-            [(ngModel)]="filterState.search" 
-            placeholder="Hledání..."
-            (keyup.enter)="refreshData()"
-            class="filter-input">
+        <div class="filter-section">
+          <h4>Základní údaje</h4>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label>ID</label>
+              <input type="text" [(ngModel)]="filterState.id" placeholder="1, 5, 10..." (keyup.enter)="refreshData()" class="filter-input">
+            </div>
+            <div class="filter-group">
+              <label>Název</label>
+              <input type="text" [(ngModel)]="filterState.name" placeholder="Hledej název..." (keyup.enter)="refreshData()" class="filter-input">
+            </div>
+            <div class="filter-group">
+              <label>SKU</label>
+              <input type="text" [(ngModel)]="filterState.sku" placeholder="SKU-001..." (keyup.enter)="refreshData()" class="filter-input">
+            </div>
+          </div>
+        </div>
 
-          <select [(ngModel)]="filterState.category_id" (change)="refreshData()" class="filter-select">
-            <option [value]="null">Kategorie</option>
-            <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-          </select>
+        <div class="filter-section">
+          <h4>Kategorie & Dodavatel</h4>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label>Kategorie</label>
+              <select [(ngModel)]="filterState.category_id" (change)="refreshData()" class="filter-select">
+                <option [value]="null">Všechny</option>
+                <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+              </select>
+            </div>
 
-          <select [(ngModel)]="filterState.supplier_id" (change)="refreshData()" class="filter-select">
-            <option [value]="null">Dodavatel</option>
-            <option *ngFor="let sup of suppliers" [value]="sup.id">{{ sup.name }}</option>
-          </select>
+            <div class="filter-group">
+              <label>Dodavatel</label>
+              <select [(ngModel)]="filterState.supplier_id" (change)="refreshData()" class="filter-select">
+                <option [value]="null">Všichni</option>
+                <option *ngFor="let sup of suppliers" [value]="sup.id">{{ sup.name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
-          <select [(ngModel)]="filterState.is_active" (change)="refreshData()" class="filter-select">
-            <option [value]="null">Stav</option>
-            <option [value]="true">Aktivní</option>
-            <option [value]="false">Neaktivní</option>
-          </select>
+        <div class="filter-section">
+          <h4>Cena (rozpětí CZK)</h4>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label>Od</label>
+              <input type="number" [(ngModel)]="filterState.price_from" placeholder="0" min="0" (change)="refreshData()" class="filter-input">
+            </div>
+            <div class="filter-group">
+              <label>Do</label>
+              <input type="number" [(ngModel)]="filterState.price_to" placeholder="99999" min="0" (change)="refreshData()" class="filter-input">
+            </div>
+          </div>
+        </div>
 
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="filterState.low_stock" (change)="refreshData()">
-            Nízké zásoby
-          </label>
+        <div class="filter-section">
+          <h4>Skladem & Varianty</h4>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label>Skladem (min. ks)</label>
+              <input type="number" [(ngModel)]="filterState.stock_level" placeholder="0" min="0" (change)="refreshData()" class="filter-input">
+            </div>
+            <div class="filter-group">
+              <label>Počet variant (min.)</label>
+              <input type="number" [(ngModel)]="filterState.variant_count" placeholder="1" min="0" (change)="refreshData()" class="filter-input">
+            </div>
+          </div>
+        </div>
 
-          <button class="btn btn-small" (click)="clearFilters()">Vyčistit</button>
+        <div class="filter-section">
+          <h4>Status</h4>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label>Stav</label>
+              <select [(ngModel)]="filterState.is_active" (change)="refreshData()" class="filter-select">
+                <option [value]="null">Všechny</option>
+                <option [value]="true">Aktivní</option>
+                <option [value]="false">Neaktivní</option>
+              </select>
+            </div>
+
+            <div class="filter-group checkbox-filter">
+              <label>
+                <input type="checkbox" [(ngModel)]="filterState.low_stock" (change)="refreshData()">
+                Nízké zásoby
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-actions">
+          <button class="btn btn-small" (click)="clearFilters()">Vyčistit filtry</button>
         </div>
       </div>
     </div>
@@ -63,8 +123,6 @@
                 {{ filterState.sort_direction === 'asc' ? '▲' : '▼' }}
               </span>
             </th>
-            <th style="width: 80px">Var.</th>
-            <th style="width: 80px">Obr.</th>
             <th style="width: 120px">Akce</th>
           </tr>
         </thead>
@@ -89,20 +147,12 @@
                 </ng-container>
               </ng-container>
             </td>
-            <td class="center" style="width: 80px">
-              <span *ngIf="hasVariants(product)" class="badge-small">{{ product.variants!.length }}</span>
-              <span *ngIf="!hasVariants(product)" class="text-muted">-</span>
-            </td>
-            <td class="center" style="width: 80px">
-              <span *ngIf="product.images && product.images.length > 0" class="badge-small">{{ product.images.length }}</span>
-              <span *ngIf="!product.images || product.images.length === 0" class="text-muted">-</span>
-            </td>
             <td style="width: 120px" class="action-cells">
-              <button class="btn-icon" title="Detail" (click)="openProductDetails(product)">👁️</button>
-              <button class="btn-icon" title="Editovat" (click)="openEditProductForm(product)">✏️</button>
-              <button class="btn-icon" title="Varianty" (click)="openVariantsModal(product)">⚙️</button>
-              <button class="btn-icon" title="Obrázky" (click)="openImagesModal(product)">🖼️</button>
-              <button class="btn-icon danger" title="Smazat" (click)="deleteProduct(product)">🗑️</button>
+              <button class="btn-icon" title="Detail" (click)="openProductDetails(product, $event)">👁️</button>
+              <button class="btn-icon" title="Editovat" (click)="openEditProductForm(product, $event)">✏️</button>
+              <button class="btn-icon" title="Varianty" (click)="openVariantsModal(product, $event)">⚙️</button>
+              <button class="btn-icon" title="Obrázky" (click)="openImagesModal(product, $event)">🖼️</button>
+              <button class="btn-icon danger" title="Smazat" (click)="deleteProduct(product, false, $event)">🗑️</button>
             </td>
           </tr>
         </tbody>
@@ -138,8 +188,8 @@
               {{ getFieldValue(product, col.key) || '-' }}
             </td>
             <td style="width: 120px" class="action-cells">
-              <button class="btn-icon" title="Obnovit" (click)="restoreProduct(product)">♻️</button>
-              <button class="btn-icon danger" title="Trvale smazat" (click)="deleteProduct(product, true)">💥</button>
+              <button class="btn-icon" title="Obnovit" (click)="restoreProduct(product, $event)">♻️</button>
+              <button class="btn-icon danger" title="Trvale smazat" (click)="deleteProduct(product, true, $event)">💥</button>
             </td>
           </tr>
         </tbody>
@@ -424,7 +474,7 @@
             <div class="variant-header-actions">
               <button type="button" class="btn-icon small" title="Obrázky varianty" 
                       *ngIf="!variant._delete"
-                      (click)="editVariantImages(i)">🖼️</button>
+                      (click)="editVariantImages(i, $event)">🖼️</button>
               <button type="button" class="btn-icon danger" (click)="deleteVariant(i)">🗑️</button>
             </div>
           </div>

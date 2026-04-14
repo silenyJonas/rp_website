@@ -102,9 +102,30 @@
 .filters-panel {
   background: rgba(255, 255, 255, 0.1);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px;
+  padding: 12px;
   margin-top: 8px;
   border-radius: 4px;
+}
+
+.filter-section {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.filter-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.filter-section h4 {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .filter-row {
@@ -112,6 +133,18 @@
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 8px;
   align-items: flex-end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-group label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .filter-input,
@@ -131,19 +164,31 @@
   box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
 }
 
-.checkbox-label {
+.checkbox-filter {
+  align-self: flex-end;
+}
+
+.checkbox-filter label {
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: 12px;
   color: white;
   cursor: pointer;
+  margin-bottom: 0;
 }
 
-.checkbox-label input {
+.checkbox-filter input {
   width: 14px;
   height: 14px;
   margin: 0;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
 }
 
 /* ========== TABLE ========== */
@@ -641,12 +686,7 @@ legend {
   padding: 10px;
   margin: 8px 0;
 }
-.image-preview{
-  width: 35%;
-}
-.thumb-small{
-  width: 35%;
-}
+
 .vat-calculator h4 {
   margin: 0 0 8px 0;
   font-size: 12px;
@@ -743,15 +783,152 @@ legend {
   font-weight: bold;
 }
 
-/* ========== VARIANT IMAGES ========== */
+/* ========== IMAGE PREVIEW & GRID ========== */
+
+.image-card-grid {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 16px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fafafa;
+}
+
+.image-preview-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image-preview-box {
+  width: 150px;
+  height: 150px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-placeholder {
+  color: #999;
+  font-size: 12px;
+  text-align: center;
+}
+
+.primary-badge-inline {
+  font-size: 11px;
+  background: #28a745;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 2px;
+  display: inline-block;
+  text-align: center;
+}
+
+.image-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.image-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.filename {
+  font-size: 12px;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.file-input {
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.form-hint {
+  font-size: 11px;
+  color: #999;
+  margin: 4px 0 0 0;
+}
+
+.form-input {
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 12px;
+  width: 100%;
+}
+
+/* ========== VARIANT IMAGE INFO ========== */
+
+.variant-image-info {
+  padding: 12px;
+  border: 1px solid #ffc107;
+  border-radius: 4px;
+  background: #fffbf0;
+}
 
 .variant-image-note {
   background: #fff3cd;
   border: 1px solid #ffc107;
   color: #856404;
-  padding: 8px;
+  padding: 12px;
   border-radius: 3px;
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.image-card.variant-image {
+  opacity: 0.7;
+}
+
+/* ========== IMAGES GRID SMALL (Detail modal) ========== */
+
+.images-grid-small {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.image-thumb {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  overflow: hidden;
+  background: white;
+}
+
+.thumb-small {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.variant-images-preview {
+  margin-top: 8px;
+  padding: 8px 0;
+  border-top: 1px solid #eee;
 }
 
 .variant-header-actions {
