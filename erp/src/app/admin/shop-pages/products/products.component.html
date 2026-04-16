@@ -123,7 +123,7 @@
                 {{ filterState.sort_direction === 'asc' ? '▲' : '▼' }}
               </span>
             </th>
-            <th style="width: 120px">Akce</th>
+            <th style="width: auto">Akce</th>
           </tr>
         </thead>
         <tbody>
@@ -147,7 +147,7 @@
                 </ng-container>
               </ng-container>
             </td>
-            <td style="width: 120px" class="action-cells">
+            <td width="auto" class="action-cells">
               <button class="btn-icon" title="Detail" (click)="openProductDetails(product, $event)">👁️</button>
               <button class="btn-icon" title="Editovat" (click)="openEditProductForm(product, $event)">✏️</button>
               <button class="btn-icon" title="Varianty" (click)="openVariantsModal(product, $event)">⚙️</button>

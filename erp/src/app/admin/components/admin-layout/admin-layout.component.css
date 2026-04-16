@@ -104,10 +104,10 @@ header {
   .mobile-open .nav-text { display: inline-block !important; }
   .mobile-open .nav-icon { margin-right: 12px !important; width: auto !important; }
   .resizer-handle { display: none; }
-  .admin-content { width: 100%; padding: 15px; box-sizing: border-box; }
+  .admin-content { width: 100%; padding: 5px; box-sizing: border-box; }
 }
 
-.admin-content { flex-grow: 1; overflow-y: auto; background: white; }
+.admin-content { flex-grow: 1; overflow-y: auto; background: white; height: 100vh;}
 
 .global-loading-overlay {
   position: fixed;
