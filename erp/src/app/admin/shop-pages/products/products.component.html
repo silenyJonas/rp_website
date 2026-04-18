@@ -2,201 +2,81 @@
   <!-- Error Banner -->
   <div *ngIf="errorMessage" class="error-banner">⚠️ {{ errorMessage }}</div>
 
-  <div *ngIf="!errorMessage" class="main-content">
+  <div *ngIf="!errorMessage">
     <!-- TOOLBAR -->
     <div class="toolbar-section">
       <div class="toolbar-header">
-        <h1>📦 Produkty</h1>
+        <h1>Produkty</h1>
         <div class="toolbar-actions">
-          <button class="btn btn-primary" (click)="openNewProductForm()">➕ Nový</button>
-          <button class="btn btn-secondary" (click)="toggleFilters()">🔍 Filtry</button>
-          <button class="btn btn-secondary" [class.active]="showTrashTable" (click)="toggleTrashTable()">
-            🗑️ Koš {{ showTrashTable ? '✓' : '' }}
-          </button>
-        </div>
-      </div>
-
-      <!-- FILTERS PANEL (Collapsible) -->
-      <div class="filters-panel" *ngIf="showFiltersPanel">
-        <div class="filter-section">
-          <h4>Základní údaje</h4>
-          <div class="filter-row">
-            <div class="filter-group">
-              <label>ID</label>
-              <input type="text" [(ngModel)]="filterState.id" placeholder="1, 5, 10..." (keyup.enter)="refreshData()" class="filter-input">
-            </div>
-            <div class="filter-group">
-              <label>Název</label>
-              <input type="text" [(ngModel)]="filterState.name" placeholder="Hledej název..." (keyup.enter)="refreshData()" class="filter-input">
-            </div>
-            <div class="filter-group">
-              <label>SKU</label>
-              <input type="text" [(ngModel)]="filterState.sku" placeholder="SKU-001..." (keyup.enter)="refreshData()" class="filter-input">
-            </div>
-          </div>
-        </div>
-
-        <div class="filter-section">
-          <h4>Kategorie & Dodavatel</h4>
-          <div class="filter-row">
-            <div class="filter-group">
-              <label>Kategorie</label>
-              <select [(ngModel)]="filterState.category_id" (change)="refreshData()" class="filter-select">
-                <option [value]="null">Všechny</option>
-                <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-              </select>
-            </div>
-
-            <div class="filter-group">
-              <label>Dodavatel</label>
-              <select [(ngModel)]="filterState.supplier_id" (change)="refreshData()" class="filter-select">
-                <option [value]="null">Všichni</option>
-                <option *ngFor="let sup of suppliers" [value]="sup.id">{{ sup.name }}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="filter-section">
-          <h4>Cena (rozpětí CZK)</h4>
-          <div class="filter-row">
-            <div class="filter-group">
-              <label>Od</label>
-              <input type="number" [(ngModel)]="filterState.price_from" placeholder="0" min="0" (change)="refreshData()" class="filter-input">
-            </div>
-            <div class="filter-group">
-              <label>Do</label>
-              <input type="number" [(ngModel)]="filterState.price_to" placeholder="99999" min="0" (change)="refreshData()" class="filter-input">
-            </div>
-          </div>
-        </div>
-
-        <div class="filter-section">
-          <h4>Skladem & Varianty</h4>
-          <div class="filter-row">
-            <div class="filter-group">
-              <label>Skladem (min. ks)</label>
-              <input type="number" [(ngModel)]="filterState.stock_level" placeholder="0" min="0" (change)="refreshData()" class="filter-input">
-            </div>
-            <div class="filter-group">
-              <label>Počet variant (min.)</label>
-              <input type="number" [(ngModel)]="filterState.variant_count" placeholder="1" min="0" (change)="refreshData()" class="filter-input">
-            </div>
-          </div>
-        </div>
-
-        <div class="filter-section">
-          <h4>Status</h4>
-          <div class="filter-row">
-            <div class="filter-group">
-              <label>Stav</label>
-              <select [(ngModel)]="filterState.is_active" (change)="refreshData()" class="filter-select">
-                <option [value]="null">Všechny</option>
-                <option [value]="true">Aktivní</option>
-                <option [value]="false">Neaktivní</option>
-              </select>
-            </div>
-
-            <div class="filter-group checkbox-filter">
-              <label>
-                <input type="checkbox" [(ngModel)]="filterState.low_stock" (change)="refreshData()">
-                Nízké zásoby
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="filter-actions">
-          <button class="btn btn-small" (click)="clearFilters()">Vyčistit filtry</button>
+          <app-button-builder 
+            [configs]="toolbarButtons" 
+            (actionTriggered)="handleToolbarAction($event)">
+          </app-button-builder>
         </div>
       </div>
     </div>
 
-    <!-- TABULKA - Aktivní produkty -->
-    <div class="table-section" *ngIf="!showTrashTable">
-      <table class="products-table">
-        <thead>
-          <tr>
-            <th *ngFor="let col of columns" [style.width]="col.width" (click)="changeSorting(col.key)" class="sortable">
-              {{ col.header }}
-              <span *ngIf="filterState.sort_by === col.key" class="sort-indicator">
-                {{ filterState.sort_direction === 'asc' ? '▲' : '▼' }}
-              </span>
-            </th>
-            <th style="width: auto">Akce</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="data.length === 0" class="no-data">
-            <td [attr.colspan]="columns.length + 3" class="center">Žádné produkty</td>
-          </tr>
-          <tr *ngFor="let product of data" [class.low-stock]="product.stock_quantity <= product.stock_warning_level">
-            <td *ngFor="let col of columns" [style.width]="col.width">
-              <ng-container [ngSwitch]="col.type">
-                <ng-container *ngSwitchCase="'currency'">
-                  {{ formatCurrency(getFieldValue(product, col.key)) }}
-                </ng-container>
-                <ng-container *ngSwitchCase="'boolean'">
-                  <span [class.badge-yes]="getFieldValue(product, col.key)" 
-                        [class.badge-no]="!getFieldValue(product, col.key)">
-                    {{ getFieldValue(product, col.key) ? '✓' : '✗' }}
-                  </span>
-                </ng-container>
-                <ng-container *ngSwitchDefault>
-                  {{ getFieldValue(product, col.key) || '-' }}
-                </ng-container>
-              </ng-container>
-            </td>
-            <td width="auto" class="action-cells">
-              <button class="btn-icon" title="Detail" (click)="openProductDetails(product, $event)">👁️</button>
-              <button class="btn-icon" title="Editovat" (click)="openEditProductForm(product, $event)">✏️</button>
-              <button class="btn-icon" title="Varianty" (click)="openVariantsModal(product, $event)">⚙️</button>
-              <button class="btn-icon" title="Obrázky" (click)="openImagesModal(product, $event)">🖼️</button>
-              <button class="btn-icon danger" title="Smazat" (click)="deleteProduct(product, false, $event)">🗑️</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- PAGINACE -->
-      <div class="pagination" *ngIf="totalPages > 1">
-        <button class="btn btn-small" [disabled]="currentPage === 1" (click)="onHandlePageChange(currentPage - 1)">◀</button>
-        <span>{{ currentPage }}/{{ totalPages }}</span>
-        <button class="btn btn-small" [disabled]="currentPage === totalPages" (click)="onHandlePageChange(currentPage + 1)">▶</button>
+    <!-- MAIN LAYOUT: FILTER + TABLE -->
+    <div class="main-content-layout">
+      <!-- FILTER PANEL (Collapsible) -->
+      <div class="filter-side-panel" [class.active]="showFiltersPanel">
+        <app-filter-form-builder
+          [filterColumns]="filterColumns"
+          [initialFilters]="filters"
+          [filterFormTitle]="'Filtry produktů'"
+          (filtersApplied)="applyFilters($event)"
+          (filtersCleared)="clearFilters()">
+        </app-filter-form-builder>
       </div>
-    </div>
 
-    <!-- TABULKA - Koš (Soft deleted) -->
-    <div class="table-section" *ngIf="showTrashTable">
-      <div class="trash-header">
-        <h3>🗑️ Koš smazaných produktů</h3>
-        <button class="btn btn-small danger" (click)="deleteAllTrashed()">Vyprázdnit koš</button>
+      <!-- TABLE CONTAINER -->
+      <div class="table-and-pagination-container">
+        <!-- ACTIVE TABLE -->
+        <app-table-builder #activeTable 
+          *ngIf="!showTrashTable"
+          [buttons]="buttons"
+          [data]="data"
+          [columns]="productColumns"
+          [currentFilters]="filters"
+          [isFullWidth]="true"
+          [tableCaption]="'Seznam produktů'"
+          [apiEndpoint]="apiEndpoint"
+          (itemDeleted)="refreshData()"
+          (createFormOpened)="handleCreateFormOpened()"
+          (editFormOpened)="handleEditFormOpened($event)"
+          (viewDetailsOpened)="handleViewDetails($event)"
+          (openVariantsModal)="openVariantsModal($event)"
+          (openImagesModal)="openImagesModal($event)">
+        </app-table-builder>
+
+        <!-- TRASH TABLE -->
+        <app-trash-table-builder 
+          *ngIf="showTrashTable"
+          [data]="trashData"
+          [columns]="trashProductColumns"
+          [tableCaption]="'Archiv smazaných produktů'"
+          [apiEndpoint]="apiEndpoint"
+          (itemRestored)="refreshData()"
+          (itemPermanentlyDeleted)="refreshData()">
+        </app-trash-table-builder>
+
+        <!-- PAGINATION -->
+        <div class="pagination-container">
+          <app-pagination-buttons-builder
+            [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
+            [totalPages]="showTrashTable ? trashTotalPages : totalPages"
+            [totalItems]="showTrashTable ? trashTotalItems : totalItems"
+            [itemsPerPage]="showTrashTable ? trashItemsPerPage : itemsPerPage"
+            [dataLength]="showTrashTable ? trashData.length : data.length"
+            (pageChange)="handlePageChange($event)"
+            (itemsPerPageChange)="handleItemsPerPageChange($event)">
+          </app-pagination-buttons-builder>
+        </div>
       </div>
-      <table class="products-table">
-        <thead>
-          <tr>
-            <th *ngFor="let col of trashColumns" [style.width]="col.width">{{ col.header }}</th>
-            <th style="width: 120px">Akce</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="trashData.length === 0" class="no-data">
-            <td [attr.colspan]="trashColumns.length + 1" class="center">Koš je prázdný</td>
-          </tr>
-          <tr *ngFor="let product of trashData">
-            <td *ngFor="let col of trashColumns" [style.width]="col.width">
-              {{ getFieldValue(product, col.key) || '-' }}
-            </td>
-            <td style="width: 120px" class="action-cells">
-              <button class="btn-icon" title="Obnovit" (click)="restoreProduct(product, $event)">♻️</button>
-              <button class="btn-icon danger" title="Trvale smazat" (click)="deleteProduct(product, true, $event)">💥</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </div>
 </div>
+
 <!-- ============= MODAL: DETAIL PRODUKTU ============= -->
 <ng-container *ngIf="showDetailsModal && selectedProductForDetail">
   <div class="modal-overlay" (click)="closeDetailsModal()">
@@ -287,15 +167,6 @@
               <div class="variant-stock">
                 <span class="label">Sklad:</span> <strong>{{ v.stock_quantity }} ks</strong>
               </div>
-              <!-- Variant images v detailu -->
-              <div class="variant-images-preview" *ngIf="getVisibleImages(selectedProductForDetail, v.id).length > 0">
-                <span class="label">Obrázky varianty:</span>
-                <div class="images-grid-small">
-                  <div *ngFor="let img of getVisibleImages(selectedProductForDetail, v.id)" class="image-thumb">
-                    <img [src]="img.url || ('storage/products/' + img.image_path)" [alt]="img.alt_text" class="thumb-small">
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -347,7 +218,7 @@
   </div>
 </ng-container>
 
-<!-- ============= MODAL: EDITACE PRODUKTU ============= -->
+<!-- ============= MODAL: EDITACE PRODUKTU =============
 <ng-container *ngIf="showProductForm && editingProduct">
   <div class="modal-overlay" (click)="closeProductForm()">
     <div class="modal-content modal-form" (click)="$event.stopPropagation()">
@@ -444,16 +315,121 @@
             </div>
           </fieldset>
         </form>
-      </div>
-
-      <div class="modal-footer">
+         <div class="buttons">
         <button class="btn btn-secondary" (click)="closeProductForm()">Zrušit</button>
         <button class="btn btn-primary" (click)="saveProduct()">💾 Uložit</button>
+      </div>
+      </div>
+
+     
+    </div>
+  </div>
+</ng-container> -->
+<ng-container *ngIf="showProductForm && editingProduct">
+  <div class="modal-overlay" (click)="closeProductForm()">
+    <div class="modal-content modal-form" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ editingProduct.id ? '✏️ Editace' : '➕ Nový produkt' }}</h2>
+        <button class="close-btn" (click)="closeProductForm()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form class="product-form">
+          <fieldset>
+            <legend>Základní</legend>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Kategorie *</label>
+                <select [(ngModel)]="editingProduct.category_id" name="category_id" required>
+                  <option value="">-- Vybrat --</option>
+                  <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Dodavatel</label>
+                <select [(ngModel)]="editingProduct.supplier_id" name="supplier_id">
+                  <option [value]="null">-- Bez --</option>
+                  <option *ngFor="let sup of suppliers" [value]="sup.id">{{ sup.name }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Název *</label>
+              <input type="text" [(ngModel)]="editingProduct.name" name="name" required>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Slug</label>
+                <input type="text" [(ngModel)]="editingProduct.slug" name="slug" 
+                       [placeholder]="generateSlug(editingProduct.name)">
+              </div>
+              <div class="form-group">
+                <label>SKU *</label>
+                <input type="text" [(ngModel)]="editingProduct.sku" name="sku" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Krátký popis</label>
+              <input type="text" [(ngModel)]="editingProduct.short_description" name="short_description" maxlength="500">
+            </div>
+
+            <div class="form-group">
+              <label>Podrobný popis</label>
+              <textarea [(ngModel)]="editingProduct.description" name="description" rows="3"></textarea>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Ceny</legend>
+            <div class="form-row-3">
+              <div class="form-group">
+                <label>Prodejní cena *</label>
+                <input type="number" [(ngModel)]="editingProduct.price" name="price" min="0" step="0.01" required>
+              </div>
+              <div class="form-group">
+                <label>Nákupní cena</label>
+                <input type="number" [(ngModel)]="editingProduct.cost_price" name="cost_price" min="0" step="0.01">
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Sklad</legend>
+            <p class="note">⚠️ Počet na skladě se počítá z variant!</p>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Limit upozornění</label>
+                <input type="number" [(ngModel)]="editingProduct.stock_warning_level" name="stock_warning_level" min="0">
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Status</legend>
+            <div class="checkbox-group">
+              <label>
+                <input type="checkbox" [(ngModel)]="editingProduct.is_active" name="is_active">
+                Aktivní
+              </label>
+              <label>
+                <input type="checkbox" [(ngModel)]="editingProduct.is_featured" name="is_featured">
+                Doporučený
+              </label>
+            </div>
+          </fieldset>
+          
+          <div class="modal-footer-inline">
+            <button type="button" class="btn btn-secondary" (click)="closeProductForm()">Zrušit</button>
+            <button type="button" class="btn btn-primary" (click)="saveProduct()">💾 Uložit</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </ng-container>
-
 <!-- ============= MODAL: VARIANTY ============= -->
 <ng-container *ngIf="showVariantsModal && editingProduct">
   <div class="modal-overlay" (click)="closeVariantsModal()">
@@ -512,37 +488,20 @@
               <input type="text" [(ngModel)]="variant.sku_variant" placeholder="SKU-BLK-M" [disabled]="!!variant._delete">
             </div>
 
-            <!-- DPH VÝPOČTY -->
             <div class="vat-calculator">
               <h4>💰 Ceny & DPH</h4>
               <div class="form-row-3">
                 <div class="form-group">
                   <label>Cena S DPH *</label>
-                  <input type="number" 
-                         [(ngModel)]="variant.price_with_vat" 
-                         (change)="onPriceWithVATChange(variant)"
-                         placeholder="0" 
-                         step="0.01" 
-                         [disabled]="!!variant._delete">
+                  <input type="number" [(ngModel)]="variant.price_with_vat" (change)="onPriceWithVATChange(variant)" placeholder="0" step="0.01" [disabled]="!!variant._delete">
                 </div>
                 <div class="form-group">
                   <label>DPH (%)</label>
-                  <input type="number" 
-                         [(ngModel)]="variant.vat_rate" 
-                         (change)="onVATRateChange(variant)"
-                         placeholder="21" 
-                         min="0" 
-                         max="100" 
-                         [disabled]="!!variant._delete">
+                  <input type="number" [(ngModel)]="variant.vat_rate" (change)="onVATRateChange(variant)" placeholder="21" min="0" max="100" [disabled]="!!variant._delete">
                 </div>
                 <div class="form-group">
                   <label>Cena BEZ DPH</label>
-                  <input type="number" 
-                         [(ngModel)]="variant.price_without_vat" 
-                         placeholder="0" 
-                         step="0.01"
-                         readonly
-                         [disabled]="!!variant._delete">
+                  <input type="number" [(ngModel)]="variant.price_without_vat" placeholder="0" step="0.01" readonly [disabled]="!!variant._delete">
                 </div>
               </div>
             </div>
@@ -577,24 +536,15 @@
       <div class="modal-body">
         <div *ngIf="editingVariantImages.length === 0" class="empty-state">Bez obrázků - klikni "➕ Přidat"</div>
 
-        <div *ngFor="let image of editingVariantImages; let i = index" 
-             class="image-card" [class.deleted]="image._delete">
-          
+        <div *ngFor="let image of editingVariantImages; let i = index" class="image-card" [class.deleted]="image._delete">
           <div class="image-card-grid">
-            <!-- Preview část -->
             <div class="image-preview-section">
               <div class="image-preview-box">
-                <img *ngIf="image.url || image.image_path" 
-                     [src]="image.url || ('storage/products/' + image.image_path)" 
-                     [alt]="image.alt_text || 'Náhled'"
-                     class="image-preview">
-                <div *ngIf="!image.url && !image.image_path" class="image-placeholder">
-                  Náhled obrázku
-                </div>
+                <img *ngIf="image.url || image.image_path" [src]="image.url || ('storage/products/' + image.image_path)" [alt]="image.alt_text || 'Náhled'" class="image-preview">
+                <div *ngIf="!image.url && !image.image_path" class="image-placeholder">Náhled obrázku</div>
               </div>
             </div>
 
-            <!-- Form část -->
             <div class="image-form-section">
               <div class="image-header">
                 <span class="filename" *ngIf="image.image_path">{{ image.image_path }}</span>
@@ -604,24 +554,18 @@
               <div class="image-form">
                 <div class="form-group">
                   <label>Soubor *</label>
-                  <input type="file" accept="image/*" (change)="onVariantImageFileSelected($event, i)" 
-                         [disabled]="image._delete"
-                         class="file-input">
+                  <input type="file" accept="image/*" (change)="onVariantImageFileSelected($event, i)" [disabled]="image._delete" class="file-input">
                   <p class="form-hint">Vyberi soubor JPG/PNG (max 5MB)</p>
                 </div>
 
                 <div class="form-row-2">
                   <div class="form-group">
                     <label>Alt text (popis)</label>
-                    <input type="text" [(ngModel)]="image.alt_text" placeholder="Popis obrázku" 
-                           [disabled]="!!image._delete"
-                           class="form-input">
+                    <input type="text" [(ngModel)]="image.alt_text" placeholder="Popis obrázku" [disabled]="!!image._delete" class="form-input">
                   </div>
                   <div class="form-group">
                     <label>Pořadí</label>
-                    <input type="number" [(ngModel)]="image.sort_order" placeholder="0" min="0" 
-                           [disabled]="!!image._delete"
-                           class="form-input">
+                    <input type="number" [(ngModel)]="image.sort_order" placeholder="0" min="0" [disabled]="!!image._delete" class="form-input">
                   </div>
                 </div>
               </div>
@@ -652,67 +596,48 @@
       <div class="modal-body">
         <div *ngIf="getVisibleImages(editingProduct).length === 0" class="empty-state">Bez obrázků - klikni "➕ Přidat"</div>
 
-        <div *ngFor="let image of editingProduct.images; let i = index" 
-             class="image-card" [class.deleted]="image._delete || !!image.variant_id" [class.variant-image]="!!image.variant_id">
-          
-          <!-- Pouze product images (bez variant_id) se editují zde -->
+        <div *ngFor="let image of editingProduct.images; let i = index" class="image-card" [class.deleted]="image._delete || !!image.variant_id" [class.variant-image]="!!image.variant_id">
           <div *ngIf="!image.variant_id" class="image-card-grid">
-            <!-- Preview část -->
             <div class="image-preview-section">
               <div class="image-preview-box">
-                <img *ngIf="image.url || image.image_path" 
-                     [src]="image.url || ('storage/products/' + image.image_path)" 
-                     [alt]="image.alt_text || 'Náhled'"
-                     class="image-preview">
-                <div *ngIf="!image.url && !image.image_path" class="image-placeholder">
-                  Náhled obrázku
-                </div>
+                <img *ngIf="image.url || image.image_path" [src]="image.url || ('storage/products/' + image.image_path)" [alt]="image.alt_text || 'Náhled'" class="image-preview">
+                <div *ngIf="!image.url && !image.image_path" class="image-placeholder">Náhled obrázku</div>
               </div>
               <div *ngIf="image.is_primary" class="primary-badge-inline">Primární</div>
             </div>
 
-            <!-- Form část -->
             <div class="image-form-section">
               <div class="image-header">
                 <span class="filename" *ngIf="image.image_path">{{ image.image_path }}</span>
-                <button type="button" class="btn-icon danger" (click)="deleteImage(i)" 
-                        [disabled]="!!image._delete">🗑️</button>
+                <button type="button" class="btn-icon danger" (click)="deleteImage(i)" [disabled]="!!image._delete">🗑️</button>
               </div>
 
               <div class="image-form">
                 <div class="form-group">
                   <label>Soubor *</label>
-                  <input type="file" accept="image/*" (change)="onFileSelected($event, i)" 
-                         [disabled]="image._delete"
-                         class="file-input">
+                  <input type="file" accept="image/*" (change)="onFileSelected($event, i)" [disabled]="image._delete" class="file-input">
                   <p class="form-hint">Vyberi soubor JPG/PNG (max 5MB)</p>
                 </div>
 
                 <div class="form-row-2">
                   <div class="form-group">
                     <label>Alt text (popis)</label>
-                    <input type="text" [(ngModel)]="image.alt_text" placeholder="Popis obrázku" 
-                           [disabled]="!!image._delete"
-                           class="form-input">
+                    <input type="text" [(ngModel)]="image.alt_text" placeholder="Popis obrázku" [disabled]="!!image._delete" class="form-input">
                   </div>
                   <div class="form-group">
                     <label>Pořadí</label>
-                    <input type="number" [(ngModel)]="image.sort_order" placeholder="0" min="0" 
-                           [disabled]="!!image._delete"
-                           class="form-input">
+                    <input type="number" [(ngModel)]="image.sort_order" placeholder="0" min="0" [disabled]="!!image._delete" class="form-input">
                   </div>
                 </div>
 
                 <label class="radio-label">
-                  <input type="radio" [name]="'primary-' + i" [checked]="image.is_primary" 
-                         (change)="setPrimaryImage(i)" [disabled]="image._delete">
+                  <input type="radio" [name]="'primary-' + i" [checked]="image.is_primary" (change)="setPrimaryImage(i)" [disabled]="image._delete">
                   <span>Primární obrázek (hlavní náhled)</span>
                 </label>
               </div>
             </div>
           </div>
 
-          <!-- Variant images - pouze info -->
           <div *ngIf="image.variant_id" class="variant-image-info">
             <div class="variant-image-note">
               ⚠️ <strong>Obrázek varianty</strong><br>

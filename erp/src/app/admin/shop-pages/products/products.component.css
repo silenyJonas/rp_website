@@ -6,18 +6,16 @@
   color: #333;
 }
 
-.main-content {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+/* ========== TOOLBAR ========== */
+.toolbar-section {
+  background: #ffffff;
+  margin-bottom: 5px;
 }
 
-/* ========== TOOLBAR ========== */
 .toolbar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
   gap: 15px;
 }
 
@@ -33,6 +31,54 @@
   gap: 8px;
 }
 
+/* ========== MAIN LAYOUT ==========*/
+.main-content-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  gap: 0;
+}
+@media (min-width: 1024px) {
+  .main-content-layout {
+    flex-direction: row;
+    gap: 0;
+  }
+}
+.filter-side-panel {
+  width: 100%;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: 
+    max-height 0.3s ease-out,
+    width 0.3s ease-out,
+    opacity 0.2s ease,
+    margin 0.3s ease;
+}
+
+/* Mobilní / Vertikální zobrazení */
+.filter-side-panel.active {
+  max-height: 1000px; /* Dostatečná výška pro obsah filtrů */
+  opacity: 1;
+  margin-bottom: 15px;
+}
+
+.table-and-pagination-container {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  overflow-x: auto;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* ========== BUTTON STYLES ==========*/
 .btn {
   padding: 10px 16px;
   border: none;
@@ -46,6 +92,7 @@
   gap: 6px;
   white-space: nowrap;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  margin-right: 10px;
 }
 
 .btn:disabled {
@@ -74,12 +121,6 @@
   border-color: #adb5bd;
 }
 
-.btn-secondary.active {
-  background: #f0f8ff;
-  border-color: #4F46E5;
-  color: #4F46E5;
-}
-
 .btn-small {
   padding: 8px 12px;
   font-size: 0.8rem;
@@ -95,254 +136,46 @@
   background: #b91c1c;
 }
 
-/* ========== FILTERS PANEL ========== */
-.filters-panel {
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  padding: 20px;
-  margin-top: 0;
-  border-radius: 8px;
-}
-
-.filter-section {
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.filter-section:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-.filter-section h4 {
-  margin: 0 0 12px 0;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #333;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.filter-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
-  align-items: flex-end;
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.filter-group label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #444;
-}
-
-.filter-input,
-.filter-select {
-  padding: 8px 12px;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  background: white;
-  color: #333;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  transition: all 0.15s ease;
-}
-
-.filter-input:focus,
-.filter-select:focus {
-  outline: none;
-  border-color: #4F46E5;
-  box-shadow: 0 0 0 1px #4F46E5, 0 0 0 3px rgba(79, 70, 229, 0.2);
-}
-
-.checkbox-filter {
-  align-self: flex-end;
-}
-
-.checkbox-filter label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
-  color: #333;
-  cursor: pointer;
-  margin-bottom: 0;
-}
-
-.checkbox-filter input {
-  width: 15px;
-  height: 15px;
-  margin: 0;
-  cursor: pointer;
-  accent-color: #4F46E5;
-  border-radius: 3px;
-}
-
-.filter-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  margin-top: 15px;
-}
-
-/* ========== TABLE ========== */
-.table-section {
-  background: white;
-  border-radius: 8px;
-  padding: 0;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border: 1px solid #dee2e6;
-  overflow: hidden;
-}
-
-.trash-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.trash-header h3 {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.products-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-  table-layout: fixed;
-}
-
-.products-table thead {
-  background: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.products-table th {
-  padding: 12px 16px;
-  text-align: left;
-  font-weight: 600;
-  color: #333;
-  font-size: 0.8rem;
-  overflow: hidden;           /* Vše, co přeteče rozměr buňky, se skryje */
-  text-overflow: ellipsis;    /* Místo useknutého textu se zobrazí tři tečky (...) */
-  white-space: nowrap;
-}
-
-.products-table td {
-  padding-left: 8px;
-  padding-right: 8px;
-  border-bottom: 1px solid #f5f5f5;
-  overflow: hidden;           /* Vše, co přeteče rozměr buňky, se skryje */
-  text-overflow: ellipsis;    /* Místo useknutého textu se zobrazí tři tečky (...) */
-  white-space: nowrap;
-}
-
-.products-table tbody tr:hover {
-  background: #f8f9fa;
-}
-
-.products-table tbody tr.low-stock {
-  background: #fffbf0;
-}
-
-.products-table td.center {
-  text-align: center;
-}
-
-.action-cells {
-  display: flex;
-  justify-content: flex-start;
-}
-
 .btn-icon {
-  padding: 4px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   border: none;
-  background: transparent;
+  background: #f8f9fa;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
-  transition: transform 0.1s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  border: 1px solid #dee2e6;
 }
 
 .btn-icon:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
   transform: scale(1.05);
 }
 
+.btn-icon.danger {
+  background: #fee;
+  color: #dc2626;
+  border-color: #fecaca;
+}
 
 .btn-icon.danger:hover {
-    transform: scale(1.05);
-
+  background: #fdd;
+  border-color: #dc2626;
 }
 
-.no-data {
-  text-align: center;
-  color: #adb5bd;
-  padding: 30px 20px !important;
+.btn-icon.small {
+  width: 28px;
+  height: 28px;
+  font-size: 0.9rem;
 }
 
-.badge-small {
-  display: inline-block;
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: #e3f2fd;
-  color: #1976d2;
-}
-
-.badge-small.primary {
-  background: #f3e5f5;
-  color: #7b1fa2;
-}
-
-.badge-yes {
-  color: #28a745;
-  font-weight: 600;
-}
-
-.badge-no {
-  color: #dc2626;
-  font-weight: 600;
-}
-
-.text-muted {
-  color: #adb5bd;
-}
-
-.mono {
-  font-family: 'Courier New', monospace;
-  font-size: 0.8rem;
-}
-
-/* ========== PAGINATION ========== */
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  padding: 20px;
-  border-top: 1px solid #dee2e6;
-  font-size: 0.85rem;
-}
-
-.pagination span {
-  color: #666;
-  font-weight: 500;
-}
-
-/* ========== MODAL ========== */
+/* ========== MODAL STYLES ========== */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -363,13 +196,15 @@
 }
 
 .modal-content {
+  display: flex;
+  flex-direction: column;
   background: white;
   border-radius: 12px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
   max-width: 500px;
   width: 95%;
-  max-height: 90vh;
-  overflow: auto;
+  max-height: 90vh; /* Omezení výšky na 90% obrazovky */
+  overflow: hidden; /* DŮLEŽITÉ: Samotný kontejner nesmí scrollovat */
   animation: slideUp 0.3s ease-out;
 }
 
@@ -401,12 +236,14 @@
 }
 
 .modal-header {
+  flex-shrink: 0; /* Header se nikdy nezmenší */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 25px;
   border-bottom: 1px solid #dee2e6;
   background: #f8f9fa;
+  z-index: 10;
 }
 
 .modal-header h2 {
@@ -437,18 +274,22 @@
 }
 
 .modal-body {
+  flex: 1; /* Zabere veškerý zbývající prostor */
   padding: 25px;
-  max-height: calc(90vh - 140px);
-  overflow-y: auto;
+  overflow-y: auto; /* Zde se odehrává scroll */
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-footer {
+  flex-shrink: 0;
   padding: 16px 25px;
   border-top: 1px solid #dee2e6;
   display: flex;
   justify-content: flex-end;
   gap: 12px;
   background: #f8f9fa;
+  /* Odebereme zbytečné overflow/positioning, pokud by tam byly */
 }
 
 /* ========== DETAIL SECTIONS ========== */
@@ -505,10 +346,22 @@
   font-weight: 600;
 }
 
-.status-warning {
+.mono {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+}
+
+.badge-yes {
+  color: #28a745;
   font-weight: 600;
 }
 
+.badge-no {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* ========== VARIANTS LIST ========== */
 .variants-list {
   display: flex;
   flex-direction: column;
@@ -557,6 +410,7 @@
   font-weight: 600;
 }
 
+/* ========== IMAGES GRID ========== */
 .images-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -589,7 +443,7 @@
   font-weight: 600;
 }
 
-/* ========== FORMULÁŘE ========== */
+/* ========== FORMS ========== */
 .product-form,
 .variant-form,
 .image-form {
@@ -748,6 +602,11 @@ legend {
   color: #333;
 }
 
+.variant-header-actions {
+  display: flex;
+  gap: 6px;
+}
+
 .image-card {
   border: 1px solid #dee2e6;
   border-radius: 6px;
@@ -762,47 +621,6 @@ legend {
   background: #f5f5f5;
   border-style: dashed;
 }
-
-.image-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  border-bottom: 1px solid #dee2e6;
-  background: #f8f9fa;
-}
-
-.filename {
-  font-size: 0.8rem;
-  color: #666;
-  font-family: monospace;
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* ========== TABULKA HEADERY ========== */
-
-.sortable {
-  cursor: pointer;
-  user-select: none;
-  position: relative;
-}
-
-.sortable:hover {
-  background: #f0f0f0;
-}
-
-.sort-indicator {
-  margin-left: 6px;
-  font-size: 0.75rem;
-  color: #4F46E5;
-  font-weight: bold;
-}
-
-/* ========== IMAGE PREVIEW & GRID ========== */
 
 .image-card-grid {
   display: grid;
@@ -858,6 +676,26 @@ legend {
   gap: 12px;
 }
 
+.image-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: 1px solid #dee2e6;
+  background: #f8f9fa;
+}
+
+.filename {
+  font-size: 0.8rem;
+  color: #666;
+  font-family: monospace;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .file-input {
   padding: 8px;
   border: 1px solid #dee2e6;
@@ -895,8 +733,6 @@ legend {
   box-shadow: 0 0 0 1px #4F46E5, 0 0 0 3px rgba(79, 70, 229, 0.2);
 }
 
-/* ========== VARIANT IMAGE INFO ========== */
-
 .variant-image-info {
   padding: 16px;
 }
@@ -914,8 +750,6 @@ legend {
 .image-card.variant-image {
   opacity: 0.7;
 }
-
-/* ========== IMAGES GRID SMALL (Detail modal) ========== */
 
 .images-grid-small {
   display: grid;
@@ -945,26 +779,6 @@ legend {
   border-top: 1px solid #dee2e6;
 }
 
-.variant-header-actions {
-  display: flex;
-  gap: 6px;
-}
-
-.btn-icon.small {
-  width: 28px;
-  height: 28px;
-  font-size: 0.9rem;
-  padding: 0;
-}
-
-/* ========== VARIANT IMAGES DETAIL ========== */
-
-.variant-images {
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 6px;
-}
-
 /* ========== ERROR ========== */
 .error-banner {
   background: #fee;
@@ -977,6 +791,23 @@ legend {
   font-weight: 500;
 }
 
+.empty-state {
+  text-align: center;
+  color: #adb5bd;
+  padding: 30px 20px;
+}
+@media (min-width: 1024px) {
+  .filter-side-panel {
+    width: 0;
+    max-height: none; /* Na desktopu neomezujeme výšku */
+    margin-bottom: 0;
+  }
+  
+  .filter-side-panel.active {
+    width: 280px; /* Šířka bočního panelu */
+    opacity: 1;
+  }
+}
 /* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
   .products-container {
@@ -1003,10 +834,6 @@ legend {
     grid-template-columns: 1fr;
   }
 
-  .filter-row {
-    grid-template-columns: 1fr;
-  }
-
   .info-grid {
     grid-template-columns: 1fr;
   }
@@ -1015,28 +842,44 @@ legend {
     grid-template-columns: 1fr;
   }
 
-  .modal-overlay {
-    background: rgba(0, 0, 0, 0.5);
+  .variant-pricing {
+    grid-template-columns: 1fr;
   }
 
   .modal-content {
     max-width: 100%;
-    width: 95%;
-    max-height: 90vh;
+    width: 100%;
+    height: 100%;
+    max-height: 100vh; /* Na mobilu přes celou obrazovku */
+    border-radius: 0;
+  }
+  .modal-body {
+    display: block; /* Vrátíme standardní flow */
+    overflow-y: auto;
+  }
+  .toolbar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+.modal-footer {
+    position: static; 
+    border-top: 1px solid #dee2e6;
+    background: #ffffff;
+    padding-bottom: 30px; /* Extra místo pro palce na mobilu */
+  }
+  .toolbar-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
-  .modal-body {
-    max-height: calc(90vh - 140px);
-  }
 }
 
 @media (max-width: 480px) {
   .toolbar-header h1 {
     font-size: 1.2rem;
-  }
-
-  .products-table {
-    font-size: 0.8rem;
   }
 
   .modal-header h2 {
@@ -1052,5 +895,10 @@ legend {
 
   .modal-overlay {
     background: white;
+  }
+
+  .image-preview-box {
+    width: 100%;
+    max-width: 150px;
   }
 }

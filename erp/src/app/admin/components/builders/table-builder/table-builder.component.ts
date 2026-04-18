@@ -35,6 +35,10 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
   @Output() viewDetailsOpened = new EventEmitter<any>();
   @Output() generateFormOpened = new EventEmitter<any>();
   @Output() resetPasswordFormOpened = new EventEmitter<any>(); 
+  @Output() openImagesModal = new EventEmitter<any>(); 
+  @Output() openVariantsModal = new EventEmitter<any>(); 
+
+  web_logs_endpoint: string = 'web/logs'
 
   constructor(
     protected override dataHandler: Core.DataHandler,
@@ -78,7 +82,11 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
       case 'details': this.viewDetailsOpened.emit(item); break;
       case 'edit': this.editFormOpened.emit(item); break;
       case 'delete': this.onDeleteAction(item); break;
+
+      // custom events
       case 'password_reset': this.resetPasswordFormOpened.emit(item); break; 
+      case 'custom_prod_var': this.openVariantsModal.emit(item); break; 
+      case 'custom_prod_img': this.openImagesModal.emit(item); break; 
       default: console.warn('Neznámý typ akce:', buttonAction);
     }
   }
@@ -143,7 +151,7 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
       user_id_plain: this.authService.getUserId()?.toString(),
       user_plain: this.authService.getUserEmail()
     };
-    this.dataHandler.post('business_logs', logData).subscribe({
+    this.dataHandler.post(this.web_logs_endpoint, logData).subscribe({
       error: (err) => console.error('Nepodařilo se zalogovat export:', err)
     });
   }
