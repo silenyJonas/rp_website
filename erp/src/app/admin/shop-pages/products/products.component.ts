@@ -4,74 +4,11 @@ import { SHARED_UI_BUILDERS } from '../../../shared/imports/shared-ui-builders';
 import { BaseDataComponent } from '../../components/base-data/base-data.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-// import { PRODUCT_BUTTONS, PRODUCT_COLUMNS, TRASH_PRODUCT_COLUMNS, FILTER_COLUMNS, TOOLBAR_BUTTONS } from './products.config';
 import { ConfirmDialogService } from '../../../core/services/confirm-dialog.service';
 import { PRODUCT_BUTTONS, PRODUCT_COLUMNS, TRASH_PRODUCT_COLUMNS, FILTER_COLUMNS, TOOLBAR_BUTTONS } from './products.config';
-
+import { Variant, ProductImage, Category, Supplier, Product } from './product-specific.interface';
 // ========== INTERFACES ==========
-interface Variant {
-  id?: number;
-  variant_name: string;
-  attribute_1_name?: string;
-  attribute_1_value?: string;
-  attribute_2_name?: string;
-  attribute_2_value?: string;
-  sku_variant?: string;
-  price_with_vat: number;
-  vat_rate: number;
-  price_without_vat: number;
-  stock_quantity: number;
-  images?: ProductImage[];
-  _delete?: boolean;
-}
 
-interface ProductImage {
-  [key: string]: any;
-  id?: number;
-  product_id?: number;
-  variant_id?: number;
-  image_path: string;
-  alt_text: string;
-  is_primary: boolean;
-  sort_order: number;
-  file?: File;
-  url?: string;
-  _delete?: boolean;
-}
-
-interface Category {
-  id: number;
-  name: string;
-  slug: string;
-}
-
-interface Supplier {
-  id: number;
-  name: string;
-}
-
-interface Product {
-  id?: number;
-  category_id: number;
-  supplier_id?: number;
-  name: string;
-  slug: string;
-  description?: string;
-  short_description?: string;
-  price: number;
-  cost_price?: number;
-  sku: string;
-  stock_quantity: number;
-  stock_warning_level: number;
-  is_active: boolean;
-  is_featured: boolean;
-  images?: ProductImage[];
-  variants?: Variant[];
-  category?: Category;
-  supplier?: Supplier;
-  created_at?: string;
-  updated_at?: string;
-}
 
 @Component({
   selector: 'app-products',
@@ -133,6 +70,17 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
 
   override ngOnDestroy(): void {
     super.ngOnDestroy();
+    this.toggleBodyScroll(false);
+  }
+
+  // ========== BODY SCROLL HELPER ==========
+
+  private toggleBodyScroll(lock: boolean): void {
+    if (lock) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
   }
 
   // ========== TOOLBAR ACTIONS ==========
@@ -179,6 +127,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       variants: []
     };
     this.showProductForm = true;
+    this.toggleBodyScroll(true);
     this.cd.markForCheck();
   }
 
@@ -245,6 +194,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       next: (fullProduct) => {
         this.selectedProductForDetail = fullProduct;
         this.showDetailsModal = true;
+        this.toggleBodyScroll(true);
         this.cd.markForCheck();
       },
       error: () => {
@@ -256,6 +206,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   closeDetailsModal(): void {
     this.showDetailsModal = false;
     this.selectedProductForDetail = null;
+    this.toggleBodyScroll(false);
     this.cd.markForCheck();
   }
 
@@ -286,6 +237,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
         }
         this.editingProduct = { ...fullProduct };
         this.showProductForm = true;
+        this.toggleBodyScroll(true);
         this.cd.markForCheck();
       },
       error: () => {
@@ -294,91 +246,6 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     });
   }
 
-  // saveProduct(): void {
-  //   if (!this.editingProduct || !this.validateProduct()) return;
-
-  //   const formData = new FormData();
-
-  //   formData.append('category_id', this.editingProduct.category_id.toString());
-  //   formData.append('supplier_id', (this.editingProduct.supplier_id || '').toString());
-  //   formData.append('name', this.editingProduct.name);
-  //   formData.append('slug', this.editingProduct.slug || this.generateSlug(this.editingProduct.name));
-  //   formData.append('description', this.editingProduct.description || '');
-  //   formData.append('short_description', this.editingProduct.short_description || '');
-  //   formData.append('price', this.editingProduct.price.toString());
-  //   formData.append('cost_price', (this.editingProduct.cost_price || 0).toString());
-  //   formData.append('sku', this.editingProduct.sku);
-  //   formData.append('stock_quantity', this.editingProduct.stock_quantity.toString());
-  //   formData.append('stock_warning_level', this.editingProduct.stock_warning_level.toString());
-  //   formData.append('is_active', this.editingProduct.is_active ? '1' : '0');
-  //   formData.append('is_featured', this.editingProduct.is_featured ? '1' : '0');
-
-  //   // Obrázky produktu
-  //   const activeProductImages = (this.editingProduct.images || []).filter(img => !img._delete && !img.variant_id);
-  //   activeProductImages.forEach((img, idx) => {
-  //     if (img.id) formData.append(`images[${idx}][id]`, img.id.toString());
-  //     if (img.file) formData.append(`images[${idx}][file]`, img.file);
-  //     formData.append(`images[${idx}][alt_text]`, img.alt_text || '');
-  //     formData.append(`images[${idx}][is_primary]`, img.is_primary ? '1' : '0');
-  //     formData.append(`images[${idx}][sort_order]`, img.sort_order.toString());
-  //   });
-
-  //   // Smazané obrázky
-  //   const imagesToDelete = (this.editingProduct.images || []).filter(img => img._delete && img.id);
-  //   imagesToDelete.forEach((img, idx) => {
-  //     formData.append(`delete_images[${idx}]`, img.id!.toString());
-  //   });
-
-  //   // Varianty
-  //   const activeVariants = (this.editingProduct.variants || []).filter(v => !v._delete);
-  //   activeVariants.forEach((v, idx) => {
-  //     if (v.id) formData.append(`variants[${idx}][id]`, v.id.toString());
-  //     formData.append(`variants[${idx}][variant_name]`, v.variant_name);
-  //     formData.append(`variants[${idx}][attribute_1_name]`, v.attribute_1_name || '');
-  //     formData.append(`variants[${idx}][attribute_1_value]`, v.attribute_1_value || '');
-  //     formData.append(`variants[${idx}][attribute_2_name]`, v.attribute_2_name || '');
-  //     formData.append(`variants[${idx}][attribute_2_value]`, v.attribute_2_value || '');
-  //     formData.append(`variants[${idx}][sku_variant]`, v.sku_variant || '');
-  //     formData.append(`variants[${idx}][stock_quantity]`, v.stock_quantity.toString());
-  //     formData.append(`variants[${idx}][vat_rate]`, (v.vat_rate || 21).toString());
-  //     formData.append(`variants[${idx}][price_with_vat]`, (v.price_with_vat || 0).toString());
-  //     formData.append(`variants[${idx}][price_without_vat]`, (v.price_without_vat || 0).toString());
-  //   });
-
-  //   const variantsToDelete = (this.editingProduct.variants || []).filter(v => v._delete && v.id);
-  //   variantsToDelete.forEach((v, idx) => {
-  //     formData.append(`delete_variants[${idx}]`, v.id!.toString());
-  //   });
-
-  //   this.loadingService.show();
-
-  //   let request;
-  //   if (this.editingProduct.id) {
-  //     formData.append('_method', 'PUT');
-  //     request = this.dataHandler.post(`${this.apiEndpoint}/${this.editingProduct.id}`, formData);
-  //   } else {
-  //     request = this.dataHandler.post(this.apiEndpoint, formData);
-  //   }
-
-  //   request.pipe(
-  //     Core.finalize(() => {
-  //       this.loadingService.hide();
-  //       this.cd.markForCheck();
-  //     }),
-  //     Core.takeUntil(this.destroy$)
-  //   ).subscribe({
-  //     next: () => {
-  //       this.alertDialogService.open('Úspěch', 'Produkt byl uložen.', 'success');
-  //       this.showProductForm = false;
-  //       this.editingProduct = null;
-  //       this.refreshData();
-  //     },
-  //     error: (err) => {
-  //       const message = err.error?.message || err.error?.errors || 'Chyba při ukládání produktu.';
-  //       this.alertDialogService.open('Chyba', this.formatErrorMessage(message), 'danger');
-  //     }
-  //   });
-  // }
   saveProduct(): void {
     if (!this.editingProduct || !this.validateProduct()) return;
 
@@ -449,11 +316,11 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
 
     this.loadingService.show();
     // Do saveProduct() před odesláním:
-formData.forEach((value, key) => {
-  if (key.includes('[file]')) {
-    console.log('Odesílám soubor:', key, value);
-  }
-});
+    formData.forEach((value, key) => {
+      if (key.includes('[file]')) {
+        console.log('Odesílám soubor:', key, value);
+      }
+    });
 
     let request;
     if (this.editingProduct.id) {
@@ -474,6 +341,7 @@ formData.forEach((value, key) => {
         this.alertDialogService.open('Úspěch', 'Produkt byl uložen.', 'success');
         this.showProductForm = false;
         this.editingProduct = null;
+        this.toggleBodyScroll(false);
         this.refreshData();
       },
       error: (err) => {
@@ -485,9 +353,10 @@ formData.forEach((value, key) => {
   closeProductForm(): void {
     this.showProductForm = false;
     this.editingProduct = null;
+    this.toggleBodyScroll(false);
     this.cd.markForCheck();
   }
-openVariantsModal(product: Product, event?: Event): void {
+  openVariantsModal(product: Product, event?: Event): void {
     if (event) event.stopPropagation();
     this.selectedProduct = product;
     this.loadingService.show();
@@ -500,6 +369,7 @@ openVariantsModal(product: Product, event?: Event): void {
           this.editingProduct = { ...fullProduct };
         }
         this.showVariantsModal = true;
+        this.toggleBodyScroll(true);
         this.cd.markForCheck();
       }
     });
@@ -527,24 +397,24 @@ openVariantsModal(product: Product, event?: Event): void {
     this.cd.markForCheck();
   }
 
-async deleteVariant(index: number): Promise<void> {
-  if (!this.editingProduct?.variants) return;
-  const variant = this.editingProduct.variants[index];
+  async deleteVariant(index: number): Promise<void> {
+    if (!this.editingProduct?.variants) return;
+    const variant = this.editingProduct.variants[index];
 
-  const confirmed = await this.confirmDialog.open(
-    'Smazat variantu', 
-    `Opravdu chcete smazat variantu ${variant.variant_name || ''}?`
-  );
+    const confirmed = await this.confirmDialog.open(
+      'Smazat variantu', 
+      `Opravdu chcete smazat variantu ${variant.variant_name || ''}?`
+    );
 
-  if (confirmed) {
-    if (variant.id) {
-      variant._delete = true;
-    } else {
-      this.editingProduct.variants.splice(index, 1);
+    if (confirmed) {
+      if (variant.id) {
+        variant._delete = true;
+      } else {
+        this.editingProduct.variants.splice(index, 1);
+      }
+      this.cd.markForCheck();
     }
-    this.cd.markForCheck();
   }
-}
 
   editVariantImages(index: number, event?: Event): void {
     if (event) event.stopPropagation();
@@ -578,56 +448,46 @@ async deleteVariant(index: number): Promise<void> {
   }
 
   onVariantImageFileSelected(event: any, index: number): void {
-  const file: File = event.target.files[0];
-  if (file && this.editingVariantImages[index]) {
-    // Uložíme skutečný binární soubor pro odeslání
-    this.editingVariantImages[index].file = file; 
-    // Uložíme název pro zobrazení v UI
-    this.editingVariantImages[index].image_path = file.name;
+    const file: File = event.target.files[0];
+    if (file && this.editingVariantImages[index]) {
+      // Uložíme skutečný binární soubor pro odeslání
+      this.editingVariantImages[index].file = file; 
+      // Uložíme název pro zobrazení v UI
+      this.editingVariantImages[index].image_path = file.name;
 
-    // Vytvoření náhledu (Base64)
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      this.editingVariantImages[index].url = e.target.result;
-      this.cd.markForCheck();
-    };
-    reader.readAsDataURL(file);
+      // Vytvoření náhledu (Base64)
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.editingVariantImages[index].url = e.target.result;
+        this.cd.markForCheck();
+      };
+      reader.readAsDataURL(file);
+    }
   }
-}
 
   get currentEditingVariant() {
     if (this.editingVariantIdx === null || !this.editingProduct?.variants) return null;
     return this.editingProduct.variants[this.editingVariantIdx];
   }
 
-  // saveVariantImages(): void {
-  //   if (this.editingVariantIdx !== null && this.editingProduct?.variants?.[this.editingVariantIdx]) {
-  //     this.editingProduct.variants[this.editingVariantIdx].images = this.editingVariantImages.map(img => ({
-  //       ...img,
-  //       variant_id: this.editingProduct?.variants?.[this.editingVariantIdx!]?.id
-  //     }));
-  //     this.editingVariantIdx = null;
-  //     this.editingVariantImages = [];
-  //     this.cd.markForCheck();
-  //   }
-  // }
   saveVariantImages(): void {
-  if (this.editingVariantIdx !== null && this.editingProduct?.variants?.[this.editingVariantIdx]) {
-    // Musíme přenést celé pole včetně File objektů
-    // Mapování zajistí, že se přenesou všechny vlastnosti (alt_text, file, url atd.)
-    this.editingProduct.variants[this.editingVariantIdx].images = this.editingVariantImages.map(img => ({
-      ...img,
-      // Explicitně se ujistíme, že ID varianty je správně nastaveno
-      variant_id: this.editingProduct?.variants?.[this.editingVariantIdx!]?.id 
-    }));
+    if (this.editingVariantIdx !== null && this.editingProduct?.variants?.[this.editingVariantIdx]) {
+      // Musíme přenést celé pole včetně File objektů
+      // Mapování zajistí, že se přenesou všechny vlastnosti (alt_text, file, url atd.)
+      this.editingProduct.variants[this.editingVariantIdx].images = this.editingVariantImages.map(img => ({
+        ...img,
+        // Explicitně se ujistíme, že ID varianty je správně nastaveno
+        variant_id: this.editingProduct?.variants?.[this.editingVariantIdx!]?.id 
+      }));
 
-    this.editingVariantIdx = null;
-    this.editingVariantImages = [];
-    this.cd.markForCheck();
+      this.editingVariantIdx = null;
+      this.editingVariantImages = [];
+      this.cd.markForCheck();
+    }
   }
-}
   closeVariantsModal(): void {
     this.showVariantsModal = false;
+    this.toggleBodyScroll(false);
     this.cd.markForCheck();
   }
 
@@ -665,6 +525,7 @@ async deleteVariant(index: number): Promise<void> {
           this.editingProduct = { ...fullProduct };
         }
         this.showImagesModal = true;
+        this.toggleBodyScroll(true);
         this.cd.markForCheck();
       }
     });
@@ -685,26 +546,26 @@ async deleteVariant(index: number): Promise<void> {
     this.cd.markForCheck();
   }
 
- async deleteImage(index: number): Promise<void> {
-  const confirmed = await this.confirmDialog.open(
-    'Smazat obrázek', 
-    'Opravdu si přejete odstranit tento obrázek?'
-  );
+  async deleteImage(index: number): Promise<void> {
+    const confirmed = await this.confirmDialog.open(
+      'Smazat obrázek', 
+      'Opravdu si přejete odstranit tento obrázek?'
+    );
 
-  if (confirmed && this.editingProduct?.images) {
-    const image = this.editingProduct.images[index];
-    if (image.id) {
-      image._delete = true;
-    } else {
-      this.editingProduct.images.splice(index, 1);
+    if (confirmed && this.editingProduct?.images) {
+      const image = this.editingProduct.images[index];
+      if (image.id) {
+        image._delete = true;
+      } else {
+        this.editingProduct.images.splice(index, 1);
+      }
+      // Přepočet sort_order
+      this.editingProduct.images.forEach((img, idx) => {
+        if (!img._delete && !img.variant_id) img.sort_order = idx;
+      });
+      this.cd.markForCheck();
     }
-    // Přepočet sort_order
-    this.editingProduct.images.forEach((img, idx) => {
-      if (!img._delete && !img.variant_id) img.sort_order = idx;
-    });
-    this.cd.markForCheck();
   }
-}
 
   onFileSelected(event: any, index: number): void {
     const file: File = event.target.files[0];
@@ -725,6 +586,7 @@ async deleteVariant(index: number): Promise<void> {
 
   closeImagesModal(): void {
     this.showImagesModal = false;
+    this.toggleBodyScroll(false);
     this.cd.markForCheck();
   }
 

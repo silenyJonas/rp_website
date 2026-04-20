@@ -107,7 +107,7 @@ header {
   .admin-content { width: 100%; padding: 5px; box-sizing: border-box; }
 }
 
-.admin-content { flex-grow: 1; overflow-y: auto; background: white; height: 100vh;}
+.admin-content { flex-grow: 1; overflow-y: auto; background: white;}
 
 .global-loading-overlay {
   position: fixed;

@@ -104,12 +104,12 @@ class ShopProductController extends Controller
 
             if ($request->has('images')) {
                 Log::info("Found images in request", ['count' => count($request->input('images'))]);
-                $this->storeImages($product, $request->input('images'));
+                $this->storeImages($product, $request->input('images'), $request, 'images');
             }
 
             if ($request->has('variants')) {
                 Log::info("Found variants in request", ['count' => count($request->input('variants'))]);
-                $this->storeVariants($product, $request->input('variants'));
+                $this->storeVariants($product, $request->input('variants'), $request);
                 $this->syncProductStock($product);
             }
 
@@ -165,8 +165,27 @@ class ShopProductController extends Controller
             }
 
             if ($request->has('delete_variants')) {
-                Log::info("Deleting variants", ['ids' => $request->input('delete_variants')]);
-                ShopProductVariant::whereIn('id', $request->input('delete_variants'))->delete();
+                Log::info("Deleting variants and their images", ['ids' => $request->input('delete_variants')]);
+                
+                // 1. Získáme varianty, které chceme smazat
+                $variantsToDelete = ShopProductVariant::whereIn('id', $request->input('delete_variants'))->get();
+
+                foreach ($variantsToDelete as $variant) {
+                    // 2. Najdeme všechny obrázky spojené s touto variantou
+                    $variantImages = ShopProductImage::where('variant_id', $variant->id)->get();
+                    
+                    foreach ($variantImages as $img) {
+                        // 3. Smažeme fyzický soubor z disku
+                        if (Storage::disk('public')->exists('products/' . $img->image_path)) {
+                            Storage::disk('public')->delete('products/' . $img->image_path);
+                        }
+                        // 4. Smažeme záznam obrázku z DB
+                        $img->delete();
+                    }
+
+                    // 5. Nakonec smažeme samotnou variantu
+                    $variant->delete();
+                }
             }
 
             if ($request->has('variants')) {
@@ -320,7 +339,7 @@ class ShopProductController extends Controller
         }
     }
 
-    private function storeVariants(ShopProduct $product, array $variants): void
+    private function storeVariants(ShopProduct $product, array $variants, Request $request = null, string $imagePrefix = null): void
     {
         foreach ($variants as $idx => $variantData) {
             $variant = ShopProductVariant::create([
@@ -338,86 +357,20 @@ class ShopProductController extends Controller
             ]);
 
             // DŮLEŽITÉ: Kontrola obrázků uvnitř varianty (pokud je posíláš vnořené)
-            if (isset($variantData['images']) && is_array($variantData['images'])) {
+            if (isset($variantData['images']) && is_array($variantData['images']) && $request) {
                 Log::info("Found images inside variant data", ['variant_index' => $idx]);
                 // Přiřadíme variant_id k obrázkům
                 $variantImages = array_map(function($img) use ($variant) {
                     $img['variant_id'] = $variant->id;
                     return $img;
                 }, $variantData['images']);
-                $this->storeImages($product, $variantImages);
+
+                $prefix = $imagePrefix ?? "variants.{$idx}.images";
+                $this->storeImages($product, $variantImages, $request, $prefix);
             }
         }
     }
 
-    // private function updateVariants(ShopProduct $product, array $variants): void
-    // {
-    //     foreach ($variants as $variantData) {
-    //         if (isset($variantData['id']) && $variantData['id'] > 0) {
-    //             $variant = ShopProductVariant::findOrFail($variantData['id']);
-    //             $variant->update([
-    //                 'variant_name' => $variantData['variant_name'],
-    //                 'attribute_1_name' => $variantData['attribute_1_name'] ?? null,
-    //                 'attribute_1_value' => $variantData['attribute_1_value'] ?? null,
-    //                 'attribute_2_name' => $variantData['attribute_2_name'] ?? null,
-    //                 'attribute_2_value' => $variantData['attribute_2_value'] ?? null,
-    //                 'sku_variant' => $variantData['sku_variant'] ?? null,
-    //                 'price_with_vat' => $variantData['price_with_vat'] ?? 0,
-    //                 'price_without_vat' => $variantData['price_without_vat'] ?? 0,
-    //                 'vat_rate' => $variantData['vat_rate'] ?? 21,
-    //                 'stock_quantity' => $variantData['stock_quantity'] ?? 0,
-    //             ]);
-                
-    //             // Update obrázků pro existující variantu
-    //             if (isset($variantData['images']) && is_array($variantData['images'])) {
-    //                 $variantImages = array_map(function($img) use ($variant) {
-    //                     $img['variant_id'] = $variant->id;
-    //                     return $img;
-    //                 }, $variantData['images']);
-    //                 $this->storeImages($product, $variantImages);
-    //             }
-    //         } else {
-    //             $this->storeVariants($product, [$variantData]);
-    //         }
-    //     }
-    // }
-
-    // 1. Změna: Přidán Request $request do parametrů
-// private function updateVariants(ShopProduct $product, array $variants, \Illuminate\Http\Request $request): void
-// {
-//     // 2. Změna: Přidáno $idx => aby se vědělo, o kolikátou variantu jde
-//     foreach ($variants as $idx => $variantData) {
-//         if (isset($variantData['id']) && $variantData['id'] > 0) {
-//             $variant = ShopProductVariant::findOrFail($variantData['id']);
-//             $variant->update([
-//                 'variant_name' => $variantData['variant_name'],
-//                 'attribute_1_name' => $variantData['attribute_1_name'] ?? null,
-//                 'attribute_1_value' => $variantData['attribute_1_value'] ?? null,
-//                 'attribute_2_name' => $variantData['attribute_2_name'] ?? null,
-//                 'attribute_2_value' => $variantData['attribute_2_value'] ?? null,
-//                 'sku_variant' => $variantData['sku_variant'] ?? null,
-//                 'price_with_vat' => $variantData['price_with_vat'] ?? 0,
-//                 'price_without_vat' => $variantData['price_without_vat'] ?? 0,
-//                 'vat_rate' => $variantData['vat_rate'] ?? 21,
-//                 'stock_quantity' => $variantData['stock_quantity'] ?? 0,
-//             ]);
-            
-//             if (isset($variantData['images']) && is_array($variantData['images'])) {
-//                 $variantImages = array_map(function($img) use ($variant) {
-//                     $img['variant_id'] = $variant->id;
-//                     return $img;
-//                 }, $variantData['images']);
-
-//                 // 3. Změna: Volání storeImages se všemi 4 parametry
-//                 // Prefix "variants.{$idx}.images" přesně naviguje Laravel k souboru téhle varianty
-//                 $this->storeImages($product, $variantImages, $request, "variants.{$idx}.images");
-//             }
-//         } else {
-//             // Nezapomeň přidat $request i sem, pokud storeVariants také ukládá obrázky
-//             $this->storeVariants($product, [$variantData], $request);
-//         }
-//     }
-// }
     private function updateVariants(ShopProduct $product, array $variants, \Illuminate\Http\Request $request): void
 {
     foreach ($variants as $idx => $variantData) {
@@ -479,9 +432,8 @@ class ShopProductController extends Controller
         } 
         // 2. NOVÁ VARIANTA (Create)
         else {
-            // Předpokládá se, že storeVariants je upravená tak, aby přijímala $request
-            // Pokud storeVariants ještě $request nepřijímá, uprav její signaturu podobně
-            $this->storeVariants($product, [$variantData], $request);
+            // Předáváme prefix, aby storeVariants věděla, kde v poli hledat soubor
+            $this->storeVariants($product, [$variantData], $request, "variants.{$idx}.images");
         }
     }
 }

@@ -42,7 +42,7 @@
 @media (min-width: 1024px) {
   .main-content-layout {
     flex-direction: row;
-    gap: 0;
+    gap: 5px;
   }
 }
 .filter-side-panel {
