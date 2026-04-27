@@ -418,46 +418,52 @@ class ShopProductController extends Controller
         }
     }
 
-    /**
-     * Aktualizace variant
-     */
-    private function updateVariants(ShopProduct $product, array $variants, Request $request): void
-    {
-        foreach ($variants as $idx => $variantData) {
-            // EXISTUJÍCÍ VARIANTA (Update)
-            if (isset($variantData['id']) && $variantData['id'] > 0) {
-                $variant = ShopProductVariant::findOrFail($variantData['id']);
-                
-                $variant->update([
-                    'variant_name'      => $variantData['variant_name'],
-                    'attribute_1_name'  => $variantData['attribute_1_name'] ?? null,
-                    'attribute_1_value' => $variantData['attribute_1_value'] ?? null,
-                    'attribute_2_name'  => $variantData['attribute_2_name'] ?? null,
-                    'attribute_2_value' => $variantData['attribute_2_value'] ?? null,
-                    'sku_variant'       => $variantData['sku_variant'] ?? null,
-                    'price_with_vat'    => $variantData['price_with_vat'] ?? 0,
-                    'price_without_vat' => $variantData['price_without_vat'] ?? 0,
-                    'vat_rate'          => $variantData['vat_rate'] ?? 21,
-                    'stock_quantity'    => $variantData['stock_quantity'] ?? 0,
+private function updateVariants(ShopProduct $product, array $variants, Request $request): void
+{
+    foreach ($variants as $idx => $variantData) {
+        // EXISTUJÍCÍ VARIANTA (Update)
+        if (isset($variantData['id']) && $variantData['id'] > 0) {
+            $variant = ShopProductVariant::findOrFail($variantData['id']);
+            
+            $variant->update([
+                'variant_name'      => $variantData['variant_name'],
+                'attribute_1_name'  => $variantData['attribute_1_name'] ?? null,
+                'attribute_1_value' => $variantData['attribute_1_value'] ?? null,
+                'attribute_2_name'  => $variantData['attribute_2_name'] ?? null,
+                'attribute_2_value' => $variantData['attribute_2_value'] ?? null,
+                'sku_variant'       => $variantData['sku_variant'] ?? null,
+                'price_with_vat'    => $variantData['price_with_vat'] ?? 0,
+                'price_without_vat' => $variantData['price_without_vat'] ?? 0,
+                'vat_rate'          => $variantData['vat_rate'] ?? 21,
+                'stock_quantity'    => $variantData['stock_quantity'] ?? 0,
+            ]);
+
+            // ⚠️ NOVÉ: Smazání označených obrázků této konkrétní varianty
+            if (isset($variantData['delete_images']) && is_array($variantData['delete_images'])) {
+                Log::info("Deleting variant images", [
+                    'variant_id' => $variant->id,
+                    'image_ids' => $variantData['delete_images']
                 ]);
-
-                // Zpracování obrázků varianty
-                if (isset($variantData['images']) && is_array($variantData['images'])) {
-                    $variantImages = array_map(function($img) use ($variant) {
-                        $img['variant_id'] = $variant->id;
-                        return $img;
-                    }, $variantData['images']);
-
-                    $this->storeImages($product, $variantImages, $request, "variants.{$idx}.images");
-                }
-            } 
-            // NOVÁ VARIANTA (Create)
-            else {
-                $this->storeVariants($product, [$variantData], $request);
+                
+                $this->deleteImages($variantData['delete_images']);
             }
+
+            // Zpracování nových nebo upravených obrázků varianty
+            if (isset($variantData['images']) && is_array($variantData['images'])) {
+                $variantImages = array_map(function($img) use ($variant) {
+                    $img['variant_id'] = $variant->id;
+                    return $img;
+                }, $variantData['images']);
+
+                $this->storeImages($product, $variantImages, $request, "variants.{$idx}.images");
+            }
+        } 
+        // NOVÁ VARIANTA (Create)
+        else {
+            $this->storeVariants($product, [$variantData], $request);
         }
     }
-
+}
     /**
      * Synchronizace skladových zásob
      */
