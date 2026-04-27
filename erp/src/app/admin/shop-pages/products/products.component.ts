@@ -20,7 +20,7 @@ import { Variant, ProductImage, Category, Supplier, Product } from './product-sp
 })
 export class ProductsComponent extends BaseDataComponent<Product> implements OnInit, OnDestroy {
   override apiEndpoint: string = 'shop/products';
-
+  @ViewChild('activeTable') activeTable!: any;
   categories: Category[] = [];
   suppliers: Supplier[] = [];
 
@@ -89,9 +89,20 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     const actions: { [key: string]: () => void } = {
       toggleFilters: () => this.toggleFilters(),
       handleCreateFormOpened: () => this.handleCreateFormOpened(),
-      toggleTable: () => this.toggleTable()
+      toggleTable: () => this.toggleTable(),
+      exportActiveTable: () => this.exportActiveTable()
     };
     if (actions[action]) actions[action]();
+  }
+
+  // NAHRADIT PŮVODNÍ PRÁZDNOU FUNKCI:
+  exportActiveTable(): void {
+    if (this.activeTable) {
+      // Zavolá metodu exportToCSV přímo v komponentě table-builder
+      this.activeTable.exportToCSV();
+    } else {
+      console.error('Nebyla nalezena aktivní tabulka pro export.');
+    }
   }
 
   override toggleFilters(): void {
