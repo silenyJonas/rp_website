@@ -103,13 +103,13 @@ class ShopProductController extends Controller
             Log::info("Product created", ['id' => $product->id]);
 
             if ($request->has('images')) {
-                Log::info("Found images in request", ['count' => count($request->input('images'))]);
-                $this->storeImages($product, $request->input('images'), $request, 'images');
+                Log::info("Found images in request", ['count' => count($request->input('images', []))]);
+                $this->storeImages($product, $request->input('images', []), $request, 'images');
             }
 
             if ($request->has('variants')) {
-                Log::info("Found variants in request", ['count' => count($request->input('variants'))]);
-                $this->storeVariants($product, $request->input('variants'), $request);
+                Log::info("Found variants in request", ['count' => count($request->input('variants', []))]);
+                $this->storeVariants($product, $request->input('variants', []), $request);
                 $this->syncProductStock($product);
             }
 
@@ -154,44 +154,27 @@ class ShopProductController extends Controller
 
             $product->update($updateData);
 
+            // Smazání obrázků produktu
             if ($request->has('delete_images')) {
-                Log::info("Deleting images", ['ids' => $request->input('delete_images')]);
+                Log::info("Deleting product images", ['ids' => $request->input('delete_images')]);
                 $this->deleteImages($request->input('delete_images'));
             }
 
+            // Uložení nových/update obrázků produktu
             if ($request->has('images')) {
-                // Předáváme celý $request, aby se storeImages dostala k souborům
-                $this->storeImages($product, $request->input('images'), $request, 'images');
+                $this->storeImages($product, $request->input('images', []), $request, 'images');
             }
 
+            // Smazání variant
             if ($request->has('delete_variants')) {
                 Log::info("Deleting variants and their images", ['ids' => $request->input('delete_variants')]);
-                
-                // 1. Získáme varianty, které chceme smazat
-                $variantsToDelete = ShopProductVariant::whereIn('id', $request->input('delete_variants'))->get();
-
-                foreach ($variantsToDelete as $variant) {
-                    // 2. Najdeme všechny obrázky spojené s touto variantou
-                    $variantImages = ShopProductImage::where('variant_id', $variant->id)->get();
-                    
-                    foreach ($variantImages as $img) {
-                        // 3. Smažeme fyzický soubor z disku
-                        if (Storage::disk('public')->exists('products/' . $img->image_path)) {
-                            Storage::disk('public')->delete('products/' . $img->image_path);
-                        }
-                        // 4. Smažeme záznam obrázku z DB
-                        $img->delete();
-                    }
-
-                    // 5. Nakonec smažeme samotnou variantu
-                    $variant->delete();
-                }
+                $this->deleteVariantsWithImages($request->input('delete_variants'));
             }
 
+            // Update/Create variant
             if ($request->has('variants')) {
-                Log::info("Updating variants", ['count' => count($request->input('variants'))]);
-                // PŘIDÁNO: $request
-                $this->updateVariants($product, $request->input('variants'), $request);
+                Log::info("Updating variants", ['count' => count($request->input('variants', []))]);
+                $this->updateVariants($product, $request->input('variants', []), $request);
             }
 
             $this->syncProductStock($product);
@@ -291,55 +274,120 @@ class ShopProductController extends Controller
      * ========== HELPERS ==========
      */
 
+    /**
+     * Uložení obrázků - podporuje jak hlavní obrázky, tak obrázky variant
+     */
     private function storeImages(ShopProduct $product, array $images, Request $request, string $prefix = 'images'): void
-{
-    foreach ($images as $index => $imageData) {
-        // Získáme skutečný soubor z Requestu pomocí tečkové notace
-        // Pro hlavní obrázky: images.0.file
-        // Pro varianty: variants.0.images.0.file
-        $fileKey = "{$prefix}.{$index}.file";
-        $file = $request->file($fileKey);
+    {
+        foreach ($images as $index => $imageData) {
+            // Přeskakujeme obrázky, které již existují a nemají nový soubor
+            if (!empty($imageData['id']) && !$request->hasFile("{$prefix}.{$index}.file")) {
+                Log::info("Skipping existing image without new file", ['image_id' => $imageData['id']]);
+                continue;
+            }
 
-        if (!$file) {
-            Log::warning("File not found in request for key: {$fileKey}");
-            continue;
+            // Pokud je to existující obrázek bez souboru, aktualizujeme metadata
+            if (!empty($imageData['id']) && !$request->hasFile("{$prefix}.{$index}.file")) {
+                ShopProductImage::find($imageData['id'])?->update([
+                    'alt_text' => $imageData['alt_text'] ?? '',
+                    'sort_order' => $imageData['sort_order'] ?? $index,
+                    'is_primary' => filter_var($imageData['is_primary'] ?? false, FILTER_VALIDATE_BOOLEAN),
+                ]);
+                continue;
+            }
+
+            // Získáme soubor z requestu
+            $file = $request->file("{$prefix}.{$index}.file");
+
+            if (!$file) {
+                Log::warning("File not found in request for key: {$prefix}.{$index}.file");
+                continue;
+            }
+
+            if (!$file->isValid()) {
+                Log::warning("File at key {$prefix}.{$index}.file is not valid.");
+                continue;
+            }
+
+            // Uložíme soubor
+            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('products', $fileName, 'public');
+            Log::info("Image stored to disk", ['path' => $path, 'filename' => $fileName]);
+
+            // Pokud je to aktualizace existujícího obrázku, smazeme starý
+            if (!empty($imageData['id'])) {
+                $oldImage = ShopProductImage::find($imageData['id']);
+                if ($oldImage) {
+                    Storage::disk('public')->delete('products/' . $oldImage->image_path);
+                    $oldImage->update([
+                        'image_path' => $fileName,
+                        'alt_text' => $imageData['alt_text'] ?? $product->name,
+                        'sort_order' => $imageData['sort_order'] ?? $index,
+                        'is_primary' => filter_var($imageData['is_primary'] ?? false, FILTER_VALIDATE_BOOLEAN),
+                    ]);
+                }
+            } else {
+                // Nový obrázek
+                ShopProductImage::create([
+                    'product_id' => $product->id,
+                    'variant_id' => $imageData['variant_id'] ?? null,
+                    'image_path' => $fileName,
+                    'alt_text' => $imageData['alt_text'] ?? $product->name,
+                    'is_primary' => filter_var($imageData['is_primary'] ?? false, FILTER_VALIDATE_BOOLEAN),
+                    'sort_order' => $imageData['sort_order'] ?? $index,
+                ]);
+            }
+
+            Log::info("Image record processed", [
+                'product_id' => $product->id, 
+                'variant_id' => $imageData['variant_id'] ?? null
+            ]);
         }
-
-        if (!$file->isValid()) {
-            Log::warning("File at key {$fileKey} is not valid.");
-            continue;
-        }
-
-        $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('products', $fileName, 'public');
-        Log::info("Image stored to disk", ['path' => $path, 'filename' => $fileName]);
-
-        ShopProductImage::create([
-            'product_id' => $product->id,
-            'variant_id' => $imageData['variant_id'] ?? null,
-            'image_path' => $fileName,
-            'alt_text' => $imageData['alt_text'] ?? $product->name,
-            'is_primary' => filter_var($imageData['is_primary'] ?? false, FILTER_VALIDATE_BOOLEAN),
-            'sort_order' => $imageData['sort_order'] ?? $index,
-        ]);
-        Log::info("Image record created in DB", [
-            'product_id' => $product->id, 
-            'variant_id' => $imageData['variant_id'] ?? null
-        ]);
     }
-}
 
+    /**
+     * Smazání obrázků
+     */
     private function deleteImages(array $imageIds): void
     {
         $images = ShopProductImage::whereIn('id', $imageIds)->get();
         foreach ($images as $image) {
-            Storage::disk('public')->delete('products/' . $image->image_path);
-            Log::info("Image file deleted from disk", ['path' => $image->image_path]);
+            // Smazání souboru
+            if (Storage::disk('public')->exists('products/' . $image->image_path)) {
+                Storage::disk('public')->delete('products/' . $image->image_path);
+                Log::info("Image file deleted from disk", ['path' => $image->image_path]);
+            }
+            // Smazání DB záznamu
             $image->delete();
         }
     }
 
-    private function storeVariants(ShopProduct $product, array $variants, Request $request = null, string $imagePrefix = null): void
+    /**
+     * Smazání variant a jejich obrázků
+     */
+    private function deleteVariantsWithImages(array $variantIds): void
+    {
+        $variants = ShopProductVariant::whereIn('id', $variantIds)->get();
+        
+        foreach ($variants as $variant) {
+            // Smazání všech obrázků varianty
+            $images = ShopProductImage::where('variant_id', $variant->id)->get();
+            foreach ($images as $image) {
+                if (Storage::disk('public')->exists('products/' . $image->image_path)) {
+                    Storage::disk('public')->delete('products/' . $image->image_path);
+                }
+                $image->delete();
+            }
+            
+            // Smazání varianty
+            $variant->delete();
+        }
+    }
+
+    /**
+     * Uložení nových variant
+     */
+    private function storeVariants(ShopProduct $product, array $variants, Request $request = null): void
     {
         foreach ($variants as $idx => $variantData) {
             $variant = ShopProductVariant::create([
@@ -356,87 +404,63 @@ class ShopProductController extends Controller
                 'stock_quantity' => $variantData['stock_quantity'] ?? 0,
             ]);
 
-            // DŮLEŽITÉ: Kontrola obrázků uvnitř varianty (pokud je posíláš vnořené)
+            // Uložení obrázků uvnitř varianty
             if (isset($variantData['images']) && is_array($variantData['images']) && $request) {
-                Log::info("Found images inside variant data", ['variant_index' => $idx]);
-                // Přiřadíme variant_id k obrázkům
-                $variantImages = array_map(function($img) use ($variant) {
-                    $img['variant_id'] = $variant->id;
-                    return $img;
-                }, $variantData['images']);
-
-                $prefix = $imagePrefix ?? "variants.{$idx}.images";
-                $this->storeImages($product, $variantImages, $request, $prefix);
-            }
-        }
-    }
-
-    private function updateVariants(ShopProduct $product, array $variants, \Illuminate\Http\Request $request): void
-{
-    foreach ($variants as $idx => $variantData) {
-        // 1. EXISTUJÍCÍ VARIANTA (Update)
-        if (isset($variantData['id']) && $variantData['id'] > 0) {
-            $variant = ShopProductVariant::findOrFail($variantData['id']);
-            
-            $variant->update([
-                'variant_name'      => $variantData['variant_name'],
-                'attribute_1_name'  => $variantData['attribute_1_name'] ?? null,
-                'attribute_1_value' => $variantData['attribute_1_value'] ?? null,
-                'attribute_2_name'  => $variantData['attribute_2_name'] ?? null,
-                'attribute_2_value' => $variantData['attribute_2_value'] ?? null,
-                'sku_variant'       => $variantData['sku_variant'] ?? null,
-                'price_with_vat'    => $variantData['price_with_vat'] ?? 0,
-                'price_without_vat' => $variantData['price_without_vat'] ?? 0,
-                'vat_rate'          => $variantData['vat_rate'] ?? 21,
-                'stock_quantity'    => $variantData['stock_quantity'] ?? 0,
-            ]);
-
-            // Zpracování obrázků varianty
-            if (isset($variantData['images']) && is_array($variantData['images'])) {
+                Log::info("Processing images for new variant", ['variant_id' => $variant->id]);
                 
-                // KONTROLA: Posíláme pro tuto variantu alespoň jeden nový soubor?
-                $hasNewFiles = false;
-                foreach ($variantData['images'] as $imgIdx => $img) {
-                    if ($request->hasFile("variants.{$idx}.images.{$imgIdx}.file")) {
-                        $hasNewFiles = true;
-                        break;
-                    }
-                }
-
-                // Pokud detekujeme nové soubory, musíme vyřešit náhradu
-                if ($hasNewFiles) {
-                    Log::info("Detected new images for variant ID: {$variant->id}, cleaning old images.");
-                    
-                    // Najdeme staré obrázky patřící k této variantě
-                    $oldImages = ShopProductImage::where('variant_id', $variant->id)->get();
-                    
-                    foreach ($oldImages as $oldImg) {
-                        // Smazání souboru z disku
-                        if (Storage::disk('public')->exists('products/' . $oldImg->image_path)) {
-                            Storage::disk('public')->delete('products/' . $oldImg->image_path);
-                        }
-                        // Smazání záznamu z DB
-                        $oldImg->delete();
-                    }
-                }
-
-                // Příprava dat pro storeImages (přiřazení variant_id)
                 $variantImages = array_map(function($img) use ($variant) {
                     $img['variant_id'] = $variant->id;
                     return $img;
                 }, $variantData['images']);
 
-                // Uložení nových obrázků (metoda storeImages si sama vytáhne soubory z requestu díky prefixu)
                 $this->storeImages($product, $variantImages, $request, "variants.{$idx}.images");
             }
-        } 
-        // 2. NOVÁ VARIANTA (Create)
-        else {
-            // Předáváme prefix, aby storeVariants věděla, kde v poli hledat soubor
-            $this->storeVariants($product, [$variantData], $request, "variants.{$idx}.images");
         }
     }
-}
+
+    /**
+     * Aktualizace variant
+     */
+    private function updateVariants(ShopProduct $product, array $variants, Request $request): void
+    {
+        foreach ($variants as $idx => $variantData) {
+            // EXISTUJÍCÍ VARIANTA (Update)
+            if (isset($variantData['id']) && $variantData['id'] > 0) {
+                $variant = ShopProductVariant::findOrFail($variantData['id']);
+                
+                $variant->update([
+                    'variant_name'      => $variantData['variant_name'],
+                    'attribute_1_name'  => $variantData['attribute_1_name'] ?? null,
+                    'attribute_1_value' => $variantData['attribute_1_value'] ?? null,
+                    'attribute_2_name'  => $variantData['attribute_2_name'] ?? null,
+                    'attribute_2_value' => $variantData['attribute_2_value'] ?? null,
+                    'sku_variant'       => $variantData['sku_variant'] ?? null,
+                    'price_with_vat'    => $variantData['price_with_vat'] ?? 0,
+                    'price_without_vat' => $variantData['price_without_vat'] ?? 0,
+                    'vat_rate'          => $variantData['vat_rate'] ?? 21,
+                    'stock_quantity'    => $variantData['stock_quantity'] ?? 0,
+                ]);
+
+                // Zpracování obrázků varianty
+                if (isset($variantData['images']) && is_array($variantData['images'])) {
+                    $variantImages = array_map(function($img) use ($variant) {
+                        $img['variant_id'] = $variant->id;
+                        return $img;
+                    }, $variantData['images']);
+
+                    $this->storeImages($product, $variantImages, $request, "variants.{$idx}.images");
+                }
+            } 
+            // NOVÁ VARIANTA (Create)
+            else {
+                $this->storeVariants($product, [$variantData], $request);
+            }
+        }
+    }
+
+    /**
+     * Synchronizace skladových zásob
+     */
     private function syncProductStock(ShopProduct $product): void
     {
         $totalStock = ShopProductVariant::where('product_id', $product->id)
@@ -447,6 +471,9 @@ class ShopProductController extends Controller
         Log::info("Stock synced", ['product_id' => $product->id, 'total_stock' => $totalStock]);
     }
 
+    /**
+     * Logování akcí
+     */
     protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null): void 
     {
         try {

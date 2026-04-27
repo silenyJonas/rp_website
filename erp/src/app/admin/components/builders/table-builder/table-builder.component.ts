@@ -20,7 +20,7 @@ import { InputDefinition } from '../../../../shared/interfaces/input-definiton';
 export class TableBuilderComponent extends BaseDataComponent<any> implements Core.OnInit, Core.OnChanges {
   @Input() override data: any[] = [];
   @Input('columns') columnDefinitions: ColumnDefinition[] = [];
-  @Input() inputDefinitions: InputDefinition[] = []; // Nový input pro překlady
+  @Input() inputDefinitions: InputDefinition[] = [];
   @Input() tableCaption?: string;
   @Input() override apiEndpoint: string = '';
   @Input() uploadsBaseUrl: string = '';
@@ -38,7 +38,10 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
   @Output() openImagesModal = new EventEmitter<any>(); 
   @Output() openVariantsModal = new EventEmitter<any>(); 
 
-  web_logs_endpoint: string = 'web/logs'
+  web_logs_endpoint: string = 'web/logs';
+  
+  // Flag k prevenci double-click a souběžných operací
+  private processingItemIds = new Set<any>();
 
   constructor(
     protected override dataHandler: Core.DataHandler,
@@ -49,8 +52,13 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
     super(dataHandler, cd, genericTableService);
   }
 
-  override ngOnInit(): void { super.ngOnInit(); }
-  override ngOnChanges(changes: Core.SimpleChanges): void { super.ngOnChanges(changes); }
+  override ngOnInit(): void { 
+    super.ngOnInit(); 
+  }
+
+  override ngOnChanges(changes: Core.SimpleChanges): void { 
+    super.ngOnChanges(changes); 
+  }
 
   getCellValue(item: any, column: ColumnDefinition): any {
     const keys = column.key.split('.');
@@ -66,7 +74,6 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
       case 'image':
         return value ? `${this.uploadsBaseUrl}${value}` : '';
       default:
-        // Pokus o automatický překlad z dropdownu (selectu)
         const fieldDef = this.inputDefinitions.find(i => i.column_name === column.key);
         if (fieldDef?.options) {
           const option = fieldDef.options.find(opt => String(opt.value) === String(value));
@@ -77,18 +84,54 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
   }
 
   handleAction(item: any, buttonAction: string): void {
-    switch (buttonAction) {
-      case 'generate_form': this.generateFormOpened.emit(item); break;
-      case 'details': this.viewDetailsOpened.emit(item); break;
-      case 'edit': this.editFormOpened.emit(item); break;
-      case 'delete': this.onDeleteAction(item); break;
-
-      // custom events
-      case 'password_reset': this.resetPasswordFormOpened.emit(item); break; 
-      case 'custom_prod_var': this.openVariantsModal.emit(item); break; 
-      case 'custom_prod_img': this.openImagesModal.emit(item); break; 
-      default: console.warn('Neznámý typ akce:', buttonAction);
+    // ⚠️ DOUBLE-CLICK PREVENTION: Kontrola, jestli je položka již zpracovávána
+    if (this.processingItemIds.has(item.id)) {
+      console.warn(`⚠️ Akce pro položku ID ${item.id} je již zpracovávána. Ignoruji duplikát.`);
+      return;
     }
+
+    // ⚠️ Označíme položku jako zpracovávanou
+    this.processingItemIds.add(item.id);
+
+    // ⚠️ Async wrapper pro oddělení event loopu
+    setTimeout(() => {
+      try {
+        // === INLINE SWITCH - ŽÁDNÁ NOVÁ METODA ===
+        switch (buttonAction) {
+          case 'generate_form': 
+            this.generateFormOpened.emit(item); 
+            break;
+          case 'details': 
+            this.viewDetailsOpened.emit(item); 
+            break;
+          case 'edit': 
+            this.editFormOpened.emit(item); 
+            break;
+          case 'delete': 
+            this.onDeleteAction(item); 
+            break;
+          case 'password_reset': 
+            this.resetPasswordFormOpened.emit(item); 
+            break; 
+          case 'custom_prod_var': 
+            this.openVariantsModal.emit(item); 
+            break; 
+          case 'custom_prod_img': 
+            this.openImagesModal.emit(item); 
+            break; 
+          default: 
+            console.warn('⚠️ Neznámý typ akce:', buttonAction);
+        }
+        
+        // ⚠️ Zajisti update change detection
+        this.cd.markForCheck();
+      } finally {
+        // ⚠️ Cleanup - odstraň položku ze zpracování po určité době
+        setTimeout(() => {
+          this.processingItemIds.delete(item.id);
+        }, 500);
+      }
+    }, 0);
   }
 
   public onDeleteAction(item: any): void {
@@ -100,9 +143,21 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
               this.removeItemFromLocal(item.id);
               this.itemDeleted.emit(item);
               this.alertDialogService.open('Úspěch', 'Položka byla smazána.', 'success');
+            },
+            error: () => {
+              // ⚠️ Cleanup na error
+              this.processingItemIds.delete(item.id);
+              this.alertDialogService.open('Chyba', 'Smazání se nezdařilo.', 'danger');
             }
           });
+        } else {
+          // ⚠️ Cleanup pokud uživatel zrušil
+          this.processingItemIds.delete(item.id);
         }
+      })
+      .catch(() => {
+        // ⚠️ Cleanup pokud dialog selhal
+        this.processingItemIds.delete(item.id);
       });
   }
 

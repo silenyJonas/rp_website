@@ -7,8 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { ConfirmDialogService } from '../../../core/services/confirm-dialog.service';
 import { PRODUCT_BUTTONS, PRODUCT_COLUMNS, TRASH_PRODUCT_COLUMNS, FILTER_COLUMNS, TOOLBAR_BUTTONS } from './products.config';
 import { Variant, ProductImage, Category, Supplier, Product } from './product-specific.interface';
-// ========== INTERFACES ==========
-
 
 @Component({
   selector: 'app-products',
@@ -21,6 +19,7 @@ import { Variant, ProductImage, Category, Supplier, Product } from './product-sp
 export class ProductsComponent extends BaseDataComponent<Product> implements OnInit, OnDestroy {
   override apiEndpoint: string = 'shop/products';
   @ViewChild('activeTable') activeTable!: any;
+  
   categories: Category[] = [];
   suppliers: Supplier[] = [];
 
@@ -37,18 +36,20 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   editingVariantIdx: number | null = null;
   editingVariantImages: ProductImage[] = [];
 
+  // Flag k prevenci double-click
+  private isProcessing = false;
+
   filters: Core.FilterParams = {
     sort_by: 'id',
     sort_direction: 'desc'
   };
 
-  // Config z PRODUCT_BUTTONS, PRODUCT_COLUMNS atd.
   buttons = PRODUCT_BUTTONS;
   productColumns = PRODUCT_COLUMNS;
   trashProductColumns = TRASH_PRODUCT_COLUMNS;
   filterColumns = FILTER_COLUMNS;
   toolbarButtons = TOOLBAR_BUTTONS;
-  formFields: any[] = []; // Není potřeba pro table-builder, ale lze tu přidat
+  formFields: any[] = [];
 
   constructor(
     protected override dataHandler: Core.DataHandler,
@@ -73,8 +74,6 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     this.toggleBodyScroll(false);
   }
 
-  // ========== BODY SCROLL HELPER ==========
-
   private toggleBodyScroll(lock: boolean): void {
     if (lock) {
       document.body.classList.add('modal-open');
@@ -86,19 +85,20 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   // ========== TOOLBAR ACTIONS ==========
 
   handleToolbarAction(action: string): void {
+    if (this.isProcessing) return;
+    
     const actions: { [key: string]: () => void } = {
       toggleFilters: () => this.toggleFilters(),
       handleCreateFormOpened: () => this.handleCreateFormOpened(),
       toggleTable: () => this.toggleTable(),
       exportActiveTable: () => this.exportActiveTable()
     };
+    
     if (actions[action]) actions[action]();
   }
 
-  // NAHRADIT PŮVODNÍ PRÁZDNOU FUNKCI:
   exportActiveTable(): void {
     if (this.activeTable) {
-      // Zavolá metodu exportToCSV přímo v komponentě table-builder
       this.activeTable.exportToCSV();
     } else {
       console.error('Nebyla nalezena aktivní tabulka pro export.');
@@ -121,6 +121,8 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   }
 
   handleCreateFormOpened(): void {
+    if (this.isProcessing) return;
+    
     this.editingProduct = {
       category_id: 0,
       name: '',
@@ -196,10 +198,17 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   // ========== DETAIL PRODUKTU ==========
 
   handleViewDetails(item: any): void {
-    if (!item.id) return;
+    if (this.isProcessing || !item.id) return;
+    
+    this.isProcessing = true;
     this.loadingService.show();
+    
     this.getItemDetails(item.id).pipe(
-      Core.finalize(() => this.loadingService.hide()),
+      Core.finalize(() => {
+        this.loadingService.hide();
+        this.isProcessing = false;
+        this.cd.markForCheck();
+      }),
       Core.takeUntil(this.destroy$)
     ).subscribe({
       next: (fullProduct) => {
@@ -225,16 +234,23 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
 
   handleEditFormOpened(product: Product, event?: Event): void {
     if (event) event.stopPropagation();
+    if (this.isProcessing) return;
     this.openEditProductForm(product);
   }
 
   openEditProductForm(product: Product, event?: Event): void {
     if (event) event.stopPropagation();
-    if (!product.id) return;
+    if (this.isProcessing || !product.id) return;
 
+    this.isProcessing = true;
     this.loadingService.show();
+    
     this.getItemDetails(product.id).pipe(
-      Core.finalize(() => this.loadingService.hide()),
+      Core.finalize(() => {
+        this.loadingService.hide();
+        this.isProcessing = false;
+        this.cd.markForCheck();
+      }),
       Core.takeUntil(this.destroy$)
     ).subscribe({
       next: (fullProduct) => {
@@ -258,8 +274,9 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   }
 
   saveProduct(): void {
-    if (!this.editingProduct || !this.validateProduct()) return;
+    if (this.isProcessing || !this.editingProduct || !this.validateProduct()) return;
 
+    this.isProcessing = true;
     const formData = new FormData();
 
     formData.append('category_id', this.editingProduct.category_id.toString());
@@ -276,7 +293,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     formData.append('is_active', this.editingProduct.is_active ? '1' : '0');
     formData.append('is_featured', this.editingProduct.is_featured ? '1' : '0');
 
-    // Obrázky produktu
+    // Obrázky produktu (bez variant)
     const activeProductImages = (this.editingProduct.images || []).filter(img => !img._delete && !img.variant_id);
     activeProductImages.forEach((img, idx) => {
       if (img.id) formData.append(`images[${idx}][id]`, img.id.toString());
@@ -307,7 +324,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       formData.append(`variants[${idx}][price_with_vat]`, (v.price_with_vat || 0).toString());
       formData.append(`variants[${idx}][price_without_vat]`, (v.price_without_vat || 0).toString());
 
-      // PŘIDÁNO: Mapování obrázků přímo pod variantu pro Laravel prefix "variants.{$idx}.images"
+      // Obrázky varianty - FIXME: Správné mapování
       if (v.images && v.images.length > 0) {
         const variantImages = v.images.filter(img => !img._delete);
         variantImages.forEach((img, imgIdx) => {
@@ -326,12 +343,6 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     });
 
     this.loadingService.show();
-    // Do saveProduct() před odesláním:
-    formData.forEach((value, key) => {
-      if (key.includes('[file]')) {
-        console.log('Odesílám soubor:', key, value);
-      }
-    });
 
     let request;
     if (this.editingProduct.id) {
@@ -344,6 +355,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     request.pipe(
       Core.finalize(() => {
         this.loadingService.hide();
+        this.isProcessing = false;
         this.cd.markForCheck();
       }),
       Core.takeUntil(this.destroy$)
@@ -361,30 +373,43 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       }
     });
   }
+
   closeProductForm(): void {
     this.showProductForm = false;
     this.editingProduct = null;
     this.toggleBodyScroll(false);
     this.cd.markForCheck();
   }
+
   openVariantsModal(product: Product, event?: Event): void {
     if (event) event.stopPropagation();
+    if (this.isProcessing) return;
+
+    this.isProcessing = true;
     this.selectedProduct = product;
     this.loadingService.show();
+    
     this.getItemDetails(product.id).pipe(
-      Core.finalize(() => this.loadingService.hide()),
+      Core.finalize(() => {
+        this.loadingService.hide();
+        this.isProcessing = false;
+        this.cd.markForCheck();
+      }),
       Core.takeUntil(this.destroy$)
     ).subscribe({
       next: (fullProduct) => {
-        if (!this.editingProduct) {
-          this.editingProduct = { ...fullProduct };
-        }
+        this.editingProduct = { ...fullProduct };
         this.showVariantsModal = true;
         this.toggleBodyScroll(true);
         this.cd.markForCheck();
+      },
+      error: () => {
+        this.isProcessing = false;
+        this.alertDialogService.open('Chyba', 'Nepodařilo se načíst produkt.', 'danger');
       }
     });
   }
+
   // ========== VARIANTY ==========
 
   addVariant(): void {
@@ -432,7 +457,9 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     this.editingVariantIdx = index;
     const variant = this.editingProduct?.variants?.[index];
     if (variant) {
-      this.editingVariantImages = [...(variant.images || [])];
+      this.editingVariantImages = JSON.parse(JSON.stringify(variant.images || []));
+    } else {
+      this.editingVariantImages = [];
     }
     this.cd.markForCheck();
   }
@@ -458,15 +485,13 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     this.cd.markForCheck();
   }
 
-// Metoda pro hlavní obrázky produktu
   onFileSelected(event: any, index: number): void {
     const file: File = event.target.files[0];
     if (!file) return;
 
-    // Kontrola velikosti (5MB = 5 * 1024 * 1024 bajtů)
     if (file.size > 5 * 1024 * 1024) {
       this.alertDialogService.open('Příliš velký soubor', 'Obrázek může mít maximálně 5MB.', 'warning');
-      event.target.value = ''; // Reset inputu
+      event.target.value = '';
       return;
     }
 
@@ -474,7 +499,6 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       this.editingProduct.images[index].file = file;
       this.editingProduct.images[index].image_path = file.name;
       
-      // Volitelně vytvoření náhledu i pro hlavní obrázky, pokud jej používáte
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.editingProduct!.images![index].url = e.target.result;
@@ -484,15 +508,13 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     }
   }
 
-  // Metoda pro obrázky variant
   onVariantImageFileSelected(event: any, index: number): void {
     const file: File = event.target.files[0];
     if (!file) return;
 
-    // Kontrola velikosti (5MB = 5 * 1024 * 1024 bajtů)
     if (file.size > 5 * 1024 * 1024) {
       this.alertDialogService.open('Příliš velký soubor', 'Obrázek může mít maximálně 5MB.', 'warning');
-      event.target.value = ''; // Reset inputu
+      event.target.value = '';
       return;
     }
 
@@ -516,11 +538,8 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
 
   saveVariantImages(): void {
     if (this.editingVariantIdx !== null && this.editingProduct?.variants?.[this.editingVariantIdx]) {
-      // Musíme přenést celé pole včetně File objektů
-      // Mapování zajistí, že se přenesou všechny vlastnosti (alt_text, file, url atd.)
       this.editingProduct.variants[this.editingVariantIdx].images = this.editingVariantImages.map(img => ({
         ...img,
-        // Explicitně se ujistíme, že ID varianty je správně nastaveno
         variant_id: this.editingProduct?.variants?.[this.editingVariantIdx!]?.id 
       }));
 
@@ -529,9 +548,12 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       this.cd.markForCheck();
     }
   }
+
   closeVariantsModal(): void {
     this.showVariantsModal = false;
     this.toggleBodyScroll(false);
+    this.editingVariantIdx = null;
+    this.editingVariantImages = [];
     this.cd.markForCheck();
   }
 
@@ -558,19 +580,29 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
 
   openImagesModal(product: Product, event?: Event): void {
     if (event) event.stopPropagation();
+    if (this.isProcessing) return;
+
+    this.isProcessing = true;
     this.selectedProduct = product;
     this.loadingService.show();
+    
     this.getItemDetails(product.id).pipe(
-      Core.finalize(() => this.loadingService.hide()),
+      Core.finalize(() => {
+        this.loadingService.hide();
+        this.isProcessing = false;
+        this.cd.markForCheck();
+      }),
       Core.takeUntil(this.destroy$)
     ).subscribe({
       next: (fullProduct) => {
-        if (!this.editingProduct) {
-          this.editingProduct = { ...fullProduct };
-        }
+        this.editingProduct = { ...fullProduct };
         this.showImagesModal = true;
         this.toggleBodyScroll(true);
         this.cd.markForCheck();
+      },
+      error: () => {
+        this.isProcessing = false;
+        this.alertDialogService.open('Chyba', 'Nepodařilo se načíst produkt.', 'danger');
       }
     });
   }
@@ -584,7 +616,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       image_path: '',
       alt_text: '',
       is_primary: this.editingProduct.images.filter(img => !img.variant_id).length === 0,
-      sort_order: this.editingProduct.images.length,
+      sort_order: this.editingProduct.images.filter(img => !img.variant_id).length,
       file: undefined
     });
     this.cd.markForCheck();
@@ -603,15 +635,13 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       } else {
         this.editingProduct.images.splice(index, 1);
       }
-      // Přepočet sort_order
+      // Přepočet sort_order pouze pro hlavní obrázky
       this.editingProduct.images.forEach((img, idx) => {
         if (!img._delete && !img.variant_id) img.sort_order = idx;
       });
       this.cd.markForCheck();
     }
   }
-
-
 
   setPrimaryImage(index: number): void {
     if (!this.editingProduct?.images) return;
