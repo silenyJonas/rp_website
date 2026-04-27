@@ -143,7 +143,6 @@ export class TableBuilderComponent extends BaseDataComponent<any> implements Cor
 
   private logExportActivity(rowCount: number): void {
     const logData = {
-      origin: 'GenericTable',
       event_type: 'DATA_EXPORT',
       module: this.apiEndpoint,
       description: `Uživatel exportoval ${rowCount} záznamů z tabulky: ${this.tableCaption || this.apiEndpoint}.`,

@@ -109,7 +109,160 @@
     cursor: pointer;
     font-weight: 500;
 }
+/* ... tvé stávající CSS ... */
 
+.json-block {
+    background: #2d2d2d; /* Tmavé pozadí pro lepší kontrast kódu */
+    color: #a9dc76;    /* Hezká "kódovací" zelená */
+    padding: 12px;
+    border-radius: 6px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    border: 1px solid #1a1a1a;
+    max-height: 400px;
+    overflow: auto;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Úprava scrollování uvnitř JSON bloku pro hezčí vzhled */
+.json-block::-webkit-scrollbar {
+    width: 8px;
+}
+.json-block::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+.json-block::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+/* Ostatní tvoje styly zůstávají stejné */
+.popup-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.form-container.wide-style {
+    background: #ffffff;
+    color: #333;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    position: relative;
+    animation: slideUp 0.3s ease-out; 
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    min-height: 60px;
+}
+
+.header-title {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #222;
+    font-weight: 600;
+}
+
+.close-button {
+    background: transparent;
+    border: none;
+    color: #999;
+    font-size: 2.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 10px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.close-button:hover {
+    color: #ff4d4d;
+}
+
+.details-content {
+    padding: 25px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.details-row {
+    display: flex;
+    padding: 12px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.label-cell {
+    flex: 0 0 220px;
+    font-weight: 600;
+    color: #555;
+}
+
+.value-cell {
+    flex: 1;
+    color: #111;
+}
+
+.file-actions { display: flex; gap: 10px; margin-top: 5px; }
+.btn-action { padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; border: 1px solid #ddd; }
+.btn-action.view { background: #eef6ff; color: #007bff; }
+.btn-action.download { background: #f0fff4; color: #28a745; }
+
+.form-footer {
+    padding: 15px 25px;
+    background: #f8f9fa;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-close-flat {
+    background: #444;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .form-container.wide-style {
+        width: 100%; height: 100%;
+        max-height: 100vh; border-radius: 0;
+    }
+    .details-row { flex-direction: column; padding: 15px 0; }
+    .label-cell { flex: none; width: 100%; color: #888; font-size: 0.8rem; }
+}
 @media (max-width: 768px) {
     .form-container.wide-style {
         width: 100%; height: 100%;

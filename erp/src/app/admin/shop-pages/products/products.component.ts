@@ -447,15 +447,48 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     this.cd.markForCheck();
   }
 
+// Metoda pro hlavní obrázky produktu
+  onFileSelected(event: any, index: number): void {
+    const file: File = event.target.files[0];
+    if (!file) return;
+
+    // Kontrola velikosti (5MB = 5 * 1024 * 1024 bajtů)
+    if (file.size > 5 * 1024 * 1024) {
+      this.alertDialogService.open('Příliš velký soubor', 'Obrázek může mít maximálně 5MB.', 'warning');
+      event.target.value = ''; // Reset inputu
+      return;
+    }
+
+    if (this.editingProduct?.images) {
+      this.editingProduct.images[index].file = file;
+      this.editingProduct.images[index].image_path = file.name;
+      
+      // Volitelně vytvoření náhledu i pro hlavní obrázky, pokud jej používáte
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.editingProduct!.images![index].url = e.target.result;
+        this.cd.markForCheck();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // Metoda pro obrázky variant
   onVariantImageFileSelected(event: any, index: number): void {
     const file: File = event.target.files[0];
-    if (file && this.editingVariantImages[index]) {
-      // Uložíme skutečný binární soubor pro odeslání
+    if (!file) return;
+
+    // Kontrola velikosti (5MB = 5 * 1024 * 1024 bajtů)
+    if (file.size > 5 * 1024 * 1024) {
+      this.alertDialogService.open('Příliš velký soubor', 'Obrázek může mít maximálně 5MB.', 'warning');
+      event.target.value = ''; // Reset inputu
+      return;
+    }
+
+    if (this.editingVariantImages[index]) {
       this.editingVariantImages[index].file = file; 
-      // Uložíme název pro zobrazení v UI
       this.editingVariantImages[index].image_path = file.name;
 
-      // Vytvoření náhledu (Base64)
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.editingVariantImages[index].url = e.target.result;
@@ -567,14 +600,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     }
   }
 
-  onFileSelected(event: any, index: number): void {
-    const file: File = event.target.files[0];
-    if (file && this.editingProduct?.images) {
-      this.editingProduct.images[index].file = file;
-      this.editingProduct.images[index].image_path = file.name;
-      this.cd.markForCheck();
-    }
-  }
+
 
   setPrimaryImage(index: number): void {
     if (!this.editingProduct?.images) return;

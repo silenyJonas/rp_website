@@ -5,7 +5,11 @@
   font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #333;
 }
-
+.row{
+  display: flex;
+  gap:5px;
+  padding-bottom: 4px;
+}
 /* ========== TOOLBAR ========== */
 .toolbar-section {
   background: #ffffff;
@@ -170,8 +174,8 @@
 }
 
 .btn-icon.small {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   font-size: 0.9rem;
 }
 
@@ -273,12 +277,25 @@
   color: #dc2626;
 }
 
+/* ========== MODAL BODY (Oprava scrollování) ========== */
 .modal-body {
-  flex: 1; /* Zabere veškerý zbývající prostor */
+  flex: 1 1 auto; /* Povolí růst, ale i základní velikost podle obsahu */
+  min-height: 0;   /* KLÍČOVÉ: Umožňuje flex-itemu (body) se zmenšit a aktivovat scrollbar */
   padding: 25px;
   overflow-y: auto; /* Zde se odehrává scroll */
   display: flex;
   flex-direction: column;
+}
+
+/* ========== IMAGE CARDS (Zajištění fixní výšky karet) ========== */
+.image-card {
+  flex-shrink: 0; /* Zabrání Flexboxu, aby karty "mačkal" (zmenšoval) pod jejich obsah */
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 0;
+  margin-bottom: 12px;
+  background: white;
+  overflow: hidden;
 }
 
 .modal-footer {
@@ -393,9 +410,6 @@
 }
 
 .variant-pricing {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
   font-size: 0.8rem;
   margin-bottom: 8px;
 }
@@ -607,14 +621,7 @@ legend {
   gap: 6px;
 }
 
-.image-card {
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  padding: 0;
-  margin-bottom: 12px;
-  background: white;
-  overflow: hidden;
-}
+
 
 .image-card.deleted {
   opacity: 0.5;

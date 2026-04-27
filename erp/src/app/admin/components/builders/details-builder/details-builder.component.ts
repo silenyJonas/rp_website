@@ -15,7 +15,7 @@ import { environment } from '../../../../../environments/environment';
 export class DetailsBuilderComponent implements OnInit, OnDestroy {
   @Input() itemData: any;
   @Input() itemDetailColumns: ItemDetailsColumns[] = [];
-  @Input() inputDefinitions: InputDefinition[] = []; // Nový input pro překlady
+  @Input() inputDefinitions: InputDefinition[] = [];
   @Output() closeDetails = new EventEmitter<void>();
 
   constructor(
@@ -41,6 +41,32 @@ export class DetailsBuilderComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Zkusí zparsovat JSON string na objekt. Pokud selže nebo to není string, vrátí původní hodnotu.
+   */
+  getJsonValue(val: any): any {
+    if (typeof val === 'string' && (val.trim().startsWith('{') || val.trim().startsWith('['))) {
+      try {
+        return JSON.parse(val);
+      } catch (e) {
+        return val;
+      }
+    }
+    return val;
+  }
+
+  /**
+   * Detekuje, zda je hodnota objekt nebo JSON string vhodný pro zobrazení v <pre>
+   */
+  isObject(val: any): boolean {
+    if (val === null || val === undefined) return false;
+    // Je to přímo objekt
+    if (typeof val === 'object' && !(val instanceof Date)) return true;
+    // Je to string, který vypadá jako JSON
+    if (typeof val === 'string' && (val.trim().startsWith('{') || val.trim().startsWith('['))) return true;
+    return false;
+  }
+
   getFileName(url: string): string {
     if (!url) return 'soubor';
     const parts = url.split('/');
@@ -63,21 +89,20 @@ export class DetailsBuilderComponent implements OnInit, OnDestroy {
     if (value === null || value === undefined || value === '') return null;
 
     switch (columnDef.type) {
-        case 'currency':
-            return this.currencyPipe.transform(value, 'CZK', 'symbol-narrow', '1.0-0', 'cs-CZ');
-        case 'date':
-            const date = new Date(value);
-            return isNaN(date.getTime()) ? value : this.datePipe.transform(date, columnDef.format || 'dd.MM.yyyy HH:mm', 'cs-CZ');
-        case 'boolean':
-            return (value == true || value == 1) ? 'Ano' : 'Ne';
-        default:
-            // PŘIDÁNO: Překlad technického kódu na label v Detailu
-            const fieldDef = this.inputDefinitions.find(i => i.column_name === columnDef.key);
-            if (fieldDef?.options) {
-              const option = fieldDef.options.find(opt => String(opt.value) === String(value));
-              return option ? option.label : value;
-            }
-            return value;
+      case 'currency':
+        return this.currencyPipe.transform(value, 'CZK', 'symbol-narrow', '1.0-0', 'cs-CZ');
+      case 'date':
+        const date = new Date(value);
+        return isNaN(date.getTime()) ? value : this.datePipe.transform(date, columnDef.format || 'dd.MM.yyyy HH:mm', 'cs-CZ');
+      case 'boolean':
+        return (value == true || value == 1) ? 'Ano' : 'Ne';
+      default:
+        const fieldDef = this.inputDefinitions.find(i => i.column_name === columnDef.key);
+        if (fieldDef?.options) {
+          const option = fieldDef.options.find(opt => String(opt.value) === String(value));
+          return option ? option.label : value;
+        }
+        return value;
     }
   }
 

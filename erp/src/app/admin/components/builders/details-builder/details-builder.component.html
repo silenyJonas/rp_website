@@ -22,15 +22,26 @@
                   <div class="file-actions">
                     <a [href]="fileUrl" target="_blank" class="btn-action view">📄 Zobrazit</a>
                     <button type="button" (click)="downloadFile(fileUrl)" class="btn-action download">
-                  📥 Stáhnout
-                </button>
+                      📥 Stáhnout
+                    </button>
                   </div>
                 </div>
                 <ng-template #noFile><span class="text-muted">Není přiložena</span></ng-template>
               </div>
 
               <div *ngSwitchDefault>
-                {{ getFormattedValue(itemData, column.key, column) || '-' }}
+                <div *ngIf="getValueByPath(itemData, column.key) as val; else emptyVal">
+                  
+                  <ng-container *ngIf="isObject(val); else simpleValue">
+                    <pre class="json-block">{{ getJsonValue(val) | json }}</pre>
+                  </ng-container>
+
+                  <ng-template #simpleValue>
+                    {{ getFormattedValue(itemData, column.key, column) || '-' }}
+                  </ng-template>
+
+                </div>
+                <ng-template #emptyVal>-</ng-template>
               </div>
               
             </ng-container>

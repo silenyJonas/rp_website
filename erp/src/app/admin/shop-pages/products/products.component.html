@@ -160,9 +160,18 @@
                 <span *ngIf="v.attribute_2_name">{{ v.attribute_2_name }}: <strong>{{ v.attribute_2_value }}</strong></span>
               </div>
               <div class="variant-pricing">
-                <span class="label">Bez DPH:</span> {{ formatCurrency(v.price_without_vat || 0) }}
-                <span class="label">S DPH:</span> {{ formatCurrency(v.price_with_vat) }}
-                <span class="label">DPH:</span> {{ v.vat_rate }}%
+                <div class="row">
+                  <div class="label">Bez DPH:</div>
+                  <div>{{ formatCurrency(v.price_without_vat || 0) }}</div>
+                </div>
+                <div class="row">
+                  <div class="label">S DPH:</div>
+                  <div>{{ formatCurrency(v.price_with_vat) }}</div>
+                </div>
+                <div class="row">
+                  <div class="label">DPH:</div>
+                  <div>{{ v.vat_rate }}%</div>
+                </div>
               </div>
               <div class="variant-stock">
                 <span class="label">Sklad:</span> <strong>{{ v.stock_quantity }} ks</strong>
@@ -528,13 +537,6 @@
                   <span>Primární obrázek (hlavní náhled)</span>
                 </label>
               </div>
-            </div>
-          </div>
-
-          <div *ngIf="image.variant_id" class="variant-image-info">
-            <div class="variant-image-note">
-              ⚠️ <strong>Obrázek varianty</strong><br>
-              Tento obrázek patří k variantě. Upravit ho můžeš v sekci <strong>Varianty → 🖼️</strong>
             </div>
           </div>
         </div>
