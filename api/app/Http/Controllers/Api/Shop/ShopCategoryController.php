@@ -17,7 +17,7 @@ class ShopCategoryController extends Controller
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page', 15);
-        $query = ShopCategory::with('parent');
+        $query = ShopCategory::with('parent')->withCount('products');
 
         if ($s = $request->input('search')) {
             $query->where(fn($q) => $q->where('name', 'like', "%$s%")
@@ -76,27 +76,55 @@ class ShopCategoryController extends Controller
         }
     }
 
-    public function destroy(Request $request, $id): JsonResponse
-    {
-        try {
-            $item = ShopCategory::findOrFail($id);
+    // public function destroy(Request $request, $id): JsonResponse
+    // {
+    //     try {
+    //         $item = ShopCategory::findOrFail($id);
 
-            // Kontrola existence podkategorií
-            if ($item->children()->exists()) {
-                return response()->json([
-                    'message' => "Kategorii '{$item->name}' nelze smazat, protože obsahuje podkategorie. Nejdříve je odstraňte nebo přesuňte."
-                ], 422);
-            }
+    //         // Kontrola existence podkategorií
+    //         if ($item->children()->exists()) {
+    //             return response()->json([
+    //                 'message' => "Kategorii '{$item->name}' nelze smazat, protože obsahuje podkategorie. Nejdříve je odstraňte nebo přesuňte."
+    //             ], 422);
+    //         }
 
-            $item->delete();
-            $this->logAction($request, 'delete', 'ShopCategory', "Smazána kategorie: {$item->name}", $id);
-            return response()->json(null, 204);
+    //         $item->delete();
+    //         $this->logAction($request, 'delete', 'ShopCategory', "Smazána kategorie: {$item->name}", $id);
+    //         return response()->json(null, 204);
             
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Smazání se nezdařilo.'], 500);
-        }
-    }
+    //     } catch (\Exception $e) {
+    //         return response()->json(['message' => 'Smazání se nezdařilo.'], 500);
+    //     }
+    // }
+    public function destroy(Request $request, $id): JsonResponse
+{
+    try {
+        $item = ShopCategory::findOrFail($id);
 
+        // 1. Kontrola existence podkategorií
+        if ($item->children()->exists()) {
+            return response()->json([
+                'message' => "Kategorii '{$item->name}' nelze smazat, protože obsahuje podkategorie. Nejdříve je odstraňte nebo přesuňte."
+            ], 422);
+        }
+
+        // 2. NOVÉ: Kontrola existence přiřazených produktů
+        // Předpokládá existenci metody products() v modelu ShopCategory
+        if ($item->products()->exists()) {
+            return response()->json([
+                'message' => "Kategorii '{$item->name}' nelze smazat, protože obsahuje přiřazené produkty. Nejdříve produkty přesuňte do jiné kategorie nebo je smažte."
+            ], 422);
+        }
+
+        $item->delete();
+        $this->logAction($request, 'delete', 'ShopCategory', "Smazána kategorie: {$item->name}", $id);
+        return response()->json(null, 204);
+        
+    } catch (\Exception $e) {
+        Log::error("Delete error (ShopCategory): " . $e->getMessage());
+        return response()->json(['message' => 'Smazání se nezdařilo.'], 500);
+    }
+}
     protected function logAction(Request $request, string $eventType, string $module, string $description, ?int $affectedId = null): void
     {
         try {

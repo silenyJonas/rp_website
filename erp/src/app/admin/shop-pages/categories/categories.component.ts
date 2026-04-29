@@ -267,37 +267,87 @@ export class CategoriesComponent extends BaseDataComponent<CategoryNode> impleme
       });
   }
 
+  // async deleteCategory(node: CategoryNode): Promise<void> {
+  //   if (node.children?.length) {
+  //     await this.alertDialogService.open('Nelze smazat', 'Smažte nejdříve podkategorie.', 'warning');
+  //     return;
+  //   }
+
+  //   const confirmed = await this.confirmDialogService.open(
+  //     'Potvrdit smazání', 
+  //     `Opravdu si přejete smazat kategorii "${node.name}"?`
+  //   );
+
+  //   if (confirmed) {
+  //     // Optimistická aktualizace - okamžitě odstranit z UI
+  //     this.removeNodeFromTree(node.id);
+  //     this.expandedStates.delete(node.id);
+  //     this.cd.markForCheck();
+
+  //     this.deleteData(node.id).subscribe({
+  //       next: () => {
+  //         this.alertDialogService.open('Smazáno', 'Kategorie byla odstraněna.', 'success');
+  //         this.saveExpandedStates();
+  //       },
+  //       error: (err) => {
+  //         // Vrátit kompletní strom v případě chyby
+  //         this.alertDialogService.open('Chyba', err.error?.message || 'Smazání selhalo.', 'danger');
+  //         this.loadTree();
+  //       }
+  //     });
+  //   }
+  // }
   async deleteCategory(node: CategoryNode): Promise<void> {
-    if (node.children?.length) {
-      await this.alertDialogService.open('Nelze smazat', 'Smažte nejdříve podkategorie.', 'warning');
-      return;
-    }
-
-    const confirmed = await this.confirmDialogService.open(
-      'Potvrdit smazání', 
-      `Opravdu si přejete smazat kategorii "${node.name}"?`
+  // 1. Kontrola na podkategorie (tu už tam máš)
+  if (node.children?.length) {
+    await this.alertDialogService.open(
+      'Nelze smazat', 
+      'Smažte nejdříve podkategorie.', 
+      'warning'
     );
-
-    if (confirmed) {
-      // Optimistická aktualizace - okamžitě odstranit z UI
-      this.removeNodeFromTree(node.id);
-      this.expandedStates.delete(node.id);
-      this.cd.markForCheck();
-
-      this.deleteData(node.id).subscribe({
-        next: () => {
-          this.alertDialogService.open('Smazáno', 'Kategorie byla odstraněna.', 'success');
-          this.saveExpandedStates();
-        },
-        error: (err) => {
-          // Vrátit kompletní strom v případě chyby
-          this.alertDialogService.open('Chyba', err.error?.message || 'Smazání selhalo.', 'danger');
-          this.loadTree();
-        }
-      });
-    }
+    return;
   }
 
+  // 2. NOVÉ: Kontrola na produkty (pokud tvé API vrací products_count)
+  // Poznámka: Pokud tvůj interface CategoryNode toto pole nemá, přidej si ho do něj
+  if (node.products_count && node.products_count > 0) {
+    await this.alertDialogService.open(
+      'Nelze smazat', 
+      `Kategorii "${node.name}" nelze smazat, protože obsahuje přiřazené produkty (${node.products_count}). Nejdříve produkty přesuňte nebo smažte.`, 
+      'warning'
+    );
+    return;
+  }
+
+  const confirmed = await this.confirmDialogService.open(
+    'Potvrdit smazání', 
+    `Opravdu si přejete smazat kategorii "${node.name}"?`
+  );
+
+  if (confirmed) {
+    // Optimistická aktualizace - okamžitě odstranit z UI
+    this.removeNodeFromTree(node.id);
+    this.expandedStates.delete(node.id);
+    this.cd.markForCheck();
+
+    this.deleteData(node.id).subscribe({
+      next: () => {
+        this.alertDialogService.open('Smazáno', 'Kategorie byla odstraněna.', 'success');
+        this.saveExpandedStates();
+      },
+      error: (err) => {
+        // Pokud backend vrátí chybu (např. tu 422 o produktech, kterou jsme v PHP přidali),
+        // tak se loadTree() postará o navrácení kategorie zpět do UI a zobrazí se zpráva z backendu.
+        this.alertDialogService.open(
+          'Chyba', 
+          err.error?.message || 'Smazání selhalo.', 
+          'danger'
+        );
+        this.loadTree();
+      }
+    });
+  }
+}
   private removeNodeFromTree(nodeId: number): void {
     const removeRecursive = (nodes: CategoryNode[]): boolean => {
       for (let i = 0; i < nodes.length; i++) {

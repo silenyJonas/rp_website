@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ShopCategory extends Model
 {
-
     protected $fillable = [
         'name',
         'slug',
@@ -39,5 +38,15 @@ class ShopCategory extends Model
     public function children(): HasMany
     {
         return $this->hasMany(ShopCategory::class, 'parent_id')->orderBy('sort_order', 'asc');
+    }
+
+    /**
+     * ⚠️ DOPLNĚNO: Relace na produkty v této kategorii.
+     * Umožňuje controlleru kontrolovat, zda kategorie není prázdná před smazáním.
+     */
+    public function products(): HasMany
+    {
+        // Předpokládáme, že model produktu se jmenuje ShopProduct
+        return $this->hasMany(ShopProduct::class, 'category_id');
     }
 }

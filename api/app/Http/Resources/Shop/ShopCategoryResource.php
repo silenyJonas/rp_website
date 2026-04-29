@@ -19,7 +19,7 @@ class ShopCategoryResource extends JsonResource
             'image_path' => $this->image_path,
             'is_active' => (bool)$this->is_active,
             'sort_order' => $this->sort_order,
-            
+            'products_count' => $this->products_count ?? 0,
             // Oprava: Zajistíme, že i když je datum string, převedeme ho na Carbon před formátováním
             'created_at' => $this->created_at ? Carbon::parse($this->created_at)->toIso8601String() : null,
             'updated_at' => $this->updated_at ? Carbon::parse($this->updated_at)->toIso8601String() : null,

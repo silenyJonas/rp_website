@@ -8,7 +8,7 @@ export interface CategoryNode {
   image_path?: string | null;
   description?: string | null;
   children: CategoryNode[]; // Rekurzivní vazba pro podstrom
-  
+  products_count?: number;
   // --- UI STAVY (neukládají se do DB) ---
   isEditing?: boolean;       // Přepíná mezi textem a inputem
   isExpanded?: boolean;      // Řídí, zda jsou vidět děti (rolování)
