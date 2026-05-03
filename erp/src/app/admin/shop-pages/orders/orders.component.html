@@ -1,4 +1,3 @@
-
 <div class="orders-container">
   <!-- Error Banner -->
   <div *ngIf="errorMessage" class="error-banner">⚠️ {{ errorMessage }}</div>
@@ -269,7 +268,9 @@
                 <label>Slevový kupón</label>
                 <select [(ngModel)]="editingOrder.coupon_id" name="coupon_id" (change)="recalculateTotals()">
                   <option value="">-- Bez kupónu --</option>
-                  <option *ngFor="let coup of coupons" [value]="coup.id">{{ coup.code }} (-{{ formatCurrency(coup.discount_value) }})</option>
+                  <option *ngFor="let coup of coupons" [value]="coup.id">
+                    {{ coup.code }} ({{ getCouponDisplayValue(coup) }})
+                  </option>
                 </select>
               </div>
             </div>
@@ -360,52 +361,69 @@
                 </div>
               </div>
             </div>
+            
+            <!-- Aplikovaný kupón (pokud je vybrán) -->
             <div *ngIf="editingOrder.coupon_id && editingOrder.discount_amount > 0" class="order-item coupon-row">
-  <div class="item-header">
-    <h4>🎫 Aplikovaný kupón</h4>
-  </div>
-  <div class="item-form">
-    <div class="coupon-display-flex">
-      <div class="coupon-info">
-        <strong>{{ getCouponCode(editingOrder.coupon_id) }}</strong>
-        <span class="coupon-type-badge">
-          (Sleva {{ getCouponTypeLabel(editingOrder.coupon_id) }})
-        </span>
-      </div>
-      <div class="item-total">
-        <label>Sleva:</label>
-        <span class="amount discount-text">-{{ formatCurrency(editingOrder.discount_amount) }}</span>
-      </div>
-    </div>
-  </div>
-</div>
+              <div class="item-header">
+                <h4>🎫 Aplikovaný kupón</h4>
+              </div>
+              <div class="item-form">
+                <div class="coupon-display-flex">
+                  <div class="coupon-info">
+                    <strong>{{ getCouponCode(editingOrder.coupon_id) }}</strong>
+                    <span class="coupon-type-badge">
+                      (Sleva {{ getCouponTypeLabel(editingOrder.coupon_id) }})
+                    </span>
+                  </div>
+                  <div class="item-total">
+                    <label>Sleva:</label>
+                    <span class="amount discount-text">-{{ formatCurrency(editingOrder.discount_amount) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
             <button type="button" class="btn btn-secondary" (click)="addOrderItem()">➕ Přidat položku</button>
           </fieldset>
 
-          <!-- Souhrn částek -->
+          <!-- Souhrn částek - UPRAVENO -->
           <fieldset class="summary-section">
             <legend>Souhrn cen</legend>
             <div class="summary-grid">
+              <!-- Řádek 1: Základní součet bez DPH -->
               <div class="summary-row">
                 <label>Součet BEZ DPH:</label>
-                <span>{{ formatCurrency(editingOrder.total_amount - editingOrder.tax_amount) }}</span>
+                <span>{{ formatCurrency(calculateSummaryTotals().baseAmount) }}</span>
               </div>
+              
+              <!-- Řádek 2: DPH 21% -->
               <div class="summary-row">
                 <label>DPH (21%):</label>
-                <span class="vat">{{ formatCurrency(summaryTaxAmount) }}</span>
+                <span class="vat">{{ formatCurrency(calculateSummaryTotals().vat) }}</span>
               </div>
+              
+              <!-- Řádek 3: Součet S DPH -->
               <div class="summary-row">
                 <label>Součet S DPH:</label>
-                <span>{{ formatCurrency(editingOrder.total_amount) }}</span>
+                <span>{{ formatCurrency(calculateSummaryTotals().withVat) }}</span>
               </div>
+              
+              <!-- Řádek 4: Doprava -->
               <div class="summary-row">
-                <label>Doprava:</label>
+                <label>Cena za dopravu:</label>
                 <span>{{ formatCurrency(editingOrder.shipping_amount) }}</span>
               </div>
-              <div class="summary-row" *ngIf="editingOrder.discount_amount > 0">
-                <label>Sleva:</label>
-                <span class="discount">-{{ formatCurrency(editingOrder.discount_amount) }}</span>
-              </div>
+              
+             <!-- Řádek 5: Sleva (pokud je) -->
+            <div class="summary-row" *ngIf="editingOrder.discount_amount > 0">
+              <label>
+                Slevový kupón: <span>{{ getCouponCode(editingOrder.coupon_id) }}</span> 
+                ({{ getCouponDisplayValue(editingOrder.coupon_id) }})
+              </label>
+              <span class="discount">-{{ formatCurrency(editingOrder.discount_amount) }}</span>
+            </div>
+              
+              <!-- Řádek 6: FINÁLNÍ ČÁSTKA -->
               <div class="summary-row total">
                 <label>CELKEM K ÚHRADĚ:</label>
                 <span class="total-amount">{{ formatCurrency(editingOrder.final_amount) }}</span>

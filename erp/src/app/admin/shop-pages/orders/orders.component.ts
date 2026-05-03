@@ -549,14 +549,82 @@ recalculateTotals(): void {
       }
     });
   }
-getCouponTypeLabel(couponId: number): string {
-  const coupon = this.coupons.find(c => c.id === Number(couponId));
+
+getCouponCode(couponId: any): string {
+  // Ošetříme null, undefined, 0 nebo prázdný string
+  if (!couponId) return '-';
+
+  // Převedeme couponId na číslo pro bezpečné porovnání
+  const idToFind = Number(couponId);
+  
+  const coupon = this.coupons.find(c => Number(c.id) === idToFind);
+  
+  return coupon ? coupon.code : 'N/A';
+}
+/**
+ * Formátuje zobrazení slevy pro UI (např. v dropdownu nebo souhrnu)
+ * @param coupon Objekt kupónu nebo ID
+ */
+getCouponDisplayValue(couponOrId: any): string {
+  // 1. Získáme objekt kupónu (podpora pro ID i celý objekt)
+  let coupon = typeof couponOrId === 'object' ? couponOrId : null;
+  
+  if (!coupon && couponOrId) {
+    const idToFind = Number(couponOrId);
+    coupon = this.coupons.find(c => Number(c.id) === idToFind);
+  }
+
+  // 2. Pokud kupón nemáme, vrátíme prázdný string
+  if (!coupon) return '';
+
+  // 3. Formátování podle typu
+  if (coupon.discount_type === 'percent') {
+    return `-${coupon.discount_value}%`;
+  }
+
+  return `-${this.formatCurrency(coupon.discount_value)}`;
+}
+getCouponTypeLabel(couponId: any): string {
+  if (!couponId) return '';
+  
+  // Převod na číslo, aby "12" === 12 bylo true
+  const idToFind = Number(couponId);
+  const coupon = this.coupons.find(c => Number(c.id) === idToFind);
+  
   if (!coupon) return '';
   
-  return coupon.discount_type === 'percent' 
-    ? `${coupon.discount_value} %` 
-    : this.formatCurrency(coupon.discount_value);
+  // Kontrola typu slevy
+  if (coupon.discount_type === 'percent') {
+    return `-${coupon.discount_value}%`; // Zobrazí např. -10%
+  }
+  
+  return `-${this.formatCurrency(coupon.discount_value)}`; // Zobrazí např. -200 Kč
 }
+
+calculateSummaryTotals(): { baseAmount: number; vat: number; withVat: number } {
+  if (!this.editingOrder) {
+    return { baseAmount: 0, vat: 0, withVat: 0 };
+  }
+
+  const items = (this.editingOrder.items || []).filter(i => !i._delete);
+  let productsWithVat = 0;
+  
+  items.forEach(item => {
+    productsWithVat += item.quantity * item.unit_price;
+  });
+
+  // Počítáme DPH jako 21% z ceny s DPH (aby se dostalo bez DPH)
+  // Formule: cena_bez_dph = cena_s_dph / 1.21
+  const baseAmount = Math.round((productsWithVat / 1.21) * 100) / 100;
+  const vat = Math.round((productsWithVat - baseAmount) * 100) / 100;
+
+  return {
+    baseAmount,
+    vat,
+    withVat: productsWithVat
+  };
+}
+
   private validateOrder(): boolean {
     if (!this.editingOrder) return false;
 
@@ -615,11 +683,6 @@ getCouponTypeLabel(couponId: number): string {
   getShippingMethodName(methodId: number): string {
     if (!methodId) return '-';
     return this.shippingMethods.find(m => m.id === methodId)?.name || 'N/A';
-  }
-
-  getCouponCode(couponId: number): string {
-    if (!couponId) return '-';
-    return this.coupons.find(c => c.id === couponId)?.code || 'N/A';
   }
 
   formatCurrency(value: number): string {
