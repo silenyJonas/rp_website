@@ -96,7 +96,14 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     
     if (actions[action]) actions[action]();
   }
-
+// Pomocná metoda pro získání tlačítek v režimu koše
+getTrashToolbarButtons(): any[] {
+  // Vrátíme všechna tlačítka kromě 'Vytvořit' a 'Exportovat'
+  return this.toolbarButtons.filter(btn => 
+    btn.action !== 'handleCreateFormOpened' && 
+    btn.action !== 'exportActiveTable'
+  );
+}
   exportActiveTable(): void {
     if (this.activeTable) {
       this.activeTable.exportToCSV();

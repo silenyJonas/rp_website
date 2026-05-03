@@ -41,6 +41,8 @@ class ShopProduct extends Model
         'deleted_at' => 'datetime',
     ];
 
+
+
     /**
      * Kategorie produktu
      */

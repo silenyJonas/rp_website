@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ShopProductVariant extends Model
 {
@@ -14,17 +16,9 @@ class ShopProductVariant extends Model
     protected $table = 'shop_product_variants';
 
     protected $fillable = [
-        'product_id',
-        'variant_name',
-        'attribute_1_name',
-        'attribute_1_value',
-        'attribute_2_name',
-        'attribute_2_value',
-        'sku_variant',
-        'price_with_vat',      // Cena S DPH
-        'price_without_vat',   // Cena BEZ DPH
-        'vat_rate',             // DPH sazba (%)
-        'stock_quantity',
+        'product_id', 'variant_name', 'attribute_1_name', 'attribute_1_value',
+        'attribute_2_name', 'attribute_2_value', 'sku_variant',
+        'price_with_vat', 'price_without_vat', 'vat_rate', 'stock_quantity',
     ];
 
     protected $casts = [
@@ -32,64 +26,60 @@ class ShopProductVariant extends Model
         'price_without_vat' => 'decimal:2',
         'vat_rate' => 'decimal:2',
         'stock_quantity' => 'integer',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
     ];
 
-    /**
-     * Produkt
-     */
-    public function product(): BelongsTo
+    protected static function booted()
     {
-        return $this->belongsTo(ShopProduct::class, 'product_id');
+        // Spustí se při $variant->save() nebo $variant->update()
+        static::saved(function ($variant) {
+            $variant->syncParentStock();
+        });
+
+        // Spustí se při $variant->delete()
+        static::deleted(function ($variant) {
+            $variant->syncParentStock();
+        });
+
+        static::deleting(function ($variant) {
+            foreach ($variant->images as $image) {
+                if (Storage::disk('public')->exists('products/' . $image->image_path)) {
+                    Storage::disk('public')->delete('products/' . $image->image_path);
+                }
+                $image->delete();
+            }
+        });
     }
 
     /**
-     * Obrázky specifické této variantě
+     * Provede synchronizaci skladu pro konkrétní produktové ID
+     * Tato metoda je STATICKÁ, takže ji můžeš volat odkudkoliv i bez instance varianty
      */
-    public function images(): HasMany
+    public static function forceSyncParentStock(int $productId): void
     {
-        return $this->hasMany(ShopProductImage::class, 'variant_id');
+        $totalStock = self::where('product_id', $productId)
+            ->whereNull('deleted_at') // Pouze nesmazané varianty
+            ->sum('stock_quantity');
+
+        DB::table('shop_products')
+            ->where('id', $productId)
+            ->update(['stock_quantity' => $totalStock]);
+            
+        \Illuminate\Support\Facades\Log::info("Manual stock sync performed", [
+            'product_id' => $productId, 
+            'total_stock' => $totalStock
+        ]);
     }
 
     /**
-     * Vrátí finalní cenu S DPH
+     * Pomocná metoda pro instanci varianty
      */
-    public function getPriceWithVAT(): float
+    public function syncParentStock(): void
     {
-        return (float)$this->price_with_vat;
+        if ($this->product_id) {
+            self::forceSyncParentStock($this->product_id);
+        }
     }
 
-    /**
-     * Vrátí cenu BEZ DPH
-     */
-    public function getPriceWithoutVAT(): float
-    {
-        return (float)$this->price_without_vat;
-    }
-
-    /**
-     * Vrátí DPH sazbu
-     */
-    public function getVATRate(): float
-    {
-        return (float)$this->vat_rate;
-    }
-
-    /**
-     * Scope pro dostupné varianty (na skladě)
-     */
-    public function scopeAvailable($query)
-    {
-        return $query->where('stock_quantity', '>', 0);
-    }
-
-    /**
-     * Scope pro nízké zásoby
-     */
-    public function scopeLowStock($query, int $threshold = 10)
-    {
-        return $query->whereBetween('stock_quantity', [1, $threshold]);
-    }
+    public function product(): BelongsTo { return $this->belongsTo(ShopProduct::class, 'product_id'); }
+    public function images(): HasMany { return $this->hasMany(ShopProductImage::class, 'variant_id'); }
 }

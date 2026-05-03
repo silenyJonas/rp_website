@@ -27,7 +27,7 @@ class ShopShippingMethodController extends Controller
                 ->orWhere('description', 'like', "%$s%"));
         }
 
-        // Filtry na shodu
+        // Filtry na shodu - POUZE pokud jsou specifikovány v requesti
         foreach (['shipping_type', 'is_active', 'requires_pickup_point', 'allows_cod'] as $f) {
             if ($request->filled($f)) $query->where($f, $request->input($f));
         }

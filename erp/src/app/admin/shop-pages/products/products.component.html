@@ -9,7 +9,7 @@
         <h1>Produkty</h1>
         <div class="toolbar-actions">
           <app-button-builder 
-            [configs]="toolbarButtons" 
+            [configs]="showTrashTable ? getTrashToolbarButtons() : toolbarButtons" 
             (actionTriggered)="handleToolbarAction($event)">
           </app-button-builder>
         </div>

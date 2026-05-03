@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 30, 2026 at 02:15 PM
+-- Generation Time: Apr 30, 2026 at 02:29 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -250,7 +250,7 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (87, 'App\\Models\\User', 59, 'access-token', 'c58f7b40a4862562dc033216ec4ba476336d5cc77af42b57e8a6721e0c735545', '[\"*\"]', '2026-02-15 22:41:38', '2026-02-15 23:11:38', '2026-02-15 22:41:38', '2026-02-15 22:41:38'),
 (134, 'App\\Models\\User', 62, 'access-token', '696da6ddfce759f43fcd6c430016ffff654238b4bd746c50642599a4b68a1cd7', '[\"*\"]', '2026-02-18 02:12:13', '2026-02-18 03:12:09', '2026-02-18 02:12:09', '2026-02-18 02:12:13'),
 (172, 'App\\Models\\User', 77, 'access-token', 'f783051fdb88711a863e9ccd4e5176a5a3f2a3606204c816754c3227d07698f8', '[\"*\"]', '2026-02-25 00:08:53', '2026-02-25 00:42:29', '2026-02-24 23:42:29', '2026-02-25 00:08:53'),
-(328, 'App\\Models\\User', 25, 'access-token', 'c3fbc89c3f7473fe9883d5dda2da7ad4fe36f966c4c1f2c0a6d3f4ffcb15dda1', '[\"*\"]', '2026-04-30 12:14:51', '2026-04-30 13:10:41', '2026-04-30 12:10:41', '2026-04-30 12:14:51');
+(328, 'App\\Models\\User', 25, 'access-token', 'c3fbc89c3f7473fe9883d5dda2da7ad4fe36f966c4c1f2c0a6d3f4ffcb15dda1', '[\"*\"]', '2026-04-30 12:28:09', '2026-04-30 13:10:41', '2026-04-30 12:10:41', '2026-04-30 12:28:09');
 
 -- --------------------------------------------------------
 
@@ -344,7 +344,7 @@ CREATE TABLE `shop_coupons` (
 --
 
 INSERT INTO `shop_coupons` (`id`, `code`, `description`, `discount_type`, `discount_value`, `max_usage`, `usage_count`, `min_order_amount`, `applies_to`, `valid_from`, `valid_until`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(2, 'JONAS200', NULL, 'fixed', 200.00, 10, 0, 1000.00, 'all', '2026-04-16 00:00:00', '2026-05-10 00:00:00', 1, '2026-04-29 16:23:51', '2026-04-29 16:23:51', NULL),
+(2, 'JONAS200', NULL, 'fixed', 200.00, 10, 1, 1000.00, 'all', '2026-04-16 00:00:00', '2026-05-10 00:00:00', 1, '2026-04-29 16:23:51', '2026-04-30 12:28:09', NULL),
 (3, 'JONAS10', NULL, 'percent', 10.00, 10, 0, 0.00, 'all', NULL, NULL, 1, '2026-04-29 22:04:28', '2026-04-29 22:04:28', NULL);
 
 -- --------------------------------------------------------
@@ -401,6 +401,13 @@ CREATE TABLE `shop_logs` (
   `user_plain` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `shop_logs`
+--
+
+INSERT INTO `shop_logs` (`id`, `created_at`, `origin`, `event_type`, `module`, `description`, `affected_entity_type`, `affected_entity_id`, `user_id`, `context_data`, `user_id_plain`, `user_plain`) VALUES
+(1, '2026-04-30 14:28:09', '127.0.0.1', 'create', 'ShopOrder', 'Vytvořena objednávka: 2026040001', 'ShopOrder', 4, 25, '\"{\\\"customer_id\\\":\\\"1\\\",\\\"payment_method_id\\\":\\\"2\\\",\\\"shipping_method_id\\\":\\\"2\\\",\\\"coupon_id\\\":\\\"2\\\",\\\"status\\\":\\\"pending\\\",\\\"payment_status\\\":\\\"pending\\\",\\\"shipping_address\\\":\\\"hjkh\\\",\\\"shipping_city\\\":\\\"jkh\\\",\\\"shipping_postal_code\\\":\\\"jkh\\\",\\\"shipping_country\\\":\\\"jk\\\",\\\"items\\\":[{\\\"product_id\\\":14,\\\"product_name\\\":\\\"test prod1\\\",\\\"product_variant_id\\\":\\\"18\\\",\\\"variant_name\\\":\\\"cerna prod\\\",\\\"quantity\\\":1,\\\"unit_price\\\":1000,\\\"total_price\\\":1000}],\\\"delete_items\\\":[]}\"', '25', 'Jonáš Bučina');
+
 -- --------------------------------------------------------
 
 --
@@ -411,14 +418,13 @@ CREATE TABLE `shop_orders` (
   `id` int(10) UNSIGNED NOT NULL,
   `customer_id` int(10) UNSIGNED NOT NULL,
   `order_number` varchar(50) NOT NULL,
-  -- Status řeší pouze logistický proces
   `status` varchar(50) DEFAULT 'pending' COMMENT 'pending, confirmed, processing, shipped, delivered, returned, canceled',
-  -- Payment status řeší pouze peníze
   `payment_status` varchar(50) DEFAULT 'pending' COMMENT 'pending, paid, failed, refunded, cod',
   `total_amount` decimal(10,2) NOT NULL,
   `shipping_amount` decimal(10,2) DEFAULT 0.00,
   `tax_amount` decimal(10,2) DEFAULT 0.00,
   `discount_amount` decimal(10,2) DEFAULT 0.00,
+  `final_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
   `coupon_id` int(10) UNSIGNED DEFAULT NULL,
   `payment_method_id` int(10) UNSIGNED DEFAULT NULL,
   `shipping_method_id` int(10) UNSIGNED DEFAULT NULL,
@@ -429,10 +435,18 @@ CREATE TABLE `shop_orders` (
   `notes` text DEFAULT NULL,
   `paid_at` datetime DEFAULT NULL,
   `shipped_at` datetime DEFAULT NULL,
+  `delivered_at` datetime DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `shop_orders`
+--
+
+INSERT INTO `shop_orders` (`id`, `customer_id`, `order_number`, `status`, `payment_status`, `total_amount`, `shipping_amount`, `tax_amount`, `discount_amount`, `final_amount`, `coupon_id`, `payment_method_id`, `shipping_method_id`, `shipping_address`, `shipping_city`, `shipping_postal_code`, `shipping_country`, `notes`, `paid_at`, `shipped_at`, `delivered_at`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(4, 1, '2026040001', 'pending', 'pending', 1000.00, 250.00, 0.00, 200.00, 1050.00, 2, 2, 2, 'hjkh', 'jkh', 'jkh', 'jk', NULL, NULL, NULL, NULL, '2026-04-30 12:28:09', '2026-04-30 12:28:09', NULL);
 
 -- --------------------------------------------------------
 
@@ -446,12 +460,21 @@ CREATE TABLE `shop_order_items` (
   `product_id` int(10) UNSIGNED NOT NULL,
   `product_variant_id` int(10) UNSIGNED DEFAULT NULL,
   `product_name` varchar(200) NOT NULL COMMENT 'Kopie názvu (pro historii)',
+  `variant_name` varchar(255) DEFAULT NULL,
   `quantity` int(11) NOT NULL,
-  `price` decimal(10,2) NOT NULL COMMENT 'Cena za kus v čase nákupu',
+  `unit_price` decimal(10,2) NOT NULL,
+  `total_price` decimal(10,2) NOT NULL,
   `discount_amount` decimal(10,2) DEFAULT 0.00,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `shop_order_items`
+--
+
+INSERT INTO `shop_order_items` (`id`, `order_id`, `product_id`, `product_variant_id`, `product_name`, `variant_name`, `quantity`, `unit_price`, `total_price`, `discount_amount`, `created_at`, `updated_at`) VALUES
+(1, 4, 14, 18, 'test prod1', 'cerna prod', 1, 1000.00, 1000.00, 0.00, '2026-04-30 12:28:09', '2026-04-30 12:28:09');
 
 -- --------------------------------------------------------
 
@@ -1234,19 +1257,19 @@ ALTER TABLE `shop_customers`
 -- AUTO_INCREMENT for table `shop_logs`
 --
 ALTER TABLE `shop_logs`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `shop_orders`
 --
 ALTER TABLE `shop_orders`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `shop_order_items`
 --
 ALTER TABLE `shop_order_items`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `shop_payment_methods`

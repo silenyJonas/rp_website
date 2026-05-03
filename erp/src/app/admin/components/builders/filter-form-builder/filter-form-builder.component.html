@@ -3,7 +3,9 @@
     <div class="filter-grid">
         <div *ngFor="let column of filterColumns">
             <label [for]="'filter' + column.key" class="filter-label">{{ column.header }}</label>
-            <input *ngIf="column.type === 'text' || column.type === 'email' || column.type === 'search'"
+            
+            <!-- Přidán column.type === 'number' pro podporu ID u kupónů -->
+            <input *ngIf="column.type === 'text' || column.type === 'email' || column.type === 'search' || column.type === 'number'"
                    [type]="column.type"
                    [id]="'filter' + column.key"
                    [(ngModel)]="filterForm[column.key]"
@@ -11,17 +13,24 @@
                    class="filter-input"
                    [placeholder]="column.placeholder">
 
+            <!-- Univerzální select pro oba typy konfigurací -->
             <select *ngIf="column.type === 'select'"
                     [id]="'filter' + column.key"
                     [(ngModel)]="filterForm[column.key]"
                     class="filter-select">
                 <option value="">{{ column.placeholder }}</option>
-                <option *ngFor="let option of column.options" [value]="option">{{ option }}</option>
+                
+                <!-- Iterujeme přes options s ošetřením obou formátů -->
+                <option *ngFor="let option of $any(column.options)" 
+                        [value]="option?.value !== undefined ? option.value : option">
+                    {{ option?.label !== undefined ? option.label : option }}
+                </option>
             </select>
         </div>
     </div>
     <hr>
 
+    <!-- Sekce řazení - beze změny pro zachování funkčnosti -->
     <div class="filter-grid">
         <div>
             <label for="filterSortBy" class="filter-label">Seřadit podle</label>
@@ -40,7 +49,6 @@
             </select>
         </div>
     </div>
-
 
     <div class="filter-buttons-container">
         <button (click)="clearFilters()" class="filter-button clear">

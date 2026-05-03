@@ -166,9 +166,17 @@ class ShopProductController extends Controller
             }
 
             // Smazání variant
+            // V metodě update nahraď sekci pro mazání variant tímto:
+
             if ($request->has('delete_variants')) {
-                Log::info("Deleting variants and their images", ['ids' => $request->input('delete_variants')]);
-                $this->deleteVariantsWithImages($request->input('delete_variants'));
+                Log::info("Deleting variants and their images", ['ids' => $request->delete_variants]);
+                
+                // Místo whereIn()->delete() uděláme toto:
+                $variantsToDelete = ShopProductVariant::whereIn('id', $request->delete_variants)->get();
+                
+                foreach ($variantsToDelete as $variant) {
+                    $variant->delete(); // Toto spustí události v modelu (maže obrázky i syncuje sklad)
+                }
             }
 
             // Update/Create variant

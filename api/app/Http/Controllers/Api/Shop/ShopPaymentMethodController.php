@@ -28,7 +28,7 @@ class ShopPaymentMethodController extends Controller
                 ->orWhere('provider', 'like', "%$s%"));
         }
 
-        // Filtry na shodu
+        // Filtry na shodu - POUZE pokud jsou specifikovány v requesti
         foreach (['provider', 'is_active', 'is_external'] as $f) {
             if ($request->filled($f)) $query->where($f, $request->input($f));
         }
@@ -67,18 +67,74 @@ class ShopPaymentMethodController extends Controller
         return response()->json(new ShopPaymentMethodResource($method));
     }
 
+    // public function update(UpdateShopPaymentMethodRequest $request, $id): JsonResponse
+    // {
+    //     try {
+    //         $method = ShopPaymentMethod::withTrashed()->findOrFail($id);
+    //         $method->update($request->validated());
+    //         $this->logAction($request, 'update', 'ShopPaymentMethod', "Aktualizace platební metody: {$method->name}", $method->id);
+    //         return response()->json(new ShopPaymentMethodResource($method));
+    //     } catch (\Exception $e) {
+    //         return response()->json(['message' => 'Aktualizace selhala.'], 500);
+    //     }
+    // }
+    /**
+     * Aktualizace konkrétní platební metody.
+     */
+    // public function update(UpdateShopPaymentMethodRequest $request, ShopPaymentMethod $id)
+    // {
+    //     try {
+    //         // Validovaná data získáme z requestu
+    //         $validated = $request->validated();
+            
+    //         // Provedeme update
+    //         $payment_method->update($validated);
+
+    //         // Logování akce
+    //         $this->logAction(
+    //             $request, 
+    //             'update', 
+    //             'ShopPaymentMethod', 
+    //             "Aktualizace platební metody: {$payment_method->name}", 
+    //             $payment_method->id
+    //         );
+
+    //         return response()->json(new ShopPaymentMethodResource($payment_method));
+    //     } catch (\Exception $e) {
+    //         Log::error("Update error: " . $e->getMessage());
+    //         return response()->json(['message' => 'Aktualizace selhala.'], 500);
+    //     }
+    // }
+    /**
+     * Aktualizace platební metody
+     */
     public function update(UpdateShopPaymentMethodRequest $request, $id): JsonResponse
     {
         try {
+            // Najdeme záznam
             $method = ShopPaymentMethod::withTrashed()->findOrFail($id);
+            
+            // Provedeme update pomocí validovaných dat z Requestu
+            // Tady se provede skutečný zápis do databáze
             $method->update($request->validated());
-            $this->logAction($request, 'update', 'ShopPaymentMethod', "Aktualizace platební metody: {$method->name}", $method->id);
+
+            // Logování akce
+            $this->logAction(
+                $request, 
+                'update', 
+                'ShopPaymentMethod', 
+                "Aktualizace platební metody: {$method->name}", 
+                $method->id
+            );
+
+            // Vrátíme čerstvá data přes Resource
             return response()->json(new ShopPaymentMethodResource($method));
+            
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Update error: " . $e->getMessage());
             return response()->json(['message' => 'Aktualizace selhala.'], 500);
         }
     }
-
     public function destroy(Request $request, $id): JsonResponse
     {
         $force = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);

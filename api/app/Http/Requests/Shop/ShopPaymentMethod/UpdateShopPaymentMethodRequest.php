@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Shop\ShopPaymentMethod;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateShopPaymentMethodRequest extends FormRequest
 {
@@ -10,9 +11,18 @@ class UpdateShopPaymentMethodRequest extends FormRequest
 
     public function rules(): array
     {
-        $id = $this->route('payment_method'); // nebo 'id' podle route definice
+        // V api.php máš ->parameters(['payment_methods' => 'id'])
+        // Proto musíme brát z routy parametr 'id'
+        $id = $this->route('id');
+
         return [
-            'code' => 'required|string|max:50|unique:shop_payment_methods,code,' . $id,
+            'code' => [
+                'required',
+                'string',
+                'max:50',
+                // Nyní ignorujeme správné ID, takže chyba 422 zmizí
+                Rule::unique('shop_payment_methods', 'code')->ignore($id),
+            ],
             'name' => 'required|string|max:100',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',

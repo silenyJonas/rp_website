@@ -1,0 +1,231 @@
+/* ========== KONTEJNER A LAYOUT OBJEDNÁVEK ========== */
+.orders-container {
+  width: 100%;
+  padding: 5px;
+  font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #333;
+}
+
+.row {
+  display: flex;
+  gap: 5px;
+  padding-bottom: 4px;
+}
+
+/* ========== TOOLBAR ========== */
+.toolbar-section {
+  background: #ffffff;
+  margin-bottom: 5px;
+}
+
+.toolbar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.toolbar-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #222;
+}
+
+/* ========== MAIN LAYOUT (Filter + Table) ========== */
+.main-content-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  gap: 0;
+}
+
+@media (min-width: 1024px) {
+  .main-content-layout {
+    flex-direction: row;
+    gap: 5px;
+  }
+}
+
+.filter-side-panel {
+  width: 100%;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: max-height 0.3s ease-out, width 0.3s ease-out, opacity 0.2s ease;
+}
+
+.filter-side-panel.active {
+  max-height: 1000px;
+  opacity: 1;
+  margin-bottom: 15px;
+}
+
+@media (min-width: 1024px) {
+  .filter-side-panel { width: 0; max-height: none; }
+  .filter-side-panel.active { width: 280px; }
+}
+
+.table-and-pagination-container {
+  flex: 1;
+  min-width: 0;
+  display: block;
+}
+
+/* ========== ZÁKLADNÍ MODAL SYSTÉM (POPUPY) ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000; /* Nad vším */
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  width: 95%;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+.modal-detail { max-width: 800px; }
+.modal-form { max-width: 950px; }
+.coupon-row {
+  background-color: #f0fff4 !important; /* Jemně zelená */
+  border: 1px dashed #38a169 !important;
+  margin-top: 10px;
+}
+
+.discount-text {
+  color: #e53e3e; /* Červená pro mínusovou částku */
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.coupon-display-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.coupon-type-badge {
+  margin-left: 10px;
+  font-size: 0.9em;
+  color: #666;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  flex-shrink: 0;
+}
+
+.modal-body {
+  padding: 25px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer, .modal-footer-inline {
+  padding: 15px 25px;
+  background: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #999;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-btn:hover { color: #dc2626; }
+
+/* ========== BADGES PRO STAVY ========== */
+.badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.status-pending { background: #fef3c7; color: #92400e; }
+.status-delivered { background: #dcfce7; color: #166534; }
+.status-canceled { background: #fee2e2; color: #991b1b; }
+.payment-paid { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.payment-pending { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+/* ========== FORMULÁŘE A POLOŽKY ========== */
+fieldset {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 15px;
+  background: #f8f9fa;
+}
+
+legend { font-weight: 600; color: #4b5563; padding: 0 8px; }
+
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.form-row-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; }
+
+.form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+
+.form-group input, .form-group select, .form-group textarea {
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.order-item {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 12px;
+  background: #ffffff;
+}
+
+.order-item.deleted { opacity: 0.4; border-style: dashed; pointer-events: none; }
+
+/* ========== SOUHRN CEN ========== */
+.summary-section { background: #eff6ff; border-color: #bfdbfe; }
+.summary-grid { display: flex; flex-direction: column; gap: 8px; max-width: 350px; margin-left: auto; }
+.summary-row { display: flex; justify-content: space-between; font-size: 0.95rem; }
+.summary-row.total { margin-top: 8px; padding-top: 8px; border-top: 2px solid #ddd; font-weight: 700; }
+.total-amount { font-size: 1.2rem; color: #4F46E5; }
+
+/* ========== ANIMACE ========== */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ========== RESPONSIVITA ========== */
+@media (max-width: 768px) {
+  .modal-content { width: 100%; height: 100%; max-height: 100vh; border-radius: 0; }
+  .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
+}

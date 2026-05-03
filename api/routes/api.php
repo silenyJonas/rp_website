@@ -25,7 +25,9 @@ use App\Http\Controllers\Api\Shop\ShopCouponController;
 use App\Http\Controllers\Api\Shop\ShopCategoryController;
 use App\Http\Controllers\Api\Shop\ShopShippingMethodController;
 use App\Http\Controllers\Api\Shop\ShopPaymentMethodController;
-use App\Http\Controllers\Api\Shop\ShopProductController; // 📦 Přidán import produktu
+use App\Http\Controllers\Api\Shop\ShopProductController;
+use App\Http\Controllers\Api\Shop\ShopOrderController; // 📦 Objednávky
+use App\Http\Controllers\Api\Shop\ShopCustomerController; // 👥 Zákazníci
 
 /*
 |--------------------------------------------------------------------------
@@ -108,6 +110,24 @@ Route::middleware('auth:sanctum')->group(function () {
         });
         Route::apiResource('products', ShopProductController::class)
             ->parameters(['products' => 'id']);
+
+        // Customers (Zákazníci) 👥
+        Route::prefix('customers')->group(function () {
+            Route::get('/{id}', [ShopCustomerController::class, 'show']);
+            Route::post('/{id}/restore', [ShopCustomerController::class, 'restore']);
+            Route::delete('/force-delete-all', [ShopCustomerController::class, 'forceDeleteAllTrashed']);
+        });
+        Route::apiResource('customers', ShopCustomerController::class)
+            ->parameters(['customers' => 'id']);
+
+        // Orders (Objednávky) 📋
+        Route::prefix('orders')->group(function () {
+            Route::get('/{id}', [ShopOrderController::class, 'show']);
+            Route::post('/{id}/restore', [ShopOrderController::class, 'restore']);
+            Route::delete('/force-delete-all', [ShopOrderController::class, 'forceDeleteAllTrashed']);
+        });
+        Route::apiResource('orders', ShopOrderController::class)
+            ->parameters(['orders' => 'id']);
 
         // Suppliers (Dodavatelé)
         Route::prefix('suppliers')->group(function () {

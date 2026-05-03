@@ -27,7 +27,7 @@ class ShopCouponController extends Controller
                 ->orWhere('description', 'like', "%$s%"));
         }
 
-        // Filtry na shodu
+        // Filtry na shodu - POUZE pokud jsou specifikovány v requesti
         foreach (['discount_type', 'applies_to', 'is_active'] as $f) {
             if ($request->filled($f)) $query->where($f, $request->input($f));
         }

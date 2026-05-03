@@ -1,0 +1,137 @@
+import * as Core from '../../../shared/imports/core-providers';
+
+export const CUSTOMER_BUTTONS: Core.TableButtons[] = [
+  { display_name: '🔍', header_name: 'Detaily', isActive: true, type: 'info_button', action: 'details' },
+  { display_name: '✒️', header_name: 'Edit', isActive: true, type: 'neutral_button', action: 'edit' },
+  { display_name: '🗑️', header_name: 'Smazat', isActive: true, type: 'delete_button', action: 'delete' },
+];
+
+export const CUSTOMER_TOOLBAR_BUTTONS: Core.Button[] = [
+  { action: 'toggleFilters', label: 'Filtry', icon: '🔍', class: 'btn-filter', isActive: false },
+  { action: 'handleCreateFormOpened', label: 'Nový zákazník', icon: '➕', class: 'btn-create', showIf: true },
+  { action: 'exportActiveTable', label: 'Export CSV', icon: '📥', class: 'btn-export', showIf: true },
+  { action: 'toggleTable', label: 'Koš', icon: '🗑️', class: 'btn-trash', permission: 'view-deleted' }
+];
+
+export const CUSTOMER_FORM_FIELDS: Core.InputDefinition[] = [
+  {
+    column_name: 'first_name',
+    label: 'Jméno',
+    placeholder: 'Zadejte jméno',
+    type: 'text',
+    required: true,
+    editable: true, show_in_edit: true, show_in_create: true,
+  },
+  {
+    column_name: 'last_name',
+    label: 'Příjmení',
+    placeholder: 'Zadejte příjmení',
+    type: 'text',
+    required: true,
+    editable: true, show_in_edit: true, show_in_create: true,
+  },
+  {
+    column_name: 'email',
+    label: 'Email',
+    placeholder: 'email@priklad.cz',
+    type: 'text',
+    required: true,
+    pattern: '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$',
+    errorMessage: 'Zadejte platný email.',
+    editable: true, show_in_edit: true, show_in_create: true,
+  },
+  {
+    column_name: 'phone',
+    label: 'Telefon',
+    placeholder: '+420...',
+    type: 'text',
+    required: false,
+    editable: true, show_in_edit: true, show_in_create: true,
+  },
+  {
+    column_name: 'company',
+    label: 'Firma',
+    placeholder: 'Název společnosti',
+    type: 'text',
+    required: false,
+    editable: true, show_in_edit: true, show_in_create: true,
+  },
+  {
+    column_name: 'address',
+    label: 'Ulice a č.p.',
+    placeholder: 'Zadejte adresu',
+    type: 'text',
+    required: false,
+    editable: true, show_in_edit: true, show_in_create: true,
+  },
+  {
+    column_name: 'city',
+    label: 'Město',
+    placeholder: 'Zadejte město',
+    type: 'text',
+    required: false,
+    editable: true, show_in_edit: true, show_in_create: true,
+  },
+  {
+    column_name: 'postal_code',
+    label: 'PSČ',
+    placeholder: '123 45',
+    type: 'text',
+    required: false,
+    editable: true, show_in_edit: true, show_in_create: true,
+  },
+  {
+    column_name: 'is_active',
+    label: 'Aktivní',
+    type: 'select',
+    options: [{ value: '1', label: 'Ano' }, { value: '0', label: 'Ne' }],
+    required: true,
+    editable: true, show_in_edit: true, show_in_create: true
+  },
+  {
+    column_name: 'notes',
+    label: 'Poznámka',
+    placeholder: 'Interní informace...',
+    type: 'textarea',
+    required: false,
+    editable: true, show_in_edit: true, show_in_create: true
+  }
+];
+
+export const CUSTOMER_COLUMNS: Core.ColumnDefinition[] = [
+  { key: 'id', header: 'ID', type: 'text' },
+  { key: 'last_name', header: 'Příjmení', type: 'text' },
+  { key: 'first_name', header: 'Jméno', type: 'text' },
+  { key: 'email', header: 'Email', type: 'text' },
+  { key: 'phone', header: 'Telefon', type: 'text' },
+  { key: 'total_spent', header: 'Celkem utraceno', type: 'text' }, // Formátováno přes Resource
+  { key: 'is_active', header: 'Aktivní', type: 'text' }
+];
+
+export const CUSTOMER_TRASH_COLUMNS: Core.ColumnDefinition[] = [
+  { key: 'id', header: 'ID', type: 'text' },
+  { key: 'email', header: 'Email', type: 'text' },
+  { key: 'deleted_at', header: 'Smazáno', type: 'date', format: 'short' }
+];
+
+export const CUSTOMER_FILTER_COLUMNS: Core.FilterColumns[] = [
+  { key: 'search', header: 'Hledat', type: 'text', placeholder: 'Jméno, email, telefon...', canSort: false },
+  { key: 'is_active', header: 'Status', type: 'select', options: ["1", "0"], placeholder: '-- Aktivní --', canSort: true },
+];
+
+export const CUSTOMER_DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
+  { key: 'id', displayName: 'ID', type: 'text' },
+  { key: 'first_name', displayName: 'Jméno', type: 'text' },
+  { key: 'last_name', displayName: 'Příjmení', type: 'text' },
+  { key: 'email', displayName: 'Email', type: 'text' },
+  { key: 'phone', displayName: 'Telefon', type: 'text' },
+  { key: 'company', displayName: 'Společnost', type: 'text' },
+  { key: 'address', displayName: 'Adresa', type: 'text' },
+  { key: 'city', displayName: 'Město', type: 'text' },
+  { key: 'postal_code', displayName: 'PSČ', type: 'text' },
+  { key: 'country', displayName: 'Země', type: 'text' },
+  { key: 'total_spent', displayName: 'Celková útrata', type: 'text' },
+  { key: 'is_active', displayName: 'Aktivní', type: 'text' },
+  { key: 'notes', displayName: 'Poznámky', type: 'text' },
+  { key: 'created_at', displayName: 'Registrace', type: 'date', format: 'medium' },
+];
