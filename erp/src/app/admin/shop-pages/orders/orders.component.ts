@@ -379,7 +379,8 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
       variant_name: '',
       quantity: 1,
       unit_price: 0,
-      total_price: 0
+      total_price: 0,
+      vat_rate: 21
     });
 
     this.cd.markForCheck();
@@ -403,22 +404,22 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
     }
   }
 
-  onVariantSelected(item: OrderItem, index: number): void {
-    if (!item.product_variant_id) return;
+  // onVariantSelected(item: OrderItem, index: number): void {
+  //   if (!item.product_variant_id) return;
 
-    const variant = this.variants.find(v => Number(v.id) === Number(item.product_variant_id));
+  //   const variant = this.variants.find(v => Number(v.id) === Number(item.product_variant_id));
 
-    if (variant) {
-      item.product_id = variant.product_id;
-      item.product_name = variant.product_name || '';
-      item.variant_name = variant.variant_name;
-      item.unit_price = variant.price_with_vat; 
-      item.total_price = item.quantity * item.unit_price;
-    }
+  //   if (variant) {
+  //     item.product_id = variant.product_id;
+  //     item.product_name = variant.product_name || '';
+  //     item.variant_name = variant.variant_name;
+  //     item.unit_price = variant.price_with_vat; 
+  //     item.total_price = item.quantity * item.unit_price;
+  //   }
 
-    this.recalculateTotals();
-    this.cd.markForCheck();
-  }
+  //   this.recalculateTotals();
+  //   this.cd.markForCheck();
+  // }
 
   onItemQuantityChange(item: OrderItem): void {
     item.total_price = item.quantity * item.unit_price;
@@ -531,7 +532,101 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
       }
     });
   }
+// V komponentě (.ts)
+onVariantSelected(item: OrderItem, index: number) {
+  const variantId = Number(item.product_variant_id);
+  const selectedVariant = this.variants.find(v => Number(v.id) === variantId);
 
+  if (selectedVariant) {
+    // KLÍČOVÝ ŘÁDEK: Backend vyžaduje reálné product_id, ne nulu
+    item.product_id = selectedVariant.product_id; 
+    
+    item.product_name = selectedVariant.product_name || selectedVariant.variant_name || '';
+    item.variant_name = selectedVariant.variant_name;
+    item.unit_price = selectedVariant.price_with_vat;
+    item.vat_rate = selectedVariant.vat_rate;
+    
+    // Přepočet ceny řádku
+    item.total_price = item.quantity * item.unit_price;
+    
+    // Přepočet celé objednávky
+    this.recalculateTotals(); 
+  }
+}
+// calculateSummaryTotals() {
+//   let totalBase = 0;
+//   let totalVat = 0;
+//   let totalWithVat = 0;
+
+//   this.editingOrder.items.forEach(item => {
+//     if (!item._delete) {
+//       const lineTotal = item.quantity * item.unit_price;
+//       // Výpočet základu a daně z ceny s DPH: 
+//       // Koeficient = sazba / (100 + sazba)
+//       const vatRate = item.vat_rate || 21; // fallback na 21
+//       const itemVat = lineTotal * (vatRate / (100 + vatRate));
+//       const itemBase = lineTotal - itemVat;
+
+//       totalVat += itemVat;
+//       totalBase += itemBase;
+//       totalWithVat += lineTotal;
+//     }
+//   });
+
+//   return {
+//     baseAmount: totalBase,
+//     vat: totalVat,
+//     withVat: totalWithVat
+//   };
+// }
+calculateSummaryTotals() {
+  if (!this.editingOrder || !this.editingOrder.items) {
+    return { baseAmount: 0, vatGroups: [], withVat: 0 };
+  }
+
+  // 1. Celková cena položek před slevou (včetně DPH)
+  const totalBeforeDiscount = this.editingOrder.items
+    .filter(item => !item._delete)
+    .reduce((sum, item) => sum + (item.quantity * item.unit_price), 0);
+
+  const discountAmount = this.editingOrder.discount_amount || 0;
+
+  // 2. Výpočet koeficientu slevy
+  // Pokud je celková cena 1000 a sleva 200, koeficient je 0.8 (80%)
+  const discountFactor = totalBeforeDiscount > 0 
+    ? (totalBeforeDiscount - discountAmount) / totalBeforeDiscount 
+    : 1;
+
+  let totalBaseAfterDiscount = 0;
+  const vatBreakdown: { [key: number]: number } = {};
+
+  // 3. Rozpočet slevy do základů a daní
+  this.editingOrder.items.forEach(item => {
+    if (!item._delete) {
+      // Reálná cena řádku po slevě
+      const lineTotalAfterDiscount = (item.quantity * item.unit_price) * discountFactor;
+      const rate = item.vat_rate || 21;
+      
+      // Výpočet DPH a základu z již ponížené ceny
+      const itemVat = lineTotalAfterDiscount * (rate / (100 + rate));
+      const itemBase = lineTotalAfterDiscount - itemVat;
+
+      totalBaseAfterDiscount += itemBase;
+
+      if (!vatBreakdown[rate]) vatBreakdown[rate] = 0;
+      vatBreakdown[rate] += itemVat;
+    }
+  });
+
+  return {
+    baseAmount: totalBaseAfterDiscount,
+    vatGroups: Object.keys(vatBreakdown).map(rate => ({
+      rate: Number(rate),
+      amount: vatBreakdown[Number(rate)]
+    })),
+    withVat: totalBeforeDiscount - discountAmount
+  };
+}
   // ========== ROBUSTNÍ HELPERS (NA BÁZI KUPÓNU) ==========
 
   getCouponCode(couponId: any): string {
@@ -593,19 +688,19 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
     return `-${this.formatCurrency(coupon.discount_value)}`;
   }
 
-  calculateSummaryTotals(): { baseAmount: number; vat: number; withVat: number } {
-    if (!this.editingOrder) {
-      return { baseAmount: 0, vat: 0, withVat: 0 };
-    }
-    const items = (this.editingOrder.items || []).filter(i => !i._delete);
-    let productsWithVat = 0;
-    items.forEach(item => {
-      productsWithVat += item.quantity * item.unit_price;
-    });
-    const baseAmount = Math.round((productsWithVat / 1.21) * 100) / 100;
-    const vat = Math.round((productsWithVat - baseAmount) * 100) / 100;
-    return { baseAmount, vat, withVat: productsWithVat };
-  }
+  // calculateSummaryTotals(): { baseAmount: number; vat: number; withVat: number } {
+  //   if (!this.editingOrder) {
+  //     return { baseAmount: 0, vat: 0, withVat: 0 };
+  //   }
+  //   const items = (this.editingOrder.items || []).filter(i => !i._delete);
+  //   let productsWithVat = 0;
+  //   items.forEach(item => {
+  //     productsWithVat += item.quantity * item.unit_price;
+  //   });
+  //   const baseAmount = Math.round((productsWithVat / 1.21) * 100) / 100;
+  //   const vat = Math.round((productsWithVat - baseAmount) * 100) / 100;
+  //   return { baseAmount, vat, withVat: productsWithVat };
+  // }
 
   private validateOrder(): boolean {
     if (!this.editingOrder) return false;

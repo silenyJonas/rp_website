@@ -203,6 +203,9 @@ public function index(Request $request): JsonResponse
 /**
  * Vytvoření nové objednávky s automatickou synchronizací skladu přes modely
  */
+/**
+ * Vytvoření nové objednávky s automatickou synchronizací skladu a výpočtem daní
+ */
 public function store(StoreShopOrderRequest $request): JsonResponse
 {
     Log::info("ShopOrder Store started", ['payload' => $request->all()]);
@@ -212,7 +215,7 @@ public function store(StoreShopOrderRequest $request): JsonResponse
 
         $validated = $request->validated();
 
-        // 1. Výpočet základních částek
+        // 1. Výpočet základních částek (sumace položek před slevou)
         $totalAmount = 0;
         foreach ($validated['items'] as $itemData) {
             $totalAmount += (float)$itemData['quantity'] * (float)$itemData['unit_price'];
@@ -238,9 +241,13 @@ public function store(StoreShopOrderRequest $request): JsonResponse
             $shippingAmount = $shippingMethod ? (float)$shippingMethod->base_price : 0;
         }
 
+        // Koeficient slevy pro rozpočet DPH
+        $discountFactor = $totalAmount > 0 ? ($totalAmount - $discountAmount) / $totalAmount : 1;
+        $totalTax = 0;
+
         $finalAmount = max(0, $totalAmount + $shippingAmount - $discountAmount);
 
-        // 4. Vytvoření objednávky
+        // 4. Vytvoření objednávky (tax_amount zatím 0, updatneme po cyklu položek)
         $order = ShopOrder::create([
             'customer_id'          => $validated['customer_id'],
             'order_number'         => ShopOrder::generateOrderNumber(),
@@ -248,7 +255,7 @@ public function store(StoreShopOrderRequest $request): JsonResponse
             'payment_status'       => $validated['payment_status'] ?? 'pending',
             'total_amount'         => $totalAmount,
             'shipping_amount'      => $shippingAmount,
-            'tax_amount'           => 0, // Případně dopočítat dle sazeb
+            'tax_amount'           => 0, 
             'discount_amount'      => $discountAmount,
             'final_amount'         => $finalAmount,
             'coupon_id'            => $validated['coupon_id'] ?? null,
@@ -262,29 +269,36 @@ public function store(StoreShopOrderRequest $request): JsonResponse
             'paid_at'              => ($validated['payment_status'] ?? 'pending') === 'paid' ? now() : null,
         ]);
 
-        // 5. Položky a odečtení ze skladu (Sync hlavního produktu proběhne automaticky v modelu)
+        // 5. Položky, odečtení ze skladu a výpočet daně
         foreach ($validated['items'] as $itemData) {
             $quantity = (int)$itemData['quantity'];
             $product = ShopProduct::findOrFail($itemData['product_id']);
             
+            // Inicializace DPH a názvu varianty
             $variantName = null;
+            $vatRate = $itemData['vat_rate'] ?? $product->vat_rate ?? 21; // Oprava: definice vatRate
 
             if (!empty($itemData['product_variant_id'])) {
-    // LOCK a odečtení varianty
-    $variant = ShopProductVariant::lockForUpdate()->findOrFail($itemData['product_variant_id']);
-    $variant->decrement('stock_quantity', $quantity);
-    $variantName = $variant->variant_name;
+                $variant = ShopProductVariant::lockForUpdate()->findOrFail($itemData['product_variant_id']);
+                $variant->decrement('stock_quantity', $quantity);
+                $variantName = $variant->variant_name;
+                
+                // Pokud má varianta specifickou sazbu, použije se ta
+                if (isset($variant->vat_rate)) {
+                    $vatRate = $variant->vat_rate;
+                }
 
-    // Ručně vynutíme přepočet hlavního produktu
-    ShopProductVariant::forceSyncParentStock($product->id);
+                ShopProductVariant::forceSyncParentStock($product->id);
+            } else {
+                $product->lockForUpdate();
+                $product->decrement('stock_quantity', $quantity);
+            }
 
-} else {
-    // Pokud produkt nemá varianty, odečítáme přímo z něj
-    $product->lockForUpdate();
-    $product->decrement('stock_quantity', $quantity);
-    // Tady není co sčítat, protože produkt nemá varianty, 
-    // takže se jen sníží jeho vlastní stock_quantity.
-}
+            // Výpočet daně pro tuto položku po aplikaci slevy
+            $linePrice = $quantity * (float)$itemData['unit_price'];
+            $linePriceAfterDiscount = $linePrice * $discountFactor;
+            $itemTax = $linePriceAfterDiscount * ($vatRate / (100 + $vatRate));
+            $totalTax += $itemTax;
 
             ShopOrderItem::create([
                 'order_id'           => $order->id,
@@ -294,9 +308,13 @@ public function store(StoreShopOrderRequest $request): JsonResponse
                 'variant_name'       => $variantName,
                 'quantity'           => $quantity,
                 'unit_price'         => $itemData['unit_price'],
-                'total_price'        => $quantity * (float)$itemData['unit_price'],
+                'total_price'        => $linePrice,
+                'vat_rate'           => $vatRate,
             ]);
         }
+
+        // 6. Finální update daně v objednávce
+        $order->update(['tax_amount' => $totalTax]);
 
         DB::commit();
 
@@ -308,7 +326,7 @@ public function store(StoreShopOrderRequest $request): JsonResponse
     } catch (\Exception $e) {
         DB::rollBack();
         Log::error("ShopOrder creation error: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-        return response()->json(['message' => 'Vytvoření objednávky selhalo.'], 500);
+        return response()->json(['message' => 'Vytvoření objednávky selhalo: ' . $e->getMessage()], 500);
     }
 }
     /**
@@ -530,79 +548,88 @@ public function destroy(Request $request, $id)
     /**
      * Přepočítání součtů objednávky
      */
-    // private function recalculateOrderTotals(ShopOrder $order): void
-    // {
-    //     $totalAmount = $order->items()->sum(DB::raw('quantity * unit_price'));
+
+// private function recalculateOrderTotals(ShopOrder $order): void
+// {
+//     // Základní součet položek
+//     $totalAmount = (float)$order->items()->sum(DB::raw('quantity * unit_price'));
+    
+//     $discountAmount = 0;
+//     if ($order->coupon_id) {
+//         $coupon = \App\Models\Shop\ShopCoupon::find($order->coupon_id);
         
-    //     $discountAmount = 0;
-    //     if ($order->coupon_id) {
-    //         $coupon = \App\Models\Shop\ShopCoupon::find($order->coupon_id);
-    //         if ($coupon && $coupon->is_active) {
-    //             if ($coupon->discount_type === 'percent') {
-    //                 $discountAmount = ($totalAmount * $coupon->discount_value) / 100;
-    //             } else {
-    //                 $discountAmount = $coupon->discount_value;
-    //             }
-    //         }
-    //     }
+//         // Použijeme stejnou validaci (při přepočtu už neinkrementujeme usage_count!)
+//         if ($coupon && $coupon->isValid($totalAmount)) {
+//             if ($coupon->discount_type === 'percent') {
+//                 $discountAmount = ($totalAmount * (float)$coupon->discount_value) / 100;
+//             } else {
+//                 $discountAmount = (float)$coupon->discount_value;
+//             }
+//         }
+//     }
 
-    //     $shippingAmount = 0;
-    //     if ($order->shipping_method_id) {
-    //         $shippingMethod = \App\Models\Shop\ShopShippingMethod::find($order->shipping_method_id);
-    //         if ($shippingMethod) {
-    //             $shippingAmount = (float)$shippingMethod->base_price;
-    //         }
-    //     }
+//     $shippingAmount = 0;
+//     if ($order->shipping_method_id) {
+//         $shippingMethod = \App\Models\Shop\ShopShippingMethod::find($order->shipping_method_id);
+//         if ($shippingMethod) {
+//             $shippingAmount = (float)$shippingMethod->base_price;
+//         }
+//     }
 
-    //     $finalAmount = $totalAmount + $shippingAmount - $discountAmount;
+//     // Finální částka (ošetřeno proti záporným hodnotám)
+//     $finalAmount = max(0, $totalAmount + $shippingAmount - $discountAmount);
 
-    //     $order->update([
-    //         'total_amount' => $totalAmount,
-    //         'discount_amount' => $discountAmount,
-    //         'shipping_amount' => $shippingAmount,
-    //         'final_amount' => $finalAmount,
-    //     ]);
+//     $order->update([
+//         'total_amount' => $totalAmount,
+//         'discount_amount' => $discountAmount,
+//         'shipping_amount' => $shippingAmount,
+//         'final_amount' => $finalAmount,
+//     ]);
 
-    //     Log::info("Order totals recalculated", ['order_id' => $order->id, 'final_amount' => $finalAmount]);
-    // }
+//     Log::info("Order totals recalculated", ['order_id' => $order->id, 'final_amount' => $finalAmount]);
+// }
 private function recalculateOrderTotals(ShopOrder $order): void
 {
-    // Základní součet položek
-    $totalAmount = (float)$order->items()->sum(DB::raw('quantity * unit_price'));
-    
+    $items = $order->items;
+    $totalWithVatBeforeDiscount = (float)$items->sum('total_price');
     $discountAmount = 0;
+
+    // 1. Výpočet slevy
     if ($order->coupon_id) {
         $coupon = \App\Models\Shop\ShopCoupon::find($order->coupon_id);
+        if ($coupon && $coupon->isValid($totalWithVatBeforeDiscount)) {
+            $discountAmount = ($coupon->discount_type === 'percent') 
+                ? ($totalWithVatBeforeDiscount * (float)$coupon->discount_value) / 100 
+                : (float)$coupon->discount_value;
+        }
+    }
+
+    // 2. Koeficient slevy
+    $discountFactor = $totalWithVatBeforeDiscount > 0 
+        ? ($totalWithVatBeforeDiscount - $discountAmount) / totalWithVatBeforeDiscount 
+        : 1;
+
+    $totalTax = 0;
+
+    // 3. Výpočet daně z každé položky po slevě
+    foreach ($items as $item) {
+        // Musíte mít vat_rate v tabulce shop_order_items!
+        $rate = $item->vat_rate ?? 21; 
+        $lineTotalAfterDiscount = $item->total_price * $discountFactor;
         
-        // Použijeme stejnou validaci (při přepočtu už neinkrementujeme usage_count!)
-        if ($coupon && $coupon->isValid($totalAmount)) {
-            if ($coupon->discount_type === 'percent') {
-                $discountAmount = ($totalAmount * (float)$coupon->discount_value) / 100;
-            } else {
-                $discountAmount = (float)$coupon->discount_value;
-            }
-        }
+        $itemTax = $lineTotalAfterDiscount * ($rate / (100 + $rate));
+        $totalTax += $itemTax;
     }
 
-    $shippingAmount = 0;
-    if ($order->shipping_method_id) {
-        $shippingMethod = \App\Models\Shop\ShopShippingMethod::find($order->shipping_method_id);
-        if ($shippingMethod) {
-            $shippingAmount = (float)$shippingMethod->base_price;
-        }
-    }
-
-    // Finální částka (ošetřeno proti záporným hodnotám)
-    $finalAmount = max(0, $totalAmount + $shippingAmount - $discountAmount);
+    $shippingAmount = $order->shippingMethod ? (float)$order->shippingMethod->base_price : 0;
 
     $order->update([
-        'total_amount' => $totalAmount,
+        'total_amount'    => $totalWithVatBeforeDiscount,
         'discount_amount' => $discountAmount,
+        'tax_amount'      => $totalTax, // TADY už máte reálnou daň
         'shipping_amount' => $shippingAmount,
-        'final_amount' => $finalAmount,
+        'final_amount'    => max(0, $totalWithVatBeforeDiscount + $shippingAmount - $discountAmount),
     ]);
-
-    Log::info("Order totals recalculated", ['order_id' => $order->id, 'final_amount' => $finalAmount]);
 }
     /**
      * Logování akcí

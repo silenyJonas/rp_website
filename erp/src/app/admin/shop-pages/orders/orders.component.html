@@ -401,12 +401,11 @@
                 <span>{{ formatCurrency(calculateSummaryTotals().baseAmount) }}</span>
               </div>
               
-              <!-- Řádek 2: DPH 21% -->
-              <div class="summary-row">
-                <label>DPH (21%):</label>
-                <span class="vat">{{ formatCurrency(calculateSummaryTotals().vat) }}</span>
-              </div>
-              
+              <!-- Dynamický popisek daně -->
+              <div *ngFor="let group of calculateSummaryTotals().vatGroups" class="summary-row">
+      <label>DPH {{ group.rate }}%:</label>
+      <span class="vat">{{ formatCurrency(group.amount) }}</span>
+    </div>
               <!-- Řádek 3: Součet S DPH -->
               <div class="summary-row">
                 <label>Součet S DPH:</label>

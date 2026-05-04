@@ -43,6 +43,7 @@ export interface OrderItem {
   display_name?: string;
   quantity: number;
   unit_price: number;
+  vat_rate: number;
   total_price: number;
   created_at?: string;
   _delete?: boolean;
