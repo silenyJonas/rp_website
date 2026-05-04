@@ -16,6 +16,11 @@ import {
 } from './orders.config';
 import { Order, OrderItem, Customer, Product, ProductVariant, PaymentMethod, ShippingMethod, Coupon } from './order-specific.interface';
 
+interface CouponValidationResult {
+  valid: boolean;
+  error?: string;
+}
+
 @Component({
   selector: 'app-orders',
   standalone: true,
@@ -51,6 +56,9 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
   selectedOrderForDetail: Order | null = null;
   editingOrder: Order | null = null;
   editingItemIdx: number | null = null;
+
+  // Real-time validation state
+  couponValidation: CouponValidationResult = { valid: true };
 
   // Double-click prevention
   private isProcessing = false;
@@ -308,6 +316,7 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
   handleCreateFormOpened(): void {
     if (this.isProcessing) return;
 
+    this.couponValidation = { valid: true };
     this.editingOrder = {
       order_number: '',
       customer_id: 0,
@@ -356,6 +365,7 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
         this.editingOrder = { ...fullOrder };
         this.showOrderForm = true;
         this.toggleBodyScroll(true);
+        this.recalculateTotals(); 
         this.cd.markForCheck();
       },
       error: () => {
@@ -404,23 +414,6 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
     }
   }
 
-  // onVariantSelected(item: OrderItem, index: number): void {
-  //   if (!item.product_variant_id) return;
-
-  //   const variant = this.variants.find(v => Number(v.id) === Number(item.product_variant_id));
-
-  //   if (variant) {
-  //     item.product_id = variant.product_id;
-  //     item.product_name = variant.product_name || '';
-  //     item.variant_name = variant.variant_name;
-  //     item.unit_price = variant.price_with_vat; 
-  //     item.total_price = item.quantity * item.unit_price;
-  //   }
-
-  //   this.recalculateTotals();
-  //   this.cd.markForCheck();
-  // }
-
   onItemQuantityChange(item: OrderItem): void {
     item.total_price = item.quantity * item.unit_price;
     this.recalculateTotals();
@@ -440,7 +433,44 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
     );
   }
 
-  // ========== VÝPOČTY ==========
+  // ========== VÝPOČTY A VALIDACE ==========
+
+validateCouponRealtime(coupon: Coupon, totalAmount: number): CouponValidationResult {
+  if (!coupon) return { valid: true };
+
+  if (!coupon.is_active) {
+    return { valid: false, error: 'Tento kupón není aktivní.' };
+  }
+
+  const now = new Date();
+
+  // Kontrola začátku platnosti
+  if (coupon.valid_from && new Date(coupon.valid_from) > now) {
+    return { valid: false, error: 'Platnost kupónu ještě nezačala.' };
+  }
+
+  // Kontrola konce platnosti
+  if (coupon.valid_until && new Date(coupon.valid_until) < now) {
+    return { valid: false, error: 'Platnost kupónu již vypršela.' };
+  }
+
+  // Kontrola počtu použití - přidáno jištění pomocí (coupon.max_usage ?? 0)
+  const maxUsage = coupon.max_usage ?? 0;
+  if (maxUsage > 0 && (coupon.usage_count || 0) >= maxUsage) {
+    return { valid: false, error: 'Tento kupón již byl vyčerpán.' };
+  }
+
+  // Kontrola minimální částky - přidáno jištění pomocí Number() a fallbacku na 0
+  const minAmount = Number(coupon.min_order_amount ?? 0);
+  if (minAmount > 0 && totalAmount < minAmount) {
+    return { 
+      valid: false, 
+      error: `Minimální hodnota objednávky pro tento kupón je ${this.formatCurrency(minAmount)}.` 
+    };
+  }
+
+  return { valid: true };
+}
 
   recalculateTotals(): void {
     if (!this.editingOrder) return;
@@ -457,14 +487,23 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
     if (this.editingOrder.coupon_id) {
       const idToFind = Number(this.editingOrder.coupon_id);
       const coupon = this.coupons.find(c => Number(c.id) === idToFind);
+      
       if (coupon) {
-        discount = (coupon.discount_type === 'percent') 
-          ? (productsTotal * Number(coupon.discount_value)) / 100 
-          : Number(coupon.discount_value);
+        this.couponValidation = this.validateCouponRealtime(coupon, productsTotal);
+        if (this.couponValidation.valid) {
+          discount = (coupon.discount_type === 'percent') 
+            ? (productsTotal * Number(coupon.discount_value)) / 100 
+            : Number(coupon.discount_value);
+        } else {
+          discount = 0;
+        }
       }
+    } else {
+      this.couponValidation = { valid: true };
+      discount = 0;
     }
-    this.editingOrder.discount_amount = Math.min(discount, productsTotal);
 
+    this.editingOrder.discount_amount = Math.min(discount, productsTotal);
     this.editingOrder.shipping_amount = this.getShippingMethodPrice(this.editingOrder.shipping_method_id);
     const paymentFee = this.getPaymentMethodPrice(this.editingOrder.payment_method_id);
 
@@ -532,102 +571,63 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
       }
     });
   }
-// V komponentě (.ts)
-onVariantSelected(item: OrderItem, index: number) {
-  const variantId = Number(item.product_variant_id);
-  const selectedVariant = this.variants.find(v => Number(v.id) === variantId);
 
-  if (selectedVariant) {
-    // KLÍČOVÝ ŘÁDEK: Backend vyžaduje reálné product_id, ne nulu
-    item.product_id = selectedVariant.product_id; 
-    
-    item.product_name = selectedVariant.product_name || selectedVariant.variant_name || '';
-    item.variant_name = selectedVariant.variant_name;
-    item.unit_price = selectedVariant.price_with_vat;
-    item.vat_rate = selectedVariant.vat_rate;
-    
-    // Přepočet ceny řádku
-    item.total_price = item.quantity * item.unit_price;
-    
-    // Přepočet celé objednávky
-    this.recalculateTotals(); 
-  }
-}
-// calculateSummaryTotals() {
-//   let totalBase = 0;
-//   let totalVat = 0;
-//   let totalWithVat = 0;
+  onVariantSelected(item: OrderItem, index: number) {
+    const variantId = Number(item.product_variant_id);
+    const selectedVariant = this.variants.find(v => Number(v.id) === variantId);
 
-//   this.editingOrder.items.forEach(item => {
-//     if (!item._delete) {
-//       const lineTotal = item.quantity * item.unit_price;
-//       // Výpočet základu a daně z ceny s DPH: 
-//       // Koeficient = sazba / (100 + sazba)
-//       const vatRate = item.vat_rate || 21; // fallback na 21
-//       const itemVat = lineTotal * (vatRate / (100 + vatRate));
-//       const itemBase = lineTotal - itemVat;
-
-//       totalVat += itemVat;
-//       totalBase += itemBase;
-//       totalWithVat += lineTotal;
-//     }
-//   });
-
-//   return {
-//     baseAmount: totalBase,
-//     vat: totalVat,
-//     withVat: totalWithVat
-//   };
-// }
-calculateSummaryTotals() {
-  if (!this.editingOrder || !this.editingOrder.items) {
-    return { baseAmount: 0, vatGroups: [], withVat: 0 };
-  }
-
-  // 1. Celková cena položek před slevou (včetně DPH)
-  const totalBeforeDiscount = this.editingOrder.items
-    .filter(item => !item._delete)
-    .reduce((sum, item) => sum + (item.quantity * item.unit_price), 0);
-
-  const discountAmount = this.editingOrder.discount_amount || 0;
-
-  // 2. Výpočet koeficientu slevy
-  // Pokud je celková cena 1000 a sleva 200, koeficient je 0.8 (80%)
-  const discountFactor = totalBeforeDiscount > 0 
-    ? (totalBeforeDiscount - discountAmount) / totalBeforeDiscount 
-    : 1;
-
-  let totalBaseAfterDiscount = 0;
-  const vatBreakdown: { [key: number]: number } = {};
-
-  // 3. Rozpočet slevy do základů a daní
-  this.editingOrder.items.forEach(item => {
-    if (!item._delete) {
-      // Reálná cena řádku po slevě
-      const lineTotalAfterDiscount = (item.quantity * item.unit_price) * discountFactor;
-      const rate = item.vat_rate || 21;
-      
-      // Výpočet DPH a základu z již ponížené ceny
-      const itemVat = lineTotalAfterDiscount * (rate / (100 + rate));
-      const itemBase = lineTotalAfterDiscount - itemVat;
-
-      totalBaseAfterDiscount += itemBase;
-
-      if (!vatBreakdown[rate]) vatBreakdown[rate] = 0;
-      vatBreakdown[rate] += itemVat;
+    if (selectedVariant) {
+      item.product_id = selectedVariant.product_id; 
+      item.product_name = selectedVariant.product_name || selectedVariant.variant_name || '';
+      item.variant_name = selectedVariant.variant_name;
+      item.unit_price = selectedVariant.price_with_vat;
+      item.vat_rate = selectedVariant.vat_rate;
+      item.total_price = item.quantity * item.unit_price;
+      this.recalculateTotals(); 
     }
-  });
+  }
 
-  return {
-    baseAmount: totalBaseAfterDiscount,
-    vatGroups: Object.keys(vatBreakdown).map(rate => ({
-      rate: Number(rate),
-      amount: vatBreakdown[Number(rate)]
-    })),
-    withVat: totalBeforeDiscount - discountAmount
-  };
-}
-  // ========== ROBUSTNÍ HELPERS (NA BÁZI KUPÓNU) ==========
+  calculateSummaryTotals() {
+    if (!this.editingOrder || !this.editingOrder.items) {
+      return { baseAmount: 0, vatGroups: [], withVat: 0 };
+    }
+
+    const totalBeforeDiscount = this.editingOrder.items
+      .filter(item => !item._delete)
+      .reduce((sum, item) => sum + (item.quantity * item.unit_price), 0);
+
+    const discountAmount = this.editingOrder.discount_amount || 0;
+    const discountFactor = totalBeforeDiscount > 0 
+      ? (totalBeforeDiscount - discountAmount) / totalBeforeDiscount 
+      : 1;
+
+    let totalBaseAfterDiscount = 0;
+    const vatBreakdown: { [key: number]: number } = {};
+
+    this.editingOrder.items.forEach(item => {
+      if (!item._delete) {
+        const lineTotalAfterDiscount = (item.quantity * item.unit_price) * discountFactor;
+        const rate = item.vat_rate || 21;
+        const itemVat = lineTotalAfterDiscount * (rate / (100 + rate));
+        const itemBase = lineTotalAfterDiscount - itemVat;
+
+        totalBaseAfterDiscount += itemBase;
+        if (!vatBreakdown[rate]) vatBreakdown[rate] = 0;
+        vatBreakdown[rate] += itemVat;
+      }
+    });
+
+    return {
+      baseAmount: totalBaseAfterDiscount,
+      vatGroups: Object.keys(vatBreakdown).map(rate => ({
+        rate: Number(rate),
+        amount: vatBreakdown[Number(rate)]
+      })),
+      withVat: totalBeforeDiscount - discountAmount
+    };
+  }
+
+  // ========== HELPERS ==========
 
   getCouponCode(couponId: any): string {
     if (!couponId) return '-';
@@ -671,10 +671,9 @@ calculateSummaryTotals() {
       coupon = this.coupons.find(c => Number(c.id) === idToFind);
     }
     if (!coupon) return '';
-    if (coupon.discount_type === 'percent') {
-      return `-${coupon.discount_value}%`;
-    }
-    return `-${this.formatCurrency(coupon.discount_value)}`;
+    return coupon.discount_type === 'percent' 
+      ? `-${coupon.discount_value}%` 
+      : `-${this.formatCurrency(coupon.discount_value)}`;
   }
 
   getCouponTypeLabel(couponId: any): string {
@@ -682,28 +681,23 @@ calculateSummaryTotals() {
     const idToFind = Number(couponId);
     const coupon = this.coupons.find(c => Number(c.id) === idToFind);
     if (!coupon) return '';
-    if (coupon.discount_type === 'percent') {
-      return `-${coupon.discount_value}%`;
-    }
-    return `-${this.formatCurrency(coupon.discount_value)}`;
+    return coupon.discount_type === 'percent' 
+      ? `${coupon.discount_value}%` 
+      : this.formatCurrency(coupon.discount_value);
   }
 
-  // calculateSummaryTotals(): { baseAmount: number; vat: number; withVat: number } {
-  //   if (!this.editingOrder) {
-  //     return { baseAmount: 0, vat: 0, withVat: 0 };
-  //   }
-  //   const items = (this.editingOrder.items || []).filter(i => !i._delete);
-  //   let productsWithVat = 0;
-  //   items.forEach(item => {
-  //     productsWithVat += item.quantity * item.unit_price;
-  //   });
-  //   const baseAmount = Math.round((productsWithVat / 1.21) * 100) / 100;
-  //   const vat = Math.round((productsWithVat - baseAmount) * 100) / 100;
-  //   return { baseAmount, vat, withVat: productsWithVat };
-  // }
+  getCouponValidationClass(): string {
+    if (!this.editingOrder?.coupon_id) return '';
+    return this.couponValidation.valid ? 'is-valid' : 'is-invalid';
+  }
 
   private validateOrder(): boolean {
     if (!this.editingOrder) return false;
+
+    if (this.editingOrder.coupon_id && !this.couponValidation.valid) {
+      this.alertDialogService.open('Chyba kupónu', this.couponValidation.error || 'Kupón není platný.', 'warning');
+      return false;
+    }
     if (!this.editingOrder.customer_id) {
       this.alertDialogService.open('Validace', 'Vyberte zákazníka.', 'warning');
       return false;
@@ -733,8 +727,6 @@ calculateSummaryTotals() {
     this.toggleBodyScroll(false);
     this.cd.markForCheck();
   }
-
-  // ========== ZÁKLADNÍ HELPERS ==========
 
   getCustomerName(customerId: number): string {
     if (!customerId) return '-';

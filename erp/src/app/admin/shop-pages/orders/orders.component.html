@@ -269,14 +269,22 @@
                   <option *ngFor="let sm of shippingMethods" [value]="sm.id">{{ sm.name }} ({{ formatCurrency(sm.base_price) }})</option>
                 </select>
               </div>
+              <!-- UPRAVENO: Real-time validace kupónu -->
               <div class="form-group">
                 <label>Slevový kupón</label>
-                <select [(ngModel)]="editingOrder.coupon_id" name="coupon_id" (change)="recalculateTotals()">
+                <select [(ngModel)]="editingOrder.coupon_id" 
+                        name="coupon_id" 
+                        (change)="recalculateTotals()"
+                        [ngClass]="getCouponValidationClass()">
                   <option value="">-- Bez kupónu --</option>
                   <option *ngFor="let coup of coupons" [value]="coup.id">
                     {{ coup.code }} ({{ getCouponDisplayValue(coup) }})
                   </option>
                 </select>
+                <!-- Chybová hláška kupónu -->
+                <div *ngIf="editingOrder.coupon_id && !couponValidation.valid" class="coupon-error-msg">
+                  ⚠️ {{ couponValidation.error }}
+                </div>
               </div>
             </div>
           </fieldset>
@@ -367,8 +375,8 @@
               </div>
             </div>
             
-            <!-- Aplikovaný kupón (pokud je vybrán) -->
-            <div *ngIf="editingOrder.coupon_id && editingOrder.discount_amount > 0" class="order-item coupon-row">
+            <!-- Aplikovaný kupón - UPRAVENO: Zobrazuje se jen pokud je validní -->
+            <div *ngIf="editingOrder.coupon_id && couponValidation.valid && editingOrder.discount_amount > 0" class="order-item coupon-row">
               <div class="item-header">
                 <h4>🎫 Aplikovaný kupón</h4>
               </div>
@@ -391,47 +399,44 @@
             <button type="button" class="btn btn-secondary" (click)="addOrderItem()">➕ Přidat položku</button>
           </fieldset>
 
-          <!-- Souhrn částek - UPRAVENO -->
+          <!-- Souhrn částek -->
           <fieldset class="summary-section">
             <legend>Souhrn cen</legend>
             <div class="summary-grid">
-              <!-- Řádek 1: Základní součet bez DPH -->
               <div class="summary-row">
                 <label>Součet BEZ DPH:</label>
                 <span>{{ formatCurrency(calculateSummaryTotals().baseAmount) }}</span>
               </div>
               
-              <!-- Dynamický popisek daně -->
               <div *ngFor="let group of calculateSummaryTotals().vatGroups" class="summary-row">
-      <label>DPH {{ group.rate }}%:</label>
-      <span class="vat">{{ formatCurrency(group.amount) }}</span>
-    </div>
-              <!-- Řádek 3: Součet S DPH -->
+                <label>DPH {{ group.rate }}%:</label>
+                <span class="vat">{{ formatCurrency(group.amount) }}</span>
+              </div>
+
               <div class="summary-row">
                 <label>Součet S DPH:</label>
                 <span>{{ formatCurrency(calculateSummaryTotals().withVat) }}</span>
               </div>
               
-              <!-- Řádek 4: Doprava -->
               <div class="summary-row">
                 <label>Cena za dopravu:</label>
                 <span>{{ formatCurrency(editingOrder.shipping_amount) }}</span>
               </div>
-              <!-- Řádek: Platba (Nový) -->
-           <div class="summary-row" *ngIf="getPaymentMethodPrice(editingOrder.payment_method_id) > 0">
-            <label>Poplatek za platbu: ({{ getPaymentMethodName(editingOrder.payment_method_id) }})</label>
-            <span>{{ formatCurrency(getPaymentMethodPrice(editingOrder.payment_method_id)) }}</span>
-          </div>
-             <!-- Řádek 5: Sleva (pokud je) -->
-            <div class="summary-row" *ngIf="editingOrder.discount_amount > 0">
-              <label>
-                Slevový kupón: <span>{{ getCouponCode(editingOrder.coupon_id) }}</span> 
-                ({{ getCouponDisplayValue(editingOrder.coupon_id) }})
-              </label>
-              <span class="discount">-{{ formatCurrency(editingOrder.discount_amount) }}</span>
-            </div>
+
+              <div class="summary-row" *ngIf="getPaymentMethodPrice(editingOrder.payment_method_id) > 0">
+                <label>Poplatek za platbu: ({{ getPaymentMethodName(editingOrder.payment_method_id) }})</label>
+                <span>{{ formatCurrency(getPaymentMethodPrice(editingOrder.payment_method_id)) }}</span>
+              </div>
+
+              <!-- Sleva se zobrazí jen pokud je kupón validní -->
+              <div class="summary-row" *ngIf="editingOrder.discount_amount > 0 && couponValidation.valid">
+                <label>
+                  Slevový kupón: <span>{{ getCouponCode(editingOrder.coupon_id) }}</span> 
+                  ({{ getCouponDisplayValue(editingOrder.coupon_id) }})
+                </label>
+                <span class="discount">-{{ formatCurrency(editingOrder.discount_amount) }}</span>
+              </div>
               
-              <!-- Řádek 6: FINÁLNÍ ČÁSTKA -->
               <div class="summary-row total">
                 <label>CELKEM K ÚHRADĚ:</label>
                 <span class="total-amount">{{ formatCurrency(editingOrder.final_amount) }}</span>
@@ -444,13 +449,16 @@
             <legend>Poznámky</legend>
             <div class="form-group">
               <label>Interní poznámky</label>
-              <textarea [(ngModel)]="editingOrder.notes" name="notes" rows="3" placeholder="Různé poznámky k objednávce..."></textarea>
+              <textarea [(ngModel)]="editingOrder.notes" name="notes" rows="3" placeholder="Růzené poznámky k objednávce..."></textarea>
             </div>
           </fieldset>
 
           <div class="modal-footer-inline">
             <button type="button" class="btn btn-secondary" (click)="closeOrderForm()">Zrušit</button>
-            <button type="button" class="btn btn-primary" (click)="saveOrder()">💾 Uložit objednávku</button>
+            <!-- Tlačítko je vizuálně oslabené, pokud je kupón neplatný (případně lze přidat [disabled], ale validateOrder v TS to řeší) -->
+            <button type="button" class="btn btn-primary" (click)="saveOrder()" [class.btn-warning]="editingOrder.coupon_id && !couponValidation.valid">
+              💾 Uložit objednávku
+            </button>
           </div>
         </form>
       </div>

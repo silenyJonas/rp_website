@@ -116,11 +116,14 @@ export interface Coupon {
   id: number;
   code: string;
   description?: string;
-  discount_type: string;
+  discount_type: string; // 'fixed' | 'percent'
   discount_value: number;
   max_usage?: number;
   usage_count: number;
   min_order_amount?: number;
   applies_to: string;
   is_active: boolean;
+  // Přidej tyto řádky:
+  valid_from?: string | Date; 
+  valid_until?: string | Date;
 }

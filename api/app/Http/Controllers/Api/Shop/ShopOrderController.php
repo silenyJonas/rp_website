@@ -210,44 +210,74 @@ public function store(StoreShopOrderRequest $request): JsonResponse
 {
     Log::info("ShopOrder Store started", ['payload' => $request->all()]);
     
+    $validated = $request->validated();
+    $totalAmount = 0;
+    foreach ($validated['items'] as $itemData) {
+        $totalAmount += (float)$itemData['quantity'] * (float)$itemData['unit_price'];
+    }
+
+    // --- STRIKTNÍ VALIDACE KUPÓNU ---
+    $coupon = null;
+    $discountAmount = 0;
+
+    if (!empty($validated['coupon_id'])) {
+        $coupon = \App\Models\Shop\ShopCoupon::find($validated['coupon_id']);
+        
+        if (!$coupon) {
+            return response()->json(['message' => 'Vybraný kupón neexistuje.'], 422);
+        }
+
+        // Kontrola základní aktivity (is_active)
+        if (!$coupon->is_active) {
+            return response()->json(['message' => 'Tento kupón není aktivní.'], 422);
+        }
+
+        // Kontrola časové platnosti (valid_from / valid_until)
+        $now = now();
+        if ($coupon->valid_from && $now->lt($coupon->valid_from)) {
+            return response()->json(['message' => 'Platnost tohoto kupónu ještě nezačala.'], 422);
+        }
+        if ($coupon->valid_until && $now->gt($coupon->valid_until)) {
+            return response()->json(['message' => 'Platnost tohoto kupónu již vypršela.'], 422);
+        }
+
+        // Kontrola limitu použití (max_usage vs usage_count)
+        if ($coupon->max_usage > 0 && $coupon->usage_count >= $coupon->max_usage) {
+            return response()->json(['message' => 'Tento kupón již byl vyčerpán.'], 422);
+        }
+
+        // Kontrola minimální částky objednávky (min_order_amount)
+        if ($coupon->min_order_amount > 0 && $totalAmount < (float)$coupon->min_order_amount) {
+            return response()->json([
+                'message' => "Minimální hodnota objednávky pro tento kupón je " . number_format($coupon->min_order_amount, 2) . " Kč."
+            ], 422);
+        }
+
+        // Výpočet slevy
+        $discountAmount = ($coupon->discount_type === 'percent') 
+            ? ($totalAmount * (float)$coupon->discount_value) / 100 
+            : (float)$coupon->discount_value;
+    }
+    // --- KONEC VALIDACE ---
+
     try {
         DB::beginTransaction();
 
-        $validated = $request->validated();
-
-        // 1. Výpočet základních částek (sumace položek před slevou)
-        $totalAmount = 0;
-        foreach ($validated['items'] as $itemData) {
-            $totalAmount += (float)$itemData['quantity'] * (float)$itemData['unit_price'];
-        }
-
-        // 2. Logika kupónu
-        $discountAmount = 0;
-        if (!empty($validated['coupon_id'])) {
-            $coupon = \App\Models\Shop\ShopCoupon::find($validated['coupon_id']);
-            if ($coupon && $coupon->isValid($totalAmount)) {
-                $discountAmount = ($coupon->discount_type === 'percent') 
-                    ? ($totalAmount * (float)$coupon->discount_value) / 100 
-                    : (float)$coupon->discount_value;
-                
-                $coupon->increment('usage_count');
-            }
-        }
-
-        // 3. Dopravní náklady
         $shippingAmount = 0;
         if (!empty($validated['shipping_method_id'])) {
             $shippingMethod = \App\Models\Shop\ShopShippingMethod::find($validated['shipping_method_id']);
             $shippingAmount = $shippingMethod ? (float)$shippingMethod->base_price : 0;
         }
 
-        // Koeficient slevy pro rozpočet DPH
+        // Inkrementace použití kupónu
+        if ($coupon) {
+            $coupon->increment('usage_count');
+        }
+
         $discountFactor = $totalAmount > 0 ? ($totalAmount - $discountAmount) / $totalAmount : 1;
         $totalTax = 0;
-
         $finalAmount = max(0, $totalAmount + $shippingAmount - $discountAmount);
 
-        // 4. Vytvoření objednávky (tax_amount zatím 0, updatneme po cyklu položek)
         $order = ShopOrder::create([
             'customer_id'          => $validated['customer_id'],
             'order_number'         => ShopOrder::generateOrderNumber(),
@@ -269,32 +299,25 @@ public function store(StoreShopOrderRequest $request): JsonResponse
             'paid_at'              => ($validated['payment_status'] ?? 'pending') === 'paid' ? now() : null,
         ]);
 
-        // 5. Položky, odečtení ze skladu a výpočet daně
         foreach ($validated['items'] as $itemData) {
             $quantity = (int)$itemData['quantity'];
             $product = ShopProduct::findOrFail($itemData['product_id']);
             
-            // Inicializace DPH a názvu varianty
             $variantName = null;
-            $vatRate = $itemData['vat_rate'] ?? $product->vat_rate ?? 21; // Oprava: definice vatRate
+            $vatRate = $itemData['vat_rate'] ?? $product->vat_rate ?? 21;
 
             if (!empty($itemData['product_variant_id'])) {
                 $variant = ShopProductVariant::lockForUpdate()->findOrFail($itemData['product_variant_id']);
                 $variant->decrement('stock_quantity', $quantity);
                 $variantName = $variant->variant_name;
                 
-                // Pokud má varianta specifickou sazbu, použije se ta
-                if (isset($variant->vat_rate)) {
-                    $vatRate = $variant->vat_rate;
-                }
-
+                if (isset($variant->vat_rate)) { $vatRate = $variant->vat_rate; }
                 ShopProductVariant::forceSyncParentStock($product->id);
             } else {
                 $product->lockForUpdate();
                 $product->decrement('stock_quantity', $quantity);
             }
 
-            // Výpočet daně pro tuto položku po aplikaci slevy
             $linePrice = $quantity * (float)$itemData['unit_price'];
             $linePriceAfterDiscount = $linePrice * $discountFactor;
             $itemTax = $linePriceAfterDiscount * ($vatRate / (100 + $vatRate));
@@ -313,7 +336,6 @@ public function store(StoreShopOrderRequest $request): JsonResponse
             ]);
         }
 
-        // 6. Finální update daně v objednávce
         $order->update(['tax_amount' => $totalTax]);
 
         DB::commit();
@@ -325,7 +347,7 @@ public function store(StoreShopOrderRequest $request): JsonResponse
 
     } catch (\Exception $e) {
         DB::rollBack();
-        Log::error("ShopOrder creation error: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+        Log::error("ShopOrder creation error: " . $e->getMessage());
         return response()->json(['message' => 'Vytvoření objednávky selhalo: ' . $e->getMessage()], 500);
     }
 }
