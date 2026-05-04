@@ -24,6 +24,7 @@ export const PAYMENT_STATUS_OPTIONS = [
 
 /**
  * TLAČÍTKA V LIŠTĚ (TOOLBAR)
+ * Tlačítko pro Koš bylo odstraněno, protože bude součástí přepínače tabů
  */
 export const TOOLBAR_BUTTONS: Core.Button[] = [
   {
@@ -46,13 +47,6 @@ export const TOOLBAR_BUTTONS: Core.Button[] = [
     icon: '📥',
     class: 'btn-export',
     showIf: true
-  },
-  {
-    action: 'toggleTable',
-    label: 'Koš',
-    icon: '🗑️',
-    class: 'btn-trash',
-    permission: 'shop-orders-delete'
   }
 ];
 
@@ -90,76 +84,7 @@ export const TRASH_ORDER_COLUMNS: Core.ColumnDefinition[] = [
 
 /**
  * FILTRY (MATCHUJÍ S PHP ShopOrderController@index)
- * Odstraněna data, přidány sloupce pro řazení
  */
-// export const FILTER_COLUMNS: Core.FilterColumns[] = [
-//   { 
-//     key: 'search', 
-//     header: 'Hledat', 
-//     type: 'text', 
-//     placeholder: 'Číslo, email, adresa...', 
-//     canSort: false 
-//   },
-//   { 
-//     key: 'status', 
-//     header: 'Stav objednávky', 
-//     type: 'select', 
-//     options: STATUS_OPTIONS, 
-//     placeholder: '-- Všechny stavy --', 
-//     canSort: true 
-//   },
-//   { 
-//     key: 'payment_status', 
-//     header: 'Stav platby', 
-//     type: 'select', 
-//     options: PAYMENT_STATUS_OPTIONS, 
-//     placeholder: '-- Všechny platby --', 
-//     canSort: true 
-//   },
-//   { 
-//     key: 'amount_from', 
-//     header: 'Cena od', 
-//     type: 'number', 
-//     placeholder: 'Min. částka', 
-//     canSort: false 
-//   },
-//   { 
-//     key: 'amount_to', 
-//     header: 'Cena do', 
-//     type: 'number', 
-//     placeholder: 'Max. částka', 
-//     canSort: false 
-//   },
-//   // Sloupce pouze pro účely řazení (nebudou v gridu jako inputy)
-//   { 
-//     key: 'id', 
-//     header: 'ID', 
-//     type: 'sort', 
-//     canSort: true, 
-//     placeholder: '' 
-//   },
-//   { 
-//     key: 'order_number', 
-//     header: 'Číslo objednávky', 
-//     type: 'sort', 
-//     canSort: true, 
-//     placeholder: '' 
-//   },
-//   { 
-//     key: 'final_amount', 
-//     header: 'Celková částka', 
-//     type: 'sort', 
-//     canSort: true, 
-//     placeholder: '' 
-//   },
-//   { 
-//     key: 'created_at', 
-//     header: 'Datum vytvoření', 
-//     type: 'sort', 
-//     canSort: true, 
-//     placeholder: '' 
-//   }
-// ];
 export const FILTER_COLUMNS: Core.FilterColumns[] = [
   { 
     key: 'search', 
@@ -198,11 +123,10 @@ export const FILTER_COLUMNS: Core.FilterColumns[] = [
     placeholder: 'Max. částka', 
     canSort: false 
   },
-  // Změněno z 'sort' na reálné typy, aby se zobrazily inputy:
   { 
     key: 'id', 
     header: 'ID', 
-    type: 'number', // ID je číslo
+    type: 'number', 
     canSort: true, 
     placeholder: 'ID...' 
   },
@@ -223,11 +147,12 @@ export const FILTER_COLUMNS: Core.FilterColumns[] = [
   { 
     key: 'created_at', 
     header: 'Datum vytvoření', 
-    type: 'date', // Datumové pole
+    type: 'date', 
     canSort: true, 
     placeholder: '' 
   }
 ];
+
 /**
  * DETAIL OBJEDNÁVKY (MODÁL)
  */

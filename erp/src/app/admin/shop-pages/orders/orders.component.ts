@@ -21,6 +21,9 @@ interface CouponValidationResult {
   error?: string;
 }
 
+// 1. PŘIDÁNO: Definice režimů
+type TableMode = 'all' | 'pending_tasks' | 'trash';
+
 @Component({
   selector: 'app-orders',
   standalone: true,
@@ -32,6 +35,9 @@ interface CouponValidationResult {
 export class OrdersComponent extends BaseDataComponent<Order> implements OnInit, OnDestroy {
   override apiEndpoint: string = 'shop/orders';
   @ViewChild('activeTable') activeTable!: any;
+
+  // 2. PŘIDÁNO: Stav aktuálního tabu
+  currentMode: TableMode = 'all';
 
   // Data
   customers: Customer[] = [];
@@ -103,6 +109,40 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
       document.body.classList.remove('modal-open');
     }
   }
+
+  // ========== 3. PŘIDÁNO: LOGIKA PŘEPÍNÁNÍ TABŮ ==========
+
+  // Upravte metodu setTableMode následovně:
+setTableMode(mode: TableMode): void {
+  this.currentMode = mode;
+  this.currentPage = 1;
+  
+  // 1. Reset filtrů na základ
+  this.filters = {
+    sort_by: 'created_at',
+    sort_direction: 'desc'
+  };
+
+  if (mode === 'trash') {
+    this.showTrashTable = true;
+    this.filters['only_trashed'] = 'true';
+  } else {
+    this.showTrashTable = false;
+    delete this.filters['only_trashed'];
+    
+    if (mode === 'pending_tasks') {
+      // 2. Oprava: Pokud backend očekává pole, pošleme to takto, 
+      // pokud očekává string oddělený čárkou, ponecháme string.
+      // Většina Laravel query builderů bere 'status' jako jeden parametr, 
+      // proto zkusíme poslat konkrétní stavy, které definují "Na vyřízení"
+      this.filters['status'] = 'pending,confirmed,processing,shipped';
+    }
+  }
+
+  // 3. KLÍČOVÉ: Explicitní vynucení refresh a detekce změn (řeší double click)
+  this.refreshData();
+  this.cd.detectChanges(); // detectChanges je silnější než markForCheck
+}
 
   // ========== LOAD DEPENDENCIES ==========
 
@@ -221,7 +261,8 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
     const actions: { [key: string]: () => void } = {
       toggleFilters: () => this.toggleFilters(),
       handleCreateFormOpened: () => this.handleCreateFormOpened(),
-      toggleTable: () => this.toggleTable(),
+      // 4. UPRAVENO: ToggleTable nyní přepíná režim Koše
+      toggleTable: () => this.setTableMode(this.currentMode === 'trash' ? 'all' : 'trash'),
       exportActiveTable: () => this.exportActiveTable()
     };
 
@@ -231,8 +272,6 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
   exportActiveTable(): void {
     if (this.activeTable) {
       this.activeTable.exportToCSV();
-    } else {
-      console.error('Nebyla nalezena aktivní tabulka pro export.');
     }
   }
 
@@ -241,15 +280,7 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
     this.cd.markForCheck();
   }
 
-  override toggleTable(): void {
-    this.showTrashTable = !this.showTrashTable;
-    if (this.showTrashTable) {
-      const trashFilters = { ...this.filters, only_trashed: 'true' };
-      this.forceFullRefresh(trashFilters);
-    } else {
-      this.refreshData();
-    }
-  }
+  // 5. UPRAVENO: Původní toggleTable smazáno ve prospěch setTableMode výše
 
   // ========== FILTROVÁNÍ ==========
 
@@ -264,8 +295,8 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
   }
 
   clearFilters(): void {
-    this.filters = { sort_by: 'created_at', sort_direction: 'desc' };
-    this.refreshData();
+    // 6. UPRAVENO: Reset do výchozího stavu daného tabu
+    this.setTableMode(this.currentMode);
   }
 
   handlePageChange(page: number): void {
@@ -437,30 +468,15 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
 
 validateCouponRealtime(coupon: Coupon, totalAmount: number): CouponValidationResult {
   if (!coupon) return { valid: true };
-
-  if (!coupon.is_active) {
-    return { valid: false, error: 'Tento kupón není aktivní.' };
-  }
+  if (!coupon.is_active) return { valid: false, error: 'Tento kupón není aktivní.' };
 
   const now = new Date();
+  if (coupon.valid_from && new Date(coupon.valid_from) > now) return { valid: false, error: 'Platnost kupónu ještě nezačala.' };
+  if (coupon.valid_until && new Date(coupon.valid_until) < now) return { valid: false, error: 'Platnost kupónu již vypršela.' };
 
-  // Kontrola začátku platnosti
-  if (coupon.valid_from && new Date(coupon.valid_from) > now) {
-    return { valid: false, error: 'Platnost kupónu ještě nezačala.' };
-  }
-
-  // Kontrola konce platnosti
-  if (coupon.valid_until && new Date(coupon.valid_until) < now) {
-    return { valid: false, error: 'Platnost kupónu již vypršela.' };
-  }
-
-  // Kontrola počtu použití - přidáno jištění pomocí (coupon.max_usage ?? 0)
   const maxUsage = coupon.max_usage ?? 0;
-  if (maxUsage > 0 && (coupon.usage_count || 0) >= maxUsage) {
-    return { valid: false, error: 'Tento kupón již byl vyčerpán.' };
-  }
+  if (maxUsage > 0 && (coupon.usage_count || 0) >= maxUsage) return { valid: false, error: 'Tento kupón již byl vyčerpán.' };
 
-  // Kontrola minimální částky - přidáno jištění pomocí Number() a fallbacku na 0
   const minAmount = Number(coupon.min_order_amount ?? 0);
   if (minAmount > 0 && totalAmount < minAmount) {
     return { 
@@ -468,7 +484,6 @@ validateCouponRealtime(coupon: Coupon, totalAmount: number): CouponValidationRes
       error: `Minimální hodnota objednávky pro tento kupón je ${this.formatCurrency(minAmount)}.` 
     };
   }
-
   return { valid: true };
 }
 

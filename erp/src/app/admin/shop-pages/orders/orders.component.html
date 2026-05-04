@@ -16,6 +16,28 @@
       </div>
     </div>
 
+    <!-- PŘIDÁNO: PŘEPÍNAČ REŽIMŮ (TABY) -->
+    <div class="table-mode-tabs">
+      <button 
+        class="tab-btn" 
+        [class.active]="currentMode === 'all'" 
+        (click)="setTableMode('all')">
+        📦 Všechny objednávky
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="currentMode === 'pending_tasks'" 
+        (click)="setTableMode('pending_tasks')">
+        ⏳ K vyřízení
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="currentMode === 'trash'" 
+        (click)="setTableMode('trash')">
+        🗑️ Koš
+      </button>
+    </div>
+
     <!-- MAIN LAYOUT: FILTER + TABLE -->
     <div class="main-content-layout">
       <!-- FILTER PANEL -->
@@ -31,15 +53,15 @@
 
       <!-- TABLE CONTAINER -->
       <div class="table-and-pagination-container">
-        <!-- ACTIVE TABLE -->
+        <!-- ACTIVE TABLE (Zobrazuje se pro 'all' a 'pending_tasks') -->
         <app-table-builder #activeTable 
-          *ngIf="!showTrashTable"
+          *ngIf="currentMode !== 'trash'"
           [buttons]="buttons"
           [data]="data"
           [columns]="orderColumns"
           [currentFilters]="filters"
           [isFullWidth]="true"
-          [tableCaption]="'Seznam objednávek'"
+          [tableCaption]="currentMode === 'pending_tasks' ? 'Objednávky k vyřízení' : 'Seznam objednávek'"
           [apiEndpoint]="apiEndpoint"
           (itemDeleted)="refreshData()"
           (createFormOpened)="handleCreateFormOpened()"
@@ -47,9 +69,9 @@
           (viewDetailsOpened)="handleViewDetails($event)">
         </app-table-builder>
 
-        <!-- TRASH TABLE -->
+        <!-- TRASH TABLE (Zobrazuje se jen pro 'trash') -->
         <app-trash-table-builder 
-          *ngIf="showTrashTable"
+          *ngIf="currentMode === 'trash'"
           [data]="trashData"
           [columns]="trashOrderColumns"
           [tableCaption]="'Archiv smazaných objednávek'"
@@ -61,11 +83,11 @@
         <!-- PAGINATION -->
         <div class="pagination-container">
           <app-pagination-buttons-builder
-            [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
-            [totalPages]="showTrashTable ? trashTotalPages : totalPages"
-            [totalItems]="showTrashTable ? trashTotalItems : totalItems"
-            [itemsPerPage]="showTrashTable ? trashItemsPerPage : itemsPerPage"
-            [dataLength]="showTrashTable ? trashData.length : data.length"
+            [currentPage]="currentMode === 'trash' ? trashCurrentPage : currentPage"
+            [totalPages]="currentMode === 'trash' ? trashTotalPages : totalPages"
+            [totalItems]="currentMode === 'trash' ? trashTotalItems : totalItems"
+            [itemsPerPage]="currentMode === 'trash' ? trashItemsPerPage : itemsPerPage"
+            [dataLength]="currentMode === 'trash' ? trashData.length : data.length"
             (pageChange)="handlePageChange($event)"
             (itemsPerPageChange)="handleItemsPerPageChange($event)">
           </app-pagination-buttons-builder>
@@ -75,7 +97,7 @@
   </div>
 </div>
 
-<!-- ============= MODAL: DETAIL OBJEDNÁVKY ============= -->
+<!-- ============= MODAL: DETAIL OBJEDNÁVKY (ZŮSTÁVÁ STEJNÝ) ============= -->
 <ng-container *ngIf="showDetailsModal && selectedOrderForDetail">
   <div class="modal-overlay" (click)="closeDetailsModal()">
     <div class="modal-content modal-detail" (click)="$event.stopPropagation()">
@@ -225,7 +247,7 @@
   </div>
 </ng-container>
 
-<!-- ============= MODAL: FORM OBJEDNÁVKY ============= -->
+<!-- ============= MODAL: FORM OBJEDNÁVKY (ZŮSTÁVÁ STEJNÝ) ============= -->
 <ng-container *ngIf="showOrderForm && editingOrder">
   <div class="modal-overlay" (click)="closeOrderForm()">
     <div class="modal-content modal-form" (click)="$event.stopPropagation()">
@@ -269,7 +291,6 @@
                   <option *ngFor="let sm of shippingMethods" [value]="sm.id">{{ sm.name }} ({{ formatCurrency(sm.base_price) }})</option>
                 </select>
               </div>
-              <!-- UPRAVENO: Real-time validace kupónu -->
               <div class="form-group">
                 <label>Slevový kupón</label>
                 <select [(ngModel)]="editingOrder.coupon_id" 
@@ -281,7 +302,6 @@
                     {{ coup.code }} ({{ getCouponDisplayValue(coup) }})
                   </option>
                 </select>
-                <!-- Chybová hláška kupónu -->
                 <div *ngIf="editingOrder.coupon_id && !couponValidation.valid" class="coupon-error-msg">
                   ⚠️ {{ couponValidation.error }}
                 </div>
@@ -375,7 +395,6 @@
               </div>
             </div>
             
-            <!-- Aplikovaný kupón - UPRAVENO: Zobrazuje se jen pokud je validní -->
             <div *ngIf="editingOrder.coupon_id && couponValidation.valid && editingOrder.discount_amount > 0" class="order-item coupon-row">
               <div class="item-header">
                 <h4>🎫 Aplikovaný kupón</h4>
@@ -428,7 +447,6 @@
                 <span>{{ formatCurrency(getPaymentMethodPrice(editingOrder.payment_method_id)) }}</span>
               </div>
 
-              <!-- Sleva se zobrazí jen pokud je kupón validní -->
               <div class="summary-row" *ngIf="editingOrder.discount_amount > 0 && couponValidation.valid">
                 <label>
                   Slevový kupón: <span>{{ getCouponCode(editingOrder.coupon_id) }}</span> 
@@ -455,7 +473,6 @@
 
           <div class="modal-footer-inline">
             <button type="button" class="btn btn-secondary" (click)="closeOrderForm()">Zrušit</button>
-            <!-- Tlačítko je vizuálně oslabené, pokud je kupón neplatný (případně lze přidat [disabled], ale validateOrder v TS to řeší) -->
             <button type="button" class="btn btn-primary" (click)="saveOrder()" [class.btn-warning]="editingOrder.coupon_id && !couponValidation.valid">
               💾 Uložit objednávku
             </button>
