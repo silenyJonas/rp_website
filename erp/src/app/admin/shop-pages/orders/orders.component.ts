@@ -133,7 +133,6 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
   }
 
   private loadVariants(): void {
-    // Načteme všechny produkty s jejich variantami a pak extrahujeme jen varianty
     this.dataHandler.getCollection<any>('shop/products?no_pagination=true')
       .pipe(Core.takeUntil(this.destroy$))
       .subscribe({
@@ -193,13 +192,11 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
   }
 
   private updateFilterOptions(): void {
-    // Nastav opcí pro status filter
     const statusFilter = this.filterColumns.find(f => f.key === 'status');
     if (statusFilter) {
       statusFilter.options = this.statusOptions;
     }
 
-    // Nastav opcí pro payment_status filter
     const paymentFilter = this.filterColumns.find(f => f.key === 'payment_status');
     if (paymentFilter) {
       paymentFilter.options = this.paymentStatusOptions;
@@ -367,7 +364,7 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
     });
   }
 
-  // ========== POLOŽ KY OBJEDNÁVKY ==========
+  // ========== POLOŽKY OBJEDNÁVKY ==========
 
   addOrderItem(): void {
     if (!this.editingOrder) return;
@@ -406,28 +403,22 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
     }
   }
 
-onVariantSelected(item: OrderItem, index: number): void {
-  // Ošetření undefined pomocí Guard Clause
-  if (!item.product_variant_id) return;
+  onVariantSelected(item: OrderItem, index: number): void {
+    if (!item.product_variant_id) return;
 
-  // Najdeme variantu v poli, které jsi načetl v loadVariants()
-  const variant = this.variants.find(v => v.id === Number(item.product_variant_id));
+    const variant = this.variants.find(v => Number(v.id) === Number(item.product_variant_id));
 
-  if (variant) {
-    item.product_id = variant.product_id;
-    item.product_name = variant.product_name || '';
-    item.variant_name = variant.variant_name;
-    
-    // KLÍČOVÝ ŘÁDEK: Tady vezmeme cenu z DB a vložíme ji do formuláře
-    item.unit_price = variant.price_with_vat; 
-    
-    // Hned spočítáme celkovou cenu za položku
-    item.total_price = item.quantity * item.unit_price;
+    if (variant) {
+      item.product_id = variant.product_id;
+      item.product_name = variant.product_name || '';
+      item.variant_name = variant.variant_name;
+      item.unit_price = variant.price_with_vat; 
+      item.total_price = item.quantity * item.unit_price;
+    }
+
+    this.recalculateTotals();
+    this.cd.markForCheck();
   }
-
-  this.recalculateTotals();
-  this.cd.markForCheck();
-}
 
   onItemQuantityChange(item: OrderItem): void {
     item.total_price = item.quantity * item.unit_price;
@@ -441,59 +432,50 @@ onVariantSelected(item: OrderItem, index: number): void {
     this.cd.markForCheck();
   }
 
-  
-// Pomocná metoda pro získání tlačítek v režimu koše
-getTrashToolbarButtons(): any[] {
-  // Vrátíme všechna tlačítka kromě 'Vytvořit' a 'Exportovat'
-  return this.toolbarButtons.filter(btn => 
-    btn.action !== 'handleCreateFormOpened' && 
-    btn.action !== 'exportActiveTable'
-  );
-}
-  // ========== SAVE OBJEDNÁVKA ==========
-recalculateTotals(): void {
-  if (!this.editingOrder) return;
+  getTrashToolbarButtons(): any[] {
+    return this.toolbarButtons.filter(btn => 
+      btn.action !== 'handleCreateFormOpened' && 
+      btn.action !== 'exportActiveTable'
+    );
+  }
 
-  const items = (this.editingOrder.items || []).filter(i => !i._delete);
-  
-  // 1. ZÁKLAD: Pouze produkty
-  let productsTotal = 0;
-  items.forEach(item => {
-    const qty = Number(item.quantity || 0);
-    const unitPrice = Number(item.unit_price || 0);
-    productsTotal += (qty * unitPrice);
-  });
+  // ========== VÝPOČTY ==========
 
-  this.editingOrder.total_amount = productsTotal;
+  recalculateTotals(): void {
+    if (!this.editingOrder) return;
 
-  // 2. SLEVA: Počítá se JEN z ceny produktů
-  let discount = 0;
-  if (this.editingOrder.coupon_id) {
-    const coupon = this.coupons.find(c => c.id === Number(this.editingOrder!.coupon_id));
-    if (coupon) {
-      const val = Number(coupon.discount_value || 0);
-      discount = (coupon.discount_type === 'percent') 
-        ? (productsTotal * val) / 100 
-        : val;
+    const items = (this.editingOrder.items || []).filter(i => !i._delete);
+    
+    let productsTotal = 0;
+    items.forEach(item => {
+      productsTotal += (Number(item.quantity || 0) * Number(item.unit_price || 0));
+    });
+    this.editingOrder.total_amount = productsTotal;
+
+    let discount = 0;
+    if (this.editingOrder.coupon_id) {
+      const idToFind = Number(this.editingOrder.coupon_id);
+      const coupon = this.coupons.find(c => Number(c.id) === idToFind);
+      if (coupon) {
+        discount = (coupon.discount_type === 'percent') 
+          ? (productsTotal * Number(coupon.discount_value)) / 100 
+          : Number(coupon.discount_value);
+      }
     }
+    this.editingOrder.discount_amount = Math.min(discount, productsTotal);
+
+    this.editingOrder.shipping_amount = this.getShippingMethodPrice(this.editingOrder.shipping_method_id);
+    const paymentFee = this.getPaymentMethodPrice(this.editingOrder.payment_method_id);
+
+    this.editingOrder.final_amount = (productsTotal - this.editingOrder.discount_amount) + 
+                                     this.editingOrder.shipping_amount + 
+                                     paymentFee;
+
+    this.cd.markForCheck();
   }
-  // Ošetření, aby sleva nebyla vyšší než cena zboží
-  this.editingOrder.discount_amount = Math.min(discount, productsTotal);
 
-  // 3. DOPRAVA: Fixní částka, do které sleva nezasahuje
-  let shipping = 0;
-  if (this.editingOrder.shipping_method_id) {
-    const method = this.shippingMethods.find(s => s.id === Number(this.editingOrder!.shipping_method_id));
-    shipping = Number(method?.base_price || 0);
-  }
-  this.editingOrder.shipping_amount = shipping;
+  // ========== SAVE OBJEDNÁVKA ==========
 
-  // 4. FINÁLE: (Zboží - Sleva) + Doprava
-  // Vše obalíme Number(), aby se to nespojovalo jako text
-  this.editingOrder.final_amount = (Number(productsTotal) - Number(this.editingOrder.discount_amount)) + Number(shipping);
-
-  this.cd.markForCheck();
-}
   saveOrder(): void {
     if (this.isProcessing || !this.editingOrder || !this.validateOrder()) return;
 
@@ -550,109 +532,103 @@ recalculateTotals(): void {
     });
   }
 
-getCouponCode(couponId: any): string {
-  // Ošetříme null, undefined, 0 nebo prázdný string
-  if (!couponId) return '-';
+  // ========== ROBUSTNÍ HELPERS (NA BÁZI KUPÓNU) ==========
 
-  // Převedeme couponId na číslo pro bezpečné porovnání
-  const idToFind = Number(couponId);
-  
-  const coupon = this.coupons.find(c => Number(c.id) === idToFind);
-  
-  return coupon ? coupon.code : 'N/A';
-}
-/**
- * Formátuje zobrazení slevy pro UI (např. v dropdownu nebo souhrnu)
- * @param coupon Objekt kupónu nebo ID
- */
-getCouponDisplayValue(couponOrId: any): string {
-  // 1. Získáme objekt kupónu (podpora pro ID i celý objekt)
-  let coupon = typeof couponOrId === 'object' ? couponOrId : null;
-  
-  if (!coupon && couponOrId) {
-    const idToFind = Number(couponOrId);
-    coupon = this.coupons.find(c => Number(c.id) === idToFind);
+  getCouponCode(couponId: any): string {
+    if (!couponId) return '-';
+    const idToFind = Number(couponId);
+    const coupon = this.coupons.find(c => Number(c.id) === idToFind);
+    return coupon ? coupon.code : 'N/A';
   }
 
-  // 2. Pokud kupón nemáme, vrátíme prázdný string
-  if (!coupon) return '';
-
-  // 3. Formátování podle typu
-  if (coupon.discount_type === 'percent') {
-    return `-${coupon.discount_value}%`;
+  getPaymentMethodName(methodId: any): string {
+    if (!methodId || methodId == 0) return '-';
+    const idToFind = Number(methodId);
+    const method = this.paymentMethods.find(m => Number(m.id) === idToFind);
+    return method ? method.name : 'N/A';
   }
 
-  return `-${this.formatCurrency(coupon.discount_value)}`;
-}
-getCouponTypeLabel(couponId: any): string {
-  if (!couponId) return '';
-  
-  // Převod na číslo, aby "12" === 12 bylo true
-  const idToFind = Number(couponId);
-  const coupon = this.coupons.find(c => Number(c.id) === idToFind);
-  
-  if (!coupon) return '';
-  
-  // Kontrola typu slevy
-  if (coupon.discount_type === 'percent') {
-    return `-${coupon.discount_value}%`; // Zobrazí např. -10%
-  }
-  
-  return `-${this.formatCurrency(coupon.discount_value)}`; // Zobrazí např. -200 Kč
-}
-
-calculateSummaryTotals(): { baseAmount: number; vat: number; withVat: number } {
-  if (!this.editingOrder) {
-    return { baseAmount: 0, vat: 0, withVat: 0 };
+  getPaymentMethodPrice(methodId: any): number {
+    if (!methodId || methodId == 0) return 0;
+    const idToFind = Number(methodId);
+    const method = this.paymentMethods.find(m => Number(m.id) === idToFind);
+    return method ? Number(method.price) : 0;
   }
 
-  const items = (this.editingOrder.items || []).filter(i => !i._delete);
-  let productsWithVat = 0;
-  
-  items.forEach(item => {
-    productsWithVat += item.quantity * item.unit_price;
-  });
+  getShippingMethodName(methodId: any): string {
+    if (!methodId || methodId == 0) return '-';
+    const idToFind = Number(methodId);
+    const method = this.shippingMethods.find(s => Number(s.id) === idToFind);
+    return method ? method.name : 'N/A';
+  }
 
-  // Počítáme DPH jako 21% z ceny s DPH (aby se dostalo bez DPH)
-  // Formule: cena_bez_dph = cena_s_dph / 1.21
-  const baseAmount = Math.round((productsWithVat / 1.21) * 100) / 100;
-  const vat = Math.round((productsWithVat - baseAmount) * 100) / 100;
+  getShippingMethodPrice(methodId: any): number {
+    if (!methodId || methodId == 0) return 0;
+    const idToFind = Number(methodId);
+    const method = this.shippingMethods.find(s => Number(s.id) === idToFind);
+    return method ? Number(method.base_price) : 0;
+  }
 
-  return {
-    baseAmount,
-    vat,
-    withVat: productsWithVat
-  };
-}
+  getCouponDisplayValue(couponOrId: any): string {
+    let coupon = typeof couponOrId === 'object' ? couponOrId : null;
+    if (!coupon && couponOrId) {
+      const idToFind = Number(couponOrId);
+      coupon = this.coupons.find(c => Number(c.id) === idToFind);
+    }
+    if (!coupon) return '';
+    if (coupon.discount_type === 'percent') {
+      return `-${coupon.discount_value}%`;
+    }
+    return `-${this.formatCurrency(coupon.discount_value)}`;
+  }
+
+  getCouponTypeLabel(couponId: any): string {
+    if (!couponId) return '';
+    const idToFind = Number(couponId);
+    const coupon = this.coupons.find(c => Number(c.id) === idToFind);
+    if (!coupon) return '';
+    if (coupon.discount_type === 'percent') {
+      return `-${coupon.discount_value}%`;
+    }
+    return `-${this.formatCurrency(coupon.discount_value)}`;
+  }
+
+  calculateSummaryTotals(): { baseAmount: number; vat: number; withVat: number } {
+    if (!this.editingOrder) {
+      return { baseAmount: 0, vat: 0, withVat: 0 };
+    }
+    const items = (this.editingOrder.items || []).filter(i => !i._delete);
+    let productsWithVat = 0;
+    items.forEach(item => {
+      productsWithVat += item.quantity * item.unit_price;
+    });
+    const baseAmount = Math.round((productsWithVat / 1.21) * 100) / 100;
+    const vat = Math.round((productsWithVat - baseAmount) * 100) / 100;
+    return { baseAmount, vat, withVat: productsWithVat };
+  }
 
   private validateOrder(): boolean {
     if (!this.editingOrder) return false;
-
     if (!this.editingOrder.customer_id) {
       this.alertDialogService.open('Validace', 'Vyberte zákazníka.', 'warning');
       return false;
     }
-
     if (!this.editingOrder.payment_method_id) {
       this.alertDialogService.open('Validace', 'Vyberte způsob platby.', 'warning');
       return false;
     }
-
     if (!this.editingOrder.shipping_method_id) {
       this.alertDialogService.open('Validace', 'Vyberte způsob dopravy.', 'warning');
       return false;
     }
-
     if (!this.editingOrder.items || this.editingOrder.items.filter(i => !i._delete).length === 0) {
       this.alertDialogService.open('Validace', 'Objednávka musí obsahovat alespoň jednu položku.', 'warning');
       return false;
     }
-
     if (!this.editingOrder.shipping_address) {
-      this.alertDialogService.open('Validace', 'Zadejte dopravn í adresu.', 'warning');
+      this.alertDialogService.open('Validace', 'Zadejte dopravní adresu.', 'warning');
       return false;
     }
-
     return true;
   }
 
@@ -663,26 +639,16 @@ calculateSummaryTotals(): { baseAmount: number; vat: number; withVat: number } {
     this.cd.markForCheck();
   }
 
-  // ========== HELPERS ==========
+  // ========== ZÁKLADNÍ HELPERS ==========
 
   getCustomerName(customerId: number): string {
     if (!customerId) return '-';
-    return this.customers.find(c => c.id === customerId)?.full_name || 'N/A';
+    return this.customers.find(c => Number(c.id) === Number(customerId))?.full_name || 'N/A';
   }
 
   getProductName(productId: number): string {
     if (!productId) return '-';
-    return this.products.find(p => p.id === productId)?.name || 'N/A';
-  }
-
-  getPaymentMethodName(methodId: number): string {
-    if (!methodId) return '-';
-    return this.paymentMethods.find(m => m.id === methodId)?.name || 'N/A';
-  }
-
-  getShippingMethodName(methodId: number): string {
-    if (!methodId) return '-';
-    return this.shippingMethods.find(m => m.id === methodId)?.name || 'N/A';
+    return this.products.find(p => Number(p.id) === Number(productId))?.name || 'N/A';
   }
 
   formatCurrency(value: number): string {

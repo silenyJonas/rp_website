@@ -249,9 +249,14 @@
               </div>
               <div class="form-group">
                 <label>Způsob platby *</label>
-                <select [(ngModel)]="editingOrder.payment_method_id" name="payment_method_id" required>
-                  <option value="">-- Vybrat --</option>
-                  <option *ngFor="let pm of paymentMethods" [value]="pm.id">{{ pm.name }}</option>
+                <select [(ngModel)]="editingOrder.payment_method_id" name="payment_method_id" required (change)="recalculateTotals()">
+                  <option [value]="0">-- Vybrat --</option>
+                  <option *ngFor="let pm of paymentMethods" [value]="pm.id">
+                    {{ pm.name }} 
+                    <ng-container *ngIf="pm.price > 0">
+                      ({{ formatCurrency(pm.price) }})
+                    </ng-container>
+                  </option>
                 </select>
               </div>
             </div>
@@ -413,7 +418,11 @@
                 <label>Cena za dopravu:</label>
                 <span>{{ formatCurrency(editingOrder.shipping_amount) }}</span>
               </div>
-              
+              <!-- Řádek: Platba (Nový) -->
+           <div class="summary-row" *ngIf="getPaymentMethodPrice(editingOrder.payment_method_id) > 0">
+            <label>Poplatek za platbu: ({{ getPaymentMethodName(editingOrder.payment_method_id) }})</label>
+            <span>{{ formatCurrency(getPaymentMethodPrice(editingOrder.payment_method_id)) }}</span>
+          </div>
              <!-- Řádek 5: Sleva (pokud je) -->
             <div class="summary-row" *ngIf="editingOrder.discount_amount > 0">
               <label>
