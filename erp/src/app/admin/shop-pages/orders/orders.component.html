@@ -291,21 +291,32 @@
                   <option *ngFor="let sm of shippingMethods" [value]="sm.id">{{ sm.name }} ({{ formatCurrency(sm.base_price) }})</option>
                 </select>
               </div>
-              <div class="form-group">
-                <label>Slevový kupón</label>
-                <select [(ngModel)]="editingOrder.coupon_id" 
-                        name="coupon_id" 
-                        (change)="recalculateTotals()"
-                        [ngClass]="getCouponValidationClass()">
-                  <option value="">-- Bez kupónu --</option>
-                  <option *ngFor="let coup of coupons" [value]="coup.id">
-                    {{ coup.code }} ({{ getCouponDisplayValue(coup) }})
-                  </option>
-                </select>
-                <div *ngIf="editingOrder.coupon_id && !couponValidation.valid" class="coupon-error-msg">
-                  ⚠️ {{ couponValidation.error }}
-                </div>
-              </div>
+             <div class="form-group">
+  <label>Slevový kupón</label>
+  
+  <!-- Přidán [disabled] pokud editujeme (máme id objednávky) -->
+  <select [(ngModel)]="editingOrder.coupon_id" 
+          name="coupon_id" 
+          (change)="recalculateTotals()"
+          [ngClass]="getCouponValidationClass()"
+          [disabled]="!!editingOrder.id"
+          class="form-control"
+          [class.disabled-coupon]="editingOrder.id">
+    <option value="">-- Bez kupónu --</option>
+    <option *ngFor="let coup of coupons" [value]="coup.id">
+      {{ coup.code }} ({{ getCouponDisplayValue(coup) }})
+    </option>
+  </select>
+
+  <!-- Info hláška pro administrátora -->
+  <div *ngIf="editingOrder.id && editingOrder.coupon_id" class="text-muted small mt-1">
+    ℹ️ Kupón u existující objednávky již nelze měnit.
+  </div>
+
+  <div *ngIf="editingOrder.coupon_id && !couponValidation.valid" class="coupon-error-msg">
+    ⚠️ {{ couponValidation.error }}
+  </div>
+</div>
             </div>
           </fieldset>
 

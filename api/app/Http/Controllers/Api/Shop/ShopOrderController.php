@@ -21,82 +21,10 @@ class ShopOrderController extends Controller
     /**
      * Seznam objednávek s filtrováním
      */
-    // public function index(Request $request): JsonResponse
-    // {
-    //     $perPage = $request->input('per_page', 15);
-    //     $onlyTrashed = filter_var($request->input('only_trashed', false), FILTER_VALIDATE_BOOLEAN);
 
-    //     $query = ShopOrder::with([
-    //         'customer',
-    //         'paymentMethod',
-    //         'shippingMethod',
-    //         'coupon',
-    //         'items'
-    //     ]);
-
-    //     $onlyTrashed ? $query->onlyTrashed() : $query->withoutTrashed();
-
-    //     // Vyhledávání
-    //     if ($s = $request->input('search')) {
-    //         $query->where(fn($q) => 
-    //             $q->where('order_number', 'like', "%$s%")
-    //               ->orWhere('shipping_address', 'like', "%$s%")
-    //               ->orWhereHas('customer', fn($cq) => 
-    //                   $cq->where('email', 'like', "%$s%")
-    //                     ->orWhere('first_name', 'like', "%$s%")
-    //                     ->orWhere('last_name', 'like', "%$s%")
-    //               )
-    //         );
-    //     }
-
-    //     // Filtry
-    //     if ($request->filled('status')) {
-    //         $query->where('status', $request->input('status'));
-    //     }
-
-    //     if ($request->filled('payment_status')) {
-    //         $query->where('payment_status', $request->input('payment_status'));
-    //     }
-
-    //     if ($request->filled('customer_id')) {
-    //         $query->where('customer_id', $request->input('customer_id'));
-    //     }
-
-    //     if ($request->filled('date_from')) {
-    //         $query->whereDate('created_at', '>=', $request->input('date_from'));
-    //     }
-
-    //     if ($request->filled('date_to')) {
-    //         $query->whereDate('created_at', '<=', $request->input('date_to'));
-    //     }
-
-    //     if ($request->filled('amount_from')) {
-    //         $query->where('final_amount', '>=', $request->input('amount_from'));
-    //     }
-
-    //     if ($request->filled('amount_to')) {
-    //         $query->where('final_amount', '<=', $request->input('amount_to'));
-    //     }
-
-    //     $sortBy = $request->input('sort_by', 'created_at');
-    //     $sortDirection = $request->input('sort_direction', 'desc');
-    //     $query->orderBy($sortBy, $sortDirection);
-
-    //     $noPagination = filter_var($request->input('no_pagination', false), FILTER_VALIDATE_BOOLEAN);
-    //     $data = $noPagination ? $query->get() : $query->paginate($perPage);
-
-    //     if ($noPagination) {
-    //         return response()->json(ShopOrderResource::collection($data));
-    //     }
-
-    //     return response()->json([
-    //         'data' => ShopOrderResource::collection($data->items()),
-    //         'total' => $data->total(),
-    //         'per_page' => $data->perPage(),
-    //         'current_page' => $data->currentPage(),
-    //         'last_page' => $data->lastPage(),
-    //     ]);
-    // }
+/**
+ * Seznam objednávek s filtrováním
+ */
 /**
  * Seznam objednávek s filtrováním
  */
@@ -118,7 +46,7 @@ public function index(Request $request): JsonResponse
     // Vyhledávání (univerzální lupa)
     if ($s = $request->input('search')) {
         $query->where(fn($q) => 
-            $q->where('id', $s) // Přidáno hledání podle ID i v hlavním search
+            $q->where('id', $s) 
               ->orWhere('order_number', 'like', "%$s%")
               ->orWhere('shipping_address', 'like', "%$s%")
               ->orWhereHas('customer', fn($cq) => 
@@ -129,7 +57,7 @@ public function index(Request $request): JsonResponse
         );
     }
 
-    // --- Dedikované filtry (přesné shody z jednotlivých políček) ---
+    // --- Dedikované filtry ---
 
     // Filtr podle ID
     if ($request->filled('id')) {
@@ -141,9 +69,18 @@ public function index(Request $request): JsonResponse
         $query->where('order_number', 'like', '%' . $request->input('order_number') . '%');
     }
 
-    // Filtry podle stavů
+    // OPRAVA: Filtry podle stavů (podpora pro více stavů oddělených čárkou)
     if ($request->filled('status')) {
-        $query->where('status', $request->input('status'));
+        $statusValue = $request->input('status');
+        
+        if (is_string($statusValue) && str_contains($statusValue, ',')) {
+            // Pokud přijde "pending,confirmed,processing", uděláme z toho pole
+            $statuses = explode(',', $statusValue);
+            $query->whereIn('status', $statuses);
+        } else {
+            // Pokud přijde jen jeden stav
+            $query->where('status', $statusValue);
+        }
     }
 
     if ($request->filled('payment_status')) {
@@ -163,7 +100,7 @@ public function index(Request $request): JsonResponse
         $query->where('final_amount', '<=', $request->input('amount_to'));
     }
 
-    // Filtry podle data (ponecháno pro případnou budoucí potřebu)
+    // Filtry podle data
     if ($request->filled('date_from')) {
         $query->whereDate('created_at', '>=', $request->input('date_from'));
     }
@@ -176,8 +113,6 @@ public function index(Request $request): JsonResponse
     $sortBy = $request->input('sort_by', 'created_at');
     $sortDirection = $request->input('sort_direction', 'desc');
     
-    // Ochrana před řazením podle neexistujících sloupců (např. customer.full_name)
-    // Pokud key obsahuje tečku, Laravel orderBy selže, proto řadíme podle ID jako fallback
     if (str_contains($sortBy, '.')) {
         $sortBy = 'created_at';
     }
@@ -571,55 +506,19 @@ public function destroy(Request $request, $id)
      * Přepočítání součtů objednávky
      */
 
-// private function recalculateOrderTotals(ShopOrder $order): void
-// {
-//     // Základní součet položek
-//     $totalAmount = (float)$order->items()->sum(DB::raw('quantity * unit_price'));
-    
-//     $discountAmount = 0;
-//     if ($order->coupon_id) {
-//         $coupon = \App\Models\Shop\ShopCoupon::find($order->coupon_id);
-        
-//         // Použijeme stejnou validaci (při přepočtu už neinkrementujeme usage_count!)
-//         if ($coupon && $coupon->isValid($totalAmount)) {
-//             if ($coupon->discount_type === 'percent') {
-//                 $discountAmount = ($totalAmount * (float)$coupon->discount_value) / 100;
-//             } else {
-//                 $discountAmount = (float)$coupon->discount_value;
-//             }
-//         }
-//     }
 
-//     $shippingAmount = 0;
-//     if ($order->shipping_method_id) {
-//         $shippingMethod = \App\Models\Shop\ShopShippingMethod::find($order->shipping_method_id);
-//         if ($shippingMethod) {
-//             $shippingAmount = (float)$shippingMethod->base_price;
-//         }
-//     }
-
-//     // Finální částka (ošetřeno proti záporným hodnotám)
-//     $finalAmount = max(0, $totalAmount + $shippingAmount - $discountAmount);
-
-//     $order->update([
-//         'total_amount' => $totalAmount,
-//         'discount_amount' => $discountAmount,
-//         'shipping_amount' => $shippingAmount,
-//         'final_amount' => $finalAmount,
-//     ]);
-
-//     Log::info("Order totals recalculated", ['order_id' => $order->id, 'final_amount' => $finalAmount]);
-// }
 private function recalculateOrderTotals(ShopOrder $order): void
 {
     $items = $order->items;
     $totalWithVatBeforeDiscount = (float)$items->sum('total_price');
     $discountAmount = 0;
 
-    // 1. Výpočet slevy
+    // 1. Výpočet slevy - odebrána kontrola isValid()
     if ($order->coupon_id) {
         $coupon = \App\Models\Shop\ShopCoupon::find($order->coupon_id);
-        if ($coupon && $coupon->isValid($totalWithVatBeforeDiscount)) {
+        
+        // Zde už nevalidujeme expiraci, protože kupón už v objednávce existuje
+        if ($coupon) {
             $discountAmount = ($coupon->discount_type === 'percent') 
                 ? ($totalWithVatBeforeDiscount * (float)$coupon->discount_value) / 100 
                 : (float)$coupon->discount_value;
@@ -628,14 +527,13 @@ private function recalculateOrderTotals(ShopOrder $order): void
 
     // 2. Koeficient slevy
     $discountFactor = $totalWithVatBeforeDiscount > 0 
-        ? ($totalWithVatBeforeDiscount - $discountAmount) / totalWithVatBeforeDiscount 
+        ? ($totalWithVatBeforeDiscount - $discountAmount) / $totalWithVatBeforeDiscount 
         : 1;
 
     $totalTax = 0;
 
     // 3. Výpočet daně z každé položky po slevě
     foreach ($items as $item) {
-        // Musíte mít vat_rate v tabulce shop_order_items!
         $rate = $item->vat_rate ?? 21; 
         $lineTotalAfterDiscount = $item->total_price * $discountFactor;
         
@@ -648,7 +546,7 @@ private function recalculateOrderTotals(ShopOrder $order): void
     $order->update([
         'total_amount'    => $totalWithVatBeforeDiscount,
         'discount_amount' => $discountAmount,
-        'tax_amount'      => $totalTax, // TADY už máte reálnou daň
+        'tax_amount'      => $totalTax,
         'shipping_amount' => $shippingAmount,
         'final_amount'    => max(0, $totalWithVatBeforeDiscount + $shippingAmount - $discountAmount),
     ]);
