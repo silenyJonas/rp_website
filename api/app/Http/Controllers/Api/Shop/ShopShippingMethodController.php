@@ -56,7 +56,11 @@ class ShopShippingMethodController extends Controller
             $this->logAction($request, 'create', 'ShopShippingMethod', "Vytvořen způsob dopravy: {$method->name}", $method->id);
             return response()->json(new ShopShippingMethodResource($method), 201);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Chyba při vytváření dopravy.'], 500);
+            return response()->json([
+        'message' => 'Chyba při vytváření dopravy.',
+        'debug_error' => $e->getMessage(), // Tady uvidíš, co je špatně
+        'line' => $e->getLine()
+    ], 500);
         }
     }
 

@@ -77,7 +77,34 @@ class ShopCouponController extends Controller
             return response()->json(['message' => 'Aktualizace selhala.'], 500);
         }
     }
+/**
+ * Vyprázdnění koše pro slevové kupóny
+ */
+public function forceDeleteAllTrashed(Request $request): JsonResponse
+{
+    try {
+        // Najdeme všechny smazané kupóny
+        $trashed = \App\Models\Shop\ShopCoupon::onlyTrashed()->get();
+        
+        foreach ($trashed as $coupon) {
+            // Kontrola vazeb: Je kupón použit v nějaké objednávce?
+            // Předpokládám, že v tabulce shop_orders máš sloupec coupon_id nebo podobný
+            $isUsedInOrders = \App\Models\Shop\ShopOrder::where('coupon_id', $coupon->id)->exists();
+            
+            if ($isUsedInOrders) {
+                // Pokud je kupón v historii objednávek, nemůžeme ho smazat natvrdo
+                continue; 
+            }
+            
+            $coupon->forceDelete();
+        }
 
+        return response()->json(null, 204);
+    } catch (\Exception $e) {
+        Log::error("ShopCoupon forceDeleteAll error: " . $e->getMessage());
+        return response()->json(['message' => 'Chyba při vyprazdňování koše kupónů.'], 500);
+    }
+}
     public function destroy(Request $request, $id): JsonResponse
     {
         $force = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);

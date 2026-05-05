@@ -29,4 +29,12 @@ class StoreShopShippingMethodRequest extends FormRequest
             'sort_order' => 'integer',
         ];
     }
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'cod_price' => $this->input('cod_price') ?: 0,
+            'free_shipping_threshold' => $this->input('free_shipping_threshold') ?: 0,
+            'is_active' => $this->has('is_active') ? $this->boolean('is_active') : true,
+        ]);
+    }
 }

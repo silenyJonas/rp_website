@@ -162,12 +162,10 @@ public function store(StoreShopOrderRequest $request): JsonResponse
             return response()->json(['message' => 'Vybraný kupón neexistuje.'], 422);
         }
 
-        // Kontrola základní aktivity (is_active)
         if (!$coupon->is_active) {
             return response()->json(['message' => 'Tento kupón není aktivní.'], 422);
         }
 
-        // Kontrola časové platnosti (valid_from / valid_until)
         $now = now();
         if ($coupon->valid_from && $now->lt($coupon->valid_from)) {
             return response()->json(['message' => 'Platnost tohoto kupónu ještě nezačala.'], 422);
@@ -176,24 +174,20 @@ public function store(StoreShopOrderRequest $request): JsonResponse
             return response()->json(['message' => 'Platnost tohoto kupónu již vypršela.'], 422);
         }
 
-        // Kontrola limitu použití (max_usage vs usage_count)
         if ($coupon->max_usage > 0 && $coupon->usage_count >= $coupon->max_usage) {
             return response()->json(['message' => 'Tento kupón již byl vyčerpán.'], 422);
         }
 
-        // Kontrola minimální částky objednávky (min_order_amount)
         if ($coupon->min_order_amount > 0 && $totalAmount < (float)$coupon->min_order_amount) {
             return response()->json([
                 'message' => "Minimální hodnota objednávky pro tento kupón je " . number_format($coupon->min_order_amount, 2) . " Kč."
             ], 422);
         }
 
-        // Výpočet slevy
         $discountAmount = ($coupon->discount_type === 'percent') 
             ? ($totalAmount * (float)$coupon->discount_value) / 100 
             : (float)$coupon->discount_value;
     }
-    // --- KONEC VALIDACE ---
 
     try {
         DB::beginTransaction();
@@ -204,7 +198,6 @@ public function store(StoreShopOrderRequest $request): JsonResponse
             $shippingAmount = $shippingMethod ? (float)$shippingMethod->base_price : 0;
         }
 
-        // Inkrementace použití kupónu
         if ($coupon) {
             $coupon->increment('usage_count');
         }
@@ -275,6 +268,11 @@ public function store(StoreShopOrderRequest $request): JsonResponse
 
         DB::commit();
 
+        // Přepočet celkové útraty zákazníka
+        if ($order->customer) {
+            $order->customer->recalculateTotalSpent();
+        }
+
         $order->load(['customer', 'paymentMethod', 'shippingMethod', 'coupon', 'items']);
         $this->logAction($request, 'create', 'ShopOrder', "Vytvořena objednávka: {$order->order_number}.", $order->id);
 
@@ -305,50 +303,50 @@ public function store(StoreShopOrderRequest $request): JsonResponse
     /**
      * Aktualizace objednávky
      */
-    public function update(UpdateShopOrderRequest $request, $id): JsonResponse
-    {
-        Log::info("ShopOrder Update started", ['id' => $id, 'payload' => $request->all()]);
+public function update(UpdateShopOrderRequest $request, $id): JsonResponse
+{
+    Log::info("ShopOrder Update started", ['id' => $id, 'payload' => $request->all()]);
 
-        try {
-            DB::beginTransaction();
+    try {
+        DB::beginTransaction();
 
-            $order = ShopOrder::findOrFail($id);
-            $validated = $request->validated();
+        $order = ShopOrder::findOrFail($id);
+        $validated = $request->validated();
 
-            // Aktualizuj základní data
-            $updateData = collect($validated)
-                ->except(['items', 'delete_items'])
-                ->toArray();
+        $updateData = collect($validated)
+            ->except(['items', 'delete_items'])
+            ->toArray();
 
-            $order->update($updateData);
+        $order->update($updateData);
 
-            // Smazání položek
-            if ($request->has('delete_items')) {
-                ShopOrderItem::whereIn('id', $request->input('delete_items'))
-                    ->delete();
-                Log::info("Order items deleted", ['order_id' => $order->id, 'ids' => $request->input('delete_items')]);
-            }
-
-            // Aktualizace/Vytvoření položek
-            if ($request->has('items')) {
-                $this->updateOrderItems($order, $request->input('items'));
-            }
-
-            // Přepočítej ceny
-            $this->recalculateOrderTotals($order);
-
-            DB::commit();
-
-            $order->load(['customer', 'paymentMethod', 'shippingMethod', 'coupon', 'items']);
-            $this->logAction($request, 'update', 'ShopOrder', "Aktualizace objednávky: {$order->order_number}", $order->id);
-
-            return response()->json(new ShopOrderResource($order));
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error("ShopOrder update error: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return response()->json(['message' => 'Aktualizace selhala: ' . $e->getMessage()], 500);
+        if ($request->has('delete_items')) {
+            ShopOrderItem::whereIn('id', $request->input('delete_items'))
+                ->delete();
         }
+
+        if ($request->has('items')) {
+            $this->updateOrderItems($order, $request->input('items'));
+        }
+
+        $this->recalculateOrderTotals($order);
+
+        DB::commit();
+
+        // Přepočet celkové útraty po změně cen nebo položek
+        if ($order->customer) {
+            $order->customer->recalculateTotalSpent();
+        }
+
+        $order->load(['customer', 'paymentMethod', 'shippingMethod', 'coupon', 'items']);
+        $this->logAction($request, 'update', 'ShopOrder', "Aktualizace objednávky: {$order->order_number}", $order->id);
+
+        return response()->json(new ShopOrderResource($order));
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error("ShopOrder update error: " . $e->getMessage());
+        return response()->json(['message' => 'Aktualizace selhala: ' . $e->getMessage()], 500);
     }
+}
 
     /**
      * Smazání objednávky
@@ -358,22 +356,24 @@ public function store(StoreShopOrderRequest $request): JsonResponse
 // 1. NOVÁ FUNKCE PRO ZMĚNU STAVU
 public function updateStatus(Request $request, $id)
 {
-    $order = ShopOrder::with('items')->findOrFail($id);
+    $order = ShopOrder::with(['items', 'customer'])->findOrFail($id);
     $oldStatus = $order->status;
     $newStatus = $request->input('status');
 
     DB::transaction(function () use ($order, $oldStatus, $newStatus) {
-        // Stavy, kdy je zboží pryč ze skladu
         $inventoryStatuses = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
-        // Stavy, které znamenají návrat zboží
         $restoringStatuses = ['canceled', 'returned'];
 
-        // Pokud se mění ze "skladem pryč" na "storno/vráceno", vrátíme kusy
         if (in_array($oldStatus, $inventoryStatuses) && in_array($newStatus, $restoringStatuses)) {
             $order->restoreStock();
         }
 
         $order->update(['status' => $newStatus]);
+        
+        // Přepočet útraty zákazníka (pokud se stav změnil na neplatný pro útratu)
+        if ($order->customer) {
+            $order->customer->recalculateTotalSpent();
+        }
     });
 
     return response()->json($order);
@@ -386,25 +386,27 @@ public function destroy(Request $request, $id)
         DB::beginTransaction();
         
         $forceDelete = filter_var($request->input('force_delete', false), FILTER_VALIDATE_BOOLEAN);
-        $order = ShopOrder::withTrashed()->with('items')->findOrFail($id);
+        $order = ShopOrder::withTrashed()->with(['items', 'customer'])->findOrFail($id);
 
         $alreadyRestored = ['canceled', 'returned'];
 
         if ($forceDelete) {
-            // POUZE u Hard Delete vracíme sklad, pokud už nebyl vrácen dříve
             if (!in_array($order->status, $alreadyRestored)) {
-                Log::info("Hard delete: Definitivní smazání, navracím zásoby.");
                 $order->restoreStock();
             }
             $order->items()->forceDelete();
             $order->forceDelete();
         } else {
-            // Soft Delete: Jen přesun do koše, se skladem NIC neděláme
-            Log::info("Soft delete: Objednávka jde do koše, sklad zůstává beze změny.");
             $order->delete();
         }
 
         DB::commit();
+
+        // Přepočet útraty zákazníka po smazání objednávky
+        if ($order->customer) {
+            $order->customer->recalculateTotalSpent();
+        }
+
         return response()->json(null, 204);
     } catch (\Exception $e) {
         DB::rollBack();

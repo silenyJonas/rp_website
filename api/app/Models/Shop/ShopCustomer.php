@@ -44,7 +44,15 @@ class ShopCustomer extends Model
     {
         return $this->hasMany(ShopOrder::class, 'customer_id');
     }
+public function recalculateTotalSpent(): void
+{
+    $total = ShopOrder::where('customer_id', $this->id)
+        ->whereIn('status', ['confirmed', 'processing', 'shipped', 'delivered']) // Pouze relevantní stavy
+        ->selectRaw('SUM(final_amount - shipping_amount) as total')
+        ->value('total');
 
+    $this->update(['total_spent' => $total ?? 0]);
+}
     /**
      * Vrátí plné jméno
      */
