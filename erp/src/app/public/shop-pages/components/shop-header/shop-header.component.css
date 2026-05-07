@@ -1,47 +1,232 @@
-.shop-navbar {
-  background: #1a1a1a;
-  color: white;
-  padding: 1rem 0;
-  border-bottom: 2px solid #333;
+:host {
+  /* Design systém sjednocený s hlavním webem */
+  --primary: #a67dff;        /* Fialová */
+  --primary-soft: rgba(166, 125, 255, 0.15); /* Velmi jemná pro hovery v menu */
+  --bg-dark: #1a1a2e;       /* Tmavé pozadí */
+  --surface: #131325;       /* Tmavší pro dropdowny */
+  --text-main: #e0e0e0;     
+  --text-dim: #9a9a9b;      
+  --border: #302d2e;        
+  --accent-glow: rgba(107, 46, 145, 0.2); 
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.shop-header {
+  background: var(--bg-dark);
+  color: var(--text-main);
+  padding: 1.1rem 0;
+  border-bottom: 3px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  transition: var(--transition);
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+/* Glassmorphism při scrollu */
+.shop-header.scrolled {
+  padding: 0.7rem 0;
+  background: rgba(26, 26, 46, 0.9);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 15px var(--accent-glow);
+}
+
 .shop-container {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 1.5rem;
 }
-.badge {
-  background: #007bff;
-  font-size: 0.7rem;
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-left: 5px;
-  vertical-align: middle;
-}
-.shop-nav a {
-  color: #ccc;
-  margin-right: 20px;
-  text-decoration: none;
-  font-weight: 500;
-}
-.shop-nav a.active { color: white; border-bottom: 2px solid #007bff; }
-.cart-btn {
-  background: #333;
-  border: none;
-  color: white;
-  padding: 8px 15px;
-  border-radius: 20px;
+
+/* Logo */
+.shop-logo {
   cursor: pointer;
-  position: relative;
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-shadow: 0 0 10px rgba(166, 125, 255, 0.2);
+  display: flex;
+  align-items: center;
 }
-.cart-count {
-  background: #ff4757;
+
+.brand-accent {
+  color: var(--primary);
+}
+
+.shop-badge {
+  background: var(--surface);
+  color: var(--primary);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  margin-left: 12px;
+  transform: skewX(-15deg);
+  display: inline-block;
+}
+
+.shop-badge span {
+  transform: skewX(15deg);
+  display: block;
+}
+
+.shop-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Kontakt - Statický vzhled bez hoveru */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  gap: 2px;
+}
+
+.contact-link {
+  color: var(--text-dim);
+  text-decoration: none;
   font-size: 0.75rem;
-  padding: 2px 6px;
+  font-weight: 600;
+  cursor: default; 
+}
+
+.divider {
+  width: 2px;
+  height: 24px;
+  background: var(--border);
+}
+
+/* Seskupení selektorů s pevnou šířkou */
+.selectors {
+  display: flex;
+  gap: 12px;
+}
+
+.custom-dropdown {
+  position: relative;
+  cursor: pointer;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  width: 65px;              /* Fixní šířka pro symetrii */
+  height: 36px;
+  transform: skewX(-15deg);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;  /* Vycentrování obsahu */
+  gap: 6px;
+}
+
+.custom-dropdown:hover {
+  box-shadow: 0 0 12px rgba(166, 125, 255, 0.15);
+  border-color: #4a4a5e;
+}
+
+.selected-val {
+  transform: skewX(15deg);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  transition: color 0.3s ease;
+}
+
+.custom-dropdown:hover .selected-val {
+  color: var(--text-main);
+}
+
+.chevron {
+  transform: skewX(15deg);
+  color: var(--text-dim);
+  transition: transform 0.3s ease;
+}
+
+.chevron.open {
+  transform: skewX(15deg) rotate(180deg);
+  color: var(--primary);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 100%;               /* Menu široké jako box */
+  background: var(--surface);
+  border: 2px solid var(--border);
+  transform: skewX(15deg);   /* Narovnání menu */
+  padding: 5px 0;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  animation: fadeIn 0.2s ease-out;
+  box-sizing: border-box;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: skewX(15deg) translateY(-10px); }
+  to { opacity: 1; transform: skewX(15deg) translateY(0); }
+}
+
+.dropdown-item {
+  padding: 8px 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: var(--primary-soft);
+  color: var(--text-main);
+}
+
+/* Košík */
+.cart-trigger {
+  position: relative;
+  cursor: pointer;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  height: 36px;
+  padding: 0 15px;
+  transform: skewX(-15deg);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.cart-trigger:hover {
+  box-shadow: 0 0 12px rgba(166, 125, 255, 0.15);
+  border-color: #4a4a5e;
+}
+
+.cart-trigger svg {
+  transform: skewX(15deg);
+  color: var(--text-dim);
+}
+
+.cart-dot {
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.65rem;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: -8px;
+  right: -8px;
+  transform: skewX(15deg);
+  box-shadow: 0 0 8px rgba(166, 125, 255, 0.3);
+}
+
+/* Mobilní responzivita */
+@media (max-width: 850px) {
+  .contact-info, .divider { display: none; }
+  .shop-container { padding: 0 1rem; }
+  .custom-dropdown { width: 70px; } /* Mírné zmenšení na mobilu */
 }

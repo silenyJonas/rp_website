@@ -1,65 +1,191 @@
+:host {
+  --primary: #a67dff;
+  --bg-dark: #1a1a2e;
+  --surface: #131325;
+  --text-main: #e0e0e0;
+  --text-dim: #9a9a9b;
+  --border: #302d2e;
+  --transition: 0.2s ease;
+}
+
 .catalog-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+  max-width: 1300px;
+  margin: 40px auto;
+  padding: 0 1.5rem;
+}
+
+/* --- HEADER --- */
+.catalog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin: 0;
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Trychtýř tlačítko */
+.filter-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 6px 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transform: skewX(-15deg);
+  transition: var(--transition);
+}
+
+.filter-toggle span, .filter-toggle svg {
+  transform: skewX(15deg); /* Narovnání obsahu uvnitř zkoseného tlačítka */
+}
+
+.filter-toggle:hover, .filter-toggle.active {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(166, 125, 255, 0.05);
+}
+
+.catalog-info {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  color: var(--primary);
+  transform: skewX(-15deg);
+  font-weight: bold;
+}
+
+/* --- FILTER BAR (Azure DevOps Style) --- */
+.filter-bar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary); /* Výrazný prvek na kraji */
+  padding: 12px 20px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+  width: 100%;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Stylování inputů a selectů */
+.filter-item input, 
+.filter-item select {
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color var(--transition);
+  min-width: 140px;
+}
+
+.filter-item input:focus, 
+.filter-item select:focus {
+  border-color: var(--primary);
+}
+
+.sort-dir select {
+  min-width: 60px;
+  text-align: center;
+}
+
+/* Lupa tlačítko */
+.search-btn {
+  background: var(--primary);
+  border: none;
+  color: #fff;
+  padding: 8px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity var(--transition);
+}
+
+.search-btn:hover {
+  opacity: 0.85;
+}
+
+/* --- MŘÍŽKA PRODUKTŮ --- */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.opacity-30 { opacity: 0.3; pointer-events: none; }
+
+.product-card {
+  display: block;
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 10px;
+  transition: all var(--transition);
   position: relative;
 }
 
-.catalog-header {
-  margin-bottom: 2rem;
-  border-bottom: 2px solid #f1f1f1;
-  padding-bottom: 1rem;
+.product-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
 }
 
-/* Grid Layout */
-.products-grid {
-  display: grid;
-  /* Responzivní grid: 1 sloupec na mobilu, až 4 na desktopu */
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
-  transition: opacity 0.3s ease;
+/* --- OSTATNÍ --- */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-dim);
+  border: 1px dashed var(--border);
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
-/* Odkaz přes celý builder */
-.product-link-wrapper {
-  text-decoration: none;
-  color: inherit;
-  display: block;
+.pagination-wrapper {
+  margin-top: 50px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
 }
 
-/* Pomocné třídy */
-.opacity-50 {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.loader-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-}
-
-/* Jednoduchý spinner */
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
+/* --- MOBILNÍ VERZE --- */
 @media (max-width: 768px) {
-  .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-  }
+  .filter-group { flex-direction: column; align-items: stretch; }
+  .filter-item input, .filter-item select { width: 100%; }
+  .catalog-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+  .products-grid { grid-template-columns: 1fr; }
 }

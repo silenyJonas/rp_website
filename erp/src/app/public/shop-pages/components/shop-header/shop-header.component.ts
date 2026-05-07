@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -10,10 +10,41 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./shop-header.component.css']
 })
 export class ShopHeaderComponent {
-  cartCount: number = 0; // Tady se později napojí CartService
+  isScrolled = false;
+  cartCount = 0;
 
-  openCart(): void {
-    console.log('Otevírám košík (drawer)...');
-    // Zde později zavoláš metodu ze service pro otevření overlaye
+  // Stavy pro dropdowny
+  showLang = false;
+  showCurrency = false;
+  selectedLang = 'CZ';
+  selectedCurrency = 'CZK';
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 20;
   }
+
+  // Kliknutí kamkoliv jinam zavře dropdowny
+  @HostListener('document:click', ['$event'])
+  clickout(event: any) {
+    if (!event.target.closest('.custom-dropdown')) {
+      this.showLang = false;
+      this.showCurrency = false;
+    }
+  }
+
+  toggleLang() { this.showLang = !this.showLang; this.showCurrency = false; }
+  toggleCurrency() { this.showCurrency = !this.showCurrency; this.showLang = false; }
+
+  selectLang(val: string) {
+    this.selectedLang = val;
+    console.log('Jazyk:', val);
+  }
+
+  selectCurrency(val: string) {
+    this.selectedCurrency = val;
+    console.log('Měna:', val);
+  }
+
+  openCart() { console.log('Košík'); }
 }

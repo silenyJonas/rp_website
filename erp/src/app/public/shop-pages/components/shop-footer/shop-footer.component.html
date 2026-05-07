@@ -1,33 +1,68 @@
 <footer class="shop-footer">
   <div class="footer-container">
     <div class="footer-grid">
+      
+      <!-- Sloupec 1: O firmě -->
+      <div class="footer-col info-col">
+        <div class="footer-logo">
+          <span class="brand-name">YOUR<span class="brand-accent">APP</span></span>
+        </div>
+        <div class="company-details">
+          <p class="company-name">YourApp Digital s.r.o.</p>
+          <p>Ulice 123/4, 110 00 Praha 1</p>
+          <p>IČO: 12345678</p>
+          <p>DIČ: CZ12345678</p>
+        </div>
+      </div>
+
+      <!-- Sloupec 2: Nákup -->
       <div class="footer-col">
-        <h4>Nákup</h4>
-        <ul>
+        <h4 class="footer-title"><span>Informace</span></h4>
+        <ul class="footer-links">
           <li><a routerLink="/tos">Obchodní podmínky</a></li>
           <li><a routerLink="/privacy-policy">Ochrana údajů</a></li>
           <li><a routerLink="/faq">Časté dotazy</a></li>
+          <li><a routerLink="/">Zpět na hlavní web</a></li>
         </ul>
       </div>
 
+      <!-- Sloupec 3: Podpora -->
       <div class="footer-col">
-        <h4>Podpora</h4>
-        <p>Email: support@yourapp.cz</p>
-        <p>Po-Pá: 9:00 - 17:00</p>
-      </div>
-
-      <div class="footer-col">
-        <h4>Platba & Doprava</h4>
-        <div class="methods">
-          <span>💳 Kartou</span>
-          <span>🚚 Zásilkovna</span>
-          <span>📧 Email</span>
+        <h4 class="footer-title"><span>Podpora</span></h4>
+        <div class="support-info">
+          <p class="support-item">
+            <span class="label">Email:</span>
+            <span>support@yourapp.cz</span>
+          </p>
+          <p class="support-item">
+            <span class="label">Dostupnost:</span>
+            <span>Po-Pá: 9:00 - 17:00</span>
+          </p>
         </div>
       </div>
+
+      <!-- Sloupec 4: Metody -->
+      <div class="footer-col">
+        <h4 class="footer-title"><span>Bezpečné platby</span></h4>
+        <div class="payment-methods">
+          <div class="method-badge">VISA</div>
+          <div class="method-badge">Mastercard</div>
+          <div class="method-badge">Apple Pay</div>
+          <div class="method-badge">Google Pay</div>
+        </div>
+      </div>
+
     </div>
     
     <div class="footer-bottom">
-      <p>&copy; 2026 YourApp Store. Všechna práva vyhrazena.</p>
+      <div class="bottom-content">
+        <p>&copy; 2026 YourApp Store. Všechna práva vyhrazena.</p>
+        <div class="social-placeholders">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
     </div>
   </div>
 </footer>

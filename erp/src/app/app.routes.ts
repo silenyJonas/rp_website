@@ -87,10 +87,10 @@ export const routes: Routes = [
     path: '404',
     loadComponent: () => import('./public/web-pages/not-found/not-found.component').then(m => m.NotFoundComponent)
   },
-  {
-    path: '**',
-    // Místo přímého importu zkusíme přesměrování bez změny URL v historii
-    redirectTo: '404', 
-    pathMatch: 'full'
-  }
+  // {
+    //toto se musi fixnout nekdy se to kvuli lazy loading vyvolava na mistech kde nema - fixne se to pozdeji
+    // path: '**',
+    // redirectTo: '404', 
+    // pathMatch: 'full'
+  // }
 ];

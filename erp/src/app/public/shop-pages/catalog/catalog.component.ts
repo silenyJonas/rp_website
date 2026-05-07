@@ -1,22 +1,18 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'; // <--- DŮLEŽITÉ: Musí zde být pro routerLink
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { ShopPublicService } from '../components/services/public-data.service';
 import { ProductBuilderComponent } from '../components/builders/product-builder/product-builder.component';
 import { PaginationButtonsBuilderComponent } from '../components/builders/pagination-buttons-builder/pagination-buttons-builder.component';
 
-/**
- * Centrální konfigurace textů a endpointů pro snadnou údržbu
- */
 const CATALOG_CONFIG = {
-  ENDPOINTS: {
-    PRODUCT_DETAIL_BASE: '/shop/products'
-  },
+  ENDPOINTS: { PRODUCT_DETAIL_BASE: '/shop/products' },
   TEXTS: {
-    HEADER: 'Naše Produkty',
+    HEADER: 'Katalog produktů',
     TOTAL_FOUND: 'Celkem nalezeno',
     ITEMS_UNIT: 'položek',
-    EMPTY_STATE: 'Nebyly nalezeny žádné produkty odpovídající filtrům.'
+    EMPTY_STATE: 'Nebyly nalezeny žádné produkty odpovídající výběru.'
   }
 };
 
@@ -24,30 +20,31 @@ const CATALOG_CONFIG = {
   selector: 'app-catalog',
   standalone: true,
   imports: [
-    CommonModule, 
-    RouterModule, // <--- Přidáno zde
-    ProductBuilderComponent, 
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ProductBuilderComponent,
     PaginationButtonsBuilderComponent
   ],
   templateUrl: './catalog.component.html',
   styleUrl: './catalog.component.css',
 })
 export class CatalogComponent implements OnInit {
-  // Zpřístupnění konfigurace pro šablonu
   readonly config = CATALOG_CONFIG;
 
-  // State management
   products = signal<any[]>([]);
+  categories = signal<any[]>([]);
   totalItems = signal(0);
   totalPages = signal(1);
   isLoading = signal(false);
+  showFilters = signal(false);
 
-  // Výchozí parametry filtrů
-  filters = {
+  // Inicializace filtrů tak, aby neposílaly "null" jako řetězec
+  filters: any = {
     page: 1,
     per_page: 15,
     search: '',
-    category_id: null as number | null,
+    category_id: '', // Prázdný string je pro Laravel lepší než null
     sort_by: 'created_at',
     sort_direction: 'desc'
   };
@@ -55,24 +52,54 @@ export class CatalogComponent implements OnInit {
   constructor(private shopService: ShopPublicService) {}
 
   ngOnInit(): void {
+    this.loadInitialData();
+  }
+
+  loadInitialData(): void {
+    // 1. Načtení kategorií
+    this.shopService.getCategories().subscribe({
+      next: (res) => this.categories.set(res.data || res),
+      error: (err) => console.error('Chyba kategorií:', err)
+    });
+
+    // 2. Načtení produktů
     this.loadProducts();
   }
 
   loadProducts(): void {
     this.isLoading.set(true);
-    this.shopService.getProducts(this.filters).subscribe({
+
+    // Očištění filtrů před odesláním (odstraní prázdné hodnoty)
+    const activeFilters = Object.keys(this.filters)
+      .filter(key => this.filters[key] !== '' && this.filters[key] !== null)
+      .reduce((obj: any, key) => {
+        obj[key] = this.filters[key];
+        return obj;
+      }, {});
+
+    this.shopService.getProducts(activeFilters).subscribe({
       next: (response) => {
-        this.products.set(response.data);
-        this.totalItems.set(response.total);
-        this.totalPages.set(response.last_page);
+        this.products.set(response.data || []);
+        this.totalItems.set(response.total || 0);
+        this.totalPages.set(response.last_page || 1);
         this.isLoading.set(false);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
       },
       error: (err) => {
-        console.error('Chyba při načítání katalogu', err);
+        console.error('Chyba produktů:', err);
         this.isLoading.set(false);
+        this.products.set([]); // Reset při chybě
       }
     });
+  }
+
+  toggleFilters(): void {
+    this.showFilters.update(v => !v);
+  }
+
+  // Tato metoda se volá při změně jakéhokoliv filtru v HTML
+  applyFilters(): void {
+    this.filters.page = 1;
+    this.loadProducts();
   }
 
   onPageChange(page: number): void {
@@ -86,9 +113,6 @@ export class CatalogComponent implements OnInit {
     this.loadProducts();
   }
 
-  /**
-   * Helper pro sestavení URL detailu (využívá centrální config)
-   */
   getProductUrl(slug: string): string {
     return `${this.config.ENDPOINTS.PRODUCT_DETAIL_BASE}/${slug}`;
   }

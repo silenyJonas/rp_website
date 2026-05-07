@@ -8,22 +8,15 @@ import { environment } from '../../../../../environments/environment';
   providedIn: 'root'
 })
 export class ShopPublicService {
-  /**
-   * Změněno na /shop/public pro přístup k veřejným routám bez tokenu.
-   * V Laravelu tyto trasy musí být mimo 'auth:sanctum' middleware.
-   */
   private readonly apiUrl = `${environment.base_api_url}/shop/public`;
 
   constructor(private http: HttpClient) { }
 
   /**
-   * Získání seznamu produktů s paginací a filtry
-   * @param params Objekt s filtry (page, per_page, category_id, search, price_from, price_to, atd.)
+   * Získání seznamu produktů
    */
   getProducts(params: any = {}): Observable<any> {
     let httpParams = new HttpParams();
-    
-    // Mapování parametrů na query string
     Object.keys(params).forEach(key => {
       const value = params[key];
       if (value !== null && value !== undefined && value !== '') {
@@ -31,54 +24,39 @@ export class ShopPublicService {
       }
     });
 
-    // Volá GET: /api/shop/public/products?...
     return this.http.get<any>(`${this.apiUrl}/products`, { params: httpParams })
-      .pipe(
-        catchError(this.handleError)
-      );
+      .pipe(catchError(this.handleError));
   }
 
   /**
-   * Získání detailu produktu podle ID nebo SLUG
-   * @param slugOrId Identifikátor produktu (veřejná metoda preferuje slug)
+   * NOVÉ: Získání seznamu kategorií pro filtry
+   * Přidáváme parametr no_pagination=true, aby nám Laravel vrátil prostý seznam
+   */
+  getCategories(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/categories`, { 
+      params: new HttpParams().set('no_pagination', 'true') 
+    }).pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Získání detailu produktu
    */
   getProductDetail(slugOrId: string | number): Observable<any> {
-    // Volá GET: /api/shop/public/products/{slugOrId}
     return this.http.get<any>(`${this.apiUrl}/products/${slugOrId}`)
-      .pipe(
-        catchError(this.handleError)
-      );
+      .pipe(catchError(this.handleError));
   }
 
-  /**
-   * Ošetření chyb specificky pro veřejné rozhraní
-   */
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Při komunikaci s e-shopem nastala chyba.';
-    
     if (error.error instanceof ErrorEvent) {
-      // Chyba sítě nebo na straně klienta
       errorMessage = `Chyba sítě: ${error.error.message}`;
     } else {
-      // Chyba vrácená z Laravelu
       console.error(`Status: ${error.status}, Body:`, error.error);
-      
       switch (error.status) {
-        case 404:
-          errorMessage = 'Produkt nebo kategorie nebyly nalezeny.';
-          break;
-        case 401:
-          errorMessage = 'Nepovolený přístup. Trasa pravděpodobně vyžaduje přihlášení.';
-          break;
-        case 429:
-          errorMessage = 'Příliš mnoho požadavků. Zkuste to prosím později.';
-          break;
-        case 500:
-          errorMessage = 'Chyba na straně serveru. Na nápravě pracujeme.';
-          break;
+        case 404: errorMessage = 'Produkt nebo kategorie nebyly nalezeny.'; break;
+        case 500: errorMessage = 'Chyba na straně serveru.'; break;
       }
     }
-    
     return throwError(() => new Error(errorMessage));
   }
 }
