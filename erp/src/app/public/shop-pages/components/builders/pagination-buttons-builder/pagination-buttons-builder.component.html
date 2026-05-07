@@ -1,0 +1,47 @@
+<div class="pagination-wrapper reveal-down">
+  <div class="pagination-container">
+    
+    <!-- Levá strana: Informace o stavu -->
+    <div class="pagination-info">
+      Zobrazuji <strong>{{ (currentPage - 1) * itemsPerPage + 1 }}</strong> – 
+      <strong>{{ (currentPage - 1) * itemsPerPage + dataLength }}</strong> 
+      z <strong>{{ totalItems }}</strong> záznamů
+    </div>
+
+    <!-- Pravá strana: Akce -->
+    <div class="pagination-actions">
+      
+      <!-- Volba počtu položek -->
+      <div class="select-wrapper">
+        <label for="itemsPerPage">Zobrazit:</label>
+        <select id="itemsPerPage" [ngModel]="itemsPerPage" (change)="onItemsPerPageSelect($event)">
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="15">15</option>
+          <option [value]="20">20</option>
+          <option [value]="50">50</option>
+        </select>
+      </div>
+
+      <!-- Navigace -->
+      <nav class="pagination-nav">
+        <button class="nav-btn" (click)="onPageClick(currentPage - 1)" [disabled]="currentPage === 1">
+          &laquo;
+        </button>
+
+        <ng-container *ngFor="let page of pagesArray">
+          <button class="page-btn" 
+                  [class.active]="page === currentPage" 
+                  (click)="onPageClick(page)">
+            {{ page }}
+          </button>
+        </ng-container>
+
+        <button class="nav-btn" (click)="onPageClick(currentPage + 1)" [disabled]="currentPage === totalPages">
+          &raquo;
+        </button>
+      </nav>
+
+    </div>
+  </div>
+</div>

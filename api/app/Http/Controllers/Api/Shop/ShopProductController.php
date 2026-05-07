@@ -472,6 +472,77 @@ private function updateVariants(ShopProduct $product, array $variants, Request $
         }
     }
 }
+/**
+ * Veřejný seznam produktů pro e-shop (Paginace + Filtry)
+ */
+public function publicIndex(Request $request): JsonResponse
+{
+    $perPage = $request->input('per_page', 20); // Defaultně 20 produktů pro frontend
+
+    // Základní query: Pouze aktivní produkty + Eager Loading pro rychlost
+    $query = ShopProduct::active()
+        ->with(['primaryImage', 'category']);
+
+    // --- FILTRY ---
+    // Vyhledávání
+    if ($s = $request->input('search')) {
+        $query->where(fn($q) => $q->where('name', 'like', "%$s%")
+            ->orWhere('description', 'like', "%$s%"));
+    }
+
+    // Filtrování podle kategorie
+    if ($request->filled('category_id')) {
+        $query->where('category_id', $request->input('category_id'));
+    }
+
+    // Cenové rozpětí
+    if ($request->filled('price_from')) {
+        $query->where('price', '>=', $request->input('price_from'));
+    }
+    if ($request->filled('price_to')) {
+        $query->where('price', '<=', $request->input('price_to'));
+    }
+
+    // --- ŘAZENÍ ---
+    $sortBy = $request->input('sort_by', 'created_at'); 
+    $sortDirection = $request->input('sort_direction', 'desc');
+    $query->orderBy($sortBy, $sortDirection);
+
+    // Paginace
+    $products = $query->paginate($perPage);
+
+    return response()->json([
+        'data'         => ShopProductResource::collection($products->items()),
+        'total'        => $products->total(),
+        'per_page'     => $products->perPage(),
+        'current_page' => $products->currentPage(),
+        'last_page'    => $products->lastPage(),
+    ]);
+}
+/**
+ * Veřejný detail produktu pro e-shop
+ */
+public function publicShow($slugOrId): JsonResponse
+{
+    // Hledáme buď podle ID nebo podle SLUG, ale vždy jen AKTIVNÍ
+    $query = ShopProduct::active()
+        ->with([
+            'category', 
+            'images' => fn($q) => $q->orderBy('sort_order'), // Kompletní galerie
+            'variants' => fn($q) => $q->with('images')       // Všechny varianty + jejich fotky
+        ]);
+
+    // Zkusíme najít podle ID, pokud je to číslo, jinak podle slugu
+    $product = is_numeric($slugOrId) 
+        ? $query->find($slugOrId) 
+        : $query->where('slug', $slugOrId)->first();
+
+    if (!$product) {
+        return response()->json(['message' => 'Produkt nebyl nalezen nebo není aktivní.'], 404);
+    }
+
+    return response()->json(new ShopProductResource($product));
+}
     /**
      * Synchronizace skladových zásob
      */

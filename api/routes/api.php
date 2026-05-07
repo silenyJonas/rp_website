@@ -31,6 +31,19 @@ use App\Http\Controllers\Api\Shop\ShopCustomerController; // 👥 Zákazníci
 
 /*
 |--------------------------------------------------------------------------
+| 🛒 VEŘEJNÉ E-SHOP TRASY (Bez autorizace)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('shop/public')->group(function () {
+    // Produkty
+    Route::get('products', [ShopProductController::class, 'publicIndex']);
+    Route::get('products/{slugOrId}', [ShopProductController::class, 'publicShow']);
+    
+    // Kategorie
+    Route::get('categories', [ShopCategoryController::class, 'index']);
+});
+/*
+|--------------------------------------------------------------------------
 | Public Routes
 |--------------------------------------------------------------------------
 */
@@ -40,6 +53,13 @@ Route::get('/sanctum/csrf-cookie', function (Request $request) {
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/refresh', [AuthController::class, 'refresh']);
+
+// 🛒 VEŘEJNÉ E-SHOP TRASY (Pro zákazníky bez přihlášení)
+Route::prefix('shop')->group(function () {
+    Route::get('products', [ShopProductController::class, 'publicIndex']);
+    Route::get('products/{slugOrId}', [ShopProductController::class, 'publicShow']);
+    Route::get('categories', [ShopCategoryController::class, 'index']); // Seznam kategorií pro menu
+});
 
 // 🟢 VEŘEJNÉ FORMULÁŘE (Zvenčí z webu bez /web prefixu)
 Route::post('raw_request_commissions', [WebRawRequestCommissionController::class, 'store']);

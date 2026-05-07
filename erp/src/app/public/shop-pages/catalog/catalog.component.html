@@ -1,1 +1,39 @@
-<p>catalog works!</p>
+<div class="catalog-container">
+  
+  <header class="catalog-header">
+    <h1>{{ config.TEXTS.HEADER }}</h1>
+    <p class="text-muted">
+      {{ config.TEXTS.TOTAL_FOUND }} {{ totalItems() }} {{ config.TEXTS.ITEMS_UNIT }}
+    </p>
+  </header>
+
+  <div *ngIf="isLoading()" class="loader-overlay">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="products-grid" [class.opacity-50]="isLoading()">
+    <ng-container *ngFor="let product of products()">
+      <!-- Dynamické sestavení odkazu přes helper metodu -->
+      <a [routerLink]="[config.ENDPOINTS.PRODUCT_DETAIL_BASE, product.slug]" 
+         class="product-link-wrapper">
+        <app-product-builder [product]="product"></app-product-builder>
+      </a>
+    </ng-container>
+
+    <!-- Text z konfigurace -->
+    <div *ngIf="products().length === 0 && !isLoading()" class="empty-state">
+      <p>{{ config.TEXTS.EMPTY_STATE }}</p>
+    </div>
+  </div>
+
+  <app-pagination-buttons-builder
+    [currentPage]="filters.page"
+    [totalPages]="totalPages()"
+    [totalItems]="totalItems()"
+    [itemsPerPage]="filters.per_page"
+    [dataLength]="products().length"
+    (pageChange)="onPageChange($event)"
+    (itemsPerPageChange)="onItemsPerPageChange($event)">
+  </app-pagination-buttons-builder>
+
+</div>

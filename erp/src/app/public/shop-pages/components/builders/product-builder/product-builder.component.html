@@ -1,0 +1,36 @@
+<div class="product-card" [class.out-of-stock]="product?.stock_quantity <= 0">
+  <!-- Image Wrapper -->
+  <div class="product-image-container" [routerLink]="['/eshop/produkt', product?.slug]">
+    <img [src]="getThumbnailUrl()" [alt]="product?.name" class="product-img">
+    
+    <div class="badge-overlay" if="product?.is_featured">
+      <span class="badge featured">Tip</span>
+    </div>
+
+    <div class="out-of-stock-overlay" *ngIf="product?.stock_quantity <= 0">
+      <span>Vyprodáno</span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="product-info">
+    <span class="category-label">{{ product?.category?.name || 'Obecné' }}</span>
+    
+    <h3 class="product-title" [routerLink]="['/eshop/produkt', product?.slug]">
+      {{ product?.name }}
+    </h3>
+
+    <div class="product-footer">
+      <div class="price-box">
+        <span class="price-value">{{ getFormattedPrice() }}</span>
+      </div>
+      
+      <button class="btn-add-to-cart" 
+              [disabled]="product?.stock_quantity <= 0"
+              (click)="$event.stopPropagation()">
+        <i class="cart-icon"></i>
+        Detail
+      </button>
+    </div>
+  </div>
+</div>

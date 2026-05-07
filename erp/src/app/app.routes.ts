@@ -55,7 +55,7 @@ export const routes: Routes = [
     ]
   },
 
-  // --- 2. E-SHOP SEKCE (Nový layout, nový header, bez starého headeru) ---
+  // --- 2. E-SHOP SEKCE ---
   {
     path: 'shop',
     loadComponent: () => import('./public/shop-pages/shop-layout/shop-layout.component').then(m => m.ShopLayoutComponent),
@@ -65,7 +65,10 @@ export const routes: Routes = [
         path: 'catalog',
         loadComponent: () => import('./public/shop-pages/catalog/catalog.component').then(m => m.CatalogComponent)
       },
-      // Zde později přibude detail: path: 'product/:id'
+      {
+        path: 'products/:slugOrId', // Sjednoceno na 'product' podle tvého servisu
+        loadComponent: () => import('./public/shop-pages/product-detail/product-detail.component').then(m => m.ProductDetailComponent)
+      }
     ]
   },
 
@@ -85,7 +88,9 @@ export const routes: Routes = [
     loadComponent: () => import('./public/web-pages/not-found/not-found.component').then(m => m.NotFoundComponent)
   },
   {
-    path: '**', 
-    redirectTo: '404'
+    path: '**',
+    // Místo přímého importu zkusíme přesměrování bez změny URL v historii
+    redirectTo: '404', 
+    pathMatch: 'full'
   }
 ];

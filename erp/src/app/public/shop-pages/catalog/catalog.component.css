@@ -1,0 +1,65 @@
+.catalog-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  position: relative;
+}
+
+.catalog-header {
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #f1f1f1;
+  padding-bottom: 1rem;
+}
+
+/* Grid Layout */
+.products-grid {
+  display: grid;
+  /* Responzivní grid: 1 sloupec na mobilu, až 4 na desktopu */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+  transition: opacity 0.3s ease;
+}
+
+/* Odkaz přes celý builder */
+.product-link-wrapper {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Pomocné třídy */
+.opacity-50 {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.loader-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+/* Jednoduchý spinner */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+}

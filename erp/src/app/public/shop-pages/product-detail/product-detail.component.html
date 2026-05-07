@@ -1,0 +1,55 @@
+<div class="product-detail-container" *ngIf="!isLoading(); else loader">
+  <div class="product-grid" *ngIf="product() as p">
+    
+    <!-- Galerie -->
+    <div class="product-gallery">
+      <img [src]="'storage/products/' + (selectedVariant()?.image?.image_path || p.primary_image?.image_path)" 
+           [alt]="p.name" class="main-image">
+      
+      <div class="thumbnails" *ngIf="p.images?.length > 1">
+        <img *ngFor="let img of p.images" 
+             [src]="'storage/products/' + img.image_path" 
+             (click)="p.primary_image = img"
+             class="thumb">
+      </div>
+    </div>
+
+    <!-- Informace -->
+    <div class="product-info">
+      <nav class="breadcrumb">Shop / {{ p.category?.name }}</nav>
+      <h1>{{ p.name }}</h1>
+      
+      <div class="price-tag">
+        {{ selectedVariant()?.price_with_vat || p.price }} Kč
+      </div>
+
+      <p class="description">{{ p.description }}</p>
+
+      <!-- Výběr variant -->
+      <div class="variants-section" *ngIf="p.variants?.length > 0">
+        <h3>Vyberte variantu:</h3>
+        <div class="variant-options">
+          <button *ngFor="let v of p.variants" 
+                  [class.active]="selectedVariant()?.id === v.id"
+                  (click)="selectVariant(v)"
+                  class="variant-btn">
+            {{ v.variant_name }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Skladovost -->
+      <div class="stock-info" [class.in-stock]="(selectedVariant()?.stock_quantity || 0) > 0">
+        {{ (selectedVariant()?.stock_quantity || 0) > 0 ? 'Skladem (' + selectedVariant().stock_quantity + ' ks)' : 'Vyprodáno' }}
+      </div>
+
+      <button class="add-to-cart-btn" [disabled]="(selectedVariant()?.stock_quantity || 0) <= 0">
+        Přidat do košíku
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #loader>
+  <div class="spinner-container">Načítám produkt...</div>
+</ng-template>
