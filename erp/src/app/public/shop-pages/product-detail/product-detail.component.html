@@ -3,23 +3,42 @@
     
     <!-- LEVÁ STRANA: Galerie -->
     <div class="product-gallery">
+      <!-- Hlavní zobrazený obrázek -->
       <div class="main-image-wrapper">
         <img [src]="activeImage()" [alt]="product()?.name" class="img-fluid">
         <div class="badge-float" *ngIf="product()?.is_featured">TOP PRODUKT</div>
       </div>
       
-      <div class="image-thumbnails" *ngIf="product()?.images?.length > 1">
-        <div 
-          class="thumb-item" 
-          *ngFor="let img of product().images" 
-          [class.active]="activeImage() === img.image_url"
-          (click)="setActiveImage(img.image_url)">
-          <img [src]="img.image_url" [alt]="product()?.name">
+      <!-- HLAVNÍ GALERIE (Obrázky produktu) -->
+      <div class="gallery-section">
+        <span class="gallery-label">Produktová galerie</span>
+        <div class="image-thumbnails" *ngIf="product()?.images?.length > 0">
+          <div 
+            class="thumb-item" 
+            *ngFor="let img of product().images" 
+            [class.active]="activeImage() === img.url"
+            (click)="setActiveImage(img.url)">
+            <img [src]="img.url" [alt]="product()?.name">
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANTOVÁ GALERIE (Zobrazí se jen pokud má varianta své fotky) -->
+      <div class="gallery-section variant-addon" *ngIf="variantImages().length > 0">
+        <span class="gallery-label">Fotografie varianty: {{ selectedVariant()?.variant_name }}</span>
+        <div class="image-thumbnails">
+          <div 
+            class="thumb-item variant-specific" 
+            *ngFor="let vImg of variantImages()" 
+            [class.active]="activeImage() === vImg.url"
+            (click)="setActiveImage(vImg.url)">
+            <img [src]="vImg.url" [alt]="selectedVariant()?.variant_name">
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- PRAVÁ STRANA: Info a nákup (Sticky) -->
+    <!-- PRAVÁ STRANA: Info a nákup -->
     <div class="product-purchase-zone">
       <div class="sticky-content">
         <nav class="breadcrumb-trail">
@@ -30,19 +49,12 @@
         
         <div class="product-meta">
           <span class="product-stock" [class.in-stock]="isAvailable()" [class.low-stock]="currentStock() > 0 && currentStock() < 5">
-            <ng-container *ngIf="currentStock() >= 5">
-              ● Skladem > 5 ks
-            </ng-container>
-            <ng-container *ngIf="currentStock() > 0 && currentStock() < 5">
-              ● Skladem pouze {{ currentStock() }} ks
-            </ng-container>
-            <ng-container *ngIf="currentStock() <= 0">
-              ○ Momentálně nedostupné
-            </ng-container>
+            <ng-container *ngIf="currentStock() >= 5">● Skladem > 5 ks</ng-container>
+            <ng-container *ngIf="currentStock() > 0 && currentStock() < 5">● Skladem pouze {{ currentStock() }} ks</ng-container>
+            <ng-container *ngIf="currentStock() <= 0">○ Momentálně nedostupné</ng-container>
           </span>
         </div>
 
-        <!-- DROPDOWN VARIANT S NÁZVY ATRIBUTŮ -->
         <div class="variant-select-wrapper" *ngIf="product()?.variants?.length > 0">
           <label for="variantSelect" class="section-label">Vyberte variantu:</label>
           <select 
@@ -51,20 +63,12 @@
             (change)="onVariantChange($event)"
             [value]="selectedVariant()?.id">
             <option *ngFor="let v of product().variants" [value]="v.id">
-              {{ v.variant_name }}
-              <!-- Atribut 1: Název + Hodnota -->
-              <ng-container *ngIf="v.attribute_1_name">
-                | {{ v.attribute_1_name }}: {{ v.attribute_1_value }}
-              </ng-container>
-              <!-- Atribut 2: Název + Hodnota -->
-              <ng-container *ngIf="v.attribute_2_name">
-                , {{ v.attribute_2_name }}: {{ v.attribute_2_value }}
-              </ng-container>
+              {{ v.variant_name }} 
+              <ng-container *ngIf="v.attribute_1_value">| {{ v.attribute_1_value }}</ng-container>
               — ({{ getFormattedPrice(v.price_with_vat) }})
             </option>
           </select>
 
-          <!-- DETAIL VYBRANÉ VARIANTY -->
           <div class="selected-attributes-box" *ngIf="selectedVariant()">
             <div class="attr-row" *ngIf="selectedVariant().attribute_1_name">
               <span class="attr-label">{{ selectedVariant().attribute_1_name }}:</span>
@@ -77,44 +81,39 @@
           </div>
         </div>
 
-       <div class="purchase-card">
-  <div class="price-section">
-    <div class="price-main">{{ getFormattedPrice(currentPrice()) }}</div>
-    <!-- Zobrazení ceny bez DPH -->
-    <div class="price-no-vat" *ngIf="selectedVariant()">
-      Cena bez DPH: {{ getFormattedPrice(selectedVariant()?.price_without_vat) }}
-    </div>
-  </div>
+        <div class="purchase-card">
+          <div class="price-section">
+            <div class="price-main">{{ getFormattedPrice(currentPrice()) }}</div>
+            <div class="price-no-vat" *ngIf="selectedVariant()">
+              Cena bez DPH: {{ getFormattedPrice(selectedVariant()?.price_without_vat) }}
+            </div>
+          </div>
 
-  <!-- STATUS: READY TO SHIP -->
-  <div class="delivery-status">
-    <div class="status-badge" [class.ready]="isAvailable()">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M22 10L12 15L2 10M22 6L12 11L2 6M12 19V11" />
-      </svg>
-      <span>{{ isAvailable() ? 'Ready to ship' : 'Out of stock' }}</span>
-    </div>
-    <p class="status-subtext" *ngIf="isAvailable()">
-      Expedujeme okamžitě z centrálního skladu.
-    </p>
-  </div>
+          <div class="delivery-status">
+            <div class="status-badge" [class.ready]="isAvailable()">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 10L12 15L2 10M22 6L12 11L2 6M12 19V11" />
+              </svg>
+              <span>{{ isAvailable() ? 'Ready to ship' : 'Out of stock' }}</span>
+            </div>
+            <p class="status-subtext" *ngIf="isAvailable()">Expedujeme okamžitě z centrálního skladu.</p>
+          </div>
 
-  <div class="action-buttons">
-    <button class="btn-buy" [disabled]="!isAvailable()">
-      <span>PŘIDAT DO KOŠÍKU</span>
-    </button>
-  </div>
-</div>
+          <div class="action-buttons">
+            <button class="btn-buy" [disabled]="!isAvailable()">
+              <span>PŘIDAT DO KOŠÍKU</span>
+            </button>
+          </div>
+        </div>
 
         <div class="quick-description">
           <h3>Stručný popis</h3>
-          <p>{{ product()?.short_description || 'Tento produkt vyniká svou kvalitou a precizním zpracováním.' }}</p>
+          <p>{{ product()?.short_description || 'Detailní informace naleznete v popisu produktu níže.' }}</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Popis produktu -->
   <div class="product-tabs">
     <div class="tab-header">
       <button class="active">Popis produktu</button>

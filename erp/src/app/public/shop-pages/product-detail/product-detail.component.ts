@@ -11,23 +11,26 @@ import { ShopPublicService } from '../components/services/public-data.service';
   styleUrl: './product-detail.component.css',
 })
 export class ProductDetailComponent implements OnInit {
-  // Signály pro reaktivitu
+  // Signály pro stav a data
   product = signal<any>(null);
   selectedVariant = signal<any>(null);
   isLoading = signal(true);
   activeImage = signal<string | null>(null);
 
-  // Computed signály pro odvozené hodnoty (vždy aktuální dle varianty)
+  // Computed signál pro obrázky vybrané varianty
+  variantImages = computed(() => {
+    return this.selectedVariant()?.images || [];
+  });
+
+  // Dynamické hodnoty podle vybrané varianty
   currentPrice = computed(() => {
     const variant = this.selectedVariant();
-    if (variant) return variant.price_with_vat;
-    return this.product()?.price || 0;
+    return variant ? variant.price_with_vat : (this.product()?.price || 0);
   });
 
   currentStock = computed(() => {
     const variant = this.selectedVariant();
-    if (variant) return variant.stock_quantity;
-    return this.product()?.stock_quantity || 0;
+    return variant ? variant.stock_quantity : (this.product()?.stock_quantity || 0);
   });
 
   isAvailable = computed(() => this.currentStock() > 0);
@@ -54,9 +57,9 @@ export class ProductDetailComponent implements OnInit {
         
         // Nastavení hlavní fotky (priorita: primární obrázek)
         const primary = data.images?.find((img: any) => img.is_primary);
-        this.activeImage.set(primary?.image_url || data.images?.[0]?.image_url);
+        this.activeImage.set(primary?.url || data.images?.[0]?.url);
 
-        // Automatický výběr první dostupné varianty
+        // Výběr první varianty
         if (data.variants && data.variants.length > 0) {
           this.selectVariant(data.variants[0]);
         }
@@ -72,10 +75,18 @@ export class ProductDetailComponent implements OnInit {
 
   selectVariant(variant: any): void {
     this.selectedVariant.set(variant);
-    
-    // Pokud má varianta vlastní obrázek, přepneme galerii na něj
+    // Při přepnutí varianty nastavíme její první obrázek jako aktivní (pokud existuje)
     if (variant.images && variant.images.length > 0) {
-      this.activeImage.set(variant.images[0].image_url);
+      this.activeImage.set(variant.images[0].url);
+    }
+  }
+
+  onVariantChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const variantId = Number(selectElement.value);
+    const variant = this.product().variants.find((v: any) => v.id === variantId);
+    if (variant) {
+      this.selectVariant(variant);
     }
   }
 
@@ -90,13 +101,4 @@ export class ProductDetailComponent implements OnInit {
       minimumFractionDigits: 0
     }).format(value);
   }
-  // Přidejte/upravte metodu v .ts
-onVariantChange(event: Event): void {
-  const selectElement = event.target as HTMLSelectElement;
-  const variantId = Number(selectElement.value);
-  const variant = this.product().variants.find((v: any) => v.id === variantId);
-  if (variant) {
-    this.selectVariant(variant);
-  }
-}
 }
