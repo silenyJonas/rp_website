@@ -1,11 +1,10 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-pagination-buttons-builder',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './pagination-buttons-builder.component.html',
   styleUrl: './pagination-buttons-builder.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -13,14 +12,10 @@ import { FormsModule } from '@angular/forms';
 export class PaginationButtonsBuilderComponent {
   @Input() currentPage: number = 1;
   @Input() totalPages: number = 1;
-  @Input() totalItems: number = 0;
-  @Input() itemsPerPage: number = 15;
-  @Input() dataLength: number = 0;
-
+  
   @Output() pageChange = new EventEmitter<number>();
-  @Output() itemsPerPageChange = new EventEmitter<number>();
 
-  // Výpočet pole čísel stránek (zobrazuje max 5 tlačítek kolem aktuální stránky)
+  // Výpočet pole čísel stránek
   get pagesArray(): number[] {
     const maxVisible = 5;
     let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
@@ -41,10 +36,5 @@ export class PaginationButtonsBuilderComponent {
     if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
       this.pageChange.emit(page);
     }
-  }
-
-  onItemsPerPageSelect(event: Event): void {
-    const value = Number((event.target as HTMLSelectElement).value);
-    this.itemsPerPageChange.emit(value);
   }
 }

@@ -1,47 +1,26 @@
-<div class="pagination-wrapper reveal-down">
-  <div class="pagination-container">
-    
-    <!-- Levá strana: Informace o stavu -->
-    <div class="pagination-info">
-      Zobrazuji <strong>{{ (currentPage - 1) * itemsPerPage + 1 }}</strong> – 
-      <strong>{{ (currentPage - 1) * itemsPerPage + dataLength }}</strong> 
-      z <strong>{{ totalItems }}</strong> záznamů
-    </div>
+<div class="pagination-wrapper reveal-up">
+  <nav class="pagination-nav">
+    <!-- Předchozí -->
+    <button class="nav-btn" (click)="onPageClick(currentPage - 1)" [disabled]="currentPage === 1">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
 
-    <!-- Pravá strana: Akce -->
-    <div class="pagination-actions">
-      
-      <!-- Volba počtu položek -->
-      <div class="select-wrapper">
-        <label for="itemsPerPage">Zobrazit:</label>
-        <select id="itemsPerPage" [ngModel]="itemsPerPage" (change)="onItemsPerPageSelect($event)">
-          <option [value]="5">5</option>
-          <option [value]="10">10</option>
-          <option [value]="15">15</option>
-          <option [value]="20">20</option>
-          <option [value]="50">50</option>
-        </select>
-      </div>
+    <!-- Čísla stránek -->
+    <ng-container *ngFor="let page of pagesArray">
+      <button class="page-btn" 
+              [class.active]="page === currentPage" 
+              (click)="onPageClick(page)">
+        {{ page }}
+      </button>
+    </ng-container>
 
-      <!-- Navigace -->
-      <nav class="pagination-nav">
-        <button class="nav-btn" (click)="onPageClick(currentPage - 1)" [disabled]="currentPage === 1">
-          &laquo;
-        </button>
-
-        <ng-container *ngFor="let page of pagesArray">
-          <button class="page-btn" 
-                  [class.active]="page === currentPage" 
-                  (click)="onPageClick(page)">
-            {{ page }}
-          </button>
-        </ng-container>
-
-        <button class="nav-btn" (click)="onPageClick(currentPage + 1)" [disabled]="currentPage === totalPages">
-          &raquo;
-        </button>
-      </nav>
-
-    </div>
-  </div>
+    <!-- Další -->
+    <button class="nav-btn" (click)="onPageClick(currentPage + 1)" [disabled]="currentPage === totalPages">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </nav>
 </div>

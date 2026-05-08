@@ -1,2 +1,4 @@
 ng generate @angular/core:control-flow
 //prepise na @for syntag
+
+odstranit srdicko z detailu odstranit ID a pridat cenu bez dph misto % a do dropdownu dat i ten druhy info treba vliskost atd 

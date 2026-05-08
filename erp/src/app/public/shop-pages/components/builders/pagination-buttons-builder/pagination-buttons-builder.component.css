@@ -1,116 +1,84 @@
 :host {
   display: block;
   width: 100%;
-}
-
-/* Animace odkrývání směrem dolů */
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.reveal-down {
-  animation: slideDown 0.4s ease-out forwards;
+  --primary: #a67dff;
+  --surface: #131325;
+  --bg-dark: #1a1a2e;
+  --border: #302d2e;
+  --text-main: #e0e0e0;
+  --transition: 0.2s ease;
 }
 
 .pagination-wrapper {
-  background: #ffffff;
-  border-top: 1px solid #e2e8f0;
-  padding: 1rem;
-  margin-top: 1rem;
-}
-
-.pagination-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
+  justify-content: center; /* Vycentrování na střed */
+  padding: 2rem 0;
+  margin-top: 2rem;
 }
 
-.pagination-info {
-  font-size: 0.875rem;
-  color: #4a5568;
-}
-
-.pagination-actions {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-/* Select styling */
-.select-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #4a5568;
-}
-
-.select-wrapper select {
-  padding: 0.25rem 0.5rem;
-  border: 1px solid #cbd5e0;
-  border-radius: 4px;
-  background-color: white;
-  outline: none;
-  cursor: pointer;
-}
-
-/* Tlačítka stránkování */
 .pagination-nav {
   display: flex;
-  gap: 0.25rem;
+  gap: 8px; /* Trochu větší rozestupy pro čistší vzhled */
+  align-items: center;
 }
 
 .page-btn, .nav-btn {
-  min-width: 35px;
-  height: 35px;
+  min-width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #e2e8f0;
-  background: white;
-  color: #2d3748;
-  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-main);
   cursor: pointer;
-  font-size: 0.875rem;
-  transition: all 0.2s;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
 }
 
-.page-btn:hover:not(.active), .nav-btn:hover:not(:disabled) {
-  background-color: #f7fafc;
-  border-color: #cbd5e0;
+/* Hover efekt - fialové podsvícení */
+.page-btn:hover:not(.active), 
+.nav-btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(166, 125, 255, 0.05);
 }
 
+/* Aktivní stránka - Výrazná fialová bez oblých rohů */
 .page-btn.active {
-  background-color: #3182ce;
-  color: white;
-  border-color: #3182ce;
-  font-weight: bold;
+  background-color: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 0 15px rgba(166, 125, 255, 0.2);
+  z-index: 2;
 }
 
+/* Disabled šipky */
 .nav-btn:disabled {
-  opacity: 0.4;
+  opacity: 0.15;
   cursor: not-allowed;
-  background-color: #edf2f7;
+  border-color: var(--border);
 }
 
-/* Responzivita */
-@media (max-width: 640px) {
-  .pagination-container {
-    flex-direction: column;
-    align-items: flex-start;
+/* Animace při načtení */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal-up {
+  animation: slideUp 0.4s ease-out forwards;
+}
+
+/* Responzivita - menší tlačítka na mobilu */
+@media (max-width: 480px) {
+  .page-btn, .nav-btn {
+    min-width: 35px;
+    height: 35px;
+    font-size: 0.8rem;
   }
-  
-  .pagination-actions {
-    width: 100%;
-    justify-content: space-between;
-  }
+  .pagination-nav { gap: 5px; }
 }

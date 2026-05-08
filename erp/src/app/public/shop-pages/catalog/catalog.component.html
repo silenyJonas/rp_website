@@ -8,42 +8,41 @@
         </svg>
         <span>Filtr</span>
       </button>
+
+      <!-- Filtrační lišta vložená vedle tlačítka -->
+      <div class="filter-bar-inline" *ngIf="showFilters()">
+        <div class="filter-group">
+          <div class="filter-item">
+            <input type="text" placeholder="Hledat..." [(ngModel)]="filters.search" (keyup.enter)="applyFilters()">
+          </div>
+          
+          <div class="filter-item">
+            <select [(ngModel)]="filters.category_id" (change)="applyFilters()">
+              <option value="">Kategorie</option>
+              <option *ngFor="let cat of categories()" [value]="cat.id">{{ cat.name }}</option>
+            </select>
+          </div>
+
+          <div class="filter-item">
+            <select [(ngModel)]="filters.sort_by" (change)="applyFilters()">
+              <option value="name">Název</option>
+              <option value="price">Cena</option>
+              <option value="created_at">Nejnovější</option>
+            </select>
+          </div>
+
+          <div class="filter-item sort-dir">
+            <select [(ngModel)]="filters.sort_direction" (change)="applyFilters()">
+              <option value="asc">↑</option>
+              <option value="desc">↓</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
-  <!-- Filtrační lišta -->
-  <div class="filter-bar" *ngIf="showFilters()">
-    <div class="filter-group">
-      <div class="filter-item">
-        <input type="text" placeholder="Hledat..." [(ngModel)]="filters.search" (keyup.enter)="applyFilters()">
-      </div>
-      
-      <div class="filter-item">
-        <select [(ngModel)]="filters.category_id" (change)="applyFilters()">
-          <option value="">Všechny kategorie</option>
-          <option *ngFor="let cat of categories()" [value]="cat.id">{{ cat.name }}</option>
-        </select>
-      </div>
-
-      <div class="filter-item">
-        <select [(ngModel)]="filters.sort_by" (change)="applyFilters()">
-          <option value="name">Název</option>
-          <option value="price">Cena</option>
-          <option value="created_at">Nejnovější</option>
-        </select>
-      </div>
-
-      <div class="filter-item sort-dir">
-        <select [(ngModel)]="filters.sort_direction" (change)="applyFilters()">
-          <option value="asc">↑</option>
-          <option value="desc">↓</option>
-        </select>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- TOTO TI CHYBĚLO: Mřížka s výpisem -->
+  <!-- Mřížka s produkty -->
   <div class="products-grid" [class.opacity-30]="isLoading()">
     <ng-container *ngFor="let product of products()">
       <a [routerLink]="[config.ENDPOINTS.PRODUCT_DETAIL_BASE, product.slug]" class="product-card">
@@ -57,16 +56,12 @@
     <p>{{ config.TEXTS.EMPTY_STATE }}</p>
   </div>
 
-  <!-- Paginace -->
+  <!-- Paginace (Zjednodušené volání) -->
   <div class="pagination-wrapper" *ngIf="products().length > 0">
     <app-pagination-buttons-builder
       [currentPage]="filters.page"
       [totalPages]="totalPages()"
-      [totalItems]="totalItems()"
-      [itemsPerPage]="filters.per_page"
-      [dataLength]="products().length"
-      (pageChange)="onPageChange($event)"
-      (itemsPerPageChange)="onItemsPerPageChange($event)">
+      (pageChange)="onPageChange($event)">
     </app-pagination-buttons-builder>
   </div>
 

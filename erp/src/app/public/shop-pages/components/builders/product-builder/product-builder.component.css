@@ -1,31 +1,45 @@
 :host {
   display: block;
+  height: 100%;
+  --primary: #a67dff;
+  --surface: #131325;
+  --bg-dark: #1a1a2e;
+  --border: #302d2e;
+  --text-main: #e0e0e0;
+  --text-dim: #9a9a9b;
+  --success: #00ff88;
+  --warning: #ffcc00;
+  --danger: #8b0000;
+  --transition: 0.2s ease;
 }
 
 .product-card {
-  background: #ffffff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: var(--surface);
+  border: 1px solid var(--border);
   height: 100%;
   display: flex;
   flex-direction: column;
-  border: 1px solid #f0f0f0;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+  outline: 1px solid transparent;
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  outline: 1px solid var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 15px rgba(166, 125, 255, 0.2);
 }
 
-/* Image section */
+/* --- IMAGE SECTION --- */
 .product-image-container {
   position: relative;
   width: 100%;
-  padding-top: 100%; /* Aspect ratio 1:1 */
-  background: #f8f9fa;
+  padding-top: 100%;
+  background: var(--bg-dark);
   cursor: pointer;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
 }
 
 .product-img {
@@ -37,35 +51,26 @@
   object-fit: cover;
 }
 
-/* Badges */
-.badge-overlay {
-  position: absolute;
-  top: 10px;
-  left: 10px;
+.product-card:hover .product-image-container {
+  border-color: var(--primary);
 }
 
+/* --- BADGES --- */
 .badge.featured {
-  background: #ffcc00;
-  color: #000;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.out-of-stock-overlay {
   position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: #d9534f;
+  top: 0;
+  left: 0;
+  background: var(--primary);
+  color: #fff;
+  padding: 5px 15px;
+  font-size: 0.7rem;
+  font-weight: 800;
   text-transform: uppercase;
+  z-index: 2;
+  clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
 }
 
-/* Info section */
+/* --- INFO SECTION --- */
 .product-info {
   padding: 1.25rem;
   display: flex;
@@ -73,31 +78,40 @@
   flex-grow: 1;
 }
 
-.category-label {
-  font-size: 0.75rem;
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 0.5rem;
-}
-
 .product-title {
-  margin: 0 0 1rem 0;
-  font-size: 1.1rem;
-  color: #2d3436;
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--text-main);
   font-weight: 600;
-  cursor: pointer;
   line-height: 1.4;
-  /* Zkrácení dlouhého textu */
+  cursor: pointer;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* Footer & Price */
+.product-card:hover .product-title {
+  color: #fff;
+}
+
+/* --- STOCK STATUS --- */
+.product-stock {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stock-badge.in-stock { color: var(--success); }
+.stock-badge.low-stock { color: var(--warning); }
+.stock-badge.out-of-stock { color: var(--danger); }
+
+/* --- FOOTER & PRICE --- */
 .product-footer {
   margin-top: auto;
+  padding-top: 1.25rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -105,30 +119,31 @@
 
 .price-value {
   font-size: 1.25rem;
-  font-weight: 700;
-  color: #27ae60;
+  font-weight: 800;
+  color: #fff;
 }
 
-.btn-add-to-cart {
-  background: #3498db;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
+/* --- TLAČÍTKO DETAIL --- */
+.btn-detail {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 7px 14px;
   cursor: pointer;
-  font-weight: 500;
-  transition: background 0.2s;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition);
+  transform: skewX(-15deg);
 }
 
-.btn-add-to-cart:hover {
-  background: #2980b9;
-}
+.btn-detail span, .btn-detail svg { transform: skewX(15deg); }
 
-.btn-add-to-cart:disabled {
-  background: #bdc3c7;
-  cursor: not-allowed;
-}
-
-.out-of-stock .product-title {
-  color: #95a5a6;
+.btn-detail:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
 }

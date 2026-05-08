@@ -5,7 +5,7 @@
   --text-main: #e0e0e0;
   --text-dim: #9a9a9b;
   --border: #302d2e;
-  --transition: 0.2s ease;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .catalog-container {
@@ -14,103 +14,73 @@
   padding: 0 1.5rem;
 }
 
-/* --- HEADER --- */
+/* --- HEADER & INLINE FILTER --- */
 .catalog-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 15px;
 }
 
 .title-group {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
-h1 {
-  font-size: 1.6rem;
-  margin: 0;
-  color: var(--text-main);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* Trychtýř tlačítko */
 .filter-toggle {
   background: transparent;
   border: 1px solid var(--border);
   color: var(--text-dim);
-  padding: 6px 15px;
+  padding: 8px 16px;
   display: flex;
   align-items: center;
   gap: 10px;
   cursor: pointer;
   transform: skewX(-15deg);
   transition: var(--transition);
+  flex-shrink: 0;
 }
 
-.filter-toggle span, .filter-toggle svg {
-  transform: skewX(15deg); /* Narovnání obsahu uvnitř zkoseného tlačítka */
+.filter-toggle span, 
+.filter-toggle svg { 
+  transform: skewX(15deg); 
 }
 
-.filter-toggle:hover, .filter-toggle.active {
+.filter-toggle:hover, 
+.filter-toggle.active {
   border-color: var(--primary);
   color: var(--primary);
-  background: rgba(166, 125, 255, 0.05);
 }
 
-.catalog-info {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 4px 12px;
-  font-size: 0.75rem;
-  color: var(--primary);
-  transform: skewX(-15deg);
-  font-weight: bold;
-}
-
-/* --- FILTER BAR (Azure DevOps Style) --- */
-.filter-bar {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--primary); /* Výrazný prvek na kraji */
-  padding: 12px 20px;
-  margin-bottom: 30px;
+.filter-bar-inline {
   display: flex;
   align-items: center;
-  animation: slideDown 0.2s ease-out;
+  animation: fadeIn 0.3s ease-out;
 }
 
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .filter-group {
   display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
+  gap: 10px;
   align-items: center;
-  width: 100%;
+  flex-wrap: wrap;
 }
 
-.filter-item {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Stylování inputů a selectů */
 .filter-item input, 
 .filter-item select {
-  background: var(--bg-dark);
+  background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text-main);
-  padding: 8px 12px;
+  padding: 6px 10px;
   font-size: 0.85rem;
   outline: none;
+  min-width: 130px;
   transition: border-color var(--transition);
-  min-width: 140px;
 }
 
 .filter-item input:focus, 
@@ -118,74 +88,60 @@ h1 {
   border-color: var(--primary);
 }
 
-.sort-dir select {
-  min-width: 60px;
-  text-align: center;
-}
-
-/* Lupa tlačítko */
-.search-btn {
-  background: var(--primary);
-  border: none;
-  color: #fff;
-  padding: 8px 15px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity var(--transition);
-}
-
-.search-btn:hover {
-  opacity: 0.85;
+.sort-dir select { 
+  min-width: 50px; 
 }
 
 /* --- MŘÍŽKA PRODUKTŮ --- */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 25px;
+  gap: 20px;
 }
 
-.opacity-30 { opacity: 0.3; pointer-events: none; }
-
+/* 
+   Obalový odkaz (<a>) - vyčištěno od borderů.
+   Vizuál teď kompletně kreslí app-product-builder uvnitř.
+*/
 .product-card {
-  display: block;
   text-decoration: none;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 10px;
-  transition: all var(--transition);
-  position: relative;
+  display: block;
+  height: 100%;
+  background: transparent;
+  border: none; /* Odstraněno, aby nevznikaly dvojité čáry */
+  transition: transform var(--transition);
 }
 
-.product-card:hover {
-  border-color: var(--primary);
-  transform: translateY(-3px);
+.opacity-30 { 
+  opacity: 0.3; 
 }
 
 /* --- OSTATNÍ --- */
 .empty-state {
   text-align: center;
-  padding: 80px 20px;
+  padding: 60px;
   color: var(--text-dim);
   border: 1px dashed var(--border);
   text-transform: uppercase;
-  letter-spacing: 2px;
 }
 
 .pagination-wrapper {
-  margin-top: 50px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
+  margin-top: 40px;
   display: flex;
   justify-content: center;
 }
 
-/* --- MOBILNÍ VERZE --- */
+/* --- RESPONZIVITA --- */
 @media (max-width: 768px) {
-  .filter-group { flex-direction: column; align-items: stretch; }
-  .filter-item input, .filter-item select { width: 100%; }
-  .catalog-header { flex-direction: column; align-items: flex-start; gap: 15px; }
-  .products-grid { grid-template-columns: 1fr; }
+  .filter-group { 
+    width: 100%; 
+  }
+  .filter-item { 
+    flex: 1; 
+  }
+  .filter-item input, 
+  .filter-item select { 
+    width: 100%; 
+    min-width: 100px; 
+  }
 }
