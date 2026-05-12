@@ -64,7 +64,7 @@
             [value]="selectedVariant()?.id">
             <option *ngFor="let v of product().variants" [value]="v.id">
               {{ v.variant_name }} 
-              <ng-container *ngIf="v.attribute_1_value">| {{ v.attribute_1_value }}</ng-container>
+              <ng-container *ngIf="v.attribute_1_value">|{{ v.attribute_1_name }}: {{ v.attribute_1_value }} | {{ v.attribute_2_name }}: {{ v.attribute_2_value }}</ng-container>
               — ({{ getFormattedPrice(v.price_with_vat) }})
             </option>
           </select>
