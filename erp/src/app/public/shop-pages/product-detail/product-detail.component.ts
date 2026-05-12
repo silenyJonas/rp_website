@@ -11,18 +11,21 @@ import { ShopPublicService } from '../components/services/public-data.service';
   styleUrl: './product-detail.component.css',
 })
 export class ProductDetailComponent implements OnInit {
-  // Signály pro stav a data
   product = signal<any>(null);
   selectedVariant = signal<any>(null);
   isLoading = signal(true);
   activeImage = signal<string | null>(null);
 
-  // Computed signál pro obrázky vybrané varianty
-  variantImages = computed(() => {
-    return this.selectedVariant()?.images || [];
+  // Computed: Obrázky specifické pro variantu
+  variantImages = computed(() => this.selectedVariant()?.images || []);
+
+  // Computed: Obecné obrázky produktu, které NEJSOU přiřazeny k žádné variantě
+  // To zabrání duplicitám, pokud bys měl stejnou fotku u produktu i u varianty
+  generalImages = computed(() => {
+    const allImgs = this.product()?.images || [];
+    return allImgs.filter((img: any) => !img.variant_id);
   });
 
-  // Dynamické hodnoty podle vybrané varianty
   currentPrice = computed(() => {
     const variant = this.selectedVariant();
     return variant ? variant.price_with_vat : (this.product()?.price || 0);
@@ -55,13 +58,13 @@ export class ProductDetailComponent implements OnInit {
       next: (data) => {
         this.product.set(data);
         
-        // Nastavení hlavní fotky (priorita: primární obrázek)
-        const primary = data.images?.find((img: any) => img.is_primary);
-        this.activeImage.set(primary?.url || data.images?.[0]?.url);
-
-        // Výběr první varianty
+        // Defaultní start: První varianta
         if (data.variants && data.variants.length > 0) {
           this.selectVariant(data.variants[0]);
+        } else {
+          // Pokud nejsou varianty, vezmeme primární foto produktu
+          const primary = data.images?.find((img: any) => img.is_primary);
+          this.activeImage.set(primary?.url || data.images?.[0]?.url || 'assets/images/placeholder-product.png');
         }
         
         this.isLoading.set(false);
@@ -75,9 +78,13 @@ export class ProductDetailComponent implements OnInit {
 
   selectVariant(variant: any): void {
     this.selectedVariant.set(variant);
-    // Při přepnutí varianty nastavíme její první obrázek jako aktivní (pokud existuje)
+    // UX ROZHODNUTÍ: Při výběru varianty okamžitě nastavíme její první fotku
     if (variant.images && variant.images.length > 0) {
       this.activeImage.set(variant.images[0].url);
+    } else {
+      // Pokud varianta nemá fotky, vrátíme se k hlavní fotce produktu
+      const primary = this.product().images?.find((img: any) => img.is_primary);
+      this.activeImage.set(primary?.url || this.product().images?.[0]?.url);
     }
   }
 
