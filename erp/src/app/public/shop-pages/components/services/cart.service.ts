@@ -39,6 +39,9 @@ export class CartService {
 
   private timerSignal = signal<number>(0);
   private isExpiredSignal = signal<boolean>(false);
+  
+  // UPRAVENO: Interní příznak pro jednorázové upozornění na vypršení rezervace
+  private expiredNotificationPending = false;
 
   cartItems = computed(() => this.cartSignal().items);
   cartCount = computed(() => this.cartItems().length);
@@ -80,6 +83,8 @@ export class CartService {
         if (now > cart.expiresAt) {
           this.cartSignal.set({ items: [], expiresAt: 0, createdAt: now });
           this.isExpiredSignal.set(true);
+          // UPRAVENO: Při prostém načtení staré session z localStorage notifikaci záměrně nepovolujeme
+          this.expiredNotificationPending = false; 
           localStorage.removeItem(this.CART_STORAGE_KEY);
         } else {
           this.cartSignal.set(cart);
@@ -195,6 +200,15 @@ export class CartService {
     this.timerSignal.set(0);
   }
 
+  // PŘIDÁNO: Metoda pro bezpečné ověření reálného vypršení (zkonzumuje příznak)
+  checkAndClearExpired(): boolean {
+    if (this.expiredNotificationPending) {
+      this.expiredNotificationPending = false; // Vynulujeme, aby F5/Refresh podruhé nehlásil nic
+      return true;
+    }
+    return false;
+  }
+
   private startTimer(): void {
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
@@ -213,6 +227,10 @@ export class CartService {
       this.timerSignal.set(remaining);
 
       if (remaining <= 0) {
+        // UPRAVENO: Notifikaci aktivujeme pouze tehdy, pokud v košíku skutečně byly položky
+        if (cart.items.length > 0) {
+          this.expiredNotificationPending = true;
+        }
         this.isExpiredSignal.set(true);
         this.clear();
       }

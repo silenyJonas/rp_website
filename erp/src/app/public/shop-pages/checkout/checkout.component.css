@@ -1,165 +1,267 @@
-.checkout-container {
-  max-width: 900px;
+:host {
+  /* Globální barevná paleta */
+  --primary: #a67dff;
+  --surface: #131325;
+  --surface-light: #1c1c3a;
+  --bg-dark: #1a1a2e;
+  --border: #302d2e;
+  --text-main: #e0e0e0;
+  --text-dim: #9a9a9b;
+  --success: #00ff88;
+  --error: #ff4d4d;
+  --warning: #ffcc00;
+
+  display: block;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 2rem;
+  box-sizing: border-box;
+  color: var(--text-main);
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.checkout-container {
+  max-width: 840px;
+  margin: 0 auto;
 }
 
 h1 {
-  margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  color: #fff;
+  letter-spacing: -0.5px;
   text-align: center;
 }
 
-/* PROGRESS BAR */
+/* ==========================================================================
+   PROGRESS BAR (Indikátor kroků)
+   ========================================================================== */
 .progress-bar {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 40px;
+  margin-bottom: 2.5rem;
   position: relative;
+  background: var(--surface);
+  padding: 1.25rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
 }
 
 .progress-bar::before {
   content: '';
   position: absolute;
-  top: 20px;
-  left: 0;
-  right: 0;
+  top: 36px;
+  left: 10%;
+  right: 10%;
   height: 2px;
-  background: #ddd;
-  z-index: -1;
+  background: var(--border);
+  z-index: 0;
 }
 
 .step {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex: 1;
-}
-
-.step-num {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #ddd;
-  color: #666;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
   z-index: 1;
 }
 
+.step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: var(--bg-dark);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
 .step.active .step-num {
-  background: #007bff;
-  color: white;
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 0 12px rgba(166, 125, 255, 0.25);
 }
 
 .step.done .step-num {
-  background: #28a745;
-  color: white;
+  background: var(--surface-light);
+  color: var(--success);
+  border-color: var(--success);
 }
 
 .step-label {
-  font-size: 12px;
-  color: #666;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* CHECKOUT STEPS */
+.step.active .step-label {
+  color: #fff;
+}
+
+/* ==========================================================================
+   SEKCE KROKŮ (Karty s obsahem)
+   ========================================================================== */
 .checkout-step {
-  background: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 30px;
-  margin-bottom: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .checkout-step h2 {
-  margin-bottom: 20px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 15px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 1.75rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: -0.3px;
 }
 
 .checkout-step h3 {
-  margin: 20px 0 15px 0;
-  font-size: 15px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin: 1.75rem 0 1rem 0;
+  letter-spacing: 0.75px;
 }
 
-/* ORDER SUMMARY */
+/* ==========================================================================
+   PŘEHLEDY OBJEDNÁVKY A POLOŽKY
+   ========================================================================== */
 .order-summary {
-  background: #f9f9f9;
-  padding: 20px;
-  border-radius: 6px;
-  margin-bottom: 20px;
+  background: var(--surface-light);
+  border: 1px solid var(--border);
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
 }
 
 .order-item {
   display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 15px;
+  grid-template-columns: 1fr auto 120px;
+  gap: 1.5rem;
   align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #eee;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
 }
 
 .order-item:last-child {
   border-bottom: none;
+  padding-bottom: 0;
+}
+
+.order-item:first-child {
+  padding-top: 0;
+}
+
+.order-item strong {
+  color: #fff;
+  font-size: 0.95rem;
 }
 
 .variant-info {
-  font-size: 12px;
-  color: #666;
-  margin-top: 3px;
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: var(--surface);
+  color: var(--primary);
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  margin-left: 10px;
 }
 
 .quantity-info {
-  font-size: 13px;
-  color: #666;
-  margin-top: 5px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 0.4rem;
 }
 
 .price {
   text-align: right;
-  font-size: 13px;
-  color: #666;
+  font-size: 0.85rem;
+  color: var(--text-dim);
 }
 
 .total {
   text-align: right;
-  font-weight: bold;
-  min-width: 100px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: #fff;
 }
 
-/* TOTALS */
+/* ==========================================================================
+   SOUČTY A FINÁLNÍ KALKULACE
+   ========================================================================== */
 .totals {
-  background: #f0f0f0;
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 20px;
+  padding: 1.5rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
 }
 
 .total-row {
   display: flex;
   justify-content: space-between;
-  padding: 8px 0;
-  font-size: 14px;
-  border-bottom: 1px solid #ddd;
+  padding: 0.4rem 0;
+  font-size: 0.9rem;
+  color: var(--text-main);
 }
 
 .total-row.final {
-  border-bottom: none;
-  border-top: 2px solid #333;
-  margin-top: 10px;
-  padding-top: 12px;
-  font-weight: bold;
-  font-size: 16px;
+  border-top: 1px solid var(--border);
+  margin-top: 1rem;
+  padding-top: 1.25rem;
+  font-weight: 900;
+  font-size: 1.4rem;
+  color: #fff;
 }
 
-/* FORM */
+.summary-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.summary-detail.final {
+  border-top: 1px solid var(--border);
+  padding-top: 1.25rem;
+  margin-top: 1rem;
+}
+
+.summary-detail.final strong {
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.text-muted {
+  color: var(--text-dim) !important;
+}
+
+/* ==========================================================================
+   FORMULÁŘE A VSTUPNÍ POLE
+   ========================================================================== */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-bottom: 20px;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group {
@@ -172,133 +274,144 @@ h1 {
 }
 
 .form-group label {
-  margin-bottom: 6px;
-  font-weight: 500;
-  font-size: 14px;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-  padding: 10px;
-  border: 1px solid #ddd;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  color: #fff;
+  padding: 0.8rem;
   border-radius: 4px;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  border-color: var(--primary);
 }
 
-/* KUPON */
-.coupon-input {
-  margin-bottom: 0;
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239a9a9b'><path d='M1 4l5 5 5-5H1z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
 }
 
-.coupon-row {
-  display: flex;
-  gap: 10px;
-}
-
+/* ==========================================================================
+   SLEVOVÉ KUPÓNY
+   ========================================================================== */
 .coupon-row input {
   flex: 1;
 }
 
 .btn-apply {
-  padding: 10px 15px;
-  background: #6c757d;
-  color: white;
-  border: none;
+  padding: 0 1.5rem;
+  background: var(--surface-light);
+  border: 1px solid var(--border);
+  color: #fff;
   border-radius: 4px;
   cursor: pointer;
-  font-weight: 500;
-}
-
-.btn-apply:hover {
-  background: #5a6268;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
 }
 
 .coupon-status {
-  margin-top: 8px;
-  font-size: 13px;
-  color: #28a745;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--success);
 }
 
-/* PAYMENT METHODS */
+/* ==========================================================================
+   PLATEBNÍ METODY
+   ========================================================================== */
 .payment-methods {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-  margin-bottom: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .payment-option {
-  border: 2px solid #ddd;
-  border-radius: 6px;
-  padding: 20px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.25rem;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 15px;
-  transition: all 0.3s;
-}
-
-.payment-option:hover {
-  border-color: #007bff;
+  gap: 1.25rem;
+  position: relative;
 }
 
 .payment-option.selected {
-  border-color: #007bff;
-  background: #f0f7ff;
+  border-color: var(--primary);
+  background: var(--surface-light);
 }
 
 .payment-icon {
-  font-size: 32px;
-  min-width: 50px;
+  font-size: 2rem;
+  min-width: 40px;
   text-align: center;
+  color: var(--primary);
 }
 
 .payment-info strong {
   display: block;
-  margin-bottom: 5px;
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
 }
 
 .payment-info p {
-  font-size: 12px;
-  color: #666;
+  font-size: 0.8rem;
+  color: var(--text-dim);
   margin: 0;
 }
 
 .checkmark {
   margin-left: auto;
-  width: 24px;
-  height: 24px;
-  background: #28a745;
-  color: white;
+  width: 20px;
+  height: 20px;
+  background: var(--success);
+  color: var(--surface);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  font-weight: 900;
+  font-size: 0.75rem;
 }
 
-/* ORDER REVIEW */
+/* ==========================================================================
+   REKAPITULACE & TABULKY (KROK 4)
+   ========================================================================== */
 .order-review {
-  background: #f9f9f9;
-  padding: 20px;
-  border-radius: 6px;
-  margin-bottom: 30px;
+  background: var(--surface-light);
+  border: 1px solid var(--border);
+  padding: 1.75rem;
+  border-radius: 4px;
+  margin-bottom: 2rem;
 }
 
 .review-section {
-  margin-bottom: 25px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .review-section:last-child {
@@ -308,161 +421,194 @@ h1 {
 }
 
 .review-section p {
-  font-size: 14px;
+  font-size: 0.95rem;
   line-height: 1.6;
-  color: #333;
+  color: var(--text-main);
+  margin: 0;
 }
 
 .order-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 0.9rem;
 }
 
 .order-table th {
-  background: #f0f0f0;
-  padding: 10px;
+  background: var(--bg-dark);
+  color: var(--text-dim);
+  padding: 0.9rem;
   text-align: left;
-  border-bottom: 2px solid #ddd;
-  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .order-table td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  padding: 0.9rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-main);
+}
+
+.order-table tr:last-child td {
+  border-bottom: none;
 }
 
 .order-table .text-right {
   text-align: right;
 }
 
-.summary-detail {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  font-size: 14px;
-}
-
-.summary-detail.final {
-  border-top: 2px solid #333;
-  padding-top: 12px;
-  margin-top: 10px;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-/* PAYMENT SIMULATION */
+/* ==========================================================================
+   PLATEBNÍ SIMULÁTOR
+   ========================================================================== */
 .payment-simulation {
-  background: #fff3cd;
-  border: 1px solid #ffc107;
-  border-radius: 6px;
-  padding: 20px;
-  margin-bottom: 20px;
+  background: var(--surface-light) !important;
+  border: 1px solid var(--border) !important;
+  border-left: 4px solid var(--warning) !important;
+  border-radius: 4px !important;
+  padding: 1.75rem;
+  margin-top: 1.5rem;
 }
 
 .payment-simulation h3 {
   margin-top: 0;
-  color: #856404;
+  color: #fff !important;
+  font-weight: 800;
+  font-size: 1.1rem;
 }
 
+/* Hlavní odesílací tlačítko se zkosením po vzoru košíku */
 .btn-pay {
   display: block;
   width: 100%;
-  padding: 15px;
-  background: #28a745;
-  color: white;
+  padding: 1.1rem;
+  background: var(--success);
+  color: var(--surface);
   border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: bold;
+  border-radius: 4px;
+  font-size: 1.05rem;
+  font-weight: 900;
   cursor: pointer;
-  margin-top: 15px;
-}
-
-.btn-pay:hover:not(:disabled) {
-  background: #218838;
+  margin-top: 1.25rem;
+  transform: skewX(-10deg);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .btn-pay:disabled {
-  background: #ccc;
+  background: var(--border);
+  color: var(--text-dim);
   cursor: not-allowed;
+  transform: none;
 }
 
-/* SUCCESS */
+.btn-pay span {
+  display: inline-block;
+  transform: skewX(10deg); /* Narovnání textu uvnitř zkosení */
+}
+
+.btn-pay:disabled span {
+  transform: none;
+}
+
+/* ==========================================================================
+   DĚKOVACÍ STRÁNKA (KROK 5)
+   ========================================================================== */
 .checkout-step.success {
   text-align: center;
-  padding: 50px 30px;
+  padding: 4rem 2rem;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
 }
 
 .success-box h2 {
-  color: #28a745;
-  font-size: 28px;
-  margin-bottom: 10px;
+  color: var(--success);
+  font-size: 1.8rem;
+  margin-bottom: 0.75rem;
   border: none;
   padding-bottom: 0;
 }
 
 .order-number {
-  background: #e8f5e9;
-  padding: 20px;
-  border-radius: 6px;
-  margin: 20px 0;
-  font-size: 16px;
+  background: var(--surface-light) !important;
+  border: 1px solid var(--border);
+  padding: 1.25rem;
+  border-radius: 4px;
+  margin: 1.75rem 0;
+  font-size: 1.15rem;
+  font-weight: 700;
 }
 
 .confirmation-message {
-  color: #666;
-  margin-bottom: 30px;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+  font-size: 1rem;
 }
 
-/* BUTTONS */
+/* ==========================================================================
+   TLAČÍTKA AKCÍ MEZI KROKY
+   ========================================================================== */
 .step-actions {
   display: flex;
-  gap: 10px;
-  margin-top: 30px;
+  gap: 1.25rem;
+  margin-top: 2.25rem;
 }
 
-.btn-primary, .btn-secondary {
-  padding: 12px 20px;
+.btn-primary, 
+.btn-secondary {
+  padding: 1rem 1.75rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 .btn-primary {
-  background: #007bff;
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: #0056b3;
+  background: var(--primary);
+  color: #fff;
+  flex: 2;
+  transform: skewX(-10deg);
 }
 
 .btn-primary:disabled {
-  background: #ccc;
+  background: var(--border);
+  color: var(--text-dim);
   cursor: not-allowed;
+  transform: none;
 }
 
 .btn-secondary {
-  background: #ddd;
-  color: #333;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  flex: 1;
 }
 
-.btn-secondary:hover:not(:disabled) {
-  background: #ccc;
-}
-
-.btn-secondary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+/* ==========================================================================
+   RESPONSIVITA & MOBILNÍ ZOBRAZENÍ
+   ========================================================================== */
+@media (max-width: 950px) {
+  :host {
+    padding: 1.5rem 1rem;
+  }
 }
 
 @media (max-width: 768px) {
+  .checkout-step {
+    padding: 1.5rem;
+  }
+
   .form-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .payment-methods {
@@ -471,9 +617,41 @@ h1 {
 
   .order-item {
     grid-template-columns: 1fr;
+    gap: 0.5rem;
+    text-align: left;
+  }
+  
+  .price, 
+  .total {
+    text-align: left;
   }
 
   .step-actions {
-    flex-direction: column;
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    flex: none;
+  }
+  
+  .progress-bar {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .progress-bar::before {
+    display: none;
+  }
+  
+  .step-label {
+    display: none;
+  }
+  
+  .step.active .step-label {
+    display: block;
+    font-size: 0.7rem;
+    text-align: center;
   }
 }

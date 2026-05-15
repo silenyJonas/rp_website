@@ -1,10 +1,11 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { CartService } from '../components/services/cart.service';
+import { ShopPublicService } from '../components/services/public-data.service';
 
 interface ShippingMethod {
   id: number;
@@ -57,14 +58,80 @@ export class CheckoutComponent implements OnInit {
 
   selectedShippingPrice = signal(0);
 
+  /**
+   * REVOLUČNÍ ZMĚNA: Použití computed signalu pro rekapitulaci cen.
+   * Přesně kopíruje logiku z admin OrdersComponent.
+   */
+orderSummary = computed(() => {
+    const productsTotal = Number(this.cartService.subtotal() || 0);
+    const coupon = this.appliedCoupon();
+    
+    // Výpočet slevy s jistotou číselného formátu
+    let discount = 0;
+    if (coupon) {
+      if (coupon.discount_type === 'percent') {
+        discount = (productsTotal * Number(coupon.discount_value || 0)) / 100;
+      } else {
+        discount = Number(coupon.discount_value || 0);
+      }
+    }
+    const discountAmount = Math.min(discount, productsTotal);
+
+    // Koeficient slevy pro správný rozpad DPH položek
+    const discountFactor = productsTotal > 0 
+      ? (productsTotal - discountAmount) / productsTotal 
+      : 1;
+
+    let totalBaseAfterDiscount = 0;
+    const vatBreakdown: { [key: number]: number } = {};
+
+    const cartItems = this.cartService.cartItems() || [];
+    
+    cartItems.forEach(item => {
+      const itemUnitPrice = Number(item.unit_price || 0);
+      const itemQuantity = Number(item.quantity || 0);
+      const itemVatRate = Number(item.vat_rate || 21);
+
+      // Výpočet ceny řádku po slevě
+      const lineTotalAfterDiscount = (itemQuantity * itemUnitPrice) * discountFactor;
+      
+      // Výpočet samotného DPH z částky s DPH: částka * (sazba / (100 + sazba))
+      const itemVat = lineTotalAfterDiscount * (itemVatRate / (100 + itemVatRate));
+      const itemBase = lineTotalAfterDiscount - itemVat;
+
+      totalBaseAfterDiscount += itemBase;
+      if (!vatBreakdown[itemVatRate]) {
+        vatBreakdown[itemVatRate] = 0;
+      }
+      vatBreakdown[itemVatRate] += itemVat;
+    });
+
+    const shippingAmount = Number(this.selectedShippingPrice() || 0);
+    
+    // 🛠️ FIX: Striktní matematické sečtení (zajištěno přetypováním proměnných výše)
+    const finalAmount = Math.max(0, (productsTotal - discountAmount) + shippingAmount);
+
+    return {
+      productsTotal,
+      discountAmount,
+      shippingAmount,
+      baseAmount: totalBaseAfterDiscount,
+      vatGroups: Object.keys(vatBreakdown).map(rate => ({
+        rate: Number(rate),
+        amount: vatBreakdown[Number(rate)]
+      })),
+      finalAmount
+    };
+  });
+
   constructor(
     public cartService: CartService,
+    private shopPublicService: ShopPublicService,
     private http: HttpClient,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    // Kontrola, zda je košík prázdný
     if (this.cartService.cartCount() === 0) {
       this.router.navigate(['/cart']);
       return;
@@ -75,28 +142,27 @@ export class CheckoutComponent implements OnInit {
   }
 
   loadShippingMethods(): void {
-    this.http.get<any>(`${environment.base_api_url}/shop/shipping-methods?no_pagination=true`)
-      .subscribe({
-        next: (data) => {
-          this.shippingMethods.set(data.data || data);
-        },
-        error: (e) => console.error('Chyba při načítání dopravy:', e)
-      });
+    this.shopPublicService.getShippingMethods().subscribe({
+      next: (response) => {
+        this.shippingMethods.set(response.data || response);
+      },
+      error: (e) => console.error('Chyba při načítání dopravy:', e)
+    });
   }
 
   loadPaymentMethods(): void {
-    this.http.get<any>(`${environment.base_api_url}/shop/payment-methods?no_pagination=true`)
-      .subscribe({
-        next: (data) => {
-          this.paymentMethods.set(data.data || data);
-        },
-        error: (e) => console.error('Chyba při načítání plateb:', e)
-      });
+    this.shopPublicService.getPaymentMethods().subscribe({
+      next: (response) => {
+        this.paymentMethods.set(response.data || response);
+      },
+      error: (e) => console.error('Chyba při načítání plateb:', e)
+    });
   }
 
   goToStep(step: number): void {
     if (step === 2 && !this.validateStep1()) return;
     if (step === 3 && !this.validateStep2()) return;
+    if (step === 4 && !this.validateStep3()) return;
     this.currentStep.set(step);
   }
 
@@ -105,19 +171,27 @@ export class CheckoutComponent implements OnInit {
   }
 
   validateStep2(): boolean {
-    if (!this.formData.email || !this.formData.firstName || !this.formData.lastName) {
-      alert('Vyplňte prosím všechna povinná pole!');
+    if (!this.formData.email || !this.formData.firstName || !this.formData.lastName || !this.formData.phone || !this.formData.address || !this.formData.city || !this.formData.postalCode) {
+      alert('Vyplňte prosím všechna povinná pole s osobními a doručovacími údaji!');
       return false;
     }
     if (!this.formData.shippingMethodId) {
-      alert('Vyberte si způsob dopravy!');
+      alert('Vyberte si prosím způsob dopravy!');
+      return false;
+    }
+    return true;
+  }
+
+  validateStep3(): boolean {
+    if (!this.formData.paymentMethodId) {
+      alert('Vyberte si prosím platební metodu!');
       return false;
     }
     return true;
   }
 
   updateShippingPrice(): void {
-    const method = this.shippingMethods().find(m => m.id === this.formData.shippingMethodId);
+    const method = this.shippingMethods().find(m => m.id === Number(this.formData.shippingMethodId));
     this.selectedShippingPrice.set(method?.base_price || 0);
   }
 
@@ -127,11 +201,11 @@ export class CheckoutComponent implements OnInit {
 
   applyCoupon(): void {
     if (!this.couponCode.trim()) {
-      this.couponStatus.set('Zadejte kód slev!');
+      this.couponStatus.set('Zadejte kód slevy!');
       return;
     }
 
-    this.http.post<any>(`${environment.base_api_url}/shop/coupons/validate`, {
+    this.http.post<any>(`${environment.base_api_url}/shop/public/coupons/validate`, {
       code: this.couponCode,
       order_amount: this.cartService.subtotal()
     }).subscribe({
@@ -146,44 +220,39 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
-  proceedToConfirmation(): void {
-    this.goToStep(4);
-  }
+simulatePayment(): void {
+  this.isProcessing.set(true);
 
-  couponDiscount(): number {
-    if (!this.appliedCoupon()) return 0;
-    const coupon = this.appliedCoupon();
-    if (coupon.discount_type === 'percent') {
-      return (this.cartService.subtotal() * coupon.discount_value) / 100;
-    }
-    return coupon.discount_value;
-  }
+  // Mapování položek košíku přesně pro potřeby Laravel validace
+  const formattedItems = (this.cartService.cartItems() || []).map(item => ({
+    // Ujistíme se, že předáváme správné ID produktu (případně item.id, pokud drží ID produktu)
+    product_id: Number(item.product_id || item.id), 
+    product_variant_id: item.product_variant_id ? Number(item.product_variant_id) : null,
+    quantity: Number(item.quantity),
+    unit_price: Number(item.unit_price),
+    vat_rate: item.vat_rate ? Number(item.vat_rate) : 21 // Fallback na 21, pokud chybí
+  }));
 
-  finalTotal(): number {
-    const total = this.cartService.subtotal() + this.selectedShippingPrice() - this.couponDiscount();
-    return Math.max(0, total);
-  }
+  const payload = {
+    email: this.formData.email,
+    first_name: this.formData.firstName,
+    last_name: this.formData.lastName,
+    phone: this.formData.phone,
+    company: this.formData.company || null,
+    address: this.formData.address,
+    city: this.formData.city,
+    postal_code: this.formData.postalCode,
+    country: this.formData.country,
+    payment_method_id: Number(this.formData.paymentMethodId),
+    shipping_method_id: Number(this.formData.shippingMethodId),
+    coupon_code: this.appliedCoupon()?.code || null,
+    notes: this.formData.notes || null,
+    items: formattedItems // <--- Přidáno správně naformátované pole položek
+  };
 
-  simulatePayment(): void {
-    this.isProcessing.set(true);
-
-    this.cartService.createOrder(
-      this.formData.email,
-      this.formData.firstName,
-      this.formData.lastName,
-      this.formData.phone,
-      this.formData.company,
-      this.formData.address,
-      this.formData.city,
-      this.formData.postalCode,
-      this.formData.country,
-      this.formData.paymentMethodId!,
-      this.formData.shippingMethodId!,
-      this.appliedCoupon()?.code || null,
-      this.formData.notes
-    ).subscribe({
+  this.http.post<any>(`${environment.base_api_url}/shop/checkout/create-order`, payload)
+    .subscribe({
       next: (response) => {
-        console.log('Objednávka vytvořena:', response);
         this.orderNumber.set(response.order_number);
         this.cartService.clear();
         this.currentStep.set(5);
@@ -191,15 +260,22 @@ export class CheckoutComponent implements OnInit {
       },
       error: (e) => {
         console.error('Chyba při vytváření objednávky:', e);
-        alert('Chyba: ' + (e.error?.message || 'Nepodařilo se vytvořit objednávku'));
+        
+        // VÝBORNÝ POMOCNÍK: Pokud Laravel vrátí 422, vypíšeme přesné chyby z validace do alertu
+        if (e.status === 422 && e.error?.errors) {
+          const validationErrors = Object.values(e.error.errors).flat().join('\n');
+          alert('Chyba validace na serveru:\n' + validationErrors);
+        } else {
+          alert('Chyba: ' + (e.error?.message || 'Nepodařilo se vytvořit objednávku'));
+        }
+        
         this.isProcessing.set(false);
       }
     });
-  }
+}
 
   finishCheckout(): void {
-    this.cartService.clear();
-    this.router.navigate(['/']);
+    this.router.navigate(['/shop']);
   }
 
   formatPrice(price: number): string {

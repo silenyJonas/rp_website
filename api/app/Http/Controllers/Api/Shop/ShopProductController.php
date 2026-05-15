@@ -166,16 +166,13 @@ class ShopProductController extends Controller
             }
 
             // Smazání variant
-            // V metodě update nahraď sekci pro mazání variant tímto:
-
             if ($request->has('delete_variants')) {
                 Log::info("Deleting variants and their images", ['ids' => $request->delete_variants]);
                 
-                // Místo whereIn()->delete() uděláme toto:
                 $variantsToDelete = ShopProductVariant::whereIn('id', $request->delete_variants)->get();
                 
                 foreach ($variantsToDelete as $variant) {
-                    $variant->delete(); // Toto spustí události v modelu (maže obrázky i syncuje sklad)
+                    $variant->delete();
                 }
             }
 
@@ -186,6 +183,13 @@ class ShopProductController extends Controller
             }
 
             $this->syncProductStock($product);
+
+            // 🔥 VYČIŠTĚNÍ CACHE: Odstranění starých stavů skladu z cache paměti
+            \Illuminate\Support\Facades\Cache::forget("product_stock_{$product->id}");
+            foreach ($product->variants as $variant) {
+                \Illuminate\Support\Facades\Cache::forget("product_stock_{$product->id}_v{$variant->id}");
+            }
+
             $product->load(['category', 'supplier', 'primaryImage', 'images', 'variants' => fn($q) => $q->with('images')]);
             $this->logAction($request, 'update', 'ShopProduct', "Aktualizace produktu: {$product->name}", $product->id);
 
@@ -288,13 +292,11 @@ class ShopProductController extends Controller
     private function storeImages(ShopProduct $product, array $images, Request $request, string $prefix = 'images'): void
     {
         foreach ($images as $index => $imageData) {
-            // Přeskakujeme obrázky, které již existují a nemají nový soubor
             if (!empty($imageData['id']) && !$request->hasFile("{$prefix}.{$index}.file")) {
                 Log::info("Skipping existing image without new file", ['image_id' => $imageData['id']]);
                 continue;
             }
 
-            // Pokud je to existující obrázek bez souboru, aktualizujeme metadata
             if (!empty($imageData['id']) && !$request->hasFile("{$prefix}.{$index}.file")) {
                 ShopProductImage::find($imageData['id'])?->update([
                     'alt_text' => $imageData['alt_text'] ?? '',
@@ -304,7 +306,6 @@ class ShopProductController extends Controller
                 continue;
             }
 
-            // Získáme soubor z requestu
             $file = $request->file("{$prefix}.{$index}.file");
 
             if (!$file) {
@@ -317,12 +318,10 @@ class ShopProductController extends Controller
                 continue;
             }
 
-            // Uložíme soubor
             $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('products', $fileName, 'public');
             Log::info("Image stored to disk", ['path' => $path, 'filename' => $fileName]);
 
-            // Pokud je to aktualizace existujícího obrázku, smazeme starý
             if (!empty($imageData['id'])) {
                 $oldImage = ShopProductImage::find($imageData['id']);
                 if ($oldImage) {
@@ -335,7 +334,6 @@ class ShopProductController extends Controller
                     ]);
                 }
             } else {
-                // Nový obrázek
                 ShopProductImage::create([
                     'product_id' => $product->id,
                     'variant_id' => $imageData['variant_id'] ?? null,
@@ -360,12 +358,10 @@ class ShopProductController extends Controller
     {
         $images = ShopProductImage::whereIn('id', $imageIds)->get();
         foreach ($images as $image) {
-            // Smazání souboru
             if (Storage::disk('public')->exists('products/' . $image->image_path)) {
                 Storage::disk('public')->delete('products/' . $image->image_path);
                 Log::info("Image file deleted from disk", ['path' => $image->image_path]);
             }
-            // Smazání DB záznamu
             $image->delete();
         }
     }
@@ -378,7 +374,6 @@ class ShopProductController extends Controller
         $variants = ShopProductVariant::whereIn('id', $variantIds)->get();
         
         foreach ($variants as $variant) {
-            // Smazání všech obrázků varianty
             $images = ShopProductImage::where('variant_id', $variant->id)->get();
             foreach ($images as $image) {
                 if (Storage::disk('public')->exists('products/' . $image->image_path)) {
@@ -386,8 +381,6 @@ class ShopProductController extends Controller
                 }
                 $image->delete();
             }
-            
-            // Smazání varianty
             $variant->delete();
         }
     }
@@ -412,7 +405,6 @@ class ShopProductController extends Controller
                 'stock_quantity' => $variantData['stock_quantity'] ?? 0,
             ]);
 
-            // Uložení obrázků uvnitř varianty
             if (isset($variantData['images']) && is_array($variantData['images']) && $request) {
                 Log::info("Processing images for new variant", ['variant_id' => $variant->id]);
                 
@@ -426,123 +418,115 @@ class ShopProductController extends Controller
         }
     }
 
-private function updateVariants(ShopProduct $product, array $variants, Request $request): void
-{
-    foreach ($variants as $idx => $variantData) {
-        // EXISTUJÍCÍ VARIANTA (Update)
-        if (isset($variantData['id']) && $variantData['id'] > 0) {
-            $variant = ShopProductVariant::findOrFail($variantData['id']);
-            
-            $variant->update([
-                'variant_name'      => $variantData['variant_name'],
-                'attribute_1_name'  => $variantData['attribute_1_name'] ?? null,
-                'attribute_1_value' => $variantData['attribute_1_value'] ?? null,
-                'attribute_2_name'  => $variantData['attribute_2_name'] ?? null,
-                'attribute_2_value' => $variantData['attribute_2_value'] ?? null,
-                'sku_variant'       => $variantData['sku_variant'] ?? null,
-                'price_with_vat'    => $variantData['price_with_vat'] ?? 0,
-                'price_without_vat' => $variantData['price_without_vat'] ?? 0,
-                'vat_rate'          => $variantData['vat_rate'] ?? 21,
-                'stock_quantity'    => $variantData['stock_quantity'] ?? 0,
-            ]);
-
-            // ⚠️ NOVÉ: Smazání označených obrázků této konkrétní varianty
-            if (isset($variantData['delete_images']) && is_array($variantData['delete_images'])) {
-                Log::info("Deleting variant images", [
-                    'variant_id' => $variant->id,
-                    'image_ids' => $variantData['delete_images']
-                ]);
+    /**
+     * Aktualizace existujících variant
+     */
+    private function updateVariants(ShopProduct $product, array $variants, Request $request): void
+    {
+        foreach ($variants as $idx => $variantData) {
+            if (isset($variantData['id']) && $variantData['id'] > 0) {
+                $variant = ShopProductVariant::findOrFail($variantData['id']);
                 
-                $this->deleteImages($variantData['delete_images']);
-            }
+                $variant->update([
+                    'variant_name'      => $variantData['variant_name'],
+                    'attribute_1_name'  => $variantData['attribute_1_name'] ?? null,
+                    'attribute_1_value' => $variantData['attribute_1_value'] ?? null,
+                    'attribute_2_name'  => $variantData['attribute_2_name'] ?? null,
+                    'attribute_2_value' => $variantData['attribute_2_value'] ?? null,
+                    'sku_variant'       => $variantData['sku_variant'] ?? null,
+                    'price_with_vat'    => $variantData['price_with_vat'] ?? 0,
+                    'price_without_vat' => $variantData['price_without_vat'] ?? 0,
+                    'vat_rate'          => $variantData['vat_rate'] ?? 21,
+                    'stock_quantity'    => $variantData['stock_quantity'] ?? 0,
+                ]);
 
-            // Zpracování nových nebo upravených obrázků varianty
-            if (isset($variantData['images']) && is_array($variantData['images'])) {
-                $variantImages = array_map(function($img) use ($variant) {
-                    $img['variant_id'] = $variant->id;
-                    return $img;
-                }, $variantData['images']);
+                if (isset($variantData['delete_images']) && is_array($variantData['delete_images'])) {
+                    Log::info("Deleting variant images", [
+                        'variant_id' => $variant->id,
+                        'image_ids' => $variantData['delete_images']
+                    ]);
+                    
+                    $this->deleteImages($variantData['delete_images']);
+                }
 
-                $this->storeImages($product, $variantImages, $request, "variants.{$idx}.images");
+                if (isset($variantData['images']) && is_array($variantData['images'])) {
+                    $variantImages = array_map(function($img) use ($variant) {
+                        $img['variant_id'] = $variant->id;
+                        return $img;
+                    }, $variantData['images']);
+
+                    $this->storeImages($product, $variantImages, $request, "variants.{$idx}.images");
+                }
+            } else {
+                $this->storeVariants($product, [$variantData], $request);
             }
-        } 
-        // NOVÁ VARIANTA (Create)
-        else {
-            $this->storeVariants($product, [$variantData], $request);
         }
     }
-}
-/**
- * Veřejný seznam produktů pro e-shop (Paginace + Filtry)
- */
-public function publicIndex(Request $request): JsonResponse
-{
-    $perPage = $request->input('per_page', 20); // Defaultně 20 produktů pro frontend
 
-    // Základní query: Pouze aktivní produkty + Eager Loading pro rychlost
-    $query = ShopProduct::active()
-        ->with(['primaryImage', 'category']);
+    /**
+     * Veřejný seznam produktů pro e-shop (Paginace + Filtry)
+     */
+    public function publicIndex(Request $request): JsonResponse
+    {
+        $perPage = $request->input('per_page', 20);
 
-    // --- FILTRY ---
-    // Vyhledávání
-    if ($s = $request->input('search')) {
-        $query->where(fn($q) => $q->where('name', 'like', "%$s%")
-            ->orWhere('description', 'like', "%$s%"));
-    }
+        $query = ShopProduct::active()
+            ->with(['primaryImage', 'category']);
 
-    // Filtrování podle kategorie
-    if ($request->filled('category_id')) {
-        $query->where('category_id', $request->input('category_id'));
-    }
+        if ($s = $request->input('search')) {
+            $query->where(fn($q) => $q->where('name', 'like', "%$s%")
+                ->orWhere('description', 'like', "%$s%"));
+        }
 
-    // Cenové rozpětí
-    if ($request->filled('price_from')) {
-        $query->where('price', '>=', $request->input('price_from'));
-    }
-    if ($request->filled('price_to')) {
-        $query->where('price', '<=', $request->input('price_to'));
-    }
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->input('category_id'));
+        }
 
-    // --- ŘAZENÍ ---
-    $sortBy = $request->input('sort_by', 'created_at'); 
-    $sortDirection = $request->input('sort_direction', 'desc');
-    $query->orderBy($sortBy, $sortDirection);
+        if ($request->filled('price_from')) {
+            $query->where('price', '>=', $request->input('price_from'));
+        }
+        if ($request->filled('price_to')) {
+            $query->where('price', '<=', $request->input('price_to'));
+        }
 
-    // Paginace
-    $products = $query->paginate($perPage);
+        $sortBy = $request->input('sort_by', 'created_at'); 
+        $sortDirection = $request->input('sort_direction', 'desc');
+        $query->orderBy($sortBy, $sortDirection);
 
-    return response()->json([
-        'data'         => ShopProductResource::collection($products->items()),
-        'total'        => $products->total(),
-        'per_page'     => $products->perPage(),
-        'current_page' => $products->currentPage(),
-        'last_page'    => $products->lastPage(),
-    ]);
-}
-/**
- * Veřejný detail produktu pro e-shop
- */
-public function publicShow($slugOrId): JsonResponse
-{
-    // Hledáme buď podle ID nebo podle SLUG, ale vždy jen AKTIVNÍ
-    $query = ShopProduct::active()
-        ->with([
-            'category', 
-            'images' => fn($q) => $q->orderBy('sort_order'), // Kompletní galerie
-            'variants' => fn($q) => $q->with('images')       // Všechny varianty + jejich fotky
+        $products = $query->paginate($perPage);
+
+        return response()->json([
+            'data'         => ShopProductResource::collection($products->items()),
+            'total'        => $products->total(),
+            'per_page'     => $products->perPage(),
+            'current_page' => $products->currentPage(),
+            'last_page'    => $products->lastPage(),
         ]);
-
-    // Zkusíme najít podle ID, pokud je to číslo, jinak podle slugu
-    $product = is_numeric($slugOrId) 
-        ? $query->find($slugOrId) 
-        : $query->where('slug', $slugOrId)->first();
-
-    if (!$product) {
-        return response()->json(['message' => 'Produkt nebyl nalezen nebo není aktivní.'], 404);
     }
 
-    return response()->json(new ShopProductResource($product));
-}
+    /**
+     * Veřejný detail produktu pro e-shop
+     */
+    public function publicShow($slugOrId): JsonResponse
+    {
+        $query = ShopProduct::active()
+            ->with([
+                'category', 
+                'images' => fn($q) => $q->orderBy('sort_order'),
+                'variants' => fn($q) => $q->with('images')
+            ]);
+
+        $product = is_numeric($slugOrId) 
+            ? $query->find($slugOrId) 
+            : $query->where('slug', $slugOrId)->first();
+
+        if (!$product) {
+            return response()->json(['message' => 'Produkt nebyl nalezen nebo není aktivní.'], 404);
+        }
+
+        return response()->json(new ShopProductResource($product));
+    }
+
     /**
      * Synchronizace skladových zásob
      */

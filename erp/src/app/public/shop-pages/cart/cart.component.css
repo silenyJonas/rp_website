@@ -11,7 +11,6 @@
   --error: #ff4d4d;
   --warning: #ffcc00;
 
-  /* PŘIDÁNO: Odsazení celého designu košíku od stran okna a stropu */
   display: block;
   max-width: 1280px;
   margin: 0 auto;
@@ -25,50 +24,6 @@
   margin-bottom: 1.2rem;
   color: #fff;
   letter-spacing: -0.5px;
-}
-
-/* UPRAVENO: Výrazně zmenšené a zúžené pole pro timeout */
-.cart-timer {
-  display: inline-flex; /* Změna z flex na inline-flex, aby se pole neroztahovalo na celou šířku */
-  align-items: center;
-  gap: 8px;
-  padding: 0.4rem 0.8rem; /* Menší vnitřní padding */
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--primary);
-  border-radius: 2px;
-  margin-bottom: 1.2rem;
-  font-size: 0.8rem; /* Drobnější písmo */
-  color: var(--text-main);
-}
-
-.timer-pulse-dot {
-  width: 5px; /* Zmenšený bod */
-  height: 5px;
-  background-color: var(--success);
-  border-radius: 50%;
-}
-
-.timer-pulse-dot.warning {
-  background-color: var(--error);
-  animation: timerPulse 1s infinite;
-}
-
-@keyframes timerPulse {
-  0% { transform: scale(0.9); opacity: 1; }
-  50% { transform: scale(1.2); opacity: 0.4; }
-  100% { transform: scale(0.9); opacity: 1; }
-}
-
-.timer-label { color: var(--text-dim); }
-.timer-value { font-weight: 700; color: #fff; }
-.timer-value.warning { color: var(--error); }
-.timer-info {
-  margin-left: 10px; /* Užší fixní mezera namísto auto */
-  color: var(--warning);
-  font-weight: 700;
-  font-size: 0.75rem;
-  letter-spacing: 0.5px;
 }
 
 /* PRÁZDNÝ KOŠÍK */
@@ -298,13 +253,13 @@
 
 /* RESPONSIVITA */
 @media (max-width: 950px) {
-  :host { padding: 1rem 1.2rem; } /* Menší boční okraje na tabletech */
+  :host { padding: 1rem 1.2rem; }
   .cart-content { grid-template-columns: 1fr; gap: 1.5rem; }
   .cart-summary-card { position: static; }
 }
 
 @media (max-width: 650px) {
-  :host { padding: 0.8rem 0.6rem; } /* Minimální okraje na mobilech */
+  :host { padding: 0.8rem 0.6rem; }
   .cart-item {
     grid-template-columns: 64px 1fr auto;
     gap: 0.8rem;
@@ -312,5 +267,4 @@
   }
   .item-total { grid-column: 2; text-align: left; }
   .btn-remove { grid-column: 3; grid-row: 1; }
-  .timer-info { display: none; }
 }

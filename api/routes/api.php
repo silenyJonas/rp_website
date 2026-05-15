@@ -28,10 +28,12 @@ use App\Http\Controllers\Api\Shop\ShopPaymentMethodController;
 use App\Http\Controllers\Api\Shop\ShopProductController;
 use App\Http\Controllers\Api\Shop\ShopOrderController; // 📦 Objednávky
 use App\Http\Controllers\Api\Shop\ShopCustomerController; // 👥 Zákazníci
+use App\Http\Controllers\Api\Shop\ShopCheckoutController; // 💳 Importováno pro checkout a platbu
+use App\Http\Controllers\Api\Shop\ShopPublicController; // 🌍 Nový veřejný kontroler
 
 /*
 |--------------------------------------------------------------------------
-| 🛒 VEŘEJNÉ E-SHOP TRASY (Bez autorizace)
+| 🛒 VEŘEJNÉ E-SHOP TRASY (Bez autorizace - Angular ShopPublicService)
 |--------------------------------------------------------------------------
 */
 Route::prefix('shop/public')->group(function () {
@@ -39,15 +41,30 @@ Route::prefix('shop/public')->group(function () {
     Route::get('products', [ShopProductController::class, 'publicIndex']);
     Route::get('products/{slugOrId}', [ShopProductController::class, 'publicShow']);
     
-    // Kategorie
+    // ZABEZPEČENO: Kontrola skladu z košíku (Maximálně 15 dotazů za minutu z jedné IP adresy)
+    Route::get('products/{id}/check-stock', [ShopPublicController::class, 'checkStock'])
+        ->middleware('throttle:15,1');
+    
+    // Kategorie pro filtry a menu
     Route::get('categories', [ShopCategoryController::class, 'index']);
+
+    // Dopravní a platební metody pro pokladnu
+    Route::get('shipping-methods', [ShopPublicController::class, 'getShippingMethods']);
+    Route::get('payment-methods', [ShopPublicController::class, 'getPaymentMethods']);
+
+    // Ověření kupónu v košíku
+    Route::post('coupons/validate', [ShopPublicController::class, 'validateCoupon']);
 });
 
-Route::prefix('checkout')->group(function () {
-    Route::post('/create-order', [\App\Http\Controllers\Api\Shop\ShopCheckoutController::class, 'createOrder']);
-    Route::post('/validate-coupon', [\App\Http\Controllers\Api\Shop\ShopCheckoutController::class, 'validateCoupon']);
-    Route::post('/simulate-payment', [\App\Http\Controllers\Api\Shop\ShopCheckoutController::class, 'simulatePayment']);
-    });
+/*
+|--------------------------------------------------------------------------
+| 💳 DOKONČENÍ OBJEDNÁVKY (Košík -> Pokladna)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('shop/checkout')->group(function () {
+    Route::post('create-order', [ShopCheckoutController::class, 'createOrder']);
+    Route::post('simulate-payment', [ShopCheckoutController::class, 'simulatePayment']);
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -58,15 +75,9 @@ Route::get('/sanctum/csrf-cookie', function (Request $request) {
     return response()->json([], 204);
 });
 
-Route::post('/login', [AuthController::class, 'login']);
+// ZABEZPEČENO: Ochrana proti zkoušení hesel (Brute Force) - max 5 pokusů za minutu
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 Route::post('/refresh', [AuthController::class, 'refresh']);
-
-// 🛒 VEŘEJNÉ E-SHOP TRASY (Pro zákazníky bez přihlášení)
-Route::prefix('shop')->group(function () {
-    Route::get('products', [ShopProductController::class, 'publicIndex']);
-    Route::get('products/{slugOrId}', [ShopProductController::class, 'publicShow']);
-    Route::get('categories', [ShopCategoryController::class, 'index']); // Seznam kategorií pro menu
-});
 
 // 🟢 VEŘEJNÉ FORMULÁŘE (Zvenčí z webu bez /web prefixu)
 Route::post('raw_request_commissions', [WebRawRequestCommissionController::class, 'store']);
@@ -82,10 +93,11 @@ Route::get('/download-file/{folder}/{file}', function ($folder, $file) {
 
 /*
 |--------------------------------------------------------------------------
-| Protected Routes (Auth:Sanctum)
+| Protected Routes (Auth:Sanctum) + PLOŠNÝ RATE LIMITING
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth:sanctum')->group(function () {
+// ZABEZPEČENO: Pokud unikne token, útočník je zpomenen limitem 100 požadavků za minutu per IP
+Route::middleware(['auth:sanctum', 'throttle:100,1'])->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);

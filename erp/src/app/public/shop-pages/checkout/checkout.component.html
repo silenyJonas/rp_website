@@ -9,13 +9,13 @@
     </div>
     <div class="step" [class.active]="currentStep() === 2" [class.done]="currentStep() > 2">
       <div class="step-num">2</div>
-      <div class="step-label">Údaje</div>
+      <div class="step-label">Údaje & Doprava</div>
     </div>
     <div class="step" [class.active]="currentStep() === 3" [class.done]="currentStep() > 3">
       <div class="step-num">3</div>
       <div class="step-label">Platba</div>
     </div>
-    <div class="step" [class.active]="currentStep() === 4">
+    <div class="step" [class.active]="currentStep() === 4" [class.done]="currentStep() > 4">
       <div class="step-num">4</div>
       <div class="step-label">Potvrzení</div>
     </div>
@@ -37,36 +37,23 @@
     </div>
 
     <div class="totals">
-      <div class="total-row">
-        <span>Mezisoučet:</span>
-        <span>{{ formatPrice(cartService.subtotal()) }}</span>
-      </div>
-      <div class="total-row">
-        <span>DPH:</span>
-        <span>{{ formatPrice(cartService.totalTax()) }}</span>
-      </div>
-      <div class="total-row">
-        <span>Přepravné:</span>
-        <span>{{ formatPrice(selectedShippingPrice()) }}</span>
-      </div>
-      <div class="total-row" *ngIf="appliedCoupon()">
-        <span>Sleva ({{ appliedCoupon()?.code }}):</span>
-        <span>-{{ formatPrice(couponDiscount()) }}</span>
-      </div>
       <div class="total-row final">
-        <span>CELKEM K ÚHRADĚ:</span>
-        <span>{{ formatPrice(finalTotal()) }}</span>
+        <span>Mezisoučet za zboží:</span>
+        <span>{{ formatPrice(orderSummary().productsTotal) }}</span>
       </div>
+      <p style="color: #666; font-size: 13px; margin-top: 10px; text-align: right;">
+        * Ceny dopravy a případné slevové kódy budou spočítány v následujících krocích.
+      </p>
     </div>
 
     <div class="step-actions">
-      <button (click)="goToStep(2)" class="btn-primary">Pokračovat →</button>
+      <button (click)="goToStep(2)" class="btn-primary">Zadat doručovací údaje →</button>
     </div>
   </div>
 
-  <!-- KROK 2: ÚDAJE ZÁKAZNÍKA -->
+  <!-- KROK 2: ÚDAJE ZÁKAZNÍKA A DOPRAVA -->
   <div class="checkout-step" *ngIf="currentStep() === 2">
-    <h2>Vaše údaje</h2>
+    <h2>Doručovací údaje a způsob přepravy</h2>
     <form (ngSubmit)="goToStep(3)">
       <div class="form-grid">
         <!-- Email -->
@@ -161,21 +148,20 @@
             type="text" 
             [(ngModel)]="formData.country" 
             name="country"
-            value="Česká republika"
             required
           >
         </div>
 
         <!-- Doprava -->
-        <div class="form-group full">
-          <label>Způsob dopravy *</label>
+        <div class="form-group full" style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+          <label style="font-weight: bold; font-size: 16px;">Způsob dopravy *</label>
           <select 
             [(ngModel)]="formData.shippingMethodId" 
             name="shippingMethodId"
             (change)="updateShippingPrice()"
             required
           >
-            <option value="">-- Vyberte dopravu --</option>
+            <option [value]="null">-- Vyberte dopravu --</option>
             <option *ngFor="let method of shippingMethods()" [value]="method.id">
               {{ method.name }} — {{ formatPrice(method.base_price) }}
             </option>
@@ -191,35 +177,18 @@
             rows="3"
           ></textarea>
         </div>
-
-        <!-- Kupon -->
-        <div class="form-group full coupon-input">
-          <label>Slevový kód (volitelné)</label>
-          <div class="coupon-row">
-            <input 
-              type="text" 
-              [(ngModel)]="couponCode" 
-              name="couponCode"
-              placeholder="Zadejte kód"
-            >
-            <button type="button" (click)="applyCoupon()" class="btn-apply">
-              Použít
-            </button>
-          </div>
-          <p class="coupon-status" *ngIf="couponStatus()">{{ couponStatus() }}</p>
-        </div>
       </div>
 
       <div class="step-actions">
-        <button type="button" (click)="goToStep(1)" class="btn-secondary">← Zpět</button>
-        <button type="submit" class="btn-primary">Pokračovat →</button>
+        <button type="button" (click)="goToStep(1)" class="btn-secondary">← Zpět na přehled</button>
+        <button type="submit" class="btn-primary">Pokračovat k platbě →</button>
       </div>
     </form>
   </div>
 
-  <!-- KROK 3: PLATBA -->
+  <!-- KROK 3: PLATBA A KUPÓNY -->
   <div class="checkout-step" *ngIf="currentStep() === 3">
-    <h2>Výběr platební metody</h2>
+    <h2>Výběr platby a slevové kódy</h2>
     
     <div class="payment-methods">
       <div 
@@ -239,48 +208,82 @@
       </div>
     </div>
 
-    <!-- SHRNUTÍ Before PAYMENT -->
-    <div class="order-summary">
-      <h3>Shrnutí objednávky</h3>
+    <!-- Slevový kupon -->
+    <div class="coupon-section" style="margin-top: 25px; padding: 15px;  border-radius: 6px;">
+      <div class="form-group full coupon-input" style="margin-bottom: 0;">
+        <label style="font-weight: bold;">Máte slevový kód?</label>
+        <div class="coupon-row" style="display: flex; gap: 10px; margin-top: 5px;">
+          <input 
+            type="text" 
+            [(ngModel)]="couponCode" 
+            name="couponCode"
+            placeholder="Zadejte kód"
+            style="flex: 1;"
+          >
+          <button type="button" (click)="applyCoupon()" class="btn-apply">
+            Uplatnit slevu
+          </button>
+        </div>
+        <p class="coupon-status" *ngIf="couponStatus()" style="margin-top: 5px; font-weight: 500;">{{ couponStatus() }}</p>
+      </div>
+    </div>
+
+    <!-- Průběžné mezisoučty - PŘENESEN MODEL Z ADMIN PANELU -->
+    <div class="order-summary" style="margin-top: 25px;">
+      <h3>Průběžná kalkulace</h3>
       <div class="summary-detail">
-        <span>Mezisoučet:</span>
-        <strong>{{ formatPrice(cartService.subtotal()) }}</strong>
+        <span>Cena zboží:</span>
+        <strong>{{ formatPrice(orderSummary().productsTotal) }}</strong>
+      </div>
+      <div class="summary-detail" *ngIf="orderSummary().discountAmount > 0" style="color: #d9534f;">
+        <span>Sleva z kupónu:</span>
+        <strong>-{{ formatPrice(orderSummary().discountAmount) }}</strong>
       </div>
       <div class="summary-detail">
-        <span>Doprava:</span>
-        <strong>{{ formatPrice(selectedShippingPrice()) }}</strong>
+        <span>Zvolená doprava:</span>
+        <strong>{{ formatPrice(orderSummary().shippingAmount) }}</strong>
       </div>
-      <div class="summary-detail" *ngIf="appliedCoupon()">
-        <span>Sleva:</span>
-        <strong>-{{ formatPrice(couponDiscount()) }}</strong>
+      
+      <!-- Rozpad DPH -->
+      <div class="vat-breakdown" style="border-top: 1px dashed #eee; margin-top: 8px; padding-top: 8px;">
+        <div class="summary-detail text-muted" style="font-size: 13px;">
+          <span>Základ daně:</span>
+          <span>{{ formatPrice(orderSummary().baseAmount) }}</span>
+        </div>
+        <div class="summary-detail text-muted" style="font-size: 13px;" *ngFor="let vat of orderSummary().vatGroups">
+          <span>DPH {{ vat.rate }}%:</span>
+          <span>{{ formatPrice(vat.amount) }}</span>
+        </div>
       </div>
+
       <div class="summary-detail final">
-        <span>CELKEM K ÚHRADĚ:</span>
-        <strong>{{ formatPrice(finalTotal()) }}</strong>
+        <span>Aktuální mezisoučet celkem:</span>
+        <strong>{{ formatPrice(orderSummary().finalAmount) }}</strong>
       </div>
     </div>
 
     <div class="step-actions">
-      <button (click)="goToStep(2)" class="btn-secondary">← Zpět</button>
+      <button (click)="goToStep(2)" class="btn-secondary">← Zpět na údaje</button>
       <button 
-        (click)="proceedToConfirmation()" 
+        (click)="goToStep(4)" 
         class="btn-primary"
         [disabled]="!formData.paymentMethodId"
       >
-        Pokračovat na potvrzení →
+        Pokračovat na rekapitulaci →
       </button>
     </div>
   </div>
 
-  <!-- KROK 4: POTVRZENÍ A PLATBA -->
+  <!-- KROK 4: POTVRZENÍ A SIMULOVANÁ PLATBA -->
   <div class="checkout-step" *ngIf="currentStep() === 4">
-    <h2>Potvrzení objednávky</h2>
+    <h2>Závazné potvrzení objednávky</h2>
 
     <div class="order-review">
       <div class="review-section">
-        <h3>Doručovací adresa</h3>
+        <h3>Doručovací adresa & Kontakt</h3>
         <p>
           {{ formData.firstName }} {{ formData.lastName }}<br>
+          <span *ngIf="formData.company">Firma: {{ formData.company }}<br></span>
           {{ formData.address }}<br>
           {{ formData.postalCode }} {{ formData.city }}<br>
           {{ formData.country }}<br>
@@ -292,88 +295,101 @@
       <div class="review-section">
         <h3>Položky objednávky</h3>
         <table class="order-table">
-          <tr>
-            <th>Produkt</th>
-            <th>Kus</th>
-            <th>Počet</th>
-            <th>Cena</th>
-          </tr>
-          <tr *ngFor="let item of cartService.cartItems()">
-            <td>
-              {{ item.product_name }}
-              <br><small *ngIf="item.variant_name">{{ item.variant_name }}</small>
-            </td>
-            <td>{{ formatPrice(item.unit_price) }}</td>
-            <td>{{ item.quantity }}</td>
-            <td class="text-right">{{ formatPrice(item.total_price) }}</td>
-          </tr>
+          <thead>
+            <tr>
+              <th>Produkt</th>
+              <th>Kusová cena</th>
+              <th>Počet</th>
+              <th style="text-align: right;">Celkem</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of cartService.cartItems()">
+              <td>
+                {{ item.product_name }}
+                <br><small *ngIf="item.variant_name" class="text-muted">{{ item.variant_name }}</small>
+              </td>
+              <td>{{ formatPrice(item.unit_price) }}</td>
+              <td>{{ item.quantity }}</td>
+              <td class="text-right" style="font-weight: bold;">{{ formatPrice(item.total_price) }}</td>
+            </tr>
+          </tbody>
         </table>
       </div>
 
       <div class="review-section">
-        <h3>Celkový souhrn</h3>
+        <h3>Konečné vyúčtování</h3>
         <div class="summary-detail">
           <span>Zboží:</span>
-          <strong>{{ formatPrice(cartService.subtotal()) }}</strong>
+          <strong>{{ formatPrice(orderSummary().productsTotal) }}</strong>
         </div>
-        <div class="summary-detail">
-          <span>DPH:</span>
-          <strong>{{ formatPrice(cartService.totalTax()) }}</strong>
+        <div class="summary-detail" *ngIf="orderSummary().discountAmount > 0" style="color: #d9534f;">
+          <span>Aplikovaná sleva ({{ appliedCoupon()?.code }}):</span>
+          <strong>-{{ formatPrice(orderSummary().discountAmount) }}</strong>
         </div>
         <div class="summary-detail">
           <span>Doprava:</span>
-          <strong>{{ formatPrice(selectedShippingPrice()) }}</strong>
+          <strong>{{ formatPrice(orderSummary().shippingAmount) }}</strong>
         </div>
-        <div class="summary-detail" *ngIf="appliedCoupon()">
-          <span>Sleva ({{ appliedCoupon()?.code }}):</span>
-          <strong>-{{ formatPrice(couponDiscount()) }}</strong>
+
+        <!-- Rozpad DPH identický s administrací -->
+        <div class="vat-breakdown" style="border-top: 1px dashed #eee; margin-top: 8px; padding-top: 8px;">
+          <div class="summary-detail text-muted" style="font-size: 13px;">
+            <span>Základ daně celkem:</span>
+            <span>{{ formatPrice(orderSummary().baseAmount) }}</span>
+          </div>
+          <div class="summary-detail text-muted" style="font-size: 13px;" *ngFor="let vat of orderSummary().vatGroups">
+            <span>DPH {{ vat.rate }}%:</span>
+            <span>{{ formatPrice(vat.amount) }}</span>
+          </div>
         </div>
+
         <div class="summary-detail final">
           <span>CELKEM K ÚHRADĚ:</span>
-          <strong style="font-size: 20px;">{{ formatPrice(finalTotal()) }}</strong>
+          <strong style="font-size: 22px; color: #2ecc71;">{{ formatPrice(orderSummary().finalAmount) }}</strong>
         </div>
       </div>
     </div>
 
     <!-- SIMULACE PLATBY -->
-    <div class="payment-simulation">
-      <h3>Simulace platby</h3>
-      <p>Platební brána bude implementována později.</p>
-      <p style="color: #666; font-size: 13px;">
-        Kliknutím na tlačítko níže simulujete platbu. Objednávka bude zaslána na server.
+    <div class="payment-simulation" style="background: #fff8f2; border: 1px solid #ffebdb; padding: 20px; border-radius: 6px; margin-top: 20px;">
+      <h3>💳 Platební simulátor</h3>
+      <p style="color: #666; font-size: 13px; margin-bottom: 15px;">
+        Kliknutím na tlačítko níže odešlete objednávku do systému. Odeslání e-mailu s potvrzením bude zalogováno v konzoli vývojáře.
       </p>
 
       <button 
         (click)="simulatePayment()" 
         class="btn-pay"
         [disabled]="isProcessing()"
+        style="width: 100%; padding: 15px; font-size: 16px; font-weight: bold;"
       >
-        <span *ngIf="!isProcessing()">💳 ZAPLATIT {{ formatPrice(finalTotal()) }}</span>
-        <span *ngIf="isProcessing()">Zpracovávám...</span>
+        <span *ngIf="!isProcessing()">DOKONČIT OBJEDNÁVKU A ZAPLATIT {{ formatPrice(orderSummary().finalAmount) }}</span>
+        <span *ngIf="isProcessing()">Zpracovávám objednávku...</span>
       </button>
     </div>
 
     <div class="step-actions">
-      <button (click)="goToStep(3)" class="btn-secondary" [disabled]="isProcessing()">← Zpět</button>
+      <button (click)="goToStep(3)" class="btn-secondary" [disabled]="isProcessing()">← Zpět k platbě</button>
     </div>
   </div>
 
-  <!-- POTVRZENÍ OBJEDNÁVKY -->
+  <!-- POTVRZENÍ OBJEDNÁVKY (DĚKOVACÍ STRÁNKA) -->
   <div class="checkout-step success" *ngIf="currentStep() === 5">
     <div class="success-box">
       <h2>✓ Objednávka úspěšně vytvořena!</h2>
-      <p>Vaše objednávka byla přijata.</p>
+      <p>Vaše objednávka byla úspěšně přijata naším systémem.</p>
       
-      <div class="order-number">
-        <strong>Číslo objednávky:</strong> {{ orderNumber() }}
+      <div class="order-number" style="background: #eef9f0; padding: 15px; border-radius: 4px; font-size: 18px; margin: 15px 0;">
+        <strong>Číslo objednávky:</strong> <span style="color: #27ae60;">{{ orderNumber() }}</span>
       </div>
 
       <p class="confirmation-message">
-        Na email <strong>{{ formData.email }}</strong> vám byla poslána potvrzovací zpráva.
+        Na e-mail <strong>{{ formData.email }}</strong> vám bylo odesláno potvrzení s rekapitulací.
       </p>
 
-      <button (click)="finishCheckout()" class="btn-primary">
-        Zpět na domů
+      <button (click)="finishCheckout()" class="btn-primary" style="margin-top: 15px;">
+        Návrat na hlavní stránku
       </button>
     </div>
   </div>

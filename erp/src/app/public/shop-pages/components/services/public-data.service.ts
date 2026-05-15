@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, map } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
 
@@ -8,6 +8,7 @@ import { environment } from '../../../../../environments/environment';
   providedIn: 'root'
 })
 export class ShopPublicService {
+  // Základní URL pro veřejné e-shopové operace - v api.php odpovídá Route::prefix('shop/public')
   private readonly apiUrl = `${environment.base_api_url}/shop/public`;
 
   constructor(private http: HttpClient) { }
@@ -29,12 +30,29 @@ export class ShopPublicService {
   }
 
   /**
-   * NOVÉ: Získání seznamu kategorií pro filtry
-   * Přidáváme parametr no_pagination=true, aby nám Laravel vrátil prostý seznam
+   * Získání seznamu kategorií pro filtry
    */
   getCategories(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/categories`, { 
       params: new HttpParams().set('no_pagination', 'true') 
+    }).pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Získání veřejných dostupných způsobů dopravy pro pokladnu
+   */
+  getShippingMethods(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/shipping-methods`, {
+      params: new HttpParams().set('no_pagination', 'true')
+    }).pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Získání veřejných dostupných platebních metod pro pokladnu
+   */
+  getPaymentMethods(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/payment-methods`, {
+      params: new HttpParams().set('no_pagination', 'true')
     }).pipe(catchError(this.handleError));
   }
 
@@ -46,6 +64,21 @@ export class ShopPublicService {
       .pipe(catchError(this.handleError));
   }
 
+  /**
+   * Ověření dostupnosti specifického množství v Cache/DB (Vrací anonymní true/false)
+   */
+  checkStockAvailability(productId: string | number, variantId: number | null, requestedQuantity: number): Observable<boolean> {
+    return this.http.get<{ available: boolean }>(`${this.apiUrl}/products/${productId}/check-stock`, {
+      params: {
+        variant_id: variantId ? variantId.toString() : '',
+        quantity: requestedQuantity.toString()
+      }
+    }).pipe(
+      map(res => res.available), 
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Při komunikaci s e-shopem nastala chyba.';
     if (error.error instanceof ErrorEvent) {
@@ -53,7 +86,8 @@ export class ShopPublicService {
     } else {
       console.error(`Status: ${error.status}, Body:`, error.error);
       switch (error.status) {
-        case 404: errorMessage = 'Produkt nebo kategorie nebyly nalezeny.'; break;
+        case 404: errorMessage = 'Požadovaná data nebyla nalezena.'; break;
+        case 422: errorMessage = error.error?.message || 'Požadované množství není dostupné.'; break;
         case 500: errorMessage = 'Chyba na straně serveru.'; break;
       }
     }
