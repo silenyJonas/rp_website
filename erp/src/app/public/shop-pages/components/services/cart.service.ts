@@ -1,6 +1,6 @@
 import { Injectable, signal, computed, effect } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 
 export interface CartItem {
@@ -9,16 +9,18 @@ export interface CartItem {
   product_variant_id: number | null;
   product_name: string;
   variant_name: string | null;
+  product_image?: string;
   quantity: number;
   unit_price: number;
   total_price: number;
   vat_rate: number;
-  reservedAt: number; // timestamp kdy byl přidán
+  stock_quantity: number; // PŘIDÁNO: Maximální dostupný počet kusů na skladě
+  reservedAt: number;
 }
 
 export interface Cart {
   items: CartItem[];
-  expiresAt: number; // timestamp kdy vyprší rezervace
+  expiresAt: number;
   createdAt: number;
 }
 
@@ -27,19 +29,17 @@ export interface Cart {
 })
 export class CartService {
   private readonly CART_STORAGE_KEY = 'shop_cart';
-  private readonly RESERVATION_TIME = 15 * 60 * 1000; // 15 minut v ms
+  private readonly RESERVATION_TIME = 15 * 60 * 1000; // 15 minut
 
-  // Signály
   private cartSignal = signal<Cart>({
     items: [],
     expiresAt: 0,
     createdAt: Date.now()
   });
 
-  private timerSignal = signal<number>(0); // sekundy zbývající do vypršení
+  private timerSignal = signal<number>(0);
   private isExpiredSignal = signal<boolean>(false);
 
-  // Computed
   cartItems = computed(() => this.cartSignal().items);
   cartCount = computed(() => this.cartItems().length);
   totalQuantity = computed(() => 
@@ -64,16 +64,12 @@ export class CartService {
     this.loadCart();
     this.startTimer();
 
-    // Automatické ukládání do localStorage
     effect(() => {
       const cart = this.cartSignal();
       this.saveCart(cart);
     });
   }
 
-  /**
-   * NAČTENÍ KOŠÍKU Z LOCALSTORAGE
-   */
   private loadCart(): void {
     const stored = localStorage.getItem(this.CART_STORAGE_KEY);
     if (stored) {
@@ -81,13 +77,8 @@ export class CartService {
         const cart: Cart = JSON.parse(stored);
         const now = Date.now();
 
-        // Kontrola expiraci
         if (now > cart.expiresAt) {
-          this.cartSignal.set({
-            items: [],
-            expiresAt: now + this.RESERVATION_TIME,
-            createdAt: now
-          });
+          this.cartSignal.set({ items: [], expiresAt: 0, createdAt: now });
           this.isExpiredSignal.set(true);
           localStorage.removeItem(this.CART_STORAGE_KEY);
         } else {
@@ -99,16 +90,10 @@ export class CartService {
     }
   }
 
-  /**
-   * ULOŽENÍ KOŠÍKU DO LOCALSTORAGE
-   */
   private saveCart(cart: Cart): void {
     localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(cart));
   }
 
-  /**
-   * PŘIDÁNÍ POLOŽKY DO KOŠÍKU
-   */
   addItem(product: any, variant: any | null, quantity: number = 1): void {
     const itemId = this.generateItemId(product.id, variant?.id);
     const existingItem = this.cartItems().find(i => i.id === itemId);
@@ -116,40 +101,47 @@ export class CartService {
     const unitPrice = variant ? variant.price_with_vat : product.price;
     const variantName = variant ? variant.variant_name : null;
     const vatRate = variant?.vat_rate || product.vat_rate || 21;
+    
+    // Získání maxima na skladě z varianty nebo přímo z produktu
+    const stockQuantity = variant ? (variant.stock_qty ?? 99) : (product.stock_qty ?? 99);
+    
+    const productImage = variant?.images?.[0]?.url || 
+                         product.images?.find((img: any) => img.is_primary)?.url || 
+                         product.images?.[0]?.url || 
+                         'assets/images/placeholder-product.png';
 
     if (existingItem) {
-      // Zvýšíme množství
       this.updateItemQuantity(itemId, existingItem.quantity + quantity);
     } else {
-      // Nová položka
+      // Omezení vstupního množství skladem hned při vložení
+      const finalQty = Math.min(quantity, stockQuantity);
+
       const newItem: CartItem = {
         id: itemId,
         product_id: product.id,
         product_variant_id: variant?.id || null,
         product_name: product.name,
         variant_name: variantName,
-        quantity,
+        product_image: productImage,
+        quantity: finalQty,
         unit_price: unitPrice,
-        total_price: unitPrice * quantity,
+        total_price: unitPrice * finalQty,
         vat_rate: vatRate,
+        stock_quantity: stockQuantity,
         reservedAt: Date.now()
       };
 
       const cart = this.cartSignal();
-      const updatedCart: Cart = {
+      this.cartSignal.set({
         ...cart,
         items: [...cart.items, newItem],
-        expiresAt: Date.now() + this.RESERVATION_TIME // RESET TIMERU
-      };
-      this.cartSignal.set(updatedCart);
+        expiresAt: Date.now() + this.RESERVATION_TIME
+      });
     }
 
-    this.resetTimer(); // Resetuj timer při přidání
+    this.resetTimer();
   }
 
-  /**
-   * AKTUALIZACE MNOŽSTVÍ POLOŽKY
-   */
   updateItemQuantity(itemId: string, quantity: number): void {
     if (quantity <= 0) {
       this.removeItem(itemId);
@@ -159,10 +151,12 @@ export class CartService {
     const cart = this.cartSignal();
     const updatedItems = cart.items.map(item => {
       if (item.id === itemId) {
+        // STRUKTURA HLÍDÁNÍ SKLADU: Nedovolí překročit item.stock_quantity
+        const finalQty = Math.min(quantity, item.stock_quantity);
         return {
           ...item,
-          quantity,
-          total_price: item.unit_price * quantity
+          quantity: finalQty,
+          total_price: item.unit_price * finalQty
         };
       }
       return item;
@@ -171,25 +165,25 @@ export class CartService {
     this.cartSignal.set({
       ...cart,
       items: updatedItems,
-      expiresAt: Date.now() + this.RESERVATION_TIME // RESET TIMERU
+      expiresAt: Date.now() + this.RESERVATION_TIME
     });
+
+    this.resetTimer();
   }
 
-  /**
-   * ODSTRANĚNÍ POLOŽKY Z KOŠÍKU
-   */
   removeItem(itemId: string): void {
     const cart = this.cartSignal();
+    const updatedItems = cart.items.filter(item => item.id !== itemId);
+    
     this.cartSignal.set({
       ...cart,
-      items: cart.items.filter(item => item.id !== itemId),
-      expiresAt: Date.now() + this.RESERVATION_TIME // RESET TIMERU
+      items: updatedItems,
+      expiresAt: updatedItems.length > 0 ? Date.now() + this.RESERVATION_TIME : 0
     });
+
+    this.resetTimer();
   }
 
-  /**
-   * VYPRÁZDNĚNÍ KOŠÍKU
-   */
   clear(): void {
     this.cartSignal.set({
       items: [],
@@ -198,34 +192,41 @@ export class CartService {
     });
     localStorage.removeItem(this.CART_STORAGE_KEY);
     this.isExpiredSignal.set(false);
+    this.timerSignal.set(0);
   }
 
-  /**
-   * TIMER - ODPOČÍTÁVÁNÍ DO VYPRŠENÍ REZERVACE
-   */
   private startTimer(): void {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
+
     this.timerInterval = setInterval(() => {
       const now = Date.now();
       const cart = this.cartSignal();
-      const remaining = Math.max(0, Math.floor((cart.expiresAt - now) / 1000));
+      
+      if (cart.items.length === 0 || cart.expiresAt === 0) {
+        this.timerSignal.set(0);
+        return;
+      }
 
+      const remaining = Math.max(0, Math.floor((cart.expiresAt - now) / 1000));
       this.timerSignal.set(remaining);
 
-      // Pokud čas vypršel
       if (remaining <= 0) {
         this.isExpiredSignal.set(true);
         this.clear();
-        clearInterval(this.timerInterval);
       }
-    }, 1000); // Aktualizuj každou vteřinu
+    }, 1000);
   }
 
-  /**
-   * RESET TIMERU - při přidání položky
-   */
   private resetTimer(): void {
-    // Resetuj čas vypršení v košíku
     const cart = this.cartSignal();
+    if (cart.items.length === 0) {
+      this.cartSignal.set({ ...cart, expiresAt: 0 });
+      this.timerSignal.set(0);
+      return;
+    }
+
     this.cartSignal.set({
       ...cart,
       expiresAt: Date.now() + this.RESERVATION_TIME
@@ -233,57 +234,28 @@ export class CartService {
     this.isExpiredSignal.set(false);
   }
 
-  /**
-   * FORMÁTOVÁNÍ ČASU
-   */
   formatTime(seconds: number): string {
+    if (seconds <= 0) return '0:00';
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   }
 
-  /**
-   * GENEROVÁNÍ UNIKÁTNÍHO ID POLOŽKY
-   */
   private generateItemId(productId: number, variantId: number | null): string {
     return `${productId}_${variantId || 'novariant'}`;
   }
 
-  /**
-   * CHECKOUT - VYTVOŘIT OBJEDNÁVKU
-   */
   createOrder(
-    email: string,
-    firstName: string,
-    lastName: string,
-    phone: string,
-    company: string | null,
-    address: string,
-    city: string,
-    postalCode: string,
-    country: string,
-    paymentMethodId: number,
-    shippingMethodId: number,
-    couponCode: string | null = null,
-    notes: string | null = null
+    email: string, firstName: string, lastName: string, phone: string,
+    company: string | null, address: string, city: string, postalCode: string,
+    country: string, paymentMethodId: number, shippingMethodId: number,
+    couponCode: string | null = null, notes: string | null = null
   ): Observable<any> {
     const cart = this.cartSignal();
-
-    // Příprava dat objednávky
     const orderData = {
-      email,
-      first_name: firstName,
-      last_name: lastName,
-      phone,
-      company,
-      address,
-      city,
-      postal_code: postalCode,
-      country,
-      payment_method_id: paymentMethodId,
-      shipping_method_id: shippingMethodId,
-      coupon_code: couponCode,
-      notes,
+      email, first_name: firstName, last_name: lastName, phone, company, address, city,
+      postal_code: postalCode, country, payment_method_id: paymentMethodId,
+      shipping_method_id: shippingMethodId, coupon_code: couponCode, notes,
       items: cart.items.map(item => ({
         product_id: item.product_id,
         product_variant_id: item.product_variant_id,
@@ -292,20 +264,10 @@ export class CartService {
         vat_rate: item.vat_rate
       }))
     };
-
-    return this.http.post(
-      `${environment.base_api_url}/shop/checkout/create-order`,
-      orderData
-    );
+    return this.http.post(`${environment.base_api_url}/shop/checkout/create-order`, orderData);
   }
 
-  /**
-   * SIMULACE PLATBY
-   */
   simulatePayment(orderId: number): Observable<any> {
-    return this.http.post(
-      `${environment.base_api_url}/shop/checkout/simulate-payment`,
-      { order_id: orderId }
-    );
+    return this.http.post(`${environment.base_api_url}/shop/checkout/simulate-payment`, { order_id: orderId });
   }
 }
