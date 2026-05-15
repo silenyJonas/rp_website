@@ -1,39 +1,39 @@
-<div class="product-card" *ngIf="product">
-  <div class="product-image-container" [routerLink]="['/eshop/produkt', product.slug]">
+<div class="product-card">
+  <!-- Image Wrapper -->
+  <div class="product-image-container" [routerLink]="['/eshop/produkt', product?.slug]">
+    <img [src]="getThumbnailUrl()" [alt]="product?.name" class="product-img">
     
-    <!-- Obrázek vs Placeholder -->
-    <img
-         [src]="getThumbnailUrl()" 
-         [alt]="product.name" 
-         class="product-img">
-    
-    <ng-template #noImage>
-      <div class="no-image-placeholder">
-        <span>BEZ OBRÁZKU</span>
-      </div>
-    </ng-template>
-    
-    <div class="badge-overlay" *ngIf="product.is_featured">
+    <!-- Ostrý fialový badge -->
+    <div class="badge-overlay" *ngIf="product?.is_featured">
       <span class="badge featured">Tip</span>
     </div>
+    
+    <!-- Overlay "Vyprodáno" byl odstraněn pro čistší vzhled -->
   </div>
 
+  <!-- Content -->
   <div class="product-info">
     <div class="info-top">
-      <h3 class="product-title" [routerLink]="['/eshop/produkt', product.slug]">
-        {{ product.name }}
+      <h3 class="product-title" [routerLink]="['/eshop/produkt', product?.slug]">
+        {{ product?.name }}
       </h3>
       
-      <!-- Skladová dostupnost (stejná logika jako v detailu) -->
+      <!-- DYNAMICKÝ STAV SKLADU -->
       <div class="product-stock">
         <span class="stock-badge" [ngClass]="{
-          'in-stock': product.stock_quantity >= 5,
-          'low-stock': product.stock_quantity > 0 && product.stock_quantity < 5,
-          'out-of-stock': product.stock_quantity <= 0
+          'in-stock': product?.stock_quantity >= 5,
+          'low-stock': product?.stock_quantity > 0 && product?.stock_quantity < 5,
+          'out-of-stock': product?.stock_quantity <= 0
         }">
-          <ng-container *ngIf="product.stock_quantity >= 5">● Skladem > 5 ks</ng-container>
-          <ng-container *ngIf="product.stock_quantity > 0 && product.stock_quantity < 5">● Skladem {{ product.stock_quantity }} ks</ng-container>
-          <ng-container *ngIf="product.stock_quantity <= 0">○ Vyprodáno</ng-container>
+          <ng-container *ngIf="product?.stock_quantity >= 5">
+            ● Skladem > 5 ks
+          </ng-container>
+          <ng-container *ngIf="product?.stock_quantity > 0 && product?.stock_quantity < 5">
+            ● Skladem pouze {{ product?.stock_quantity }} ks
+          </ng-container>
+          <ng-container *ngIf="product?.stock_quantity <= 0">
+            ● Skladem 0 ks
+          </ng-container>
         </span>
       </div>
     </div>
@@ -43,8 +43,12 @@
         <span class="price-value">{{ getFormattedPrice() }}</span>
       </div>
       
-      <button class="btn-detail" [routerLink]="['/eshop/produkt', product.slug]">
+      <button class="btn-detail" 
+              [routerLink]="['/eshop/produkt', product?.slug]">
         <span>Detail</span>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
       </button>
     </div>
   </div>

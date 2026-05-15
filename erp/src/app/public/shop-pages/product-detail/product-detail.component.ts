@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ShopPublicService } from '../components/services/public-data.service';
@@ -40,11 +40,34 @@ export class ProductDetailComponent implements OnInit {
 
   isAvailable = computed(() => this.currentStock() > 0);
 
+  // Computed: Vygenerování unikátního itemId pro košík
+  currentCartItemId = computed(() => {
+    const prod = this.product();
+    if (!prod) return '';
+    const variant = this.selectedVariant();
+    const variantIdStr = variant?.id || 'novariant';
+    return `${prod.id}_${variantIdStr}`;
+  });
+
+  // Computed: Zjištění, zda je tato konkrétní varianta/produkt již v košíku
+  isInCart = computed(() => {
+    const itemId = this.currentCartItemId();
+    return this.cartService.cartItems().some(item => item.id === itemId);
+  });
+
   constructor(
     private route: ActivatedRoute,
     private shopService: ShopPublicService,
     public cartService: CartService
-  ) {}
+  ) {
+    // Hlídač: Pokud se změní varianta a její sklad je menší než navolené množství, snížíme ho na maximum
+    effect(() => {
+      const stock = this.currentStock();
+      if (this.selectedQuantity() > stock) {
+        this.selectedQuantity.set(Math.max(1, stock));
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -103,7 +126,12 @@ export class ProductDetailComponent implements OnInit {
   }
 
   increaseQuantity(): void {
-    this.selectedQuantity.update(q => q + 1);
+    this.selectedQuantity.update(q => {
+      if (q >= this.currentStock()) {
+        return this.currentStock(); // Nepustí dál než je sklad
+      }
+      return q + 1;
+    });
   }
 
   decreaseQuantity(): void {
@@ -119,19 +147,19 @@ export class ProductDetailComponent implements OnInit {
     const product = this.product();
     const variant = this.selectedVariant();
     const quantity = this.selectedQuantity();
+    const itemId = this.currentCartItemId();
 
-    // Vygenerujeme přesné ID položky, jaké používá tvůj CartService
-    const variantIdStr = variant?.id || 'novariant';
-    const itemId = `${product.id}_${variantIdStr}`;
+    // Kontrola limitu skladu před vložením
+    if (quantity > this.currentStock()) {
+      alert(`Nelze objednat více než ${this.currentStock()} ks.`);
+      return;
+    }
 
-    // Podíváme se, zda už položka v košíku existuje
     const itemInCart = this.cartService.cartItems().find(i => i.id === itemId);
 
     if (itemInCart) {
-      // Pokud už v košíku je, natvrdo přepíšeme množství pomocí metody v servisu
       this.cartService.updateItemQuantity(itemId, quantity);
     } else {
-      // Pokud v košíku není, přidáme ji standardně jako novou
       this.cartService.addItem(product, variant, quantity);
     }
     

@@ -99,29 +99,38 @@
           </div>
 
           <!-- VÝBĚR MNOŽSTVÍ -->
-          <div class="quantity-selector">
+          <div class="quantity-selector" *ngIf="isAvailable()">
             <label>Počet kusů:</label>
             <div class="quantity-controls">
-              <button (click)="decreaseQuantity()" class="qty-btn">−</button>
+              <button (click)="decreaseQuantity()" [disabled]="selectedQuantity() <= 1" class="qty-btn">−</button>
               <input type="number" [value]="selectedQuantity()" readonly class="qty-display">
-              <button (click)="increaseQuantity()" class="qty-btn">+</button>
+              <!-- Schová nebo deaktivuje tlačítko +, pokud jsme na limitu skladu -->
+              <button (click)="increaseQuantity()" *ngIf="selectedQuantity() < currentStock()" class="qty-btn">+</button>
+              <button disabled *ngIf="selectedQuantity() >= currentStock()" class="qty-btn disabled-max">✕</button>
             </div>
+            <small class="max-stock-info" *ngIf="selectedQuantity() >= currentStock()">Max. dostupné množství</small>
           </div>
 
-          <!-- PŘIDAT DO KOŠÍKU -->
+          <!-- PŘIDAT / UPRAVIT V KOŠÍKU -->
           <div class="action-buttons">
             <button 
               class="btn-buy" 
               [disabled]="!isAvailable()"
               (click)="addToCart()"
             >
-              <span *ngIf="!addedToCart()">🛒 PŘIDAT DO KOŠÍKU</span>
-              <span *ngIf="addedToCart()">✓ Přidáno v košíku!</span>
+              <ng-container *ngIf="!isInCart()">
+                <span *ngIf="!addedToCart()">🛒 PŘIDAT DO KOŠÍKU</span>
+                <span *ngIf="addedToCart()">✓ Přidáno v košíku!</span>
+              </ng-container>
+              <ng-container *ngIf="isInCart()">
+                <span *ngIf="!addedToCart()">🔄 AKTUALIZOVAT MNOŽSTVÍ</span>
+                <span *ngIf="addedToCart()">✓ Množství upraveno!</span>
+              </ng-container>
             </button>
           </div>
 
           <!-- ODKAZ NA KOŠÍK -->
-          <a routerLink="/cart" class="btn-view-cart">
+          <a routerLink="/shop/cart" class="btn-view-cart">
             Jít na košík ({{ cartService.cartCount() }})
           </a>
         </div>
