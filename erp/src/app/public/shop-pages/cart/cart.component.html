@@ -1,0 +1,77 @@
+<div class="cart-container">
+  <h1>Nákupní košík</h1>
+
+  <!-- TIMER -->
+  <div class="cart-timer" [class.expired]="cartService.isExpired()">
+    <span class="timer-label">Rezervace zboží:</span>
+    <span class="timer-value" [class.warning]="cartService.timeRemaining() < 300">
+      {{ cartService.formatTime(cartService.timeRemaining()) }}
+    </span>
+    <span class="timer-info" *ngIf="cartService.timeRemaining() < 300">
+      ⚠️ Zbývá méně než 5 minut!
+    </span>
+  </div>
+
+  <!-- PRÁZDNÝ KOŠÍK -->
+  <div class="empty-cart" *ngIf="cartService.cartCount() === 0">
+    <p>Váš košík je prázdný</p>
+    <a routerLink="/shop" class="btn-back">← Zpět na nákup</a>
+  </div>
+
+  <!-- OBSAH KOŠÍKU -->
+  <div class="cart-content" *ngIf="cartService.cartCount() > 0">
+    
+    <!-- POLOŽKY -->
+    <div class="cart-items">
+      <div class="cart-item" *ngFor="let item of cartService.cartItems()">
+        <div class="item-info">
+          <h3>{{ item.product_name }}</h3>
+          <p *ngIf="item.variant_name">{{ item.variant_name }}</p>
+          <p class="item-price">{{ formatPrice(item.unit_price) }} za kus</p>
+        </div>
+
+        <div class="item-quantity">
+          <button (click)="decreaseQuantity(item.id)" class="qty-btn">−</button>
+          <input 
+            type="number" 
+            [value]="item.quantity" 
+            (change)="updateQuantity(item.id, $event)"
+            min="1"
+            class="qty-input"
+          >
+          <button (click)="increaseQuantity(item.id)" class="qty-btn">+</button>
+        </div>
+
+        <div class="item-total">
+          <strong>{{ formatPrice(item.total_price) }}</strong>
+        </div>
+
+        <button (click)="removeItem(item.id)" class="btn-remove">✕</button>
+      </div>
+    </div>
+
+    <!-- SOUHRN -->
+    <div class="cart-summary">
+      <div class="summary-row">
+        <span>Mezisoučet:</span>
+        <strong>{{ formatPrice(cartService.subtotal()) }}</strong>
+      </div>
+      <div class="summary-row">
+        <span>DPH:</span>
+        <strong>{{ formatPrice(cartService.totalTax()) }}</strong>
+      </div>
+      <div class="summary-row total">
+        <span>Celkem:</span>
+        <strong>{{ formatPrice(cartService.totalPrice()) }}</strong>
+      </div>
+    </div>
+
+    <!-- TLAČÍTKA -->
+    <div class="cart-actions">
+      <a routerLink="/eshop" class="btn-secondary">← Pokračovat v nákupu</a>
+      <a routerLink="/checkout" class="btn-primary">
+        Pokračovat na pokladnu →
+      </a>
+    </div>
+  </div>
+</div>

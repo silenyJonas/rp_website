@@ -2,6 +2,7 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ShopPublicService } from '../components/services/public-data.service';
+import { CartService } from '../components/services/cart.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -15,12 +16,13 @@ export class ProductDetailComponent implements OnInit {
   selectedVariant = signal<any>(null);
   isLoading = signal(true);
   activeImage = signal<string | null>(null);
+  selectedQuantity = signal<number>(1);
+  addedToCart = signal<boolean>(false);
 
   // Computed: Obrázky specifické pro variantu
   variantImages = computed(() => this.selectedVariant()?.images || []);
 
   // Computed: Obecné obrázky produktu, které NEJSOU přiřazeny k žádné variantě
-  // To zabrání duplicitám, pokud bys měl stejnou fotku u produktu i u varianty
   generalImages = computed(() => {
     const allImgs = this.product()?.images || [];
     return allImgs.filter((img: any) => !img.variant_id);
@@ -40,7 +42,8 @@ export class ProductDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private shopService: ShopPublicService
+    private shopService: ShopPublicService,
+    public cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -57,7 +60,6 @@ export class ProductDetailComponent implements OnInit {
     this.shopService.getProductDetail(id).subscribe({
       next: (data) => {
         this.product.set(data);
-        
         // Defaultní start: První varianta
         if (data.variants && data.variants.length > 0) {
           this.selectVariant(data.variants[0]);
@@ -66,7 +68,6 @@ export class ProductDetailComponent implements OnInit {
           const primary = data.images?.find((img: any) => img.is_primary);
           this.activeImage.set(primary?.url || data.images?.[0]?.url || 'assets/images/placeholder-product.png');
         }
-        
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -99,6 +100,46 @@ export class ProductDetailComponent implements OnInit {
 
   setActiveImage(url: string): void {
     this.activeImage.set(url);
+  }
+
+  increaseQuantity(): void {
+    this.selectedQuantity.update(q => q + 1);
+  }
+
+  decreaseQuantity(): void {
+    this.selectedQuantity.update(q => Math.max(1, q - 1));
+  }
+
+  addToCart(): void {
+    if (!this.isAvailable()) {
+      alert('Produkt není dostupný');
+      return;
+    }
+
+    const product = this.product();
+    const variant = this.selectedVariant();
+    const quantity = this.selectedQuantity();
+
+    // Vygenerujeme přesné ID položky, jaké používá tvůj CartService
+    const variantIdStr = variant?.id || 'novariant';
+    const itemId = `${product.id}_${variantIdStr}`;
+
+    // Podíváme se, zda už položka v košíku existuje
+    const itemInCart = this.cartService.cartItems().find(i => i.id === itemId);
+
+    if (itemInCart) {
+      // Pokud už v košíku je, natvrdo přepíšeme množství pomocí metody v servisu
+      this.cartService.updateItemQuantity(itemId, quantity);
+    } else {
+      // Pokud v košíku není, přidáme ji standardně jako novou
+      this.cartService.addItem(product, variant, quantity);
+    }
+    
+    // Zobrazit potvrzení úspěšného vložení
+    this.addedToCart.set(true);
+    setTimeout(() => {
+      this.addedToCart.set(false);
+    }, 2000);
   }
 
   getFormattedPrice(value: number): string {

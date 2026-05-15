@@ -2,7 +2,7 @@
   <div class="product-image-container" [routerLink]="['/eshop/produkt', product.slug]">
     
     <!-- Obrázek vs Placeholder -->
-    <img *ngIf="getThumbnailUrl() !== 'assets/images/placeholder-product.png'; else noImage"
+    <img
          [src]="getThumbnailUrl()" 
          [alt]="product.name" 
          class="product-img">

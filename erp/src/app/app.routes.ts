@@ -68,6 +68,14 @@ export const routes: Routes = [
       {
         path: 'products/:slugOrId', // Sjednoceno na 'product' podle tvého servisu
         loadComponent: () => import('./public/shop-pages/product-detail/product-detail.component').then(m => m.ProductDetailComponent)
+      },
+      {
+        path: 'cart',
+        loadComponent: () => import('./public/shop-pages/cart/cart.component').then(m => m.CartComponent)
+      },
+      {
+        path: 'checkout',
+        loadComponent: () => import('./public/shop-pages/checkout/checkout.component').then(m => m.CheckoutComponent)
       }
     ]
   },

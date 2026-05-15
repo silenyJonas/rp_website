@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-shop-header',
@@ -18,6 +18,8 @@ export class ShopHeaderComponent {
   showCurrency = false;
   selectedLang = 'CZ';
   selectedCurrency = 'CZK';
+
+  constructor(private router: Router) {}
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -46,5 +48,7 @@ export class ShopHeaderComponent {
     console.log('Měna:', val);
   }
 
-  openCart() { console.log('Košík'); }
+  openCart() { 
+  this.router.navigate(['/shop/cart']); 
+}
 }

@@ -42,6 +42,13 @@ Route::prefix('shop/public')->group(function () {
     // Kategorie
     Route::get('categories', [ShopCategoryController::class, 'index']);
 });
+
+Route::prefix('checkout')->group(function () {
+    Route::post('/create-order', [\App\Http\Controllers\Api\Shop\ShopCheckoutController::class, 'createOrder']);
+    Route::post('/validate-coupon', [\App\Http\Controllers\Api\Shop\ShopCheckoutController::class, 'validateCoupon']);
+    Route::post('/simulate-payment', [\App\Http\Controllers\Api\Shop\ShopCheckoutController::class, 'simulatePayment']);
+    });
+
 /*
 |--------------------------------------------------------------------------
 | Public Routes

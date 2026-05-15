@@ -98,11 +98,32 @@
             <p class="status-subtext" *ngIf="isAvailable()">Expedujeme do 24h z centrálního skladu.</p>
           </div>
 
+          <!-- VÝBĚR MNOŽSTVÍ -->
+          <div class="quantity-selector">
+            <label>Počet kusů:</label>
+            <div class="quantity-controls">
+              <button (click)="decreaseQuantity()" class="qty-btn">−</button>
+              <input type="number" [value]="selectedQuantity()" readonly class="qty-display">
+              <button (click)="increaseQuantity()" class="qty-btn">+</button>
+            </div>
+          </div>
+
+          <!-- PŘIDAT DO KOŠÍKU -->
           <div class="action-buttons">
-            <button class="btn-buy" [disabled]="!isAvailable()">
-              <span>PŘIDAT DO KOŠÍKU</span>
+            <button 
+              class="btn-buy" 
+              [disabled]="!isAvailable()"
+              (click)="addToCart()"
+            >
+              <span *ngIf="!addedToCart()">🛒 PŘIDAT DO KOŠÍKU</span>
+              <span *ngIf="addedToCart()">✓ Přidáno v košíku!</span>
             </button>
           </div>
+
+          <!-- ODKAZ NA KOŠÍK -->
+          <a routerLink="/cart" class="btn-view-cart">
+            Jít na košík ({{ cartService.cartCount() }})
+          </a>
         </div>
 
         <div class="quick-description" *ngIf="product()?.short_description">
