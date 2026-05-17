@@ -97,7 +97,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
 }
 
 .quantity-controls {
@@ -123,12 +123,21 @@
   justify-content: center;
 }
 .qty-btn:disabled { color: var(--text-dim); cursor: not-allowed; opacity: 0.2; }
-.qty-btn.disabled-max { color: var(--error) !important; opacity: 1; }
 
+/* Červený křížek při zablokování maxima */
+.qty-btn.disabled-max { 
+  color: var(--error) !important; 
+  opacity: 1 !important; 
+  cursor: not-allowed;
+}
+
+/* Žlutá hláška pod selektorem */
 .max-stock-info {
   font-size: 0.65rem;
   color: var(--warning);
   transform: skewX(-5deg);
+  margin-top: 2px;
+  text-align: center;
 }
 
 .qty-display {

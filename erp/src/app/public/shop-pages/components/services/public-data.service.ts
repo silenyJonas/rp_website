@@ -79,6 +79,23 @@ export class ShopPublicService {
     );
   }
 
+  /**
+   * PŘIDÁNO: Veřejné ověření kupónu v košíku
+   */
+  validateCoupon(code: string, orderAmount: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/coupons/validate`, {
+      code: code,
+      order_amount: orderAmount
+    });
+  }
+
+  /**
+   * PŘIDÁNO: Vytvoření objednávky přes checkout endpoint
+   */
+  createOrder(payload: any): Observable<any> {
+    return this.http.post<any>(`${environment.base_api_url}/shop/checkout/create-order`, payload);
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Při komunikaci s e-shopem nastala chyba.';
     if (error.error instanceof ErrorEvent) {

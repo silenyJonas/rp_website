@@ -51,21 +51,62 @@ class ShopCheckoutController extends Controller
         try {
             DB::beginTransaction();
 
-            // 1. VYTVOŘENÍ NEBO NAČTENÍ ZÁKAZNÍKA
-            $customer = ShopCustomer::firstOrCreate(
-                ['email' => $validated['email']],
-                [
-                    'first_name' => $validated['first_name'],
-                    'last_name' => $validated['last_name'],
-                    'phone' => $validated['phone'],
-                    'company' => $validated['company'],
-                    'address' => $validated['address'],
-                    'city' => $validated['city'],
-                    'postal_code' => $validated['postal_code'],
-                    'country' => $validated['country'],
-                    'is_active' => true
-                ]
-            );
+        // 1. VYTVOŘENÍ NEBO NAČTENÍ ZÁKAZNÍKA (Včetně automatického oživení z koše)
+            $email = trim(strtolower($validated['email']));
+            
+            // Hledáme zákazníka všude – včetně smazaných v koši (Soft Deleted)
+            $customer = ShopCustomer::withTrashed()->where('email', $email)->first();
+
+            if ($customer) {
+                // Pokud byl zákazník smazaný (v koši), automaticky ho obnovíme
+                if ($customer->trashed()) {
+                    $customer->restore();
+                }
+
+                // Aktualizujeme jeho kontaktní údaje podle aktuální objednávky
+                $customer->update([
+                    'first_name'   => $validated['first_name'],
+                    'last_name'    => $validated['last_name'],
+                    'phone'        => $validated['phone'],
+                    'company'      => $validated['company'],
+                    'address'      => $validated['address'],
+                    'city'         => $validated['city'],
+                    'postal_code'  => $validated['postal_code'],
+                    'country'      => $validated['country'],
+                ]);
+            } else {
+                // Zákazník v DB vůbec neexistuje, vytvoříme úplně nového
+                try {
+                    $customer = ShopCustomer::create([
+                        'email'        => $email,
+                        'first_name'   => $validated['first_name'],
+                        'last_name'    => $validated['last_name'],
+                        'phone'        => $validated['phone'],
+                        'company'      => $validated['company'],
+                        'address'      => $validated['address'],
+                        'city'         => $validated['city'],
+                        'postal_code'  => $validated['postal_code'],
+                        'country'      => $validated['country'],
+                        'is_active'    => true
+                    ]);
+                } catch (\Illuminate\Database\QueryException $e) {
+                    // Pojistka pro extrémní případ (Race Condition) - pokud ho jiné kliknutí zapsalo o milisekundu dříve
+                    if ($e->getCode() == 23000 || $e->errorInfo[1] == 1062 || str_contains($e->getMessage(), '1062')) {
+                        $customer = ShopCustomer::withTrashed()->where('email', $email)->first();
+                        if ($customer && $customer->trashed()) {
+                            $customer->restore();
+                        }
+                    } else {
+                        // Pokud jde o jinou SQL chybu (např. chybějící sloupec), vyhodíme ji dál
+                        throw new \Exception("Chyba při zápisu zákazníka do DB: " . $e->getMessage());
+                    }
+                }
+            }
+
+            // Finální pojistka integrity před pokračováním k objednávce
+            if (!$customer) {
+                throw new \Exception("Kritická chyba: Zákazníka s e-mailem {$email} se nepodařilo inicializovat.");
+            }
 
             // 2. VÝPOČET SOUČTŮ
             $totalAmount = 0;

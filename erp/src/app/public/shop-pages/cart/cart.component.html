@@ -32,14 +32,13 @@
           <p class="item-price">{{ formatPrice(item.unit_price) }} / ks</p>
         </div>
 
-        <!-- Množství se skew designem a LIVE detekcí maxima z DB -->
+        <!-- Množství se skew designem navazující na detail produktu -->
         <div class="quantity-selector">
           <div class="quantity-controls">
-            <!-- Tlačítko mínus se zamkne, pokud se zrovna ověřuje sklad na plusu -->
             <button 
               (click)="decreaseQuantity(item.id)" 
               class="qty-btn" 
-              [disabled]="item.quantity <= 1 || loadingItems[item.id]"
+              [disabled]="item.quantity <= 1"
             >−</button>
             
             <input 
@@ -49,27 +48,32 @@
               class="qty-display"
             >
             
-            <!-- Pokud není dosaženo maxima, vykreslí se standardní tlačítko (při načítání z DB zobrazuje "...") -->
+            <!-- Standardní tlačítko plus - aktivní, dokud není dosaženo maxima skladu -->
             <button 
               (click)="increaseQuantity(item.id)" 
               *ngIf="!isMaxStockReached(item)" 
-              [disabled]="loadingItems[item.id]"
               class="qty-btn"
-            >
-              {{ loadingItems[item.id] ? '...' : '+' }}
-            </button>
+            >+</button>
 
-            <!-- Pokud live kontrola potvrdí max. sklad, tlačítko se přepne na fixní křížek identicky jako na detailu -->
-            <button disabled *ngIf="isMaxStockReached(item)" class="qty-btn disabled-max">✕</button>
+            <!-- Zablokovaný křížek ✕ (přesně jako na detailu produktu), když uživatel dosáhne stropu -->
+            <button 
+              disabled 
+              *ngIf="isMaxStockReached(item)" 
+              class="qty-btn disabled-max"
+            >✕</button>
           </div>
-          <small class="max-stock-info" *ngIf="isMaxStockReached(item)">Max. dostupné množství</small>
+          
+          <!-- Hláška pod selektorem množství informující o dosažení maxima -->
+          <!-- <small class="max-stock-info" *ngIf="isMaxStockReached(item)">
+            Max. dostupné množství (Sklad: {{ item.stock_quantity }} ks)
+          </small> -->
         </div>
 
         <div class="item-total">
           <span>{{ formatPrice(item.total_price) }}</span>
         </div>
 
-        <button (click)="removeItem(item.id)" class="btn-remove" title="Odstranit" [disabled]="loadingItems[item.id]">
+        <button (click)="removeItem(item.id)" class="btn-remove" title="Odstranit">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
           </svg>
