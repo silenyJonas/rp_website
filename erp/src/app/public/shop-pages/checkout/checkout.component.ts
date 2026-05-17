@@ -7,6 +7,7 @@ import { ShopPublicService } from '../components/services/public-data.service';
 import { ShippingMethod } from '../components/interfaces/shipping-method.interface';
 import { PaymentMethod } from '../components/interfaces/payment-method.interface';
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
+
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -239,14 +240,16 @@ export class CheckoutComponent implements OnInit {
     }).format(price);
   }
 
+  // ZMĚNĚNO: Metoda nyní vrací cesty ke skutečným grafickým ikonám/logům plateb v assets složce
   getPaymentIcon(code: string): string {
+    const basePath = 'assets/images/icons/';
     const icons: { [key: string]: string } = {
-      'card': '💳',
-      'bank_transfer': '🏦',
-      'paypal': '🅿️',
-      'apple_pay': '🍎',
-      'google_pay': '🔵'
+      'card': `${basePath}visa.png`,
+      'bank_transfer': `${basePath}bank-transfer.svg`,
+      'paypal': `${basePath}paypal.png`,
+      'apple_pay': `${basePath}apple-pay.png`,
+      'google_pay': `${basePath}google-pay.png`
     };
-    return icons[code] || '💰';
+    return icons[code] || `${basePath}generic-cash.svg`;
   }
 }

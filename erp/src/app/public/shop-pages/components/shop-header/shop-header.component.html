@@ -1,10 +1,9 @@
 <header class="shop-header" [class.scrolled]="isScrolled">
   <div class="shop-container">
-    <!-- Logo -->
-    <div class="shop-logo" routerLink="/">
-      <span class="brand-name">YOUR<span class="brand-accent">APP</span></span>
-      <span class="shop-badge">STORE</span>
-    </div>
+    <!-- Logo převzaté z hlavního webu -->
+    <a routerLink="/shop" class="logo-wrp">
+      <img src="assets/images/logos/logo.png" alt="Logo">
+    </a>
 
     <div class="shop-actions">
       <!-- Kontakt -->
@@ -46,7 +45,6 @@
       <button class="cart-trigger" (click)="openCart()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
         
-        <!-- Používáme čistý signál bez JS funkcí, kompilátor to bez problému sežere -->
         <span class="cart-dot" *ngIf="cartService.totalQuantity() > 0">
           {{ cartService.totalQuantity() }}
         </span>

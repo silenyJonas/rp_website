@@ -28,19 +28,16 @@ export class ServicesComponent implements OnInit, OnDestroy {
         { name: 'C#', path: 'assets/images/services-img/csharp.png' },
         { name: 'TypeScript', path: 'assets/images/services-img/ts.png' },
         { name: 'PHP', path: 'assets/images/services-img/php.png' },
-        { name: 'PostgreSQL', path: 'assets/images/services-img/postgresql.png' },
     ];
     desktopTechImages = [
         { name: 'C#', path: 'assets/images/services-img/csharp.png' },
         { name: 'C++', path: 'assets/images/services-img/cpp.png' },
         { name: 'Python', path: 'assets/images/services-img/py.png' },
-        { name: 'SQLite', path: 'assets/images/services-img/sqlite.png' },
     ];
     mobileTechImages = [
         { name: 'C#', path: 'assets/images/services-img/csharp.png' },
         { name: 'TypeScript', path: 'assets/images/services-img/ts.png' },
         { name: 'Kotlin', path: 'assets/images/services-img/kotlin.png' },
-        { name: 'SQLite', path: 'assets/images/services-img/sqlite.png' },
     ];
     aiTechImages = [
         { name: 'Python', path: 'assets/images/services-img/py.png' },

@@ -1,207 +1,196 @@
-:host {
-  /* Sjednocený design systém */
-  --primary: #a67dff;
-  --primary-soft: rgba(166, 125, 255, 0.15);
-  --bg-dark: #1a1a2e;
-  --surface: #131325;
-  --text-main: #e0e0e0;
-  --text-dim: #9a9a9b;
-  --border: #302d2e;
-  --accent-glow: rgba(107, 46, 145, 0.2);
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.public-footer {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+    padding: 60px 40px 20px;
+    border-top: 3px solid rgba(116, 68, 128, 0.4);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
 }
 
-.shop-footer {
-  background: var(--bg-dark);
-  color: var(--text-main);
-  padding: 80px 0 40px;
-  margin-top: 100px;
-  border-top: 3px solid var(--border); /* Silnější horní linka jako v headeru */
-  font-family: "Source Sans Pro", sans-serif;
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1300px;
+    margin: 0 auto;
+    gap: 30px;
 }
 
-.footer-container {
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 30px;
 }
 
-.footer-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 40px;
+.footer-section h3 {
+    color: #a67dff;
+    font-size: 1.4em;
+    margin-bottom: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
-/* Logo & Firemní info */
-.footer-logo {
-  font-weight: 700;
-  font-size: 1.4rem;
-  margin-bottom: 25px;
-  text-shadow: 0 0 10px rgba(166, 125, 255, 0.2);
+/* Stylované zkosené nadpisy pro vybrané sloupce */
+.skewed-title {
+    display: inline-block;
+    background: #131325;
+    border: 1px solid #302d2e;
+    padding: 4px 15px;
+    transform: skewX(-15deg);
+    margin-bottom: 20px !important;
 }
 
-.brand-accent { color: var(--primary); }
-
-.company-details p {
-  color: var(--text-dim);
-  font-size: 0.85rem;
-  line-height: 1.6;
-  margin: 0;
+.skewed-title span {
+    display: block;
+    transform: skewX(15deg);
 }
 
-.company-name {
-  color: var(--text-main) !important;
-  font-weight: 700;
-  margin-bottom: 8px !important;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.footer-section p {
+    font-size: 0.95em;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    color: #c5aaff;
 }
 
-/* Nadpisy sloupců - Zkosený styl jako badge v headeru */
-.footer-title {
-  display: inline-block;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 4px 15px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 25px;
-  color: var(--primary);
-  transform: skewX(-15deg);
+.footer-section p strong {
+    color: #e0e0e0;
 }
 
-.footer-title span {
-  display: block;
-  transform: skewX(15deg);
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-/* Odkazy - decentní hover */
-.footer-links {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.footer-section ul li {
+    margin-bottom: 10px;
 }
 
-.footer-links li {
-  margin-bottom: 12px;
+/* Odkazy a jejich animace */
+.footer-link, .dynamic-email {
+    color: #b39ddb;
+    text-decoration: none;
+    font-size: 0.95em;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
 }
 
-.footer-links a {
-  color: var(--text-dim);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: var(--transition);
+.external-icon {
+    margin-top: 2px;
 }
 
-.footer-links a:hover {
-  color: var(--text-main);
-  padding-left: 8px; /* Jemné posunutí při hoveru */
+/* Kontejnery pro ikony */
+.social-links, .payment-methods {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px; /* Mírně zvětšený rozestup, když zmizely boxy */
 }
 
-/* Podpora - Statická bez hoverů */
-.support-info {
-  font-size: 0.9rem;
+/* Sociální sítě - Čisté ikony s přiměřenou velikostí */
+.social-box {
+    cursor: pointer;
+    display: inline-flex;
 }
 
-.support-item {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column;
+.social-box img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    transition: filter 0.3s ease, transform 0.3s ease;
 }
 
-.support-item .label {
-  color: var(--text-dim);
-  font-size: 0.75rem;
-  margin-bottom: 4px;
+/* Platební metody - Obdélníkový formát pro loga karet */
+.payment-box {
+    cursor: default;
+    display: inline-flex;
 }
 
-.support-item span, .support-item a {
-  color: var(--text-main);
-  text-decoration: none;
-  font-weight: 600;
-  cursor: default; /* Statický text */
-}
-
-/* Platební metody - Zkosené boxy */
-.payment-methods {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.method-badge {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 6px 12px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  transform: skewX(-15deg);
-  transition: var(--transition);
-}
-
-.method-badge:hover {
-  border-color: #4a4a5e;
-  color: var(--text-main);
+.payment-box img {
+    width: auto;
+    max-width: 45px; /* Přiměřená šířka pro loga jako Visa/PayPal */
+    height: 25px;    /* Fixní výška pro optické sjednocení */
+    object-fit: contain;
+    transition: filter 0.3s ease, transform 0.3s ease;
 }
 
 /* Spodní lišta */
 .footer-bottom {
-  margin-top: 60px;
-  padding-top: 30px;
-  border-top: 1px solid var(--border);
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(47, 47, 47, 0.5);
+    font-size: 0.85em;
+    color: #9a9a9b;
 }
 
-.bottom-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-}
+/* Hover interakce pro Desktop */
+@media (min-width: 906px) {
+    .footer-link:hover, .dynamic-email:hover {
+        color: #a67dff;
+        transform: translateX(5px);
+    }
 
-.footer-bottom p {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  margin: 0;
-}
-
-/* Sociální sítě - Zkosené čtverce místo teček */
-.social-placeholders {
-  display: flex;
-  gap: 10px;
-}
-
-.social-placeholders .dot {
-  width: 35px;
-  height: 35px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  transform: skewX(-15deg);
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.social-placeholders .dot:hover {
-  background: var(--primary-soft);
-  border-color: var(--primary);
-  box-shadow: 0 0 10px var(--accent-glow);
+    /* Efekt záře se nyní aplikuje přímo na samotné ikony */
+    .social-box:hover img, .payment-box:hover img {
+        filter: brightness(1.2) drop-shadow(0 0 6px rgba(166, 125, 255, 0.8));
+        transform: scale(1.08); /* Jemné zvětšení čisté ikony při hoveru */
+    }
 }
 
 /* Responzivita */
-@media (max-width: 768px) {
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-  .info-col { grid-column: span 2; }
+@media (max-width: 905px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-section {
+        margin-bottom: 20px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-section ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .social-links, .payment-methods {
+        justify-content: center;
+    }
 }
 
 @media (max-width: 480px) {
-  .footer-grid { grid-template-columns: 1fr; }
-  .info-col { grid-column: span 1; }
-  .bottom-content { flex-direction: column; text-align: center; }
+    .public-footer {
+        padding: 40px 20px 15px;
+    }
+
+    .footer-section h3 {
+        font-size: 1.2em;
+    }
+
+    .footer-section p,
+    .footer-link {
+        font-size: 0.9em;
+    }
+
+    /* Mírné zmenšení ikon na malých mobilech */
+    .social-box img {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .payment-box img {
+        max-width: 38px;
+        height: 22px;
+    }
 }

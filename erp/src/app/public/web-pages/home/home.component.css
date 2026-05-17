@@ -1920,10 +1920,6 @@ button[type="submit"]:active {
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-.benefit-item:hover {
-    transform: translateY(-5px);
-}
-
 .benefit-icon-wrapper {
     width: 60px;
     height: 60px;
@@ -1946,10 +1942,6 @@ button[type="submit"]:active {
 .benefit-icon-svg path {
     stroke: #e0b4ff;
     transition: stroke 0.3s ease-in-out;
-}
-
-.benefit-item:hover .benefit-icon-svg path {
-    stroke: #fff;
 }
 
 .benefit-header {

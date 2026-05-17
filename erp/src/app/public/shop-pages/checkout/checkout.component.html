@@ -92,17 +92,30 @@
         <!-- PLATEBNÍ METODY -->
         <div class="checkout-section">
           <h3>Způsob platby</h3>
-          <div class="payment-methods-grid-compact">
-            <div 
-              class="compact-payment-card" 
+          <div class="payment-methods-list-vertical">
+            <label 
+              class="payment-list-item" 
               *ngFor="let method of paymentMethods()"
               [class.selected]="formData.paymentMethodId === method.id"
               (click)="selectPaymentMethod(method.id)"
             >
-              <span class="compact-icon">{{ getPaymentIcon(method.code) }}</span>
-              <span class="compact-title">{{ method.name }}</span>
-              <div class="mini-badge-selected" *ngIf="formData.paymentMethodId === method.id">✓</div>
-            </div>
+              <div class="payment-item-left">
+                <!-- Skutečný radio button pro lepší přístupnost -->
+                <input 
+                  type="radio" 
+                  name="paymentMethod" 
+                  [value]="method.id" 
+                  [checked]="formData.paymentMethodId === method.id"
+                  class="payment-radio"
+                >
+                <span class="payment-title">{{ method.name }}</span>
+              </div>
+              
+              <!-- Ikona platební metody na pravé straně -->
+              <span class="payment-method-icon-wrapper">
+                <img [src]="getPaymentIcon(method.code)" [alt]="method.name" class="payment-method-img">
+              </span>
+            </label>
           </div>
         </div>
       </form>

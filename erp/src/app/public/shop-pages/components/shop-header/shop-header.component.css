@@ -50,6 +50,15 @@
   align-items: center;
 }
 
+.logo-wrp{
+  height: 50px;
+}
+
+.logo-wrp img{
+  height: 100%;
+  width: 100%;
+}
+
 .brand-accent {
   color: var(--primary);
 }

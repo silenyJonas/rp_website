@@ -164,70 +164,111 @@ h1 {
 }
 
 /* ==========================================================================
-   KOMPAKTNÍ MŘÍŽKA PLATEB
+   VERTIKÁLNÍ SEZNAM PLATBY S RADIO BUTTONY (BEZ OKRAJOVÝCH BOXŮ)
    ========================================================================== */
-.payment-methods-grid-compact {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 0.6rem;
+.payment-methods-list-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.compact-payment-card {
-  background: var(--bg-dark);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 0.6rem;
+.payment-list-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
+  padding: 0.75rem 0.5rem;
   cursor: pointer;
-  position: relative;
-  transition: border-color 0.15s, background 0.15s;
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.2s ease;
 }
 
-.compact-payment-card.selected {
+.payment-list-item:last-child {
+  border-bottom: none;
+}
+
+.payment-list-item:hover {
+  background-color: rgba(166, 125, 255, 0.05);
+}
+
+.payment-list-item.selected {
+  background-color: rgba(166, 125, 255, 0.08);
+}
+
+.payment-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.payment-radio {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--bg-dark);
+  margin: 0;
+  font: inherit;
+  color: var(--primary);
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.payment-radio:focus {
+  outline: none;
   border-color: var(--primary);
-  background: var(--surface-light);
 }
 
-.compact-icon {
-  font-size: 1.25rem;
+.payment-radio::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 0.15s transform ease-in-out;
+  background-color: var(--primary);
+  box-shadow: 0 0 8px var(--primary);
+}
+
+.payment-radio:checked {
+  border-color: var(--primary);
+}
+
+.payment-radio:checked::before {
+  transform: scale(1);
+}
+
+.payment-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.payment-method-icon-wrapper {
   display: inline-flex;
   align-items: center;
 }
 
-.compact-title {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.payment-method-img {
+  width: auto;
+  max-width: 42px;
+  height: 22px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-.mini-badge-selected {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: var(--success);
-  color: var(--surface);
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  font-size: 0.65rem;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.payment-list-item:hover .payment-method-img {
+  transform: scale(1.05);
+  filter: brightness(1.1) drop-shadow(0 0 4px rgba(166, 125, 255, 0.5));
 }
 
 /* ==========================================================================
-   REKAPITULACE (Změněno na čistě statické umístění bez plavání)
+   REKAPITULACE (Statické umístění bez plavání)
    ========================================================================== */
-.checkout-summary-column {
-  /* Odstraněna position: sticky a top */
-}
-
 .static-summary {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -483,9 +524,13 @@ h1 {
     grid-template-columns: 1fr;
     gap: 0.6rem;
   }
+
+  .payment-list-item {
+    padding: 0.7rem 0.25rem;
+  }
   
-  .payment-methods-grid-compact {
-    grid-template-columns: 1fr 1fr;
+  .payment-title {
+    font-size: 0.85rem;
   }
 
   .checkout-section,
