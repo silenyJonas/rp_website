@@ -9,6 +9,7 @@ export interface CartItem {
   product_variant_id: number | null;
   product_name: string;
   variant_name: string | null;
+  product_slug: string;
   product_image?: string;
   quantity: number;
   unit_price: number;
@@ -138,6 +139,7 @@ addItem(product: any, variant: any | null, quantity: number = 1): void {
       variant_name: variantName,
       product_image: productImage,
       quantity: finalQty,
+      product_slug: product.slug,
       unit_price: unitPrice,
       total_price: unitPrice * finalQty,
       vat_rate: vatRate,

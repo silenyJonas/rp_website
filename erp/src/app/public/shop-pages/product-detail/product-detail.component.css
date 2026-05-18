@@ -1,90 +1,100 @@
 :host {
-  /* Barevná paleta e-shopu */
-  --primary: #a67dff;
-  --surface: #131325;
-  --surface-light: #1c1c3a;
-  --bg-dark: #1a1a2e;
-  --border: #302d2e;
-  --text-main: #e0e0e0;
-  --text-dim: #9a9a9b;
-  --success: #00ff88;
-  --error: #ff4d4d;
-  --warning: #ffcc00;
+  /* Černobílý minimalistický design systém */
+  --bg-main: #ffffff;        
+  --bg-dark: #000000;        
+  --text-main: #000000;      
+  --text-dim: #707070;       
+  --border: #e5e5e5;         
+  --border-dark: #000000;    
+  
+  /* Intuitivní barvy pro pozitivní emoce a přehlednost */
+  --success: #10b981;        /* Svěží moderní zelená */
+  --warning: #f59e0b;        /* Jasná oranžová pro nízký sklad */
+  --error: #9ca3af;          /* Neutrální šedá pro nedostupné produkty */
+  
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .product-detail-container {
   max-width: 1300px;
-  margin: 2rem auto;
-  padding: 0 1.5rem;
+  padding: 1.5rem 1.5rem;
   color: var(--text-main);
-  font-family: 'Inter', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 .product-main {
   display: grid;
-  grid-template-columns: 1fr 450px;
-  gap: 3rem;
+  grid-template-columns: 1fr 480px;
+  gap: 2rem;
   align-items: start;
   margin-bottom: 4rem;
 }
 
-/* --- GALERIE --- */
+/* --- LEVÁ STRANA: GALERIE --- */
 .main-image-wrapper {
-  background: var(--surface);
+  background: var(--bg-main);
   border: 1px solid var(--border);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0; 
-  height: 600px;
-  border-radius: 4px;
+  height: 450px;             
+  border-radius: 0;          
   overflow: hidden;
 }
 
 .main-image-wrapper img {
   width: 100%;
   height: 100%;
-  object-fit: cover; 
+  object-fit: contain;       
 }
 
 .badge-float {
   position: absolute;
-  top: 1.5rem;
+  top: 0;
   left: 0;
-  background: var(--primary);
-  color: #fff;
-  padding: 0.6rem 2rem;
-  font-weight: 900;
-  font-size: 0.8rem;
-  clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+  background: var(--bg-dark);
+  color: var(--bg-main);
+  padding: 6px 14px;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 0;
   z-index: 2;
 }
 
 .gallery-section {
-  padding-top: 15px;
+  padding-top: 20px;
+}
+
+.gallery-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
 }
 
 .image-thumbnails {
   display: flex;
   flex-wrap: wrap; 
   gap: 8px; 
-  margin-top: 1rem;
-  overflow-x: visible; 
+  margin-top: 0.8rem;
 }
 
 .thumb-item {
-  width: calc(20% - 6.4px); 
-  aspect-ratio: 1 / 1; 
-  height: auto;
+  width: 70px;               
+  height: 70px;
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: var(--bg-main);
   cursor: pointer;
-  transition: 0.2s;
-  border-radius: 2px;
+  border-radius: 0;
   flex-shrink: 0;
   overflow: hidden;
   padding: 0; 
+  transition: var(--transition);
 }
 
 .thumb-item img {
@@ -96,116 +106,143 @@
 
 .thumb-item:hover, 
 .thumb-item.active {
-  border-color: var(--primary);
-  box-shadow: 0 0 10px rgba(166, 125, 255, 0.4);
+  border-color: var(--border-dark);
 }
 
-/* --- PRAVÁ STRANA (NÁKUPNÍ ZÓNA) --- */
+/* --- PRAVÁ STRANA: INFO A NÁKUP --- */
 .product-purchase-zone {
   position: sticky;
-  top: 2rem;
+  top: 6rem;                 
 }
 
 .breadcrumb-trail {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--text-dim);
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.6rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+}
+
+.breadcrumb-trail span {
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.breadcrumb-trail span:hover {
+  color: var(--text-main);
 }
 
 .product-name {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 0.5rem;
-  line-height: 1.1;
-  color: #fff;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 0.8rem 0;
+  line-height: 1.15;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
 }
 
 .product-meta {
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
+  margin-bottom: 2rem;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
-/* --- SKLADOVÁ DOSTUPNOST --- */
+/* Barevná psychologie pro skladové zásoby */
 .product-stock.in-stock { 
   color: var(--success); 
 }
-
 .product-stock.low-stock {
   color: var(--warning);
 }
+.product-stock:not(.in-stock):not(.low-stock) {
+  color: var(--error);
+}
 
-/* --- VARIANTY & DROPDOWN --- */
+/* --- VARIANTY (Identické s katalogovým filtrem) --- */
 .variant-select-wrapper {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .section-label {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-dim);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .variant-dropdown {
   width: 100%;
-  padding: 1rem;
-  background: var(--surface);
+  height: 36px;              /* Sjednoceno s katalogem */
+  padding: 8px 28px 8px 12px; /* Sjednoceno s katalogem */
+  background: var(--bg-main);
   border: 1px solid var(--border);
-  color: #fff;
-  border-radius: 4px;
+  color: var(--text-main);
+  font-size: 0.8rem;         /* Sjednoceno s katalogem */
+  font-weight: 500;
+  border-radius: 0;          /* Ostré hrany */
   cursor: pointer;
+  outline: none;
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  transition: var(--transition);
+  
+  /* Minimalistická šipka přesně z katalogového filtru */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'><path d='M1 1L5 5L9 1' stroke='%23707070' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
   background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 1.2em;
+  background-position: right 10px center;
+}
+
+/* Focus stav ztlumený, identický s katalogem */
+.variant-dropdown:focus {
+  border-color: var(--border-dark);
 }
 
 .variant-dropdown option {
-  background: var(--surface-light);
-  color: #fff;
+  background: var(--bg-main);
+  color: var(--text-main);
   padding: 10px;
 }
 
 .selected-attributes-box {
   margin-top: 1rem;
-  padding: 0.8rem 1rem;
-  background: rgba(166, 125, 255, 0.05);
-  border-left: 2px solid var(--primary);
+  padding: 1rem;
+  background: transparent;
+  border: 1px solid var(--border);
 }
 
 .attr-row {
-  font-size: 0.9rem;
-  margin-bottom: 4px;
+  font-size: 0.8rem;
+  margin-bottom: 6px;
 }
+.attr-row:last-child { margin-bottom: 0; }
+.attr-label { color: var(--text-dim); margin-right: 6px; }
+.attr-val { color: var(--text-main); font-weight: 600; }
 
-.attr-label { color: var(--text-dim); margin-right: 8px; }
-.attr-val { color: #fff; font-weight: 600; }
-
-/* --- NÁKUPNÍ KARTA & CENY --- */
+/* --- NÁKUPNÍ KARTA --- */
 .purchase-card {
-  background: var(--surface-light);
-  border: 1px solid var(--border);
+  background: transparent;
+  border: 1px solid var(--border-dark); 
   padding: 2rem;
-  border-radius: 4px;
+  border-radius: 0;
   margin-bottom: 2rem;
 }
 
 .price-main {
-  font-size: 3.2rem;
-  font-weight: 900;
-  color: #fff;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--text-main);
   line-height: 1;
+  letter-spacing: -1px;
 }
 
 .price-no-vat {
   color: var(--text-dim);
-  font-size: 1rem;
-  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
   margin-bottom: 1.5rem;
   font-weight: 500;
 }
@@ -213,29 +250,31 @@
 .price-no-vat::before {
   content: '';
   display: block;
-  width: 40px;
+  width: 30px;
   height: 1px;
   background: var(--border);
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.5rem;
 }
 
-/* --- DOPRAVA --- */
+/* Doprava */
 .delivery-status {
   border-top: 1px solid var(--border);
-  padding-top: 1.5rem;
+  padding-top: 1.2rem;
   margin-bottom: 1.5rem;
 }
 
 .status-badge {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-weight: 800;
-  font-size: 0.9rem;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.8rem;
   color: var(--text-dim);
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
+/* Zelená barva pro stav K odeslání */
 .status-badge.ready { 
   color: var(--success); 
 }
@@ -243,11 +282,11 @@
 .status-subtext {
   font-size: 0.8rem;
   color: var(--text-dim);
-  margin-top: 5px;
-  padding-left: 28px;
+  margin-top: 4px;
+  padding-left: 26px;
 }
 
-/* --- MNOŽSTVÍ --- */
+/* --- MNOŽSTVÍ & ODSTRANĚNÍ MINI ŠIPEK --- */
 .quantity-selector {
   margin-bottom: 1.5rem;
   display: flex;
@@ -256,72 +295,75 @@
 }
 
 .quantity-selector label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-dim);
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .quantity-controls {
   display: inline-flex;
-  background: var(--surface);
+  background: var(--bg-main);
   border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 2px;
+  border-radius: 0;
+  padding: 0;
   width: fit-content;
-  transform: skewX(-10deg); 
 }
 
 .qty-btn {
   background: transparent;
   border: none;
-  color: #fff;
+  color: var(--text-main);
   width: 40px;
   height: 40px;
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.1rem;
+  font-weight: 400;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: var(--transition);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .qty-btn:hover:not(:disabled) {
-  background: rgba(166, 125, 255, 0.1);
-  color: var(--primary);
+  background: var(--bg-dark);
+  color: var(--bg-main);
 }
 
 .qty-btn:disabled {
-  color: var(--text-dim);
+  color: var(--border);
   cursor: not-allowed;
-  opacity: 0.3;
 }
 
-/* Zvláštní stav pro křížek při dosažení maxima skladu */
 .qty-btn.disabled-max {
-  color: var(--error);
-  font-size: 0.9rem;
+  color: var(--text-dim);
+  font-size: 0.8rem;
 }
 
 .max-stock-info {
   font-size: 0.75rem;
-  color: var(--warning);
+  color: var(--text-dim);
   margin-top: 2px;
 }
 
+/* Vstup pro číslo bez nativních malých šipek */
 .qty-display {
   background: transparent;
-  border: none;
-  color: #fff;
-  width: 50px;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-top: none;
+  border-bottom: none;
+  color: var(--text-main);
+  width: 45px;
   height: 40px;
   text-align: center;
-  font-size: 1.1rem;
-  font-weight: 800;
+  font-size: 0.9rem;
+  font-weight: 700;
   font-family: inherit;
-  pointer-events: none; 
-  transform: skewX(10deg); 
+  -webkit-appearance: none;  
+  appearance: none;          
+  -moz-appearance: textfield; 
 }
 
 .qty-display::-webkit-outer-spin-button,
@@ -329,11 +371,8 @@
   -webkit-appearance: none;
   margin: 0;
 }
-.qty-display[type=number] {
-  -moz-appearance: textfield;
-}
 
-/* --- AKČNÍ TLAČÍTKA --- */
+/* --- TLAČÍTKA --- */
 .action-buttons {
   display: flex;
   flex-direction: column;
@@ -343,67 +382,79 @@
 
 .btn-buy {
   width: 100%;
-  background: var(--primary);
-  border: none;
-  color: #fff;
-  padding: 1.2rem;
-  font-weight: 900;
-  font-size: 1.1rem;
+  background: var(--bg-dark);
+  border: 1px solid var(--bg-dark);
+  color: var(--bg-main);
+  padding: 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  transition: 0.3s;
-  transform: skewX(-10deg);
+  border-radius: 0;
   text-transform: uppercase;
+  transition: var(--transition);
 }
 
 .btn-buy:hover:not(:disabled) {
-  filter: brightness(1.1);
-  box-shadow: 0 0 25px rgba(166, 125, 255, 0.4);
+  background: var(--bg-main);
+  color: var(--text-main);
 }
 
 .btn-buy:disabled {
-  background: var(--border);
-  color: var(--text-dim);
+  background: var(--bg-main);
+  border-color: var(--border);
+  color: var(--border);
   cursor: not-allowed;
-  filter: grayscale(1);
 }
 
-/* --- ODKAZY V KARTĚ --- */
 .btn-view-cart {
   display: block;
   text-align: center;
   margin-top: 1rem;
   color: var(--text-dim);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: color 0.2s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: var(--transition);
 }
 
 .btn-view-cart:hover {
-  color: var(--primary);
+  color: var(--text-main);
 }
 
-/* --- POPISY --- */
+/* Popisy */
 .quick-description {
-  padding: 1.5rem;
-  background: rgba(255,255,255, 0.03);
-  border-radius: 4px;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
 }
 
-.quick-description h3 { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 0.5rem; text-transform: uppercase; }
-.quick-description p { font-size: 0.9rem; line-height: 1.6; }
+.quick-description h3 { 
+  font-size: 0.75rem; 
+  color: var(--text-dim); 
+  margin: 0 0 0.5rem 0; 
+  text-transform: uppercase; 
+  letter-spacing: 0.5px;
+}
+.quick-description p { font-size: 0.85rem; line-height: 1.6; color: var(--text-main); margin: 0; }
 
-/* --- SPODNÍ TABS --- */
-.product-tabs { margin-top: 4rem; border-top: 1px solid var(--border); }
+/* --- SPODNÍ TABY --- */
+.product-tabs { 
+  margin-top: 5rem; 
+  border-top: 1px solid var(--border); 
+}
 
 .tab-header button {
   background: transparent;
   border: none;
-  color: #fff;
-  padding: 1.5rem 0;
-  font-weight: 800;
-  font-size: 1.2rem;
+  color: var(--text-main);
+  padding: 1.2rem 0;
+  font-weight: 700;
+  font-size: 1rem;
   position: relative;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
   cursor: default;
 }
 
@@ -412,32 +463,50 @@
   position: absolute;
   bottom: -1px;
   left: 0;
-  width: 60px;
-  height: 3px;
-  background: var(--primary);
+  width: 40px;
+  height: 2px;
+  background: var(--border-dark);
 }
 
-.tab-content { padding: 2rem 0; font-size: 1.1rem; line-height: 1.8; }
+.tab-content { 
+  padding: 2rem 0; 
+  font-size: 0.95rem; 
+  line-height: 1.7; 
+  color: var(--text-main);
+}
 
-/* --- RESPONSIVITA --- */
+/* --- NAČÍTÁNÍ --- */
+.loading-state {
+  text-align: center;
+  padding: 5rem;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* --- RESPONZIVITA --- */
 @media (max-width: 1100px) {
   .product-main { 
     grid-template-columns: 1fr; 
-    gap: 2rem;
+    gap: 3rem;
   }
   .product-purchase-zone { 
     position: static; 
   }
   .main-image-wrapper { 
-    height: 400px; 
-  }
-  .price-main {
-    font-size: 2.5rem;
+    height: 380px; 
   }
 }
 
 @media (max-width: 600px) {
+  .product-name {
+    font-size: 1.8rem;
+  }
+  .price-main {
+    font-size: 2.2rem;
+  }
   .thumb-item {
-    width: calc(25% - 6px);
+    width: 60px;
+    height: 60px;
   }
 }

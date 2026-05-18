@@ -1,196 +1,196 @@
+:host {
+  /* Sjednocený monochromatický design systém */
+  --bg-footer: #ffffff;      /* Čistě bílé pozadí */
+  --bg-dark: #000000;        /* Čistě černá */
+  --text-main: #000000;      /* Hlavní text */
+  --text-dim: #707070;       /* Kontrastní vedlejší text */
+  --border: #e5e5e5;         /* Světlá dělící linka */
+  --border-dark: #000000;    /* Silná akcentní linka */
+  --transition: all 0.2s ease-in-out;
+}
+
 .public-footer {
-    background-color: #1a1a2e;
-    color: #e0e0e0;
-    padding: 60px 40px 20px;
-    border-top: 3px solid rgba(116, 68, 128, 0.4);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    position: relative;
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+  background-color: var(--bg-footer);
+  color: var(--text-main);
+  padding: 60px 40px 20px;
+  border-top: 1px solid var(--border-dark); /* Ostrá čistá horní linka */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  position: relative;
+  box-shadow: none; /* Odstraněn stín */
 }
 
 .footer-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    max-width: 1300px;
-    margin: 0 auto;
-    gap: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1300px;
+  margin: 0 auto;
+  gap: 30px;
 }
 
 .footer-section {
-    flex: 1;
-    min-width: 200px;
-    margin-bottom: 30px;
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 30px;
 }
 
 .footer-section h3 {
-    color: #a67dff;
-    font-size: 1.4em;
-    margin-bottom: 20px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+  color: var(--text-main);
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase; /* Moderní strohý vzhled */
 }
 
-/* Stylované zkosené nadpisy pro vybrané sloupce */
-.skewed-title {
-    display: inline-block;
-    background: #131325;
-    border: 1px solid #302d2e;
-    padding: 4px 15px;
-    transform: skewX(-15deg);
-    margin-bottom: 20px !important;
-}
-
-.skewed-title span {
-    display: block;
-    transform: skewX(15deg);
+/* Odstranění jakéhokoliv dřívějšího zkosení v šabloně */
+.footer-section h3 span {
+  display: block;
+  transform: none !important;
 }
 
 .footer-section p {
-    font-size: 0.95em;
-    line-height: 1.6;
-    margin-bottom: 10px;
-    color: #c5aaff;
+  font-size: 0.85em;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  color: var(--text-dim);
 }
 
 .footer-section p strong {
-    color: #e0e0e0;
+  color: var(--text-main);
+  font-weight: 600;
 }
 
 .footer-section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .footer-section ul li {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
-/* Odkazy a jejich animace */
+/* Odkazy - Čisté bez posunů do stran */
 .footer-link, .dynamic-email {
-    color: #b39ddb;
-    text-decoration: none;
-    font-size: 0.95em;
-    transition: color 0.3s ease, transform 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .external-icon {
-    margin-top: 2px;
+  margin-top: 0;
+  color: var(--text-dim);
+  transition: var(--transition);
 }
 
 /* Kontejnery pro ikony */
 .social-links, .payment-methods {
-    margin-top: 15px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 16px; /* Mírně zvětšený rozestup, když zmizely boxy */
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
 }
 
-/* Sociální sítě - Čisté ikony s přiměřenou velikostí */
-.social-box {
-    cursor: pointer;
-    display: inline-flex;
+.social-box, .payment-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sociální sítě a loga plateb - Čistý černobílý tón pomocí filtrů */
+.social-box img, .payment-box img {
+  filter: grayscale(1) contract(1.1); /* Sjednocení do černobílé */
+  opacity: 0.7;
+  transition: var(--transition);
+  object-fit: contain;
 }
 
 .social-box img {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-    transition: filter 0.3s ease, transform 0.3s ease;
-}
-
-/* Platební metody - Obdélníkový formát pro loga karet */
-.payment-box {
-    cursor: default;
-    display: inline-flex;
+  width: 24px;
+  height: 24px;
 }
 
 .payment-box img {
-    width: auto;
-    max-width: 45px; /* Přiměřená šířka pro loga jako Visa/PayPal */
-    height: 25px;    /* Fixní výška pro optické sjednocení */
-    object-fit: contain;
-    transition: filter 0.3s ease, transform 0.3s ease;
+  width: auto;
+  max-width: 42px;
+  height: 22px;
 }
 
 /* Spodní lišta */
 .footer-bottom {
-    text-align: center;
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(47, 47, 47, 0.5);
-    font-size: 0.85em;
-    color: #9a9a9b;
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 0.75em;
+  font-weight: 500;
+  color: var(--text-dim);
 }
 
-/* Hover interakce pro Desktop */
+/* Hover interakce pro Desktop - Decentní změna kontrastu bez efektů záře */
 @media (min-width: 906px) {
-    .footer-link:hover, .dynamic-email:hover {
-        color: #a67dff;
-        transform: translateX(5px);
-    }
+  .footer-link:hover, .dynamic-email:hover {
+    color: var(--text-main);
+    transform: none; /* Odstraněn pohyb do boku */
+  }
 
-    /* Efekt záře se nyní aplikuje přímo na samotné ikony */
-    .social-box:hover img, .payment-box:hover img {
-        filter: brightness(1.2) drop-shadow(0 0 6px rgba(166, 125, 255, 0.8));
-        transform: scale(1.08); /* Jemné zvětšení čisté ikony při hoveru */
-    }
+  .footer-link:hover .external-icon {
+    color: var(--text-main);
+  }
+
+  /* Při hoveru ikony pouze ztratí šedý filtr a získají plný kontrast */
+  .social-box:hover img, .payment-box:hover img {
+    filter: grayscale(0);
+    opacity: 1;
+    transform: none; /* Odstraněno zvětšování */
+  }
 }
 
 /* Responzivita */
 @media (max-width: 905px) {
-    .footer-content {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 
-    .footer-section {
-        margin-bottom: 20px;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+  .footer-section {
+    margin-bottom: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-    .footer-section ul {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+  .footer-section ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-    .social-links, .payment-methods {
-        justify-content: center;
-    }
+  .social-links, .payment-methods {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 480px) {
-    .public-footer {
-        padding: 40px 20px 15px;
-    }
+  .public-footer {
+    padding: 40px 20px 15px;
+  }
 
-    .footer-section h3 {
-        font-size: 1.2em;
-    }
+  .footer-section h3 {
+    font-size: 0.8rem;
+  }
 
-    .footer-section p,
-    .footer-link {
-        font-size: 0.9em;
-    }
-
-    /* Mírné zmenšení ikon na malých mobilech */
-    .social-box img {
-        width: 24px;
-        height: 24px;
-    }
-    
-    .payment-box img {
-        max-width: 38px;
-        height: 22px;
-    }
+  .footer-section p,
+  .footer-link {
+    font-size: 0.8em;
+  }
 }

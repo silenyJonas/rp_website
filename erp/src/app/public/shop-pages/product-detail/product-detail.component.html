@@ -41,7 +41,7 @@
     <div class="product-purchase-zone">
       <div class="sticky-content">
         <nav class="breadcrumb-trail">
-          <span [routerLink]="['/eshop']">E-shop</span> / <span>{{ product()?.category?.name }}</span>
+          <span [routerLink]="['/shop']">E-shop</span> / <span>{{ product()?.category?.name }}</span>
         </nav>
 
         <h1 class="product-name">{{ product()?.name }}</h1>
@@ -104,7 +104,6 @@
             <div class="quantity-controls">
               <button (click)="decreaseQuantity()" [disabled]="selectedQuantity() <= 1" class="qty-btn">−</button>
               <input type="number" [value]="selectedQuantity()" readonly class="qty-display">
-              <!-- Schová nebo deaktivuje tlačítko +, pokud jsme na limitu skladu -->
               <button (click)="increaseQuantity()" *ngIf="selectedQuantity() < currentStock()" class="qty-btn">+</button>
               <button disabled *ngIf="selectedQuantity() >= currentStock()" class="qty-btn disabled-max">✕</button>
             </div>
@@ -123,7 +122,7 @@
                 <span *ngIf="addedToCart()">✓ Přidáno v košíku!</span>
               </ng-container>
               <ng-container *ngIf="isInCart()">
-                <span *ngIf="!addedToCart()">🔄 AKTUALIZOVAT MNOŽSTVÍ</span>
+                <span *ngIf="!addedToCart()">AKTUALIZOVAT MNOŽSTVÍ</span>
                 <span *ngIf="addedToCart()">✓ Množství upraveno!</span>
               </ng-container>
             </button>

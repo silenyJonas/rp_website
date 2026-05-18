@@ -7,6 +7,7 @@ import { ShopPublicService } from '../components/services/public-data.service';
 import { ShippingMethod } from '../components/interfaces/shipping-method.interface';
 import { PaymentMethod } from '../components/interfaces/payment-method.interface';
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
+
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -36,11 +37,11 @@ export class CheckoutComponent implements OnInit {
     address: '',
     city: '',
     postalCode: '',
-    country: 'Czechia', // Změněno na výchozí český trh
+    country: 'Czechia',
     shippingMethodId: null as number | null,
     paymentMethodId: null as number | null,
     notes: null as string | null,
-    agreeToTerms: false // PŘIDÁNO: Souhlas s TOS a GDPR
+    agreeToTerms: false
   };
 
   orderSummary = computed(() => {
@@ -59,7 +60,7 @@ export class CheckoutComponent implements OnInit {
     const discountFactor = productsTotal > 0 ? (productsTotal - discountAmount) / productsTotal : 1;
 
     let totalBaseAfterDiscount = 0;
-    const vatBreakdown: { [key: number]: number } = {};
+    const vatBreakdown: { [key: number]: { amount: number; baseAmount: number } } = {};
     const cartItems = this.cartService.cartItems() || [];
     
     cartItems.forEach(item => {
@@ -72,8 +73,11 @@ export class CheckoutComponent implements OnInit {
       const itemBase = lineTotalAfterDiscount - itemVat;
 
       totalBaseAfterDiscount += itemBase;
-      if (!vatBreakdown[itemVatRate]) vatBreakdown[itemVatRate] = 0;
-      vatBreakdown[itemVatRate] += itemVat;
+      if (!vatBreakdown[itemVatRate]) {
+        vatBreakdown[itemVatRate] = { amount: 0, baseAmount: 0 };
+      }
+      vatBreakdown[itemVatRate].amount += itemVat;
+      vatBreakdown[itemVatRate].baseAmount += itemBase;
     });
 
     const shippingAmount = Number(this.selectedShippingPrice() || 0);
@@ -86,13 +90,13 @@ export class CheckoutComponent implements OnInit {
       baseAmount: totalBaseAfterDiscount,
       vatGroups: Object.keys(vatBreakdown).map(rate => ({
         rate: Number(rate),
-        amount: vatBreakdown[Number(rate)]
+        amount: vatBreakdown[Number(rate)].amount,
+        baseAmount: vatBreakdown[Number(rate)].baseAmount
       })),
       finalAmount
     };
   });
 
-  // UPRAVENO: Injektován alertDialogService pro zobrazení moderních dialogových oken místo alert()
   constructor(
     public cartService: CartService,
     private shopPublicService: ShopPublicService,
@@ -156,11 +160,10 @@ export class CheckoutComponent implements OnInit {
       this.formData.postalCode &&
       this.formData.shippingMethodId &&
       this.formData.paymentMethodId &&
-      this.formData.agreeToTerms // UPRAVENO: Formulář je validní pouze pokud je zaškrtnut souhlas
+      this.formData.agreeToTerms
     );
   }
 
-  // UPRAVENO: Využívá metodu validateCoupon ze service vrstvy
   applyCoupon(): void {
     if (!this.couponCode.trim()) return;
 
@@ -176,7 +179,6 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
-  // UPRAVENO: Využívá metodu createOrder ze service vrstvy a nahrazen alert za alertDialogService.open
   simulatePayment(): void {
     if (!this.isFormValid()) return;
     this.isProcessing.set(true);
@@ -232,7 +234,6 @@ export class CheckoutComponent implements OnInit {
     this.router.navigate(['/shop']);
   }
 
-  // OPRAVENO: Formátování na českou měnu (Kč)
   formatPrice(price: number): string {
     return new Intl.NumberFormat('cs-CZ', {
       style: 'currency',
@@ -241,7 +242,6 @@ export class CheckoutComponent implements OnInit {
     }).format(price);
   }
 
-  // ZMĚNĚNO: Metoda nyní vrací cesty ke skutečným grafickým ikonám/logům plateb v assets složce
   getPaymentIcon(code: string): string {
     const basePath = 'assets/images/icons/';
     const icons: { [key: string]: string } = {

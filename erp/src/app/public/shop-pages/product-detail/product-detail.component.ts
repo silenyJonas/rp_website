@@ -155,6 +155,12 @@ export class ProductDetailComponent implements OnInit {
       return;
     }
 
+    // Pojištění: Získání slugu přímo z aktivního parametru URL (ActivatedRoute), 
+    // pokud by v objektu 'product' z nějakého důvodu chyběl.
+    if (!product.slug) {
+      product.slug = this.route.snapshot.paramMap.get('slugOrId');
+    }
+
     const itemInCart = this.cartService.cartItems().find(i => i.id === itemId);
 
     if (itemInCart) {

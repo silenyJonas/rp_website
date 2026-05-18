@@ -1,23 +1,27 @@
 :host {
-  --primary: #a67dff;
-  --surface: #131325;
-  --surface-light: #1c1c3a;
-  --bg-dark: #1a1a2e;
-  --border: #302d2e;
-  --text-main: #e0e0e0;
-  --text-dim: #9a9a9b;
-  --success: #00ff88;
-  --error: #ff4d4d;
-  --warning: #ffcc00;
+  /* Černobílý minimalistický design systém implementovaný na pokladnu */
+  --bg-main: #ffffff;        
+  --bg-dark: #000000;        
+  --text-main: #000000;      
+  --text-dim: #707070;       
+  --border: #e5e5e5;         
+  --border-dark: #000000;    
+  
+  /* Intuitivní stavové barvy */
+  --success: #10b981;        
+  --warning: #f59e0b;        
+  --error: #9ca3af;          
+  
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   display: block;
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 1.5rem;
   box-sizing: border-box;
   color: var(--text-main);
-  font-family: inherit;
-  line-height: 1.4;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
 }
 
 .checkout-container {
@@ -25,48 +29,48 @@
 }
 
 h1 {
-  font-size: 1.6rem;
-  font-weight: 800;
-  margin-bottom: 1.5rem;
-  color: #fff;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--text-main);
   letter-spacing: -0.5px;
-  text-transform: uppercase;
+  text-transform: none; /* Přizpůsobeno čistému nadpisu z detailu */
 }
 
 /* ==========================================================================
-   DVOUSLOUPCOVÝ LAYOUT
+   DVOUSLOUPCOVÝ LAYOUT (Rozložení totožné)
    ========================================================================== */
 .instant-checkout-grid {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 1.5rem;
+  grid-template-columns: 1fr 480px; /* Sjednoceno s šířkou pravého sloupce z detailu */
+  gap: 2rem;
   align-items: start;
 }
 
 .checkout-form-column {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .checkout-section {
-  background: var(--surface);
+  background: var(--bg-main);
   border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1.25rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  margin-bottom: 7px;
+  border-radius: 0; /* Ostré hrany */
+  padding: 2rem;
+  box-shadow: none; /* Odstraněny stíny pro minimalistický look */
+  margin-bottom: 10px;
 }
 
 .checkout-section h3 {
-  font-size: 0.8rem;
-  font-weight: 800;
+  font-size: 0.75rem;
+  font-weight: 700;
   color: var(--text-dim);
   text-transform: uppercase;
-  margin: 0 0 1rem 0;
-  letter-spacing: 0.75px;
+  margin: 0 0 1.5rem 0;
+  letter-spacing: 0.5px;
   border-bottom: 1px solid var(--border);
-  padding-bottom: 0.4rem;
+  padding-bottom: 0.6rem;
 }
 
 /* ==========================================================================
@@ -75,7 +79,7 @@ h1 {
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.85rem;
+  gap: 1rem;
 }
 
 .form-grid.compact {
@@ -92,94 +96,103 @@ h1 {
 }
 
 .form-group label {
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
   font-weight: 700;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--text-dim);
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .form-group input {
-  background: var(--bg-dark);
+  background: var(--bg-main);
   border: 1px solid var(--border);
-  color: #fff;
-  padding: 0.6rem 0.75rem;
-  border-radius: 4px;
+  color: var(--text-main);
+  padding: 8px 12px;
+  height: 36px; /* Sjednoceno s výškou dropdownů a selektorů */
+  border-radius: 0; /* Ostré hrany */
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   box-sizing: border-box;
+  transition: var(--transition);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--border-dark);
 }
 
 /* ==========================================================================
-   KOMPAKTNÍ DOPRAVA
+   ZPŮSOB DOPRAVY (Krabice odpovídající designu detailu)
    ========================================================================== */
 .shipping-methods-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .selectable-option.shipping {
-  background: var(--bg-dark);
+  background: var(--bg-main);
   border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 0.75rem 1rem;
+  border-radius: 0;
+  padding: 1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: border-color 0.2s;
+  transition: var(--transition);
+}
+
+.selectable-option.shipping:hover {
+  border-color: var(--border-dark);
 }
 
 .selectable-option.shipping.selected {
-  border-color: var(--primary);
-  background: var(--surface-light);
+  border-color: var(--border-dark);
+  background: var(--bg-main);
+  outline: 1px solid var(--border-dark); /* Zvýraznění bez změny barevnosti pozadí */
 }
 
 .option-info {
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
 .option-title {
   font-weight: 700;
-  color: #fff;
-  font-size: 0.9rem;
+  color: var(--text-main);
+  font-size: 0.85rem;
 }
 
 .option-desc {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--text-dim);
 }
 
 .option-price {
-  font-weight: 800;
-  font-size: 0.95rem;
-  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-main);
 }
 
 /* ==========================================================================
-   VERTIKÁLNÍ SEZNAM PLATBY S RADIO BUTTONY (BEZ OKRAJOVÝCH BOXŮ)
+   PLATEBNÍ METODY (Čistá minimalistická tabulka bez okrajových boxů)
    ========================================================================== */
 .payment-methods-list-vertical {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0;
 }
 
 .payment-list-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 0.5rem;
+  padding: 1rem 0; /* Vycentrováno na okraj sekce */
   cursor: pointer;
   border-bottom: 1px solid var(--border);
-  transition: background-color 0.2s ease;
+  transition: var(--transition);
 }
 
 .payment-list-item:last-child {
@@ -187,54 +200,52 @@ h1 {
 }
 
 .payment-list-item:hover {
-  background-color: rgba(166, 125, 255, 0.05);
+  background-color: transparent;
 }
 
-.payment-list-item.selected {
-  background-color: rgba(166, 125, 255, 0.08);
+.payment-list-item.selected .payment-title {
+  font-weight: 700;
 }
 
 .payment-item-left {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 12px;
 }
 
+/* Custom černobílý radio button */
 .payment-radio {
   appearance: none;
   -webkit-appearance: none;
-  background-color: var(--bg-dark);
+  background-color: var(--bg-main);
   margin: 0;
-  font: inherit;
-  color: var(--primary);
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border: 1px solid var(--border);
   border-radius: 50%;
   display: grid;
   place-content: center;
   cursor: pointer;
-  transition: border-color 0.15s ease;
+  transition: var(--transition);
 }
 
 .payment-radio:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--border-dark);
 }
 
 .payment-radio::before {
   content: "";
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   transform: scale(0);
   transition: 0.15s transform ease-in-out;
-  background-color: var(--primary);
-  box-shadow: 0 0 8px var(--primary);
+  background-color: var(--bg-dark);
 }
 
 .payment-radio:checked {
-  border-color: var(--primary);
+  border-color: var(--border-dark);
 }
 
 .payment-radio:checked::before {
@@ -242,9 +253,9 @@ h1 {
 }
 
 .payment-title {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-main);
 }
 
 .payment-method-icon-wrapper {
@@ -254,83 +265,84 @@ h1 {
 
 .payment-method-img {
   width: auto;
-  max-width: 42px;
-  height: 22px;
+  max-width: 40px;
+  height: 20px;
   object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-  transition: transform 0.2s ease, filter 0.2s ease;
+  filter: grayscale(100%) contrast(120%); /* Plně černobílé ikony do designu */
+  opacity: 0.6;
+  transition: var(--transition);
 }
 
-.payment-list-item:hover .payment-method-img {
-  transform: scale(1.05);
-  filter: brightness(1.1) drop-shadow(0 0 4px rgba(166, 125, 255, 0.5));
+.payment-list-item:hover .payment-method-img,
+.payment-list-item.selected .payment-method-img {
+  filter: grayscale(0%) contrast(100%);
+  opacity: 1;
 }
 
 /* ==========================================================================
-   REKAPITULACE (Statické umístění bez plavání)
+   REKAPITULACE (Pravá nákupní karta)
    ========================================================================== */
 .static-summary {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1.25rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  background: transparent;
+  border: 1px solid var(--border-dark); /* Kopíruje .purchase-card */
+  padding: 2rem;
+  border-radius: 0;
 }
 
 .static-summary h3 {
-  font-size: 0.8rem;
-  font-weight: 800;
+  font-size: 0.75rem;
+  font-weight: 700;
   color: var(--text-dim);
   text-transform: uppercase;
-  margin: 0 0 1rem 0;
-  letter-spacing: 0.75px;
+  margin: 0 0 1.5rem 0;
+  letter-spacing: 0.5px;
   border-bottom: 1px solid var(--border);
-  padding-bottom: 0.4rem;
+  padding-bottom: 0.6rem;
 }
 
 .cart-items-preview {
-  max-height: 180px;
+  max-height: 240px;
   overflow-y: auto;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .preview-item {
   display: grid;
-  grid-template-columns: 36px 1fr auto;
-  gap: 0.85rem;
+  grid-template-columns: 40px 1fr auto;
+  gap: 12px;
   align-items: center;
-  padding: 0.5rem 0;
+  padding: 0.8rem 0;
   border-bottom: 1px solid var(--border);
 }
 
 .preview-image-wrapper {
-  width: 36px;
-  height: 36px;
-  border-radius: 2px;
+  width: 40px;
+  height: 40px;
+  border-radius: 0;
   overflow: visible;
   position: relative;
   border: 1px solid var(--border);
-  background: var(--bg-dark);
+  background: var(--bg-main);
 }
 
 .preview-image-wrapper img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
 }
 
 .preview-quantity {
   position: absolute;
-  top: -5px;
-  right: -5px;
-  background: var(--primary);
-  color: #fff;
-  font-size: 0.6rem;
-  font-weight: 900;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
+  top: -6px;
+  right: -6px;
+  background: var(--bg-dark);
+  color: var(--bg-main);
+  font-size: 0.65rem;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 0; /* Kostička */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -341,122 +353,145 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 2px;
 }
 
 .product-title {
   font-size: 0.85rem;
-  color: #fff;
-  line-height: 1.2;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.3;
 }
 
 .variant-badge {
-  font-size: 0.7rem;
-  color: var(--primary);
-  margin-top: 0.15rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 0;
+  font-weight: 500;
 }
 
 .preview-price {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-main);
 }
 
 /* Slevový box */
 .coupon-box {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .coupon-input-group {
   display: flex;
-  gap: 0.4rem;
+  gap: 8px;
 }
 
 .coupon-input-group input {
   flex: 1;
-  background: var(--bg-dark);
+  background: var(--bg-main);
   border: 1px solid var(--border);
-  color: #fff;
-  padding: 0.5rem;
-  border-radius: 4px;
+  color: var(--text-main);
+  padding: 8px 12px;
+  height: 36px;
+  border-radius: 0;
   font-size: 0.85rem;
 }
 
 .coupon-input-group button {
+  height: 36px;
   padding: 0 1rem;
-  background: var(--surface-light);
-  border: 1px solid var(--border);
-  color: #fff;
-  border-radius: 4px;
+  background: var(--bg-main);
+  border: 1px solid var(--border-dark);
+  color: var(--text-main);
+  border-radius: 0;
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.75rem;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: var(--transition);
+}
+
+.coupon-input-group button:hover:not(:disabled) {
+  background: var(--bg-dark);
+  color: var(--bg-main);
 }
 
 .coupon-msg {
   font-size: 0.75rem;
   color: var(--success);
-  margin: 0.3rem 0 0 0;
+  margin: 0.5rem 0 0 0;
+  font-weight: 600;
 }
 
 /* Výpočty */
 .summary-calculations {
-  background: var(--bg-dark);
-  padding: 0.9rem;
-  border-radius: 4px;
-  border: 1px solid var(--border);
-  margin-bottom: 1rem;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  margin-bottom: 1.5rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
 }
 
 .calc-row {
   display: flex;
   justify-content: space-between;
   font-size: 0.85rem;
-  padding: 0.25rem 0;
+  padding: 0.4rem 0;
+  color: var(--text-main);
 }
 
 .calc-row.discount {
-  color: var(--error);
+  color: var(--text-main);
   font-weight: 700;
 }
 
 .tax-breakdown {
-  border-top: 1px dashed var(--border);
-  margin-top: 0.3rem;
-  padding-top: 0.3rem;
+  border-top: 1px solid var(--border);
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
 }
 
 .calc-row.tax-detail {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: var(--text-dim);
 }
 
 .calc-row.total-final {
-  border-top: 1px solid var(--border);
-  margin-top: 0.5rem;
-  padding-top: 0.6rem;
-  font-size: 1.05rem;
+  border-top: 1px solid var(--border-dark);
+  margin-top: 1rem;
+  padding-top: 1rem;
+  font-size: 1.1rem;
+}
+
+.calc-row.total-final span {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
 }
 
 .calc-row.total-final strong {
-  color: var(--success);
-  font-size: 1.2rem;
-  font-weight: 900;
+  color: var(--text-main);
+  font-size: 1.8rem; /* Minimalisticky dominantní cena */
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 /* ==========================================================================
-   SOUHLAS S OBCHODNÍMI PODMÍNKAMI (PŘIDÁNO)
+   SOUHLAS S PODMÍNKAMI
    ========================================================================== */
 .checkout-terms-agreement {
-  margin-bottom: 1.25rem;
-  padding: 0 0.25rem;
+  margin-bottom: 1.5rem;
+  padding: 0;
 }
 
 .terms-checkbox-label {
   display: flex;
   align-items: flex-start;
-  gap: 0.65rem;
+  gap: 10px;
   cursor: pointer;
   user-select: none;
 }
@@ -464,36 +499,36 @@ h1 {
 .terms-checkbox {
   appearance: none;
   -webkit-appearance: none;
-  background-color: var(--bg-dark);
+  background-color: var(--bg-main);
   border: 1px solid var(--border);
   width: 16px;
   height: 16px;
-  border-radius: 3px;
-  margin-top: 0.15rem;
+  border-radius: 0; /* Ostré hrany */
+  margin-top: 2px;
   flex-shrink: 0;
   display: grid;
   place-content: center;
   cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: var(--transition);
 }
 
 .terms-checkbox:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--border-dark);
 }
 
 .terms-checkbox::before {
   content: "✓";
   font-size: 0.75rem;
-  font-weight: 900;
-  color: var(--surface);
+  font-weight: 700;
+  color: var(--bg-main);
   transform: scale(0);
   transition: 0.1s transform ease-in-out;
 }
 
 .terms-checkbox:checked {
-  background-color: var(--primary);
-  border-color: var(--primary);
+  background-color: var(--bg-dark);
+  border-color: var(--bg-dark);
 }
 
 .terms-checkbox:checked::before {
@@ -501,112 +536,162 @@ h1 {
 }
 
 .terms-text {
-  font-size: 0.75rem;
-  line-height: 1.35;
+  font-size: 0.8rem;
+  line-height: 1.4;
   color: var(--text-dim);
 }
 
 .terms-text a {
-  color: var(--primary);
-  text-decoration: none;
+  color: var(--text-main);
+  text-decoration: underline;
+  text-underline-offset: 2px;
   font-weight: 600;
-  transition: text-decoration 0.15s;
 }
 
 .terms-text a:hover {
-  text-decoration: underline;
+  color: var(--text-dim);
 }
 
-/* FINÁLNÍ TLAČÍTKO */
+/* FINÁLNÍ TLAČÍTKO DOKONČENÍ (Přesná kopie .btn-buy z detailu) */
 .btn-pay-instant {
   display: block;
   width: 100%;
-  padding: 0.9rem;
-  background: var(--success);
-  color: var(--surface);
-  border: none;
-  border-radius: 4px;
-  font-size: 0.95rem;
-  font-weight: 900;
-  cursor: pointer;
-  transform: skewX(-10deg);
-  text-transform: uppercase;
+  background: var(--bg-dark);
+  border: 1px solid var(--bg-dark);
+  color: var(--bg-main);
+  padding: 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
   letter-spacing: 0.5px;
+  cursor: pointer;
+  border-radius: 0;
+  text-transform: uppercase;
+  transform: none; /* Odstraněno skewX */
+  transition: var(--transition);
+}
+
+.btn-pay-instant:hover:not(:disabled) {
+  background: var(--bg-main);
+  color: var(--text-main);
 }
 
 .btn-pay-instant:disabled {
-  background: var(--border);
-  color: var(--text-dim);
+  background: var(--bg-main);
+  border-color: var(--border);
+  color: var(--border);
   cursor: not-allowed;
-  transform: none;
 }
 
+/* Zrušení vnitřního narovnání textu, jelikož skewX bylo odstraněno */
 .btn-pay-instant span {
   display: inline-block;
-  transform: skewX(10deg);
+  transform: none;
 }
 
 .security-note {
   text-align: center;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--text-dim);
-  margin: 0.5rem 0 0 0;
+  margin: 1rem 0 0 0;
+  letter-spacing: 0.3px;
 }
 
 /* ==========================================================================
-   SUCCESS STRÁNKA
+   SUCCESS STRÁNKA (Odpovídá spodním tabům a designu krabic)
    ========================================================================== */
 .checkout-step.success {
   text-align: center;
-  padding: 3rem 1.5rem;
-  background: var(--surface);
-  border: 1px dashed var(--border);
-  border-radius: 4px;
-  max-width: 500px;
-  margin: 0 auto;
+  padding: 4rem 2rem;
+  background: var(--bg-main);
+  border: 1px solid var(--border-dark);
+  border-radius: 0;
+  max-width: 600px;
+  margin: 2rem auto;
 }
 
 .success-box h2 {
-  color: var(--success);
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  color: var(--success); /* Zachována pozitivní zelená */
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.success-box p {
+  font-size: 0.95rem;
+  color: var(--text-main);
 }
 
 .success-box .order-number {
-  background: var(--surface-light) !important;
+  background: transparent !important;
   border: 1px solid var(--border);
   padding: 1rem;
-  border-radius: 4px;
-  margin: 1.25rem auto;
+  border-radius: 0;
+  margin: 2rem auto;
   font-size: 1.1rem;
+  max-width: 320px;
+}
+
+.success-box .order-number span {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.success-box .confirmation-message {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+}
+
+/* Tlačítko na děkovné stránce odpovídající sekundárním prvkům */
+.success-box .btn-primary {
+  background: var(--bg-dark);
+  border: 1px solid var(--bg-dark);
+  color: var(--bg-main);
+  padding: 1rem 2rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border-radius: 0;
+  text-transform: uppercase;
+  transition: var(--transition);
+}
+
+.success-box .btn-primary:hover {
+  background: var(--bg-main);
+  color: var(--text-main);
 }
 
 /* ==========================================================================
    RESPONSIVITA
    ========================================================================== */
-@media (max-width: 950px) {
+@media (max-width: 1100px) {
   .instant-checkout-grid {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: 3rem;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
+  .product-name, h1 {
+    font-size: 1.8rem;
+  }
+  
+  .calc-row.total-final strong {
+    font-size: 1.5rem;
+  }
+  
   .form-grid {
     grid-template-columns: 1fr;
-    gap: 0.6rem;
+    gap: 0.85rem;
   }
 
   .payment-list-item {
-    padding: 0.7rem 0.25rem;
-  }
-  
-  .payment-title {
-    font-size: 0.85rem;
+    padding: 1rem 0;
   }
 
   .checkout-section,
   .static-summary {
-    padding: 1rem;
+    padding: 1.5rem;
   }
 }

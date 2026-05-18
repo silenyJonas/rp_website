@@ -1,5 +1,5 @@
 <div class="checkout-container">
-  <h1>{{ currentStep() === 5 ? 'Objednávka potvrzena' : 'Zabezpečená pokladna' }}</h1>
+  <h1>{{ currentStep() === 5 ? '' : 'Zabezpečená pokladna' }}</h1>
 
   <!-- KROK 5: POTVRZENÍ OBJEDNÁVKY -->
   <div class="checkout-step success" *ngIf="currentStep() === 5">
@@ -121,7 +121,7 @@
       </form>
     </div>
 
-    <!-- PRAVÝ SLOUPEC: REKAPITULACE KOŠÍKU (Nyní statická, neplovoucí) -->
+    <!-- PRAVÝ SLOUPEC: REKAPITULACE KOŠÍKU -->
     <div class="checkout-summary-column">
       <div class="static-summary">
         <h3>Rekapitulace objednávky</h3>
@@ -165,11 +165,11 @@
             <span>{{ formData.shippingMethodId ? formatPrice(orderSummary().shippingAmount) : 'Bude vypočtena' }}</span>
           </div>
           
-          <!-- DPH Breakdown -->
+          <!-- DPH Breakdown upravený na cenu bez DPH -->
           <div class="tax-breakdown" *ngIf="orderSummary().vatGroups.length > 0">
             <div class="calc-row tax-detail" *ngFor="let vat of orderSummary().vatGroups">
-              <span>Včetně {{ vat.rate }}% DPH</span>
-              <span>{{ formatPrice(vat.amount) }}</span>
+              <span>Cena bez DPH ({{ vat.rate }}%)</span>
+              <span>{{ formatPrice(vat.baseAmount) }}</span>
             </div>
           </div>
 
@@ -179,7 +179,7 @@
           </div>
         </div>
 
-        <!-- PŘIDÁNO: Souhlas s Obchodními podmínkami a GDPR -->
+        <!-- Souhlas s Obchodními podmínkami a GDPR -->
         <div class="checkout-terms-agreement">
           <label class="terms-checkbox-label">
             <input type="checkbox" [(ngModel)]="formData.agreeToTerms" name="agreeToTerms" class="terms-checkbox">

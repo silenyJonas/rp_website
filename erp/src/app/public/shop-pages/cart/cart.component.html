@@ -1,5 +1,5 @@
 <div class="product-detail-container">
-  <h1 class="cart-title">Nákupní košík</h1>
+  <div class="cart-title">Nákupní košík</div>
 
   <!-- PRÁZDNÝ KOŠÍK -->
   <div class="empty-cart" *ngIf="cartService.cartCount() === 0">
@@ -19,21 +19,27 @@
     
     <!-- POLOŽKY -->
     <div class="cart-items">
-      <div class="cart-item" *ngFor="let item of cartService.cartItems()">
+      <!-- Klikatelný celý řádek položky -->
+      <div 
+        *ngFor="let item of cartService.cartItems()" 
+        [routerLink]="['/shop/products', item.product_slug]" 
+        class="cart-item"
+      >
         
         <!-- Fotografie položky -->
         <div class="item-image-wrapper">
           <img [src]="item.product_image || 'assets/images/placeholder-product.png'" [alt]="item.product_name" class="item-image">
         </div>
 
+        <!-- Informace o produktu -->
         <div class="item-info">
           <h3>{{ item.product_name }}</h3>
           <span class="variant-tag" *ngIf="item.variant_name">{{ item.variant_name }}</span>
           <p class="item-price">{{ formatPrice(item.unit_price) }} / ks</p>
         </div>
 
-        <!-- Množství se skew designem navazující na detail produktu -->
-        <div class="quantity-selector">
+        <!-- Množství ($event.stopPropagation brání prokliku do detailu) -->
+        <div class="quantity-selector" (click)="$event.stopPropagation()">
           <div class="quantity-controls">
             <button 
               (click)="decreaseQuantity(item.id)" 
@@ -48,32 +54,27 @@
               class="qty-display"
             >
             
-            <!-- Standardní tlačítko plus - aktivní, dokud není dosaženo maxima skladu -->
             <button 
               (click)="increaseQuantity(item.id)" 
               *ngIf="!isMaxStockReached(item)" 
               class="qty-btn"
             >+</button>
 
-            <!-- Zablokovaný křížek ✕ (přesně jako na detailu produktu), když uživatel dosáhne stropu -->
             <button 
               disabled 
               *ngIf="isMaxStockReached(item)" 
               class="qty-btn disabled-max"
             >✕</button>
           </div>
-          
-          <!-- Hláška pod selektorem množství informující o dosažení maxima -->
-          <!-- <small class="max-stock-info" *ngIf="isMaxStockReached(item)">
-            Max. dostupné množství (Sklad: {{ item.stock_quantity }} ks)
-          </small> -->
         </div>
 
+        <!-- Celková cena položky -->
         <div class="item-total">
           <span>{{ formatPrice(item.total_price) }}</span>
         </div>
 
-        <button (click)="removeItem(item.id)" class="btn-remove" title="Odstranit">
+        <!-- Tlačítko odstranit ($event.stopPropagation brání prokliku do detailu) -->
+        <button (click)="removeItem(item.id); $event.stopPropagation()" class="btn-remove" title="Odstranit">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
           </svg>
@@ -91,8 +92,8 @@
       </div>
       
       <div class="summary-row">
-        <span>Zahrnutá DPH:</span>
-        <span class="tax-value">{{ formatPrice(cartService.totalTax()) }}</span>
+        <span>Cena bez DPH:</span>
+        <span class="tax-value">{{ formatPrice(totalPriceWithoutTax()) }}</span>
       </div>
       
       <div class="price-main-wrapper">
