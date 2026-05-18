@@ -445,6 +445,78 @@ h1 {
   font-weight: 900;
 }
 
+/* ==========================================================================
+   SOUHLAS S OBCHODNÍMI PODMÍNKAMI (PŘIDÁNO)
+   ========================================================================== */
+.checkout-terms-agreement {
+  margin-bottom: 1.25rem;
+  padding: 0 0.25rem;
+}
+
+.terms-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.terms-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--bg-dark);
+  border: 1px solid var(--border);
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.terms-checkbox:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.terms-checkbox::before {
+  content: "✓";
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: var(--surface);
+  transform: scale(0);
+  transition: 0.1s transform ease-in-out;
+}
+
+.terms-checkbox:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.terms-checkbox:checked::before {
+  transform: scale(1);
+}
+
+.terms-text {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--text-dim);
+}
+
+.terms-text a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: text-decoration 0.15s;
+}
+
+.terms-text a:hover {
+  text-decoration: underline;
+}
+
 /* FINÁLNÍ TLAČÍTKO */
 .btn-pay-instant {
   display: block;

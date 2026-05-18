@@ -1,17 +1,16 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CartService } from '../components/services/cart.service';
 import { ShopPublicService } from '../components/services/public-data.service';
 import { ShippingMethod } from '../components/interfaces/shipping-method.interface';
 import { PaymentMethod } from '../components/interfaces/payment-method.interface';
 import { AlertDialogService } from '../../../core/services/alert-dialog.service';
-
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css']
 })
@@ -40,7 +39,8 @@ export class CheckoutComponent implements OnInit {
     country: 'Czechia', // Změněno na výchozí český trh
     shippingMethodId: null as number | null,
     paymentMethodId: null as number | null,
-    notes: null as string | null
+    notes: null as string | null,
+    agreeToTerms: false // PŘIDÁNO: Souhlas s TOS a GDPR
   };
 
   orderSummary = computed(() => {
@@ -155,7 +155,8 @@ export class CheckoutComponent implements OnInit {
       this.formData.city &&
       this.formData.postalCode &&
       this.formData.shippingMethodId &&
-      this.formData.paymentMethodId
+      this.formData.paymentMethodId &&
+      this.formData.agreeToTerms // UPRAVENO: Formulář je validní pouze pokud je zaškrtnut souhlas
     );
   }
 

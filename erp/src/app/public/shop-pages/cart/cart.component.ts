@@ -89,11 +89,6 @@ export class CartComponent {
     .then(confirmed => {
       if (confirmed) {
         this.cartService.removeItem(itemId);
-        this.alertDialogService.open(
-          'Košík aktualizován', 
-          'Položka byla úspěšně odstraněna.', 
-          'success'
-        );
       }
     })
     .catch(() => {});

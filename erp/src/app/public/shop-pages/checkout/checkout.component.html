@@ -179,6 +179,16 @@
           </div>
         </div>
 
+        <!-- PŘIDÁNO: Souhlas s Obchodními podmínkami a GDPR -->
+        <div class="checkout-terms-agreement">
+          <label class="terms-checkbox-label">
+            <input type="checkbox" [(ngModel)]="formData.agreeToTerms" name="agreeToTerms" class="terms-checkbox">
+            <span class="terms-text">
+            Souhlasím s <a routerLink="/tos" target="_blank">obchodními podmínkami</a> a beru na vědomí <a routerLink="/privacy-policy" target="_blank">zásady ochrany osobních údajů</a>. *
+            </span>
+          </label>
+        </div>
+
         <!-- TLAČÍTKO PRO ODESLÁNÍ -->
         <button 
           type="button" 
