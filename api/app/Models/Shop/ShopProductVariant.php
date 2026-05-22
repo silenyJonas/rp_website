@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
@@ -16,26 +17,26 @@ class ShopProductVariant extends Model
     protected $table = 'shop_product_variants';
 
     protected $fillable = [
-        'product_id', 'variant_name', 'attribute_1_name', 'attribute_1_value',
-        'attribute_2_name', 'attribute_2_value', 'sku_variant',
-        'price_with_vat', 'price_without_vat', 'vat_rate', 'stock_quantity',
+        'product_id', 
+        'variant_name', 
+        'attribute_1_name', 
+        'attribute_1_value',
+        'attribute_2_name', 
+        'attribute_2_value', 
+        'sku_variant',
+        'stock_quantity',
     ];
 
     protected $casts = [
-        'price_with_vat' => 'decimal:2',
-        'price_without_vat' => 'decimal:2',
-        'vat_rate' => 'decimal:2',
         'stock_quantity' => 'integer',
     ];
 
     protected static function booted()
     {
-        // Spustí se při $variant->save() nebo $variant->update()
         static::saved(function ($variant) {
             $variant->syncParentStock();
         });
 
-        // Spustí se při $variant->delete()
         static::deleted(function ($variant) {
             $variant->syncParentStock();
         });
@@ -51,13 +52,17 @@ class ShopProductVariant extends Model
     }
 
     /**
-     * Provede synchronizaci skladu pro konkrétní produktové ID
-     * Tato metoda je STATICKÁ, takže ji můžeš volat odkudkoliv i bez instance varianty
+     * Ceny specifické pro tuto variantu
      */
+    public function prices(): HasOne
+    {
+        return $this->hasOne(ShopProductPrice::class, 'variant_id');
+    }
+
     public static function forceSyncParentStock(int $productId): void
     {
         $totalStock = self::where('product_id', $productId)
-            ->whereNull('deleted_at') // Pouze nesmazané varianty
+            ->whereNull('deleted_at')
             ->sum('stock_quantity');
 
         DB::table('shop_products')
@@ -70,9 +75,6 @@ class ShopProductVariant extends Model
         ]);
     }
 
-    /**
-     * Pomocná metoda pro instanci varianty
-     */
     public function syncParentStock(): void
     {
         if ($this->product_id) {

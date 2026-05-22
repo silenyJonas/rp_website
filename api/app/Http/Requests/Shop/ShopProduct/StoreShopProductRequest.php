@@ -22,9 +22,17 @@ class StoreShopProductRequest extends FormRequest
             'description' => 'nullable|string',
             'short_description' => 'nullable|string|max:500',
 
-            // Ceny a skladové zásoby
-            'price' => 'required|numeric|min:0',
-            'cost_price' => 'nullable|numeric|min:0',
+            // Multi-měnové ceny pro hlavní produkt
+            'prices' => 'required|array',
+            'prices.vat_rate' => 'required|numeric|min:0',
+            'prices.price_czk_without_vat' => 'required|numeric|min:0',
+            'prices.price_czk_with_vat' => 'required|numeric|min:0',
+            'prices.price_eur_without_vat' => 'nullable|numeric|min:0',
+            'prices.price_eur_with_vat' => 'nullable|numeric|min:0',
+            'prices.price_usd_without_vat' => 'nullable|numeric|min:0',
+            'prices.price_usd_with_vat' => 'nullable|numeric|min:0',
+
+            // Skladové zásoby
             'sku' => 'nullable|string|max:50|unique:shop_products,sku',
             'stock_quantity' => 'nullable|integer|min:0',
             'stock_warning_level' => 'nullable|integer|min:0',
@@ -48,11 +56,17 @@ class StoreShopProductRequest extends FormRequest
             'variants.*.attribute_2_name' => 'nullable|string|max:50',
             'variants.*.attribute_2_value' => 'nullable|string|max:100',
             'variants.*.sku_variant' => 'nullable|string|max:50|unique:shop_product_variants,sku_variant',
-            'variants.*.price_modifier' => 'nullable|numeric',
             'variants.*.stock_quantity' => 'nullable|integer|min:0',
 
-            // PŘIDÁNO: Nová cenová pole pro varianty
-            'variants.*.vat_rate' => 'required_with:variants|numeric|min:0',
+            // Multi-měnové ceny pro varianty
+            'variants.*.prices' => 'required_with:variants|array',
+            'variants.*.prices.vat_rate' => 'required_with:variants.*.prices|numeric|min:0',
+            'variants.*.prices.price_czk_without_vat' => 'required_with:variants.*.prices|numeric|min:0',
+            'variants.*.prices.price_czk_with_vat' => 'required_with:variants.*.prices|numeric|min:0',
+            'variants.*.prices.price_eur_without_vat' => 'nullable|numeric|min:0',
+            'variants.*.prices.price_eur_with_vat' => 'nullable|numeric|min:0',
+            'variants.*.prices.price_usd_without_vat' => 'nullable|numeric|min:0',
+            'variants.*.prices.price_usd_with_vat' => 'nullable|numeric|min:0',
         ];
     }
 
@@ -62,8 +76,7 @@ class StoreShopProductRequest extends FormRequest
             'category_id.required' => 'Kategorie je povinná.',
             'category_id.exists' => 'Vybraná kategorie neexistuje.',
             'name.required' => 'Název produktu je povinný.',
-            'price.required' => 'Cena je povinná.',
-            'price.numeric' => 'Cena musí být číslo.',
+            'prices.prices_czk_without_vat.required' => 'Cena v CZK bez DPH je povinná.',
             'images.*.file.image' => 'Soubor musí být obrázek.',
             'images.*.file.max' => 'Obrázek je příliš velký (max 5MB).',
             'variants.*.sku_variant.unique' => 'Varianta SKU už existuje.',
@@ -72,14 +85,12 @@ class StoreShopProductRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        // Automaticky generovat slug z názvu, pokud není zadán
         if ($this->filled('name') && !$this->filled('slug')) {
             $this->merge([
                 'slug' => $this->generateSlug($this->input('name')),
             ]);
         }
 
-        // Nastav výchozí hodnoty
         $this->merge([
             'is_active' => $this->boolean('is_active'),
             'is_featured' => $this->boolean('is_featured'),
@@ -88,9 +99,6 @@ class StoreShopProductRequest extends FormRequest
         ]);
     }
 
-    /**
-     * Generuje slug z názvu
-     */
     private function generateSlug(string $name): string
     {
         return \Illuminate\Support\Str::slug($name, '-');

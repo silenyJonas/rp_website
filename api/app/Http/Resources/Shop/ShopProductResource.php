@@ -19,8 +19,18 @@ class ShopProductResource extends JsonResource
             'slug' => $this->slug,
             'description' => $this->description,
             'short_description' => $this->short_description,
-            'price' => (float)$this->price,
-            'cost_price' => $this->cost_price ? (float)$this->cost_price : null,
+            
+            // Načtení multoměnových cen pro hlavní produkt z vazby s bezpečným fallbackem
+            'prices' => $this->relationLoaded('prices') ? [
+                'vat_rate' => $this->prices ? (float)$this->prices->vat_rate : 0.0,
+                'price_czk_without_vat' => $this->prices ? (float)$this->prices->price_czk_without_vat : 0.0,
+                'price_czk_with_vat' => $this->prices ? (float)$this->prices->price_czk_with_vat : 0.0,
+                'price_eur_without_vat' => $this->prices?->price_eur_without_vat ? (float)$this->prices->price_eur_without_vat : null,
+                'price_eur_with_vat' => $this->prices?->price_eur_with_vat ? (float)$this->prices->price_eur_with_vat : null,
+                'price_usd_without_vat' => $this->prices?->price_usd_without_vat ? (float)$this->prices->price_usd_without_vat : null,
+                'price_usd_with_vat' => $this->prices?->price_usd_with_vat ? (float)$this->prices->price_usd_with_vat : null,
+            ] : null,
+
             'sku' => $this->sku,
             'stock_quantity' => $this->stock_quantity,
             'stock_warning_level' => $this->stock_warning_level,

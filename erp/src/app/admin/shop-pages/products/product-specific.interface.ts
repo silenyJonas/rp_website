@@ -6,6 +6,7 @@ export interface Variant {
   attribute_2_name?: string;
   attribute_2_value?: string;
   sku_variant?: string;
+  currency?: string;
   price_with_vat: number;
   vat_rate: number;
   price_without_vat: number;
@@ -53,6 +54,7 @@ export interface Product {
   stock_quantity: number;
   stock_warning_level: number;
   is_active: boolean;
+  currency?: string;
   is_featured: boolean;
   images?: ProductImage[];
   variants?: Variant[];

@@ -115,17 +115,21 @@
           <h3>Ceny</h3>
           <div class="info-grid">
             <div class="info-row">
+              <label>Měna:</label>
+              <span class="currency-badge">{{ selectedProductForDetail.currency || 'CZK' }}</span>
+            </div>
+            <div class="info-row">
               <label>Prodejní cena:</label>
-              <span class="price">{{ formatCurrency(selectedProductForDetail.price) }}</span>
+              <span class="price">{{ formatCurrency(selectedProductForDetail.price, selectedProductForDetail.currency) }}</span>
             </div>
             <div class="info-row">
               <label>Nákupní cena:</label>
-              <span class="price">{{ formatCurrency(selectedProductForDetail.cost_price || 0) }}</span>
+              <span class="price">{{ formatCurrency(selectedProductForDetail.cost_price || 0, selectedProductForDetail.currency) }}</span>
             </div>
             <div class="info-row">
               <label>Marže:</label>
               <span class="price" *ngIf="selectedProductForDetail.cost_price">
-                {{ formatCurrency(selectedProductForDetail.price - selectedProductForDetail.cost_price) }}
+                {{ formatCurrency(selectedProductForDetail.price - selectedProductForDetail.cost_price, selectedProductForDetail.currency) }}
               </span>
             </div>
           </div>
@@ -161,12 +165,16 @@
               </div>
               <div class="variant-pricing">
                 <div class="row">
+                  <div class="label">Měna:</div>
+                  <strong>{{ v.currency || 'CZK' }}</strong>
+                </div>
+                <div class="row">
                   <div class="label">Bez DPH:</div>
-                  <div>{{ formatCurrency(v.price_without_vat || 0) }}</div>
+                  <div>{{ formatCurrency(v.price_without_vat || 0, v.currency) }}</div>
                 </div>
                 <div class="row">
                   <div class="label">S DPH:</div>
-                  <div>{{ formatCurrency(v.price_with_vat) }}</div>
+                  <div>{{ formatCurrency(v.price_with_vat, v.currency) }}</div>
                 </div>
                 <div class="row">
                   <div class="label">DPH:</div>
@@ -227,6 +235,7 @@
   </div>
 </ng-container>
 
+<!-- ============= MODAL: EDITACE / NOVÝ PRODUKT ============= -->
 <ng-container *ngIf="showProductForm && editingProduct">
   <div class="modal-overlay" (click)="closeProductForm()">
     <div class="modal-content modal-form" (click)="$event.stopPropagation()">
@@ -288,6 +297,15 @@
             <legend>Ceny</legend>
             <div class="form-row-3">
               <div class="form-group">
+                <label>Měna *</label>
+                <select [(ngModel)]="editingProduct.currency" name="currency" required>
+                  <option value="CZK">CZK (Kč)</option>
+                  <option value="EUR">EUR (€)</option>
+                  <option value="USD">USD ($)</option>
+                  <option value="GBP">GBP (£)</option>
+                </select>
+              </div>
+              <div class="form-group">
                 <label>Prodejní cena *</label>
                 <input type="number" [(ngModel)]="editingProduct.price" name="price" min="0" step="0.01" required>
               </div>
@@ -332,6 +350,7 @@
     </div>
   </div>
 </ng-container>
+
 <!-- ============= MODAL: VARIANTY ============= -->
 <ng-container *ngIf="showVariantsModal && editingProduct">
   <div class="modal-overlay" (click)="closeVariantsModal()">
@@ -392,7 +411,16 @@
 
             <div class="vat-calculator">
               <h4>💰 Ceny & DPH</h4>
-              <div class="form-row-3">
+              <div class="form-row-4">
+                <div class="form-group">
+                  <label>Měna *</label>
+                  <select [(ngModel)]="variant.currency" [disabled]="!!variant._delete">
+                    <option value="CZK">CZK (Kč)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="GBP">GBP (£)</option>
+                  </select>
+                </div>
                 <div class="form-group">
                   <label>Cena S DPH *</label>
                   <input type="number" [(ngModel)]="variant.price_with_vat" (change)="onPriceWithVATChange(variant)" placeholder="0" step="0.01" [disabled]="!!variant._delete">

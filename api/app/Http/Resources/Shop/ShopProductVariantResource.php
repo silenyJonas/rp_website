@@ -18,11 +18,18 @@ class ShopProductVariantResource extends JsonResource
             'attribute_2_name' => $this->attribute_2_name,
             'attribute_2_value' => $this->attribute_2_value,
             'sku_variant' => $this->sku_variant,
-            // NOVÉ: DPH fields
-            'price_with_vat' => (float)$this->price_with_vat,
-            'price_without_vat' => (float)$this->price_without_vat,
-            'vat_rate' => (float)$this->vat_rate,
-            // Obrázky (pokud jsou načteny)
+            
+            // Nová struktura multoměnových cen pro variantu s bezpečným fallbackem
+            'prices' => $this->relationLoaded('prices') ? [
+                'vat_rate' => $this->prices ? (float)$this->prices->vat_rate : 0.0,
+                'price_czk_without_vat' => $this->prices ? (float)$this->prices->price_czk_without_vat : 0.0,
+                'price_czk_with_vat' => $this->prices ? (float)$this->prices->price_czk_with_vat : 0.0,
+                'price_eur_without_vat' => $this->prices?->price_eur_without_vat ? (float)$this->prices->price_eur_without_vat : null,
+                'price_eur_with_vat' => $this->prices?->price_eur_with_vat ? (float)$this->prices->price_eur_with_vat : null,
+                'price_usd_without_vat' => $this->prices?->price_usd_without_vat ? (float)$this->prices->price_usd_without_vat : null,
+                'price_usd_with_vat' => $this->prices?->price_usd_with_vat ? (float)$this->prices->price_usd_with_vat : null,
+            ] : null,
+
             'images' => $this->whenLoaded('images', ShopProductImageResource::collection($this->images)),
             'stock_quantity' => $this->stock_quantity,
             'created_at' => $this->created_at->toIso8601String(),

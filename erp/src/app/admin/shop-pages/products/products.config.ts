@@ -27,7 +27,7 @@ export const TOOLBAR_BUTTONS: Core.Button[] = [
     label: 'Koš',
     icon: '🗑️',
     class: 'btn-trash',
-    permission: 'shop-products-delete' // předpokládaná permission
+    permission: 'shop-products-delete'
   }
 ];
 
@@ -94,6 +94,15 @@ export const PRODUCT_FORM_FIELDS: Core.InputDefinition[] = [
     show_in_create: true,
   },
   {
+    column_name: 'stock_quantity',
+    label: 'Skladové množství',
+    type: 'number',
+    required: false,
+    editable: true,
+    show_in_edit: true,
+    show_in_create: true,
+  },
+  {
     column_name: 'description',
     label: 'Popis produktu',
     type: 'textarea',
@@ -124,8 +133,8 @@ export const PRODUCT_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'name', header: 'Produkt', type: 'text' },
   { key: 'sku', header: 'SKU', type: 'text' },
-  { key: 'category.name', header: 'Kategorie', type: 'text' },
-  { key: 'price', header: 'Cena (s DPH)', type: 'currency' }, // Může být currency dle implementace
+  { key: 'category.name', header: 'Kategorie', type: 'text' }, // Ověř podporu tečkové notace
+  { key: 'price', header: 'Cena (s DPH)', type: 'currency' }, 
   { key: 'stock_quantity', header: 'Skladem', type: 'text' },
   { key: 'is_active', header: 'Aktivní', type: 'boolean' }
 ];
@@ -142,8 +151,8 @@ export const FILTER_COLUMNS: Core.FilterColumns[] = [
   { key: 'search', header: 'Hledat', type: 'text', placeholder: 'Název, SKU, popis...', canSort: false },
   { key: 'category_id', header: 'Kategorie', type: 'select', options: [], placeholder: '-- Kategorie --', canSort: true },
   { key: 'supplier_id', header: 'Dodavatel', type: 'select', options: [], placeholder: '-- Dodavatel --', canSort: true },
-  { key: 'low_stock', header: 'Nízký sklad', type: 'checkbox', canSort: false , placeholder: ''},
-  { key: 'is_active', header: 'Pouze aktivní', type: 'checkbox', canSort: true,placeholder: '' }
+  { key: 'low_stock', header: 'Nízký sklad', type: 'checkbox', canSort: false, placeholder: ''},
+  { key: 'is_active', header: 'Pouze aktivní', type: 'checkbox', canSort: true, placeholder: '' }
 ];
 
 export const PRODUCT_DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
@@ -153,8 +162,8 @@ export const PRODUCT_DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'sku', displayName: 'SKU kód', type: 'text' },
   { key: 'category.name', displayName: 'Kategorie', type: 'text' },
   { key: 'supplier.name', displayName: 'Dodavatel', type: 'text' },
-  { key: 'price', displayName: 'Základní cena', type: 'text' },
-  { key: 'stock_quantity', displayName: 'Celkový sklad', type: 'text' },
+  { key: 'price', displayName: 'Základní cena', type: 'currency' }, // Opraveno z 'text' na 'currency'
+  { key: 'stock_quantity', displayName: 'Celkový sklad', type: 'text' }, // Opraveno z 'text' na 'number'
   { key: 'description', displayName: 'Popis', type: 'text' },
   { key: 'is_active', displayName: 'Stav aktivace', type: 'boolean' },
   { key: 'is_featured', displayName: 'Doporučený produkt', type: 'boolean' },

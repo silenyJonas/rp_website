@@ -5,7 +5,7 @@ import { BaseDataComponent } from '../../components/base-data/base-data.componen
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfirmDialogService } from '../../../core/services/confirm-dialog.service';
-import { PRODUCT_BUTTONS, PRODUCT_COLUMNS, TRASH_PRODUCT_COLUMNS, FILTER_COLUMNS, TOOLBAR_BUTTONS } from './products.config';
+import { PRODUCT_BUTTONS, PRODUCT_COLUMNS, TRASH_PRODUCT_COLUMNS, FILTER_COLUMNS, TOOLBAR_BUTTONS, PRODUCT_FORM_FIELDS } from './products.config';
 import { Variant, ProductImage, Category, Supplier, Product } from './product-specific.interface';
 
 @Component({
@@ -59,17 +59,22 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     private confirmDialog: ConfirmDialogService
   ) {
     super(dataHandler, cd, genericTableService);
+    console.log('[ProductsComponent] Inicializováno v konstruktoru.');
   }
 
   override ngOnInit(): void {
+    console.log('[ProductsComponent] Spouštím ngOnInit.');
     super.ngOnInit();
     this.initWithAuthCheck(this.router);
+    // Načteme konfiguraci polí z config souboru
+    this.formFields = JSON.parse(JSON.stringify(PRODUCT_FORM_FIELDS));
     this.loadCategories();
     this.loadSuppliers();
     this.refreshData();
   }
 
   override ngOnDestroy(): void {
+    console.log('[ProductsComponent] Komponenta se ničí (ngOnDestroy).');
     super.ngOnDestroy();
     this.toggleBodyScroll(false);
   }
@@ -96,14 +101,14 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     
     if (actions[action]) actions[action]();
   }
-// Pomocná metoda pro získání tlačítek v režimu koše
-getTrashToolbarButtons(): any[] {
-  // Vrátíme všechna tlačítka kromě 'Vytvořit' a 'Exportovat'
-  return this.toolbarButtons.filter(btn => 
-    btn.action !== 'handleCreateFormOpened' && 
-    btn.action !== 'exportActiveTable'
-  );
-}
+
+  getTrashToolbarButtons(): any[] {
+    return this.toolbarButtons.filter(btn => 
+      btn.action !== 'handleCreateFormOpened' && 
+      btn.action !== 'exportActiveTable'
+    );
+  }
+
   exportActiveTable(): void {
     if (this.activeTable) {
       this.activeTable.exportToCSV();
@@ -130,6 +135,7 @@ getTrashToolbarButtons(): any[] {
   handleCreateFormOpened(): void {
     if (this.isProcessing) return;
     
+    console.log('[ProductsComponent] Otevírám formulář pro nový produkt.');
     this.editingProduct = {
       category_id: 0,
       name: '',
@@ -146,6 +152,7 @@ getTrashToolbarButtons(): any[] {
       images: [],
       variants: []
     };
+    this.updateFormFieldsOptions();
     this.showProductForm = true;
     this.toggleBodyScroll(true);
     this.cd.markForCheck();
@@ -184,6 +191,7 @@ getTrashToolbarButtons(): any[] {
       .subscribe({
         next: (data) => {
           this.categories = data;
+          this.updateFormFieldsOptions();
           this.cd.markForCheck();
         },
         error: (err) => console.error('Chyba při načítání kategorií:', err)
@@ -196,10 +204,31 @@ getTrashToolbarButtons(): any[] {
       .subscribe({
         next: (data) => {
           this.suppliers = data;
+          this.updateFormFieldsOptions();
           this.cd.markForCheck();
         },
         error: (err) => console.error('Chyba při načítání dodavatelů:', err)
       });
+  }
+
+  private updateFormFieldsOptions(): void {
+    this.formFields.forEach(field => {
+      if (field.column_name === 'category_id') {
+        field.options = this.categories.map(c => ({ value: c.id, label: c.name }));
+      }
+      if (field.column_name === 'supplier_id') {
+        field.options = this.suppliers.map(s => ({ value: s.id, label: s.name }));
+      }
+    });
+
+    this.filterColumns.forEach(filter => {
+      if (filter.key === 'category_id') {
+        filter.options = this.categories.map(c => ({ value: c.id, label: c.name }));
+      }
+      if (filter.key === 'supplier_id') {
+        filter.options = this.suppliers.map(s => ({ value: s.id, label: s.name }));
+      }
+    });
   }
 
   // ========== DETAIL PRODUKTU ==========
@@ -207,6 +236,7 @@ getTrashToolbarButtons(): any[] {
   handleViewDetails(item: any): void {
     if (this.isProcessing || !item.id) return;
     
+    console.log(`[handleViewDetails] Načítám detail pro ID: ${item.id}`);
     this.isProcessing = true;
     this.loadingService.show();
     
@@ -218,13 +248,41 @@ getTrashToolbarButtons(): any[] {
       }),
       Core.takeUntil(this.destroy$)
     ).subscribe({
-      next: (fullProduct) => {
-        this.selectedProductForDetail = fullProduct;
+      next: (fullProduct: any) => {
+        console.log('[handleViewDetails] RAW data z API:', JSON.parse(JSON.stringify(fullProduct)));
+
+        // Vytvoříme hlubokou kopii, aby nedošlo k mutaci původního stavu v Base komponentě
+        const mappedProduct = { ...fullProduct };
+
+        if (mappedProduct.prices) {
+          console.log('[handleViewDetails] Nalezen objekt prices u produktu:', mappedProduct.prices);
+          mappedProduct.price = mappedProduct.prices.price_czk_with_vat || mappedProduct.prices.price || 0;
+          mappedProduct.cost_price = mappedProduct.prices.cost_price || 0;
+        } else {
+          console.warn('[handleViewDetails] POZOR: Objekt prices u hlavního produktu CHYBÍ!');
+        }
+
+        if (mappedProduct.variants) {
+          console.log(`[handleViewDetails] Mapuji ceny pro ${mappedProduct.variants.length} variant.`);
+          mappedProduct.variants = mappedProduct.variants.map((v: any, index: number) => {
+            console.log(`[handleViewDetails] Varianta [${index}] RAW prices:`, v.prices);
+            return {
+              ...v,
+              vat_rate: v.prices?.vat_rate ?? v.vat_rate ?? 21,
+              price_with_vat: v.prices?.price_czk_with_vat ?? v.price_with_vat ?? 0,
+              price_without_vat: v.prices?.price_czk_without_vat ?? v.price_without_vat ?? 0
+            };
+          });
+        }
+
+        console.log('[handleViewDetails] MAPOVANÝ produkt pro šablonu:', mappedProduct);
+        this.selectedProductForDetail = mappedProduct;
         this.showDetailsModal = true;
         this.toggleBodyScroll(true);
         this.cd.markForCheck();
       },
-      error: () => {
+      error: (err) => {
+        console.error('[handleViewDetails] Selhal odchyt detailu:', err);
         this.alertDialogService.open('Chyba', 'Nepodařilo se načíst detaily.', 'danger');
       }
     });
@@ -249,6 +307,7 @@ getTrashToolbarButtons(): any[] {
     if (event) event.stopPropagation();
     if (this.isProcessing || !product.id) return;
 
+    console.log(`[openEditProductForm] Načítám produkt k editaci, ID: ${product.id}`);
     this.isProcessing = true;
     this.loadingService.show();
     
@@ -260,135 +319,166 @@ getTrashToolbarButtons(): any[] {
       }),
       Core.takeUntil(this.destroy$)
     ).subscribe({
-      next: (fullProduct) => {
-        if (fullProduct.variants) {
-          fullProduct.variants = fullProduct.variants.map(v => ({
-            ...v,
-            price_with_vat: v.price_with_vat || 0,
-            vat_rate: v.vat_rate || 21,
-            price_without_vat: v.price_without_vat || 0
-          }));
+      next: (fullProduct: any) => {
+        console.log('[openEditProductForm] RAW data z API:', JSON.parse(JSON.stringify(fullProduct)));
+
+        const mappedProduct = { ...fullProduct };
+
+        if (mappedProduct.prices) {
+          console.log('[openEditProductForm] Nalezen objekt prices u produktu:', mappedProduct.prices);
+          mappedProduct.price = mappedProduct.prices.price_czk_with_vat || mappedProduct.prices.price || 0;
+          mappedProduct.cost_price = mappedProduct.prices.cost_price || 0;
+        } else {
+          console.warn('[openEditProductForm] POZOR: Objekt prices u hlavního produktu CHYBÍ!');
         }
-        this.editingProduct = { ...fullProduct };
+
+        if (mappedProduct.variants) {
+          console.log(`[openEditProductForm] Mapuji ceny pro ${mappedProduct.variants.length} variant.`);
+          mappedProduct.variants = mappedProduct.variants.map((v: any, index: number) => {
+            console.log(`[openEditProductForm] Varianta [${index}] RAW prices:`, v.prices);
+            return {
+              ...v,
+              vat_rate: v.prices?.vat_rate ?? v.vat_rate ?? 21,
+              price_with_vat: v.prices?.price_czk_with_vat ?? v.price_with_vat ?? 0,
+              price_without_vat: v.prices?.price_czk_without_vat ?? v.price_without_vat ?? 0
+            };
+          });
+        }
+
+        console.log('[openEditProductForm] FINÁLNÍ kopie pro editaci (editingProduct):', mappedProduct);
+        this.editingProduct = mappedProduct;
+        this.updateFormFieldsOptions();
         this.showProductForm = true;
         this.toggleBodyScroll(true);
         this.cd.markForCheck();
       },
-      error: () => {
+      error: (err) => {
+        console.error('[openEditProductForm] Chyba při stahování produktu k editaci:', err);
         this.alertDialogService.open('Chyba', 'Nepodařilo se načíst detail produktu.', 'danger');
       }
     });
   }
 
-saveProduct(): void {
-  if (this.isProcessing || !this.editingProduct || !this.validateProduct()) return;
+  saveProduct(): void {
+    if (this.isProcessing || !this.editingProduct || !this.validateProduct()) return;
 
-  this.isProcessing = true;
-  const formData = new FormData();
+    this.isProcessing = true;
+    const formData = new FormData();
 
-  // Základní metadata produktu
-  formData.append('category_id', this.editingProduct.category_id.toString());
-  formData.append('supplier_id', (this.editingProduct.supplier_id || '').toString());
-  formData.append('name', this.editingProduct.name);
-  formData.append('slug', this.editingProduct.slug || this.generateSlug(this.editingProduct.name));
-  formData.append('description', this.editingProduct.description || '');
-  formData.append('short_description', this.editingProduct.short_description || '');
-  formData.append('price', this.editingProduct.price.toString());
-  formData.append('cost_price', (this.editingProduct.cost_price || 0).toString());
-  formData.append('sku', this.editingProduct.sku);
-  formData.append('stock_quantity', this.editingProduct.stock_quantity.toString());
-  formData.append('stock_warning_level', this.editingProduct.stock_warning_level.toString());
-  formData.append('is_active', this.editingProduct.is_active ? '1' : '0');
-  formData.append('is_featured', this.editingProduct.is_featured ? '1' : '0');
+    console.log('[saveProduct] Odesílám data na backend. Aktuální stav objektu:', this.editingProduct);
 
-  // 1. OBRÁZKY PRODUKTU (hlavní, bez variant)
-  const activeProductImages = (this.editingProduct.images || []).filter(img => !img._delete && !img.variant_id);
-  activeProductImages.forEach((img, idx) => {
-    if (img.id) formData.append(`images[${idx}][id]`, img.id.toString());
-    if (img.file) formData.append(`images[${idx}][file]`, img.file);
-    formData.append(`images[${idx}][alt_text]`, img.alt_text || '');
-    formData.append(`images[${idx}][is_primary]`, img.is_primary ? '1' : '0');
-    formData.append(`images[${idx}][sort_order]`, img.sort_order.toString());
-  });
+    // Základní metadata produktu
+    formData.append('category_id', this.editingProduct.category_id.toString());
+    formData.append('supplier_id', (this.editingProduct.supplier_id || '').toString());
+    formData.append('name', this.editingProduct.name);
+    formData.append('slug', this.editingProduct.slug || this.generateSlug(this.editingProduct.name));
+    formData.append('description', this.editingProduct.description || '');
+    formData.append('short_description', this.editingProduct.short_description || '');
+    formData.append('sku', this.editingProduct.sku);
+    formData.append('stock_quantity', this.editingProduct.stock_quantity.toString());
+    formData.append('stock_warning_level', this.editingProduct.stock_warning_level.toString());
+    formData.append('is_active', this.editingProduct.is_active ? '1' : '0');
+    formData.append('is_featured', this.editingProduct.is_featured ? '1' : '0');
 
-  // Smazané hlavní obrázky
-  const imagesToDelete = (this.editingProduct.images || []).filter(img => img._delete && img.id && !img.variant_id);
-  imagesToDelete.forEach((img, idx) => {
-    formData.append(`delete_images[${idx}]`, img.id!.toString());
-  });
+    const defaultVatRate = this.editingProduct.variants?.[0]?.vat_rate ?? 21;
+    const mainPriceWithVat = this.editingProduct.price || 0;
+    const mainPriceWithoutVat = Math.round((mainPriceWithVat / (1 + defaultVatRate / 100)) * 100) / 100;
 
-  // 2. VARIANTY A JEJICH OBRÁZKY
-  const activeVariants = (this.editingProduct.variants || []).filter(v => !v._delete);
-  activeVariants.forEach((v, idx) => {
-    if (v.id) formData.append(`variants[${idx}][id]`, v.id.toString());
-    formData.append(`variants[${idx}][variant_name]`, v.variant_name);
-    formData.append(`variants[${idx}][attribute_1_name]`, v.attribute_1_name || '');
-    formData.append(`variants[${idx}][attribute_1_value]`, v.attribute_1_value || '');
-    formData.append(`variants[${idx}][attribute_2_name]`, v.attribute_2_name || '');
-    formData.append(`variants[${idx}][attribute_2_value]`, v.attribute_2_value || '');
-    formData.append(`variants[${idx}][sku_variant]`, v.sku_variant || '');
-    formData.append(`variants[${idx}][stock_quantity]`, v.stock_quantity.toString());
-    formData.append(`variants[${idx}][vat_rate]`, (v.vat_rate || 21).toString());
-    formData.append(`variants[${idx}][price_with_vat]`, (v.price_with_vat || 0).toString());
-    formData.append(`variants[${idx}][price_without_vat]`, (v.price_without_vat || 0).toString());
+    formData.append('prices[vat_rate]', defaultVatRate.toString());
+    formData.append('prices[price_czk_with_vat]', mainPriceWithVat.toString());
+    formData.append('prices[price_czk_without_vat]', mainPriceWithoutVat.toString());
+    formData.append('prices[cost_price]', (this.editingProduct.cost_price || 0).toString());
 
-    // Zpracování obrázků uvnitř varianty
-    if (v.images && v.images.length > 0) {
-      // Nové/Existující obrázky k zachování
-      const variantImagesToKeep = v.images.filter(img => !img._delete);
-      variantImagesToKeep.forEach((img, imgIdx) => {
-        if (img.id) formData.append(`variants[${idx}][images][${imgIdx}][id]`, img.id.toString());
-        if (img.file) formData.append(`variants[${idx}][images][${imgIdx}][file]`, img.file);
-        formData.append(`variants[${idx}][images][${imgIdx}][alt_text]`, img.alt_text || v.variant_name);
-        formData.append(`variants[${idx}][images][${imgIdx}][is_primary]`, img.is_primary ? '1' : '0');
-        formData.append(`variants[${idx}][images][${imgIdx}][sort_order]`, imgIdx.toString());
-      });
+    // 1. OBRÁZKY PRODUKTU
+    const activeProductImages = (this.editingProduct.images || []).filter(img => !img._delete && !img.variant_id);
+    activeProductImages.forEach((img, idx) => {
+      if (img.id) formData.append(`images[${idx}][id]`, img.id.toString());
+      if (img.file) formData.append(`images[${idx}][file]`, img.file);
+      formData.append(`images[${idx}][alt_text]`, img.alt_text || '');
+      formData.append(`images[${idx}][is_primary]`, img.is_primary ? '1' : '0');
+      formData.append(`images[${idx}][sort_order]`, img.sort_order.toString());
+    });
 
-      // ⚠️ SMAZANÉ OBRÁZKY VARIANTY
-      const variantImagesToDelete = v.images.filter(img => img._delete && img.id);
-      variantImagesToDelete.forEach((img, delIdx) => {
-        formData.append(`variants[${idx}][delete_images][${delIdx}]`, img.id!.toString());
-      });
+    const imagesToDelete = (this.editingProduct.images || []).filter(img => img._delete && img.id && !img.variant_id);
+    imagesToDelete.forEach((img, idx) => {
+      formData.append(`delete_images[${idx}]`, img.id!.toString());
+    });
+
+    // 2. VARIANTY A JEJICH OBRÁZKY
+    const activeVariants = (this.editingProduct.variants || []).filter(v => !v._delete);
+    activeVariants.forEach((v, idx) => {
+      if (v.id) formData.append(`variants[${idx}][id]`, v.id.toString());
+      formData.append(`variants[${idx}][variant_name]`, v.variant_name);
+      formData.append(`variants[${idx}][attribute_1_name]`, v.attribute_1_name || '');
+      formData.append(`variants[${idx}][attribute_1_value]`, v.attribute_1_value || '');
+      formData.append(`variants[${idx}][attribute_2_name]`, v.attribute_2_name || '');
+      formData.append(`variants[${idx}][attribute_2_value]`, v.attribute_2_value || '');
+      formData.append(`variants[${idx}][sku_variant]`, v.sku_variant || '');
+      formData.append(`variants[${idx}][stock_quantity]`, v.stock_quantity.toString());
+
+      const vVatRate = v.vat_rate || 21;
+      const vPriceWithVat = v.price_with_vat || 0;
+      const vPriceWithoutVat = v.price_without_vat || Math.round((vPriceWithVat / (1 + vVatRate / 100)) * 100) / 100;
+
+      formData.append(`variants[${idx}][prices][vat_rate]`, vVatRate.toString());
+      formData.append(`variants[${idx}][prices][price_czk_with_vat]`, vPriceWithVat.toString());
+      formData.append(`variants[${idx}][prices][price_czk_without_vat]`, vPriceWithoutVat.toString());
+
+      if (v.images && v.images.length > 0) {
+        const variantImagesToKeep = v.images.filter(img => !img._delete);
+        variantImagesToKeep.forEach((img, imgIdx) => {
+          if (img.id) formData.append(`variants[${idx}][images][${imgIdx}][id]`, img.id.toString());
+          if (img.file) formData.append(`variants[${idx}][images][${imgIdx}][file]`, img.file);
+          formData.append(`variants[${idx}][images][${imgIdx}][alt_text]`, img.alt_text || v.variant_name);
+          formData.append(`variants[${idx}][images][${imgIdx}][is_primary]`, img.is_primary ? '1' : '0');
+          formData.append(`variants[${idx}][images][${imgIdx}][sort_order]`, imgIdx.toString());
+        });
+
+        const variantImagesToDelete = v.images.filter(img => img._delete && img.id);
+        variantImagesToDelete.forEach((img, delIdx) => {
+          formData.append(`variants[${idx}][delete_images][${delIdx}]`, img.id!.toString());
+        });
+      }
+    });
+
+    const variantsToDelete = (this.editingProduct.variants || []).filter(v => v._delete && v.id);
+    variantsToDelete.forEach((v, idx) => {
+      formData.append(`delete_variants[${idx}]`, v.id!.toString());
+    });
+
+    this.loadingService.show();
+
+    let request;
+    if (this.editingProduct.id) {
+      formData.append('_method', 'PUT');
+      request = this.dataHandler.post(`${this.apiEndpoint}/${this.editingProduct.id}`, formData);
+    } else {
+      request = this.dataHandler.post(this.apiEndpoint, formData);
     }
-  });
 
-  // Smazané celé varianty
-  const variantsToDelete = (this.editingProduct.variants || []).filter(v => v._delete && v.id);
-  variantsToDelete.forEach((v, idx) => {
-    formData.append(`delete_variants[${idx}]`, v.id!.toString());
-  });
-
-  this.loadingService.show();
-
-  let request;
-  if (this.editingProduct.id) {
-    formData.append('_method', 'PUT');
-    request = this.dataHandler.post(`${this.apiEndpoint}/${this.editingProduct.id}`, formData);
-  } else {
-    request = this.dataHandler.post(this.apiEndpoint, formData);
+    request.pipe(
+      Core.finalize(() => {
+        this.loadingService.hide();
+        this.isProcessing = false;
+        this.cd.markForCheck();
+      }),
+      Core.takeUntil(this.destroy$)
+    ).subscribe({
+      next: () => {
+        this.alertDialogService.open('Úspěch', 'Produkt byl uložen.', 'success');
+        this.showProductForm = false;
+        this.editingProduct = null;
+        this.toggleBodyScroll(false);
+        this.refreshData();
+      },
+      error: (err) => {
+        console.error('[saveProduct] Chyba při ukládání na backend:', err);
+        const message = err.error?.message || err.error?.errors || 'Chyba při ukládání produktu.';
+        this.alertDialogService.open('Chyba', this.formatErrorMessage(message), 'danger');
+      }
+    });
   }
 
-  request.pipe(
-    Core.finalize(() => {
-      this.loadingService.hide();
-      this.isProcessing = false;
-      this.cd.markForCheck();
-    }),
-    Core.takeUntil(this.destroy$)
-  ).subscribe({
-    next: () => {
-      this.alertDialogService.open('Úspěch', 'Produkt byl uložen.', 'success');
-      this.showProductForm = false;
-      this.editingProduct = null;
-      this.toggleBodyScroll(false);
-      this.refreshData();
-    },
-    error: (err) => {
-      const message = err.error?.message || err.error?.errors || 'Chyba při ukládání produktu.';
-      this.alertDialogService.open('Chyba', this.formatErrorMessage(message), 'danger');
-    }
-  });
-}
   closeProductForm(): void {
     this.showProductForm = false;
     this.editingProduct = null;
@@ -400,6 +490,7 @@ saveProduct(): void {
     if (event) event.stopPropagation();
     if (this.isProcessing) return;
 
+    console.log(`[openVariantsModal] Načítám varianty pro produkt ID: ${product.id}`);
     this.isProcessing = true;
     this.selectedProduct = product;
     this.loadingService.show();
@@ -412,13 +503,30 @@ saveProduct(): void {
       }),
       Core.takeUntil(this.destroy$)
     ).subscribe({
-      next: (fullProduct) => {
-        this.editingProduct = { ...fullProduct };
+      next: (fullProduct: any) => {
+        console.log('[openVariantsModal] RAW data z API:', JSON.parse(JSON.stringify(fullProduct)));
+
+        const mappedProduct = { ...fullProduct };
+
+        if (mappedProduct.variants) {
+          mappedProduct.variants = mappedProduct.variants.map((v: any, index: number) => {
+            console.log(`[openVariantsModal] Varianta [${index}] ceny mapovány.`);
+            return {
+              ...v,
+              vat_rate: v.prices?.vat_rate ?? v.vat_rate ?? 21,
+              price_with_vat: v.prices?.price_czk_with_vat ?? v.price_with_vat ?? 0,
+              price_without_vat: v.prices?.price_czk_without_vat ?? v.price_without_vat ?? 0
+            };
+          });
+        }
+
+        this.editingProduct = mappedProduct;
         this.showVariantsModal = true;
         this.toggleBodyScroll(true);
         this.cd.markForCheck();
       },
-      error: () => {
+      error: (err) => {
+        console.error('[openVariantsModal] Selhalo načítání variant:', err);
         this.isProcessing = false;
         this.alertDialogService.open('Chyba', 'Nepodařilo se načíst produkt.', 'danger');
       }
@@ -597,6 +705,7 @@ saveProduct(): void {
     if (event) event.stopPropagation();
     if (this.isProcessing) return;
 
+    console.log(`[openImagesModal] Načítám obrázky pro produkt ID: ${product.id}`);
     this.isProcessing = true;
     this.selectedProduct = product;
     this.loadingService.show();
@@ -650,7 +759,6 @@ saveProduct(): void {
       } else {
         this.editingProduct.images.splice(index, 1);
       }
-      // Přepočet sort_order pouze pro hlavní obrázky
       this.editingProduct.images.forEach((img, idx) => {
         if (!img._delete && !img.variant_id) img.sort_order = idx;
       });
@@ -713,10 +821,13 @@ saveProduct(): void {
     return this.suppliers.find(s => s.id === supplierId)?.name || 'N/A';
   }
 
-  formatCurrency(value: number): string {
+  formatCurrency(value: number, currency: string = 'CZK'): string {
+    if (value === null || value === undefined) {
+      return '-';
+    }
     return new Intl.NumberFormat('cs-CZ', {
       style: 'currency',
-      currency: 'CZK'
+      currency: currency
     }).format(value);
   }
 

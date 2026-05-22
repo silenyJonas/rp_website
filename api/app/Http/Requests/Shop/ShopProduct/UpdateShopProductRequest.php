@@ -15,7 +15,6 @@ class UpdateShopProductRequest extends FormRequest
 
     public function rules(): array
     {
-        // Získání ID produktu z routy (zkouší 'product' i 'id' podle toho, jak máš definovanou route)
         $productId = $this->route('product') ?: $this->route('id');
 
         return [
@@ -27,13 +26,17 @@ class UpdateShopProductRequest extends FormRequest
             'description' => 'nullable|string',
             'short_description' => 'nullable|string|max:500',
 
-            // Ceny a skladové zásoby
-            'price' => 'required|numeric|min:0',
-            'cost_price' => 'nullable|numeric|min:0',
+            // Multi-měnové ceny pro hlavní produkt při úpravě
+            'prices' => 'required|array',
+            'prices.vat_rate' => 'required|numeric|min:0',
+            'prices.price_czk_without_vat' => 'required|numeric|min:0',
+            'prices.price_czk_with_vat' => 'required|numeric|min:0',
+            'prices.price_eur_without_vat' => 'nullable|numeric|min:0',
+            'prices.price_eur_with_vat' => 'nullable|numeric|min:0',
+            'prices.price_usd_without_vat' => 'nullable|numeric|min:0',
+            'prices.price_usd_with_vat' => 'nullable|numeric|min:0',
             
-            // OPRAVA: Ignoruje aktuální produkt při kontrole unikátnosti SKU
             'sku' => 'nullable|string|max:50|unique:shop_products,sku,' . $productId,
-            
             'stock_quantity' => 'nullable|integer|min:0',
             'stock_warning_level' => 'nullable|integer|min:0',
 
@@ -59,11 +62,7 @@ class UpdateShopProductRequest extends FormRequest
             'variants.*.attribute_1_value' => 'nullable|string|max:100',
             'variants.*.attribute_2_name' => 'nullable|string|max:50',
             'variants.*.attribute_2_value' => 'nullable|string|max:100',
-
-            // PŘIDÁNO: Nová cenová pole pro update variant
-            'variants.*.vat_rate' => 'required_with:variants|numeric|min:0',
             
-            // OPRAVA: Dynamická kontrola unikátnosti SKU varianty
             'variants.*.sku_variant' => [
                 'nullable',
                 'string',
@@ -84,8 +83,18 @@ class UpdateShopProductRequest extends FormRequest
                 },
             ],
 
-            'variants.*.price_modifier' => 'nullable|numeric',
             'variants.*.stock_quantity' => 'nullable|integer|min:0',
+            
+            // Multi-měnové ceny pro varianty při úpravě
+            'variants.*.prices' => 'required_with:variants|array',
+            'variants.*.prices.vat_rate' => 'required_with:variants.*.prices|numeric|min:0',
+            'variants.*.prices.price_czk_without_vat' => 'required_with:variants.*.prices|numeric|min:0',
+            'variants.*.prices.price_czk_with_vat' => 'required_with:variants.*.prices|numeric|min:0',
+            'variants.*.prices.price_eur_without_vat' => 'nullable|numeric|min:0',
+            'variants.*.prices.price_eur_with_vat' => 'nullable|numeric|min:0',
+            'variants.*.prices.price_usd_without_vat' => 'nullable|numeric|min:0',
+            'variants.*.prices.price_usd_with_vat' => 'nullable|numeric|min:0',
+
             'delete_variants' => 'nullable|array',
             'delete_variants.*' => 'integer|exists:shop_product_variants,id',
         ];
@@ -97,8 +106,6 @@ class UpdateShopProductRequest extends FormRequest
             'category_id.required' => 'Kategorie je povinná.',
             'category_id.exists' => 'Vybraná kategorie neexistuje.',
             'name.required' => 'Název produktu je povinný.',
-            'price.required' => 'Cena je povinná.',
-            'price.numeric' => 'Cena musí být číslo.',
             'sku.unique' => 'Tento SKU kód již používá jiný produkt.',
             'images.*.file.image' => 'Soubor musí být obrázek.',
             'images.*.file.max' => 'Obrázek je příliš velký (max 5MB).',
@@ -117,7 +124,6 @@ class UpdateShopProductRequest extends FormRequest
         $this->merge([
             'is_active' => $this->boolean('is_active'),
             'is_featured' => $this->boolean('is_featured'),
-            // Odstraněno natvrdo nastavené stock_quantity na 0, aby se mohl projevit součet variant
             'stock_warning_level' => $this->input('stock_warning_level', 10),
         ]);
     }

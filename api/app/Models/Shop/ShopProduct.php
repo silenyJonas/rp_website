@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ShopProduct extends Model
 {
@@ -20,8 +21,6 @@ class ShopProduct extends Model
         'slug',
         'description',
         'short_description',
-        'price',
-        'cost_price',
         'sku',
         'stock_quantity',
         'stock_warning_level',
@@ -32,8 +31,6 @@ class ShopProduct extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
-        'price' => 'decimal:2',
-        'cost_price' => 'decimal:2',
         'stock_quantity' => 'integer',
         'stock_warning_level' => 'integer',
         'created_at' => 'datetime',
@@ -41,7 +38,13 @@ class ShopProduct extends Model
         'deleted_at' => 'datetime',
     ];
 
-
+    /**
+     * Ceny hlavního produktu (kde variant_id je null)
+     */
+    public function prices(): HasOne
+    {
+        return $this->hasOne(ShopProductPrice::class, 'product_id')->whereNull('variant_id');
+    }
 
     /**
      * Kategorie produktu

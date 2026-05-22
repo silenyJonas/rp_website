@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Shop\ShopProduct;
 use App\Models\Shop\ShopProductImage;
 use App\Models\Shop\ShopProductVariant;
+use App\Models\Shop\ShopProductPrice;
 use App\Models\Shop\ShopLog;
 use App\Http\Resources\Shop\ShopProductResource;
 use App\Http\Requests\Shop\ShopProduct\StoreShopProductRequest;
@@ -30,8 +31,9 @@ class ShopProductController extends Controller
             'category',
             'supplier',
             'primaryImage',
+            'prices',
             'variants' => function ($q) {
-                $q->with('images');
+                $q->with(['images', 'prices']);
             }
         ]);
         
@@ -64,11 +66,16 @@ class ShopProductController extends Controller
             $query->lowStock();
         }
 
+        // Úprava: Filtrování cen přes novou tabulku cen (předpoklad filtru na hlavní měnu CZK s DPH)
         if ($request->filled('price_from')) {
-            $query->where('price', '>=', $request->input('price_from'));
+            $query->whereHas('prices', function ($q) use ($request) {
+                $q->where('price_czk_with_vat', '>=', $request->input('price_from'));
+            });
         }
         if ($request->filled('price_to')) {
-            $query->where('price', '<=', $request->input('price_to'));
+            $query->whereHas('prices', function ($q) use ($request) {
+                $q->where('price_czk_with_vat', '<=', $request->input('price_to'));
+            });
         }
 
         $sortBy = $request->input('sort_by', 'created_at');
@@ -99,8 +106,16 @@ class ShopProductController extends Controller
         Log::info("ShopProduct Store started", ['payload' => $request->all(), 'files' => $request->allFiles()]);
         try {
             $validated = $request->validated();
-            $product = ShopProduct::create($validated);
+            
+            // Extrakce dat pro produkt mimo pole cen
+            $productData = collect($validated)->except(['prices', 'variants', 'images'])->toArray();
+            $product = ShopProduct::create($productData);
             Log::info("Product created", ['id' => $product->id]);
+
+            // Úprava: Uložení cen pro hlavní produkt
+            if ($request->has('prices')) {
+                $product->prices()->create($request->input('prices'));
+            }
 
             if ($request->has('images')) {
                 Log::info("Found images in request", ['count' => count($request->input('images', []))]);
@@ -113,7 +128,7 @@ class ShopProductController extends Controller
                 $this->syncProductStock($product);
             }
 
-            $product->load(['category', 'supplier', 'primaryImage', 'images', 'variants' => fn($q) => $q->with('images')]);
+            $product->load(['category', 'supplier', 'primaryImage', 'images', 'prices', 'variants' => fn($q) => $q->with(['images', 'prices'])]);
             $this->logAction($request, 'create', 'ShopProduct', "Vytvořen produkt: {$product->name}", $product->id);
 
             return response()->json(new ShopProductResource($product), 201);
@@ -132,7 +147,8 @@ class ShopProductController extends Controller
             'category',
             'supplier',
             'images',
-            'variants' => fn($q) => $q->with('images')
+            'prices',
+            'variants' => fn($q) => $q->with(['images', 'prices'])
         ])->findOrFail($id);
 
         return response()->json(new ShopProductResource($product));
@@ -149,10 +165,18 @@ class ShopProductController extends Controller
             $validated = $request->validated();
 
             $updateData = collect($validated)
-                ->except(['images', 'variants', 'delete_images', 'delete_variants'])
+                ->except(['prices', 'images', 'variants', 'delete_images', 'delete_variants'])
                 ->toArray();
 
             $product->update($updateData);
+
+            // Úprava: Update/Uložení cen pro hlavní produkt
+            if ($request->has('prices')) {
+                $product->prices()->updateOrCreate(
+                    ['product_id' => $product->id, 'variant_id' => null],
+                    $request->input('prices')
+                );
+            }
 
             // Smazání obrázků produktu
             if ($request->has('delete_images')) {
@@ -172,6 +196,8 @@ class ShopProductController extends Controller
                 $variantsToDelete = ShopProductVariant::whereIn('id', $request->delete_variants)->get();
                 
                 foreach ($variantsToDelete as $variant) {
+                    // Úprava: Odstranění navázaných cen varianty před smazáním
+                    $variant->prices()->delete();
                     $variant->delete();
                 }
             }
@@ -190,7 +216,7 @@ class ShopProductController extends Controller
                 \Illuminate\Support\Facades\Cache::forget("product_stock_{$product->id}_v{$variant->id}");
             }
 
-            $product->load(['category', 'supplier', 'primaryImage', 'images', 'variants' => fn($q) => $q->with('images')]);
+            $product->load(['category', 'supplier', 'primaryImage', 'images', 'prices', 'variants' => fn($q) => $q->with(['images', 'prices'])]);
             $this->logAction($request, 'update', 'ShopProduct', "Aktualizace produktu: {$product->name}", $product->id);
 
             return response()->json(new ShopProductResource($product));
@@ -219,7 +245,11 @@ class ShopProductController extends Controller
                     foreach ($variant->images as $image) {
                         Storage::disk('public')->delete('products/' . $image->image_path);
                     }
+                    // Úprava: Tvrdé smazání cen varianty
+                    $variant->prices()->delete();
                 }
+                // Úprava: Tvrdé smazání hlavních cen produktu
+                $product->prices()->delete();
                 $product->forceDelete();
             } else {
                 Log::info("Performing soft delete for product", ['id' => $id]);
@@ -243,7 +273,7 @@ class ShopProductController extends Controller
             $product = ShopProduct::withTrashed()->findOrFail($id);
             $product->restore();
             Log::info("Product restored", ['id' => $id]);
-            $product->load(['category', 'supplier', 'primaryImage', 'images', 'variants' => fn($q) => $q->with('images')]);
+            $product->load(['category', 'supplier', 'primaryImage', 'images', 'prices', 'variants' => fn($q) => $q->with(['images', 'prices'])]);
             $this->logAction($request, 'restore', 'ShopProduct', "Obnova produktu ID: $id", $id);
 
             return response()->json(new ShopProductResource($product));
@@ -260,7 +290,7 @@ class ShopProductController extends Controller
     {
         Log::info("ShopProduct force delete all trashed started");
         try {
-            $trashedProducts = ShopProduct::onlyTrashed()->with('variants')->get();
+            $trashedProducts = ShopProduct::onlyTrashed()->with(['variants', 'images'])->get();
             $count = $trashedProducts->count();
 
             foreach ($trashedProducts as $product) {
@@ -271,7 +301,11 @@ class ShopProductController extends Controller
                     foreach ($variant->images as $image) {
                         Storage::disk('public')->delete('products/' . $image->image_path);
                     }
+                    // Úprava: Vyčištění cen varianty při vyprazdňování koše
+                    $variant->prices()->delete();
                 }
+                // Úprava: Vyčištění cen produktu při vyprazdňování koše
+                $product->prices()->delete();
                 $product->forceDelete();
             }
             Log::info("Trashed products emptied", ['deleted_count' => $count]);
@@ -381,6 +415,8 @@ class ShopProductController extends Controller
                 }
                 $image->delete();
             }
+            // Úprava: Odstranění navázaných cen varianty
+            $variant->prices()->delete();
             $variant->delete();
         }
     }
@@ -391,6 +427,7 @@ class ShopProductController extends Controller
     private function storeVariants(ShopProduct $product, array $variants, Request $request = null): void
     {
         foreach ($variants as $idx => $variantData) {
+            // Úprava: Odstraněna stará cenová pole přímo z dat varianty
             $variant = ShopProductVariant::create([
                 'product_id' => $product->id,
                 'variant_name' => $variantData['variant_name'],
@@ -399,11 +436,15 @@ class ShopProductController extends Controller
                 'attribute_2_name' => $variantData['attribute_2_name'] ?? null,
                 'attribute_2_value' => $variantData['attribute_2_value'] ?? null,
                 'sku_variant' => $variantData['sku_variant'] ?? null,
-                'price_with_vat' => $variantData['price_with_vat'] ?? 0,
-                'price_without_vat' => $variantData['price_without_vat'] ?? 0,
-                'vat_rate' => $variantData['vat_rate'] ?? 21,
                 'stock_quantity' => $variantData['stock_quantity'] ?? 0,
             ]);
+
+            // Úprava: Zápis multoměnových cen do nové tabulky cen pro novou variantu
+            if (isset($variantData['prices']) && is_array($variantData['prices'])) {
+                $variant->prices()->create(array_merge($variantData['prices'], [
+                    'product_id' => $product->id
+                ]));
+            }
 
             if (isset($variantData['images']) && is_array($variantData['images']) && $request) {
                 Log::info("Processing images for new variant", ['variant_id' => $variant->id]);
@@ -427,6 +468,7 @@ class ShopProductController extends Controller
             if (isset($variantData['id']) && $variantData['id'] > 0) {
                 $variant = ShopProductVariant::findOrFail($variantData['id']);
                 
+                // Úprava: Odstraněna stará cenová pole přímo z update metody varianty
                 $variant->update([
                     'variant_name'      => $variantData['variant_name'],
                     'attribute_1_name'  => $variantData['attribute_1_name'] ?? null,
@@ -434,11 +476,16 @@ class ShopProductController extends Controller
                     'attribute_2_name'  => $variantData['attribute_2_name'] ?? null,
                     'attribute_2_value' => $variantData['attribute_2_value'] ?? null,
                     'sku_variant'       => $variantData['sku_variant'] ?? null,
-                    'price_with_vat'    => $variantData['price_with_vat'] ?? 0,
-                    'price_without_vat' => $variantData['price_without_vat'] ?? 0,
-                    'vat_rate'          => $variantData['vat_rate'] ?? 21,
                     'stock_quantity'    => $variantData['stock_quantity'] ?? 0,
                 ]);
+
+                // Úprava: Aktualizace nebo vytvoření cenového záznamu pro upravovanou variantu
+                if (isset($variantData['prices']) && is_array($variantData['prices'])) {
+                    $variant->prices()->updateOrCreate(
+                        ['variant_id' => $variant->id],
+                        array_merge($variantData['prices'], ['product_id' => $product->id])
+                    );
+                }
 
                 if (isset($variantData['delete_images']) && is_array($variantData['delete_images'])) {
                     Log::info("Deleting variant images", [
@@ -471,7 +518,7 @@ class ShopProductController extends Controller
         $perPage = $request->input('per_page', 20);
 
         $query = ShopProduct::active()
-            ->with(['primaryImage', 'category']);
+            ->with(['primaryImage', 'category', 'prices']);
 
         if ($s = $request->input('search')) {
             $query->where(fn($q) => $q->where('name', 'like', "%$s%")
@@ -482,11 +529,16 @@ class ShopProductController extends Controller
             $query->where('category_id', $request->input('category_id'));
         }
 
+        // Úprava: Filtrování veřejných cen přes novou tabulku cen
         if ($request->filled('price_from')) {
-            $query->where('price', '>=', $request->input('price_from'));
+            $query->whereHas('prices', function ($q) use ($request) {
+                $q->where('price_czk_with_vat', '>=', $request->input('price_from'));
+            });
         }
         if ($request->filled('price_to')) {
-            $query->where('price', '<=', $request->input('price_to'));
+            $query->whereHas('prices', function ($q) use ($request) {
+                $q->where('price_czk_with_vat', '<=', $request->input('price_to'));
+            });
         }
 
         $sortBy = $request->input('sort_by', 'created_at'); 
@@ -512,8 +564,9 @@ class ShopProductController extends Controller
         $query = ShopProduct::active()
             ->with([
                 'category', 
+                'prices',
                 'images' => fn($q) => $q->orderBy('sort_order'),
-                'variants' => fn($q) => $q->with('images')
+                'variants' => fn($q) => $q->with(['images', 'prices'])
             ]);
 
         $product = is_numeric($slugOrId) 
