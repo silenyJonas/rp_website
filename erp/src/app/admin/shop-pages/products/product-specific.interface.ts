@@ -1,19 +1,4 @@
-export interface Variant {
-  id?: number;
-  variant_name: string;
-  attribute_1_name?: string;
-  attribute_1_value?: string;
-  attribute_2_name?: string;
-  attribute_2_value?: string;
-  sku_variant?: string;
-  currency?: string;
-  price_with_vat: number;
-  vat_rate: number;
-  price_without_vat: number;
-  stock_quantity: number;
-  images?: ProductImage[];
-  _delete?: boolean;
-}
+
 
 export interface ProductImage {
   [key: string]: any;
@@ -39,6 +24,32 @@ export interface Supplier {
   id: number;
   name: string;
 }
+export interface Variant {
+  id?: number;
+  variant_name: string;
+  attribute_1_name?: string;
+  attribute_1_value?: string;
+  attribute_2_name?: string;
+  attribute_2_value?: string;
+  sku_variant?: string;
+  vat_rate: number;
+  stock_quantity: number;
+  images?: ProductImage[];
+  _delete?: boolean;
+
+  // Ceny pro varianty (s DPH i bez) pro všechny měny
+  price_with_vat_czk?: number;
+  price_without_vat_czk?: number;
+  
+  price_with_vat_eur?: number;
+  price_without_vat_eur?: number;
+  
+  price_with_vat_usd?: number;
+  price_without_vat_usd?: number;
+  
+  price_with_vat_gbp?: number;
+  price_without_vat_gbp?: number;
+}
 
 export interface Product {
   id?: number;
@@ -48,13 +59,10 @@ export interface Product {
   slug: string;
   description?: string;
   short_description?: string;
-  price: number;
-  cost_price?: number;
   sku: string;
   stock_quantity: number;
   stock_warning_level: number;
   is_active: boolean;
-  currency?: string;
   is_featured: boolean;
   images?: ProductImage[];
   variants?: Variant[];
@@ -62,4 +70,16 @@ export interface Product {
   supplier?: Supplier;
   created_at?: string;
   updated_at?: string;
+
+  // Prodejní ceny hlavního produktu
+  price_czk?: number;
+  price_eur?: number;
+  price_usd?: number;
+  price_gbp?: number;
+
+  // Nákupní ceny hlavního produktu
+  cost_price_czk?: number;
+  cost_price_eur?: number;
+  cost_price_usd?: number;
+  cost_price_gbp?: number;
 }

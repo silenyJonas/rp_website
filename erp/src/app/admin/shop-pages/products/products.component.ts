@@ -30,9 +30,9 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   override showTrashTable = false;
   showFiltersPanel = false;
 
-  selectedProductForDetail: Product | null = null;
+  selectedProductForDetail: any = null; // Změněno na any kvůli dynamickému mapování pro šablonu detailu
   selectedProduct: Product | null = null;
-  editingProduct: Product | null = null;
+  editingProduct: any = null; // Změněno na any, abychom mohli dočasně držet ploché vlastnosti ceny při editaci před odesláním na API
   editingVariantIdx: number | null = null;
   editingVariantImages: ProductImage[] = [];
 
@@ -59,11 +59,9 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     private confirmDialog: ConfirmDialogService
   ) {
     super(dataHandler, cd, genericTableService);
-    console.log('[ProductsComponent] Inicializováno v konstruktoru.');
   }
 
   override ngOnInit(): void {
-    console.log('[ProductsComponent] Spouštím ngOnInit.');
     super.ngOnInit();
     this.initWithAuthCheck(this.router);
     // Načteme konfiguraci polí z config souboru
@@ -74,7 +72,6 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   }
 
   override ngOnDestroy(): void {
-    console.log('[ProductsComponent] Komponenta se ničí (ngOnDestroy).');
     super.ngOnDestroy();
     this.toggleBodyScroll(false);
   }
@@ -95,7 +92,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     const actions: { [key: string]: () => void } = {
       toggleFilters: () => this.toggleFilters(),
       handleCreateFormOpened: () => this.handleCreateFormOpened(),
-      toggleTable: () => this.toggleTable(),
+      toggleTrash: () => this.toggleTrash(),
       exportActiveTable: () => this.exportActiveTable()
     };
     
@@ -122,7 +119,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     this.cd.markForCheck();
   }
 
-  override toggleTable(): void {
+  toggleTrash(): void {
     this.showTrashTable = !this.showTrashTable;
     if (this.showTrashTable) {
       const trashFilters = { ...this.filters, only_trashed: 'true' };
@@ -135,15 +132,16 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   handleCreateFormOpened(): void {
     if (this.isProcessing) return;
     
-    console.log('[ProductsComponent] Otevírám formulář pro nový produkt.');
     this.editingProduct = {
       category_id: 0,
       name: '',
       slug: '',
       description: '',
       short_description: '',
-      price: 0,
-      cost_price: 0,
+      price_czk: 0,
+      cost_price_czk: 0,
+      price_eur: 0,
+      cost_price_eur: 0,
       sku: '',
       stock_quantity: 0,
       stock_warning_level: 10,
@@ -236,7 +234,6 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   handleViewDetails(item: any): void {
     if (this.isProcessing || !item.id) return;
     
-    console.log(`[handleViewDetails] Načítám detail pro ID: ${item.id}`);
     this.isProcessing = true;
     this.loadingService.show();
     
@@ -249,40 +246,30 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       Core.takeUntil(this.destroy$)
     ).subscribe({
       next: (fullProduct: any) => {
-        console.log('[handleViewDetails] RAW data z API:', JSON.parse(JSON.stringify(fullProduct)));
-
-        // Vytvoříme hlubokou kopii, aby nedošlo k mutaci původního stavu v Base komponentě
-        const mappedProduct = { ...fullProduct };
-
-        if (mappedProduct.prices) {
-          console.log('[handleViewDetails] Nalezen objekt prices u produktu:', mappedProduct.prices);
-          mappedProduct.price = mappedProduct.prices.price_czk_with_vat || mappedProduct.prices.price || 0;
-          mappedProduct.cost_price = mappedProduct.prices.cost_price || 0;
-        } else {
-          console.warn('[handleViewDetails] POZOR: Objekt prices u hlavního produktu CHYBÍ!');
+        if (fullProduct.prices) {
+          fullProduct.price_czk = fullProduct.prices.price_czk_with_vat || 0;
+          fullProduct.cost_price_czk = fullProduct.prices.cost_price_czk || 0;
+          fullProduct.price_eur = fullProduct.prices.price_eur_with_vat || 0;
+          fullProduct.cost_price_eur = fullProduct.prices.cost_price_eur || 0;
         }
 
-        if (mappedProduct.variants) {
-          console.log(`[handleViewDetails] Mapuji ceny pro ${mappedProduct.variants.length} variant.`);
-          mappedProduct.variants = mappedProduct.variants.map((v: any, index: number) => {
-            console.log(`[handleViewDetails] Varianta [${index}] RAW prices:`, v.prices);
-            return {
-              ...v,
-              vat_rate: v.prices?.vat_rate ?? v.vat_rate ?? 21,
-              price_with_vat: v.prices?.price_czk_with_vat ?? v.price_with_vat ?? 0,
-              price_without_vat: v.prices?.price_czk_without_vat ?? v.price_without_vat ?? 0
-            };
-          });
+        if (fullProduct.variants) {
+          fullProduct.variants = fullProduct.variants.map((v: any) => ({
+            ...v,
+            vat_rate: v.prices?.vat_rate ?? v.vat_rate ?? 21,
+            price_with_vat_czk: v.prices?.price_czk_with_vat ?? v.price_with_vat_czk ?? 0,
+            price_without_vat_czk: v.prices?.price_czk_without_vat ?? v.price_without_vat_czk ?? 0,
+            price_with_vat_eur: v.prices?.price_eur_with_vat ?? v.price_with_vat_eur ?? 0,
+            price_without_vat_eur: v.prices?.price_eur_without_vat ?? v.price_without_vat_eur ?? 0
+          }));
         }
 
-        console.log('[handleViewDetails] MAPOVANÝ produkt pro šablonu:', mappedProduct);
-        this.selectedProductForDetail = mappedProduct;
+        this.selectedProductForDetail = fullProduct;
         this.showDetailsModal = true;
         this.toggleBodyScroll(true);
         this.cd.markForCheck();
       },
-      error: (err) => {
-        console.error('[handleViewDetails] Selhal odchyt detailu:', err);
+      error: () => {
         this.alertDialogService.open('Chyba', 'Nepodařilo se načíst detaily.', 'danger');
       }
     });
@@ -307,7 +294,6 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     if (event) event.stopPropagation();
     if (this.isProcessing || !product.id) return;
 
-    console.log(`[openEditProductForm] Načítám produkt k editaci, ID: ${product.id}`);
     this.isProcessing = true;
     this.loadingService.show();
     
@@ -320,40 +306,31 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       Core.takeUntil(this.destroy$)
     ).subscribe({
       next: (fullProduct: any) => {
-        console.log('[openEditProductForm] RAW data z API:', JSON.parse(JSON.stringify(fullProduct)));
-
-        const mappedProduct = { ...fullProduct };
-
-        if (mappedProduct.prices) {
-          console.log('[openEditProductForm] Nalezen objekt prices u produktu:', mappedProduct.prices);
-          mappedProduct.price = mappedProduct.prices.price_czk_with_vat || mappedProduct.prices.price || 0;
-          mappedProduct.cost_price = mappedProduct.prices.cost_price || 0;
-        } else {
-          console.warn('[openEditProductForm] POZOR: Objekt prices u hlavního produktu CHYBÍ!');
+        if (fullProduct.prices) {
+          fullProduct.price_czk = fullProduct.prices.price_czk_with_vat || 0;
+          fullProduct.cost_price_czk = fullProduct.prices.cost_price_czk || 0;
+          fullProduct.price_eur = fullProduct.prices.price_eur_with_vat || 0;
+          fullProduct.cost_price_eur = fullProduct.prices.cost_price_eur || 0;
         }
 
-        if (mappedProduct.variants) {
-          console.log(`[openEditProductForm] Mapuji ceny pro ${mappedProduct.variants.length} variant.`);
-          mappedProduct.variants = mappedProduct.variants.map((v: any, index: number) => {
-            console.log(`[openEditProductForm] Varianta [${index}] RAW prices:`, v.prices);
-            return {
-              ...v,
-              vat_rate: v.prices?.vat_rate ?? v.vat_rate ?? 21,
-              price_with_vat: v.prices?.price_czk_with_vat ?? v.price_with_vat ?? 0,
-              price_without_vat: v.prices?.price_czk_without_vat ?? v.price_without_vat ?? 0
-            };
-          });
+        if (fullProduct.variants) {
+          fullProduct.variants = fullProduct.variants.map((v: any) => ({
+            ...v,
+            vat_rate: v.prices?.vat_rate ?? v.vat_rate ?? 21,
+            price_with_vat_czk: v.prices?.price_czk_with_vat ?? v.price_with_vat_czk ?? 0,
+            price_without_vat_czk: v.prices?.price_czk_without_vat ?? v.price_without_vat_czk ?? 0,
+            price_with_vat_eur: v.prices?.price_eur_with_vat ?? v.price_with_vat_eur ?? 0,
+            price_without_vat_eur: v.prices?.price_eur_without_vat ?? v.price_without_vat_eur ?? 0
+          }));
         }
 
-        console.log('[openEditProductForm] FINÁLNÍ kopie pro editaci (editingProduct):', mappedProduct);
-        this.editingProduct = mappedProduct;
+        this.editingProduct = { ...fullProduct };
         this.updateFormFieldsOptions();
         this.showProductForm = true;
         this.toggleBodyScroll(true);
         this.cd.markForCheck();
       },
-      error: (err) => {
-        console.error('[openEditProductForm] Chyba při stahování produktu k editaci:', err);
+      error: () => {
         this.alertDialogService.open('Chyba', 'Nepodařilo se načíst detail produktu.', 'danger');
       }
     });
@@ -365,9 +342,6 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     this.isProcessing = true;
     const formData = new FormData();
 
-    console.log('[saveProduct] Odesílám data na backend. Aktuální stav objektu:', this.editingProduct);
-
-    // Základní metadata produktu
     formData.append('category_id', this.editingProduct.category_id.toString());
     formData.append('supplier_id', (this.editingProduct.supplier_id || '').toString());
     formData.append('name', this.editingProduct.name);
@@ -381,17 +355,22 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     formData.append('is_featured', this.editingProduct.is_featured ? '1' : '0');
 
     const defaultVatRate = this.editingProduct.variants?.[0]?.vat_rate ?? 21;
-    const mainPriceWithVat = this.editingProduct.price || 0;
-    const mainPriceWithoutVat = Math.round((mainPriceWithVat / (1 + defaultVatRate / 100)) * 100) / 100;
-
     formData.append('prices[vat_rate]', defaultVatRate.toString());
-    formData.append('prices[price_czk_with_vat]', mainPriceWithVat.toString());
-    formData.append('prices[price_czk_without_vat]', mainPriceWithoutVat.toString());
-    formData.append('prices[cost_price]', (this.editingProduct.cost_price || 0).toString());
 
-    // 1. OBRÁZKY PRODUKTU
-    const activeProductImages = (this.editingProduct.images || []).filter(img => !img._delete && !img.variant_id);
-    activeProductImages.forEach((img, idx) => {
+    const priceCzkWithVat = this.editingProduct.price_czk || 0;
+    const priceCzkWithoutVat = Math.round((priceCzkWithVat / (1 + defaultVatRate / 100)) * 100) / 100;
+    formData.append('prices[price_czk_with_vat]', priceCzkWithVat.toString());
+    formData.append('prices[price_czk_without_vat]', priceCzkWithoutVat.toString());
+    formData.append('prices[cost_price_czk]', (this.editingProduct.cost_price_czk || 0).toString());
+
+    const priceEurWithVat = this.editingProduct.price_eur || 0;
+    const priceEurWithoutVat = Math.round((priceEurWithVat / (1 + defaultVatRate / 100)) * 100) / 100;
+    formData.append('prices[price_eur_with_vat]', priceEurWithVat.toString());
+    formData.append('prices[price_eur_without_vat]', priceEurWithoutVat.toString());
+    formData.append('prices[cost_price_eur]', (this.editingProduct.cost_price_eur || 0).toString());
+
+    const activeProductImages = (this.editingProduct.images || []).filter((img: any) => !img._delete && !img.variant_id);
+    activeProductImages.forEach((img: any, idx: number) => {
       if (img.id) formData.append(`images[${idx}][id]`, img.id.toString());
       if (img.file) formData.append(`images[${idx}][file]`, img.file);
       formData.append(`images[${idx}][alt_text]`, img.alt_text || '');
@@ -399,14 +378,13 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       formData.append(`images[${idx}][sort_order]`, img.sort_order.toString());
     });
 
-    const imagesToDelete = (this.editingProduct.images || []).filter(img => img._delete && img.id && !img.variant_id);
-    imagesToDelete.forEach((img, idx) => {
+    const imagesToDelete = (this.editingProduct.images || []).filter((img: any) => img._delete && img.id && !img.variant_id);
+    imagesToDelete.forEach((img: any, idx: number) => {
       formData.append(`delete_images[${idx}]`, img.id!.toString());
     });
 
-    // 2. VARIANTY A JEJICH OBRÁZKY
-    const activeVariants = (this.editingProduct.variants || []).filter(v => !v._delete);
-    activeVariants.forEach((v, idx) => {
+    const activeVariants = (this.editingProduct.variants || []).filter((v: any) => !v._delete);
+    activeVariants.forEach((v: any, idx: number) => {
       if (v.id) formData.append(`variants[${idx}][id]`, v.id.toString());
       formData.append(`variants[${idx}][variant_name]`, v.variant_name);
       formData.append(`variants[${idx}][attribute_1_name]`, v.attribute_1_name || '');
@@ -417,16 +395,21 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       formData.append(`variants[${idx}][stock_quantity]`, v.stock_quantity.toString());
 
       const vVatRate = v.vat_rate || 21;
-      const vPriceWithVat = v.price_with_vat || 0;
-      const vPriceWithoutVat = v.price_without_vat || Math.round((vPriceWithVat / (1 + vVatRate / 100)) * 100) / 100;
+      const vPriceWithVatCzk = v.price_with_vat_czk || 0;
+      const vPriceWithoutVatCzk = v.price_without_vat_czk || Math.round((vPriceWithVatCzk / (1 + vVatRate / 100)) * 100) / 100;
+      
+      const vPriceWithVatEur = v.price_with_vat_eur || 0;
+      const vPriceWithoutVatEur = v.price_without_vat_eur || Math.round((vPriceWithVatEur / (1 + vVatRate / 100)) * 100) / 100;
 
       formData.append(`variants[${idx}][prices][vat_rate]`, vVatRate.toString());
-      formData.append(`variants[${idx}][prices][price_czk_with_vat]`, vPriceWithVat.toString());
-      formData.append(`variants[${idx}][prices][price_czk_without_vat]`, vPriceWithoutVat.toString());
+      formData.append(`variants[${idx}][prices][price_czk_with_vat]`, vPriceWithVatCzk.toString());
+      formData.append(`variants[${idx}][prices][price_czk_without_vat]`, vPriceWithoutVatCzk.toString());
+      formData.append(`variants[${idx}][prices][price_eur_with_vat]`, vPriceWithVatEur.toString());
+      formData.append(`variants[${idx}][prices][price_eur_without_vat]`, vPriceWithoutVatEur.toString());
 
       if (v.images && v.images.length > 0) {
-        const variantImagesToKeep = v.images.filter(img => !img._delete);
-        variantImagesToKeep.forEach((img, imgIdx) => {
+        const variantImagesToKeep = v.images.filter((img: any) => !img._delete);
+        variantImagesToKeep.forEach((img: any, imgIdx: number) => {
           if (img.id) formData.append(`variants[${idx}][images][${imgIdx}][id]`, img.id.toString());
           if (img.file) formData.append(`variants[${idx}][images][${imgIdx}][file]`, img.file);
           formData.append(`variants[${idx}][images][${imgIdx}][alt_text]`, img.alt_text || v.variant_name);
@@ -434,15 +417,15 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
           formData.append(`variants[${idx}][images][${imgIdx}][sort_order]`, imgIdx.toString());
         });
 
-        const variantImagesToDelete = v.images.filter(img => img._delete && img.id);
-        variantImagesToDelete.forEach((img, delIdx) => {
+        const variantImagesToDelete = v.images.filter((img: any) => img._delete && img.id);
+        variantImagesToDelete.forEach((img: any, delIdx: number) => {
           formData.append(`variants[${idx}][delete_images][${delIdx}]`, img.id!.toString());
         });
       }
     });
 
-    const variantsToDelete = (this.editingProduct.variants || []).filter(v => v._delete && v.id);
-    variantsToDelete.forEach((v, idx) => {
+    const variantsToDelete = (this.editingProduct.variants || []).filter((v: any) => v._delete && v.id);
+    variantsToDelete.forEach((v: any, idx: number) => {
       formData.append(`delete_variants[${idx}]`, v.id!.toString());
     });
 
@@ -467,12 +450,13 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       next: () => {
         this.alertDialogService.open('Úspěch', 'Produkt byl uložen.', 'success');
         this.showProductForm = false;
+        this.showImagesModal = false;
+        this.showVariantsModal = false;
         this.editingProduct = null;
         this.toggleBodyScroll(false);
         this.refreshData();
       },
       error: (err) => {
-        console.error('[saveProduct] Chyba při ukládání na backend:', err);
         const message = err.error?.message || err.error?.errors || 'Chyba při ukládání produktu.';
         this.alertDialogService.open('Chyba', this.formatErrorMessage(message), 'danger');
       }
@@ -490,7 +474,6 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     if (event) event.stopPropagation();
     if (this.isProcessing) return;
 
-    console.log(`[openVariantsModal] Načítám varianty pro produkt ID: ${product.id}`);
     this.isProcessing = true;
     this.selectedProduct = product;
     this.loadingService.show();
@@ -504,29 +487,22 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       Core.takeUntil(this.destroy$)
     ).subscribe({
       next: (fullProduct: any) => {
-        console.log('[openVariantsModal] RAW data z API:', JSON.parse(JSON.stringify(fullProduct)));
-
-        const mappedProduct = { ...fullProduct };
-
-        if (mappedProduct.variants) {
-          mappedProduct.variants = mappedProduct.variants.map((v: any, index: number) => {
-            console.log(`[openVariantsModal] Varianta [${index}] ceny mapovány.`);
-            return {
-              ...v,
-              vat_rate: v.prices?.vat_rate ?? v.vat_rate ?? 21,
-              price_with_vat: v.prices?.price_czk_with_vat ?? v.price_with_vat ?? 0,
-              price_without_vat: v.prices?.price_czk_without_vat ?? v.price_without_vat ?? 0
-            };
-          });
+        if (fullProduct.variants) {
+          fullProduct.variants = fullProduct.variants.map((v: any) => ({
+            ...v,
+            vat_rate: v.prices?.vat_rate ?? v.vat_rate ?? 21,
+            price_with_vat_czk: v.prices?.price_czk_with_vat ?? v.price_with_vat_czk ?? 0,
+            price_without_vat_czk: v.prices?.price_czk_without_vat ?? v.price_without_vat_czk ?? 0,
+            price_with_vat_eur: v.prices?.price_eur_with_vat ?? v.price_with_vat_eur ?? 0,
+            price_without_vat_eur: v.prices?.price_eur_without_vat ?? v.price_without_vat_eur ?? 0
+          }));
         }
-
-        this.editingProduct = mappedProduct;
+        this.editingProduct = { ...fullProduct };
         this.showVariantsModal = true;
         this.toggleBodyScroll(true);
         this.cd.markForCheck();
       },
-      error: (err) => {
-        console.error('[openVariantsModal] Selhalo načítání variant:', err);
+      error: () => {
         this.isProcessing = false;
         this.alertDialogService.open('Chyba', 'Nepodařilo se načíst produkt.', 'danger');
       }
@@ -547,9 +523,11 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       attribute_2_name: '',
       attribute_2_value: '',
       sku_variant: '',
-      price_with_vat: 0,
+      price_with_vat_czk: 0,
+      price_without_vat_czk: 0,
+      price_with_vat_eur: 0,
+      price_without_vat_eur: 0,
       vat_rate: 21,
-      price_without_vat: 0,
       stock_quantity: 0,
       images: []
     });
@@ -682,20 +660,29 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
 
   // ========== DPH VÝPOČTY ==========
 
-  onVATRateChange(variant: Variant): void {
+  onVATRateChange(variant: any): void {
     this.calculatePriceWithoutVAT(variant);
     this.cd.markForCheck();
   }
 
-  onPriceWithVATChange(variant: Variant): void {
+  onPriceWithVATChange(variant: any): void {
     this.calculatePriceWithoutVAT(variant);
     this.cd.markForCheck();
   }
 
-  private calculatePriceWithoutVAT(variant: Variant): void {
-    if (variant.price_with_vat && variant.vat_rate !== undefined && variant.vat_rate !== null) {
+  private calculatePriceWithoutVAT(variant: any): void {
+    if (variant.vat_rate !== undefined && variant.vat_rate !== null) {
       const rate = 1 + (variant.vat_rate / 100);
-      variant.price_without_vat = Math.round((variant.price_with_vat / rate) * 100) / 100;
+      if (variant.price_with_vat_czk) {
+        variant.price_without_vat_czk = Math.round((variant.price_with_vat_czk / rate) * 100) / 100;
+      } else {
+        variant.price_without_vat_czk = 0;
+      }
+      if (variant.price_with_vat_eur) {
+        variant.price_without_vat_eur = Math.round((variant.price_with_vat_eur / rate) * 100) / 100;
+      } else {
+        variant.price_without_vat_eur = 0;
+      }
     }
   }
 
@@ -705,7 +692,6 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     if (event) event.stopPropagation();
     if (this.isProcessing) return;
 
-    console.log(`[openImagesModal] Načítám obrázky pro produkt ID: ${product.id}`);
     this.isProcessing = true;
     this.selectedProduct = product;
     this.loadingService.show();
@@ -739,8 +725,8 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     this.editingProduct.images.push({
       image_path: '',
       alt_text: '',
-      is_primary: this.editingProduct.images.filter(img => !img.variant_id).length === 0,
-      sort_order: this.editingProduct.images.filter(img => !img.variant_id).length,
+      is_primary: this.editingProduct.images.filter((img: any) => !img.variant_id).length === 0,
+      sort_order: this.editingProduct.images.filter((img: any) => !img.variant_id).length,
       file: undefined
     });
     this.cd.markForCheck();
@@ -759,7 +745,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       } else {
         this.editingProduct.images.splice(index, 1);
       }
-      this.editingProduct.images.forEach((img, idx) => {
+      this.editingProduct.images.forEach((img: any, idx: number) => {
         if (!img._delete && !img.variant_id) img.sort_order = idx;
       });
       this.cd.markForCheck();
@@ -768,7 +754,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
 
   setPrimaryImage(index: number): void {
     if (!this.editingProduct?.images) return;
-    this.editingProduct.images.forEach((img, idx) => {
+    this.editingProduct.images.forEach((img: any, idx: number) => {
       img.is_primary = idx === index && !img.variant_id;
     });
     this.cd.markForCheck();
@@ -785,14 +771,45 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   private validateProduct(): boolean {
     if (!this.editingProduct) return false;
 
+    // Základní validace společná pro formulář i obrázky
     if (!this.editingProduct.name) {
       this.alertDialogService.open('Validace', 'Název je povinný.', 'warning');
       return false;
     }
 
-    if (this.editingProduct.price <= 0) {
-      this.alertDialogService.open('Validace', 'Cena musí být > 0.', 'warning');
-      return false;
+    // Pokud ukládáme POUZE z modálu obrázků, přeskočíme hluboké validace cen a variant
+    if (this.showImagesModal) {
+      return true;
+    }
+
+    // Pokud produkt nemá žádné aktivní varianty, validujeme ceny na hlavním produktu
+    const activeVariants = (this.editingProduct.variants || []).filter((v: any) => !v._delete);
+    if (activeVariants.length === 0) {
+      if (!this.editingProduct.price_czk || this.editingProduct.price_czk <= 0) {
+        this.alertDialogService.open('Validace', 'Cena v CZK musí být > 0.', 'warning');
+        return false;
+      }
+
+      if (!this.editingProduct.price_eur || this.editingProduct.price_eur <= 0) {
+        this.alertDialogService.open('Validace', 'Cena v EUR musí být > 0.', 'warning');
+        return false;
+      }
+    } else {
+      // Pokud varianty existují, validujeme zda každá varianta má vyplněné korektní ceny
+      for (const variant of activeVariants) {
+        if (!variant.variant_name) {
+          this.alertDialogService.open('Validace', 'Všechny aktivní varianty musí mít název.', 'warning');
+          return false;
+        }
+        if (!variant.price_with_vat_czk || variant.price_with_vat_czk <= 0) {
+          this.alertDialogService.open('Validace', `Varianta "${variant.variant_name}" musí mít cenu v CZK > 0.`, 'warning');
+          return false;
+        }
+        if (!variant.price_with_vat_eur || variant.price_with_vat_eur <= 0) {
+          this.alertDialogService.open('Validace', `Varianta "${variant.variant_name}" musí mít cenu v EUR > 0.`, 'warning');
+          return false;
+        }
+      }
     }
 
     if (!this.editingProduct.sku) {
@@ -800,7 +817,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       return false;
     }
 
-    if (this.editingProduct.category_id <= 0) {
+    if (!this.editingProduct.category_id || this.editingProduct.category_id <= 0) {
       this.alertDialogService.open('Validace', 'Vyberte kategorii.', 'warning');
       return false;
     }
@@ -825,21 +842,22 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     if (value === null || value === undefined) {
       return '-';
     }
+
     return new Intl.NumberFormat('cs-CZ', {
       style: 'currency',
       currency: currency
     }).format(value);
   }
 
-  getVisibleVariants(product: Product | null): Variant[] {
-    return (product?.variants || []).filter(v => !v._delete);
+  getVisibleVariants(product: any): any[] {
+    return (product?.variants || []).filter((v: any) => !v._delete);
   }
 
-  getVisibleImages(product: Product | null, variantId?: number): ProductImage[] {
+  getVisibleImages(product: any, variantId?: number): ProductImage[] {
     const images = product?.images || [];
     return variantId
-      ? images.filter(img => !img._delete && img.variant_id === variantId)
-      : images.filter(img => !img._delete && !img.variant_id);
+      ? images.filter((img: any) => !img._delete && img.image_path && img.variant_id === variantId)
+      : images.filter((img: any) => !img._delete && !img.variant_id);
   }
 
   private formatErrorMessage(err: any): string {

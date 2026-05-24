@@ -112,25 +112,15 @@
 
         <!-- Ceny -->
         <div class="detail-section">
-          <h3>Ceny</h3>
+          <h3>Přehled cen hlavního produktu</h3>
           <div class="info-grid">
             <div class="info-row">
-              <label>Měna:</label>
-              <span class="currency-badge">{{ selectedProductForDetail.currency || 'CZK' }}</span>
+              <label>Cena CZK:</label>
+              <span class="price">{{ formatCurrency(selectedProductForDetail.price_czk || 0, 'CZK') }}</span>
             </div>
             <div class="info-row">
-              <label>Prodejní cena:</label>
-              <span class="price">{{ formatCurrency(selectedProductForDetail.price, selectedProductForDetail.currency) }}</span>
-            </div>
-            <div class="info-row">
-              <label>Nákupní cena:</label>
-              <span class="price">{{ formatCurrency(selectedProductForDetail.cost_price || 0, selectedProductForDetail.currency) }}</span>
-            </div>
-            <div class="info-row">
-              <label>Marže:</label>
-              <span class="price" *ngIf="selectedProductForDetail.cost_price">
-                {{ formatCurrency(selectedProductForDetail.price - selectedProductForDetail.cost_price, selectedProductForDetail.currency) }}
-              </span>
+              <label>Cena EUR:</label>
+              <span class="price">{{ formatCurrency(selectedProductForDetail.price_eur || 0, 'EUR') }}</span>
             </div>
           </div>
         </div>
@@ -165,19 +155,15 @@
               </div>
               <div class="variant-pricing">
                 <div class="row">
-                  <div class="label">Měna:</div>
-                  <strong>{{ v.currency || 'CZK' }}</strong>
+                  <div class="label">CZK (s DPH / bez):</div>
+                  <div><strong>{{ formatCurrency(v.price_with_vat_czk || 0, 'CZK') }}</strong> / {{ formatCurrency(v.price_without_vat_czk || 0, 'CZK') }}</div>
                 </div>
                 <div class="row">
-                  <div class="label">Bez DPH:</div>
-                  <div>{{ formatCurrency(v.price_without_vat || 0, v.currency) }}</div>
+                  <div class="label">EUR (s DPH / bez):</div>
+                  <div><strong>{{ formatCurrency(v.price_with_vat_eur || 0, 'EUR') }}</strong> / {{ formatCurrency(v.price_without_vat_eur || 0, 'EUR') }}</div>
                 </div>
                 <div class="row">
-                  <div class="label">S DPH:</div>
-                  <div>{{ formatCurrency(v.price_with_vat, v.currency) }}</div>
-                </div>
-                <div class="row">
-                  <div class="label">DPH:</div>
+                  <div class="label">Sazba DPH:</div>
                   <div>{{ v.vat_rate }}%</div>
                 </div>
               </div>
@@ -249,17 +235,20 @@
           <fieldset>
             <legend>Základní</legend>
             <div class="form-row-2">
+              <!-- Dropdown pro Kategorii -->
               <div class="form-group">
-                <label>Kategorie *</label>
-                <select [(ngModel)]="editingProduct.category_id" name="category_id" required>
-                  <option value="">-- Vybrat --</option>
+                <label for="categorySelect">Kategorie *</label>
+                <select id="categorySelect" [(ngModel)]="editingProduct.category_id" name="category_id" class="form-control" required>
+                  <option [value]="0" disabled>-- Vyberte kategorii --</option>
                   <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
                 </select>
               </div>
+              
+              <!-- Dropdown pro Dodavatele -->
               <div class="form-group">
-                <label>Dodavatel</label>
-                <select [(ngModel)]="editingProduct.supplier_id" name="supplier_id">
-                  <option [value]="null">-- Bez --</option>
+                <label for="supplierSelect">Dodavatel</label>
+                <select id="supplierSelect" [(ngModel)]="editingProduct.supplier_id" name="supplier_id" class="form-control">
+                  <option [value]="null">-- Bez dodavatele --</option>
                   <option *ngFor="let sup of suppliers" [value]="sup.id">{{ sup.name }}</option>
                 </select>
               </div>
@@ -293,25 +282,35 @@
             </div>
           </fieldset>
 
+          <!-- POUZE CZK A EUR VYPSANÉ V MŘÍŽCE -->
           <fieldset>
-            <legend>Ceny</legend>
-            <div class="form-row-3">
-              <div class="form-group">
-                <label>Měna *</label>
-                <select [(ngModel)]="editingProduct.currency" name="currency" required>
-                  <option value="CZK">CZK (Kč)</option>
-                  <option value="EUR">EUR (€)</option>
-                  <option value="USD">USD ($)</option>
-                  <option value="GBP">GBP (£)</option>
-                </select>
+            <legend>Ceník produktu (CZK a EUR)</legend>
+            
+            <div class="multi-currency-grid">
+              <!-- CZK -->
+              <div class="currency-row-inputs">
+                <span class="currency-indicator-label">CZK (Kč)</span>
+                <div class="form-group">
+                  <label>Prodejní cena</label>
+                  <input type="number" [(ngModel)]="editingProduct.price_czk" name="price_czk" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                  <label>Nákupní cena</label>
+                  <input type="number" [(ngModel)]="editingProduct.cost_price_czk" name="cost_price_czk" min="0" step="0.01">
+                </div>
               </div>
-              <div class="form-group">
-                <label>Prodejní cena *</label>
-                <input type="number" [(ngModel)]="editingProduct.price" name="price" min="0" step="0.01" required>
-              </div>
-              <div class="form-group">
-                <label>Nákupní cena</label>
-                <input type="number" [(ngModel)]="editingProduct.cost_price" name="cost_price" min="0" step="0.01">
+
+              <!-- EUR -->
+              <div class="currency-row-inputs">
+                <span class="currency-indicator-label">EUR (€)</span>
+                <div class="form-group">
+                  <label>Prodejní cena</label>
+                  <input type="number" [(ngModel)]="editingProduct.price_eur" name="price_eur" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                  <label>Nákupní cena</label>
+                  <input type="number" [(ngModel)]="editingProduct.cost_price_eur" name="cost_price_eur" min="0" step="0.01">
+                </div>
               </div>
             </div>
           </fieldset>
@@ -409,34 +408,45 @@
               <input type="text" [(ngModel)]="variant.sku_variant" placeholder="SKU-BLK-M" [disabled]="!!variant._delete">
             </div>
 
+            <!-- POUZE CZK A EUR PRO VARIANTU -->
             <div class="vat-calculator">
-              <h4>💰 Ceny & DPH</h4>
-              <div class="form-row-4">
-                <div class="form-group">
-                  <label>Měna *</label>
-                  <select [(ngModel)]="variant.currency" [disabled]="!!variant._delete">
-                    <option value="CZK">CZK (Kč)</option>
-                    <option value="EUR">EUR (€)</option>
-                    <option value="USD">USD ($)</option>
-                    <option value="GBP">GBP (£)</option>
-                  </select>
+              <h4>💰 Ceny & DPH varianty (CZK a EUR)</h4>
+              
+              <div class="form-group" style="margin-bottom: 15px; max-width: 200px;">
+                <label>DPH (%) společné pro měny</label>
+                <input type="number" [(ngModel)]="variant.vat_rate" placeholder="21" min="0" max="100" [disabled]="!!variant._delete">
+              </div>
+
+              <div class="multi-currency-variant-paths">
+                <!-- CZK VARIANT -->
+                <div class="variant-currency-row">
+                  <span class="currency-badge-static">CZK</span>
+                  <div class="form-group">
+                    <label>S DPH</label>
+                    <input type="number" [(ngModel)]="variant.price_with_vat_czk" placeholder="0" step="0.01" [disabled]="!!variant._delete">
+                  </div>
+                  <div class="form-group">
+                    <label>Bez DPH</label>
+                    <input type="number" [(ngModel)]="variant.price_without_vat_czk" placeholder="0" step="0.01" [disabled]="!!variant._delete">
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label>Cena S DPH *</label>
-                  <input type="number" [(ngModel)]="variant.price_with_vat" (change)="onPriceWithVATChange(variant)" placeholder="0" step="0.01" [disabled]="!!variant._delete">
-                </div>
-                <div class="form-group">
-                  <label>DPH (%)</label>
-                  <input type="number" [(ngModel)]="variant.vat_rate" (change)="onVATRateChange(variant)" placeholder="21" min="0" max="100" [disabled]="!!variant._delete">
-                </div>
-                <div class="form-group">
-                  <label>Cena BEZ DPH</label>
-                  <input type="number" [(ngModel)]="variant.price_without_vat" placeholder="0" step="0.01" readonly [disabled]="!!variant._delete">
+
+                <!-- EUR VARIANT -->
+                <div class="variant-currency-row">
+                  <span class="currency-badge-static">EUR</span>
+                  <div class="form-group">
+                    <label>S DPH</label>
+                    <input type="number" [(ngModel)]="variant.price_with_vat_eur" placeholder="0" step="0.01" [disabled]="!!variant._delete">
+                  </div>
+                  <div class="form-group">
+                    <label>Bez DPH</label>
+                    <input type="number" [(ngModel)]="variant.price_without_vat_eur" placeholder="0" step="0.01" [disabled]="!!variant._delete">
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-top: 15px;">
               <label>Sklad (ks)</label>
               <input type="number" [(ngModel)]="variant.stock_quantity" placeholder="0" min="0" [disabled]="!!variant._delete">
             </div>
@@ -485,7 +495,7 @@
                 <div class="form-group">
                   <label>Soubor *</label>
                   <input type="file" accept="image/*" (change)="onVariantImageFileSelected($event, i)" [disabled]="image._delete" class="file-input">
-                  <p class="form-hint">Vyberi soubor JPG/PNG (max 5MB)</p>
+                  <p class="form-hint">Vyber soubor JPG/PNG (max 5MB)</p>
                 </div>
 
                 <div class="form-row-2">
@@ -546,7 +556,7 @@
                 <div class="form-group">
                   <label>Soubor *</label>
                   <input type="file" accept="image/*" (change)="onFileSelected($event, i)" [disabled]="image._delete" class="file-input">
-                  <p class="form-hint">Vyberi soubor JPG/PNG (max 5MB)</p>
+                  <p class="form-hint">Vyber soubor JPG/PNG (max 5MB)</p>
                 </div>
 
                 <div class="form-row-2">
