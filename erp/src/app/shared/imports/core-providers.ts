@@ -24,6 +24,8 @@ export {
 
 export { HttpErrorResponse } from '@angular/common/http';
 
+export { map } from 'rxjs'; // případně 'rxjs/operators' podle vaší verze Angularu
+
 export { DataHandler } from '../../core/services/data-handler.service';
 export { GenericTableService } from '../../core/services/generic-table.service';
 export { AuthService } from '../../core/auth/auth.service';

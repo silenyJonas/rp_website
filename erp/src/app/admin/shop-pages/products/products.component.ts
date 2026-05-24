@@ -30,13 +30,12 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   override showTrashTable = false;
   showFiltersPanel = false;
 
-  selectedProductForDetail: any = null; // Změněno na any kvůli dynamickému mapování pro šablonu detailu
+  selectedProductForDetail: any = null;
   selectedProduct: Product | null = null;
-  editingProduct: any = null; // Změněno na any, abychom mohli dočasně držet ploché vlastnosti ceny při editaci před odesláním na API
+  editingProduct: any = null;
   editingVariantIdx: number | null = null;
   editingVariantImages: ProductImage[] = [];
 
-  // Flag k prevenci double-click
   private isProcessing = false;
 
   filters: Core.FilterParams = {
@@ -64,7 +63,6 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   override ngOnInit(): void {
     super.ngOnInit();
     this.initWithAuthCheck(this.router);
-    // Načteme konfiguraci polí z config souboru
     this.formFields = JSON.parse(JSON.stringify(PRODUCT_FORM_FIELDS));
     this.loadCategories();
     this.loadSuppliers();
@@ -74,6 +72,44 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   override ngOnDestroy(): void {
     super.ngOnDestroy();
     this.toggleBodyScroll(false);
+  }
+
+  // ========== ASYNCHRONNÍ TRANSFORMACE DAT PRO PLOCHÉ KLÍČE TABULKY ==========
+  override fetchPaginatedData(
+    isTrash: boolean, 
+    page: number, 
+    perPage: number, 
+    filters: Core.FilterParams
+  ): Core.Observable<Core.PaginatedResponse<Product>> {
+    
+    return super.fetchPaginatedData(isTrash, page, perPage, filters).pipe(
+      Core.map((response: Core.PaginatedResponse<Product>) => {
+        if (!isTrash && response && response.data) {
+          response.data = response.data.map((product: any) => {
+            
+            // Bezpečné mapování cen na sjednocené ploché klíče bez _flat
+            if (product.prices) {
+              product.price_czk = product.prices.price_czk_with_vat ?? 0;
+              product.price_eur = product.prices.price_eur_with_vat ?? 0;
+            } else {
+              product.price_czk = 0;
+              product.price_eur = 0;
+            }
+
+            product.category_name = product.category ? product.category.name : '-';
+            product.supplier_name = product.supplier ? product.supplier.name : '-';
+
+            return product;
+          });
+
+          this.data = response.data;
+        }
+        return response;
+      }),
+      Core.tap(() => {
+        this.cd.markForCheck();
+      })
+    );
   }
 
   private toggleBodyScroll(lock: boolean): void {
@@ -252,6 +288,9 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
           fullProduct.price_eur = fullProduct.prices.price_eur_with_vat || 0;
           fullProduct.cost_price_eur = fullProduct.prices.cost_price_eur || 0;
         }
+        
+        fullProduct.category_name = fullProduct.category ? fullProduct.category.name : '-';
+        fullProduct.supplier_name = fullProduct.supplier ? fullProduct.supplier.name : '-';
 
         if (fullProduct.variants) {
           fullProduct.variants = fullProduct.variants.map((v: any) => ({
@@ -354,21 +393,40 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     formData.append('is_active', this.editingProduct.is_active ? '1' : '0');
     formData.append('is_featured', this.editingProduct.is_featured ? '1' : '0');
 
-    const defaultVatRate = this.editingProduct.variants?.[0]?.vat_rate ?? 21;
-    formData.append('prices[vat_rate]', defaultVatRate.toString());
+    // FIX: Pokud jsme v samostatném okně variant/obrázků, formulář hlavního produktu nebyl zobrazen.
+    // Abychom si nepřepsali stávající ceny hlavního produktu nulou, vezmeme je bezpečně ze záložního objektu .prices
+    const activeVariants = (this.editingProduct.variants || []).filter((v: any) => !v._delete);
+    const isOnlySubmodal = this.showVariantsModal || this.showImagesModal;
 
-    const priceCzkWithVat = this.editingProduct.price_czk || 0;
-    const priceCzkWithoutVat = Math.round((priceCzkWithVat / (1 + defaultVatRate / 100)) * 100) / 100;
+    const currentVatRate = isOnlySubmodal && this.editingProduct.prices 
+      ? (this.editingProduct.prices.vat_rate ?? 21)
+      : (activeVariants[0]?.vat_rate ?? 21);
+
+    formData.append('prices[vat_rate]', currentVatRate.toString());
+
+    // Výpočet a odeslání CZK ceny hlavního produktu
+    let priceCzkWithVat = this.editingProduct.price_czk;
+    if (isOnlySubmodal && (!priceCzkWithVat || priceCzkWithVat === 0) && this.editingProduct.prices) {
+      priceCzkWithVat = this.editingProduct.prices.price_czk_with_vat || 0;
+    }
+    const priceCzkWithoutVat = Math.round((priceCzkWithVat / (1 + currentVatRate / 100)) * 100) / 100;
+    
     formData.append('prices[price_czk_with_vat]', priceCzkWithVat.toString());
     formData.append('prices[price_czk_without_vat]', priceCzkWithoutVat.toString());
-    formData.append('prices[cost_price_czk]', (this.editingProduct.cost_price_czk || 0).toString());
+    formData.append('prices[cost_price_czk]', (this.editingProduct.cost_price_czk || this.editingProduct.prices?.cost_price_czk || 0).toString());
 
-    const priceEurWithVat = this.editingProduct.price_eur || 0;
-    const priceEurWithoutVat = Math.round((priceEurWithVat / (1 + defaultVatRate / 100)) * 100) / 100;
+    // Výpočet a odeslání EUR ceny hlavního produktu
+    let priceEurWithVat = this.editingProduct.price_eur;
+    if (isOnlySubmodal && (!priceEurWithVat || priceEurWithVat === 0) && this.editingProduct.prices) {
+      priceEurWithVat = this.editingProduct.prices.price_eur_with_vat || 0;
+    }
+    const priceEurWithoutVat = Math.round((priceEurWithVat / (1 + currentVatRate / 100)) * 100) / 100;
+
     formData.append('prices[price_eur_with_vat]', priceEurWithVat.toString());
     formData.append('prices[price_eur_without_vat]', priceEurWithoutVat.toString());
-    formData.append('prices[cost_price_eur]', (this.editingProduct.cost_price_eur || 0).toString());
+    formData.append('prices[cost_price_eur]', (this.editingProduct.cost_price_eur || this.editingProduct.prices?.cost_price_eur || 0).toString());
 
+    // Mapování obrázků produktu
     const activeProductImages = (this.editingProduct.images || []).filter((img: any) => !img._delete && !img.variant_id);
     activeProductImages.forEach((img: any, idx: number) => {
       if (img.id) formData.append(`images[${idx}][id]`, img.id.toString());
@@ -383,7 +441,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       formData.append(`delete_images[${idx}]`, img.id!.toString());
     });
 
-    const activeVariants = (this.editingProduct.variants || []).filter((v: any) => !v._delete);
+    // Mapování variant
     activeVariants.forEach((v: any, idx: number) => {
       if (v.id) formData.append(`variants[${idx}][id]`, v.id.toString());
       formData.append(`variants[${idx}][variant_name]`, v.variant_name);
@@ -396,10 +454,10 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
 
       const vVatRate = v.vat_rate || 21;
       const vPriceWithVatCzk = v.price_with_vat_czk || 0;
-      const vPriceWithoutVatCzk = v.price_without_vat_czk || Math.round((vPriceWithVatCzk / (1 + vVatRate / 100)) * 100) / 100;
+      const vPriceWithoutVatCzk = Math.round((vPriceWithVatCzk / (1 + vVatRate / 100)) * 100) / 100;
       
       const vPriceWithVatEur = v.price_with_vat_eur || 0;
-      const vPriceWithoutVatEur = v.price_without_vat_eur || Math.round((vPriceWithVatEur / (1 + vVatRate / 100)) * 100) / 100;
+      const vPriceWithoutVatEur = Math.round((vPriceWithVatEur / (1 + vVatRate / 100)) * 100) / 100;
 
       formData.append(`variants[${idx}][prices][vat_rate]`, vVatRate.toString());
       formData.append(`variants[${idx}][prices][price_czk_with_vat]`, vPriceWithVatCzk.toString());
@@ -487,6 +545,14 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       Core.takeUntil(this.destroy$)
     ).subscribe({
       next: (fullProduct: any) => {
+        // FIX MAPOVÁNÍ CEN: Naplníme ploché ceny, aby se zachovaly i při ukládání z modálu variant
+        if (fullProduct.prices) {
+          fullProduct.price_czk = fullProduct.prices.price_czk_with_vat || 0;
+          fullProduct.cost_price_czk = fullProduct.prices.cost_price_czk || 0;
+          fullProduct.price_eur = fullProduct.prices.price_eur_with_vat || 0;
+          fullProduct.cost_price_eur = fullProduct.prices.cost_price_eur || 0;
+        }
+
         if (fullProduct.variants) {
           fullProduct.variants = fullProduct.variants.map((v: any) => ({
             ...v,
@@ -704,7 +770,15 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       }),
       Core.takeUntil(this.destroy$)
     ).subscribe({
-      next: (fullProduct) => {
+      next: (fullProduct: any) => {
+        // FIX MAPOVÁNÍ CEN: Naplníme ploché ceny, aby se zachovaly i při ukládání z modálu obrázků
+        if (fullProduct.prices) {
+          fullProduct.price_czk = fullProduct.prices.price_czk_with_vat || 0;
+          fullProduct.cost_price_czk = fullProduct.prices.cost_price_czk || 0;
+          fullProduct.price_eur = fullProduct.prices.price_eur_with_vat || 0;
+          fullProduct.cost_price_eur = fullProduct.prices.cost_price_eur || 0;
+        }
+
         this.editingProduct = { ...fullProduct };
         this.showImagesModal = true;
         this.toggleBodyScroll(true);
@@ -771,19 +845,37 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   private validateProduct(): boolean {
     if (!this.editingProduct) return false;
 
-    // Základní validace společná pro formulář i obrázky
     if (!this.editingProduct.name) {
       this.alertDialogService.open('Validace', 'Název je povinný.', 'warning');
       return false;
     }
 
-    // Pokud ukládáme POUZE z modálu obrázků, přeskočíme hluboké validace cen a variant
     if (this.showImagesModal) {
       return true;
     }
 
-    // Pokud produkt nemá žádné aktivní varianty, validujeme ceny na hlavním produktu
     const activeVariants = (this.editingProduct.variants || []).filter((v: any) => !v._delete);
+    
+    // Pokud jsme pouze v modálu variant nebo obrázků, přeskočíme přísnou validaci cen hlavního produktu,
+    // protože ty se v tomto zobrazení neupravují.
+    if (this.showVariantsModal) {
+      for (const variant of activeVariants) {
+        if (!variant.variant_name) {
+          this.alertDialogService.open('Validace', 'Všechny aktivní varianty musí mít název.', 'warning');
+          return false;
+        }
+        if (!variant.price_with_vat_czk || variant.price_with_vat_czk <= 0) {
+          this.alertDialogService.open('Validace', `Varianta "${variant.variant_name}" musí mít cenu v CZK > 0.`, 'warning');
+          return false;
+        }
+        if (!variant.price_with_vat_eur || variant.price_with_vat_eur <= 0) {
+          this.alertDialogService.open('Validace', `Varianta "${variant.variant_name}" musí mít cenu v EUR > 0.`, 'warning');
+          return false;
+        }
+      }
+      return true;
+    }
+
     if (activeVariants.length === 0) {
       if (!this.editingProduct.price_czk || this.editingProduct.price_czk <= 0) {
         this.alertDialogService.open('Validace', 'Cena v CZK musí být > 0.', 'warning');
@@ -791,11 +883,10 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       }
 
       if (!this.editingProduct.price_eur || this.editingProduct.price_eur <= 0) {
-        this.alertDialogService.open('Validace', 'Cena v EUR musí být > 0.', 'warning');
+        this.alertDialogService.open('Validace', 'Cena v EUR mustí být > 0.', 'warning');
         return false;
       }
     } else {
-      // Pokud varianty existují, validujeme zda každá varianta má vyplněné korektní ceny
       for (const variant of activeVariants) {
         if (!variant.variant_name) {
           this.alertDialogService.open('Validace', 'Všechny aktivní varianty musí mít název.', 'warning');

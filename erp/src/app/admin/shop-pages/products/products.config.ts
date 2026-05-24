@@ -66,7 +66,7 @@ export const PRODUCT_FORM_FIELDS: Core.InputDefinition[] = [
     column_name: 'category_id',
     label: 'Kategorie',
     type: 'select',
-    options: [], // Dynamicky se plní z API /shop/categories
+    options: [], 
     required: true,
     errorMessage: 'Vyberte kategorii.',
     editable: true,
@@ -77,18 +77,28 @@ export const PRODUCT_FORM_FIELDS: Core.InputDefinition[] = [
     column_name: 'supplier_id',
     label: 'Dodavatel',
     type: 'select',
-    options: [], // Dynamicky se plní z API /shop/suppliers
+    options: [], 
     required: false,
     editable: true,
     show_in_edit: true,
     show_in_create: true,
   },
   {
-    column_name: 'price',
-    label: 'Základní cena',
+    column_name: 'price_czk', // Odpovídá ngModelu ve formuláři i vlastnosti v komponentě
+    label: 'Cena CZK (s DPH)',
     type: 'number',
     required: true,
-    errorMessage: 'Zadejte cenu.',
+    errorMessage: 'Zadejte cenu v CZK.',
+    editable: true,
+    show_in_edit: true,
+    show_in_create: true,
+  },
+  {
+    column_name: 'price_eur', // Odpovídá ngModelu ve formuláři i vlastnosti v komponentě
+    label: 'Cena EUR (s DPH)',
+    type: 'number',
+    required: true,
+    errorMessage: 'Zadejte cenu v EUR.',
     editable: true,
     show_in_edit: true,
     show_in_create: true,
@@ -129,16 +139,6 @@ export const PRODUCT_FORM_FIELDS: Core.InputDefinition[] = [
   }
 ];
 
-export const PRODUCT_COLUMNS: Core.ColumnDefinition[] = [
-  { key: 'id', header: 'ID', type: 'text' },
-  { key: 'name', header: 'Produkt', type: 'text' },
-  { key: 'sku', header: 'SKU', type: 'text' },
-  { key: 'category.name', header: 'Kategorie', type: 'text' }, // Ověř podporu tečkové notace
-  { key: 'price', header: 'Cena (s DPH)', type: 'currency' }, 
-  { key: 'stock_quantity', header: 'Skladem', type: 'text' },
-  { key: 'is_active', header: 'Aktivní', type: 'boolean' }
-];
-
 export const TRASH_PRODUCT_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'name', header: 'Produkt', type: 'text' },
@@ -155,15 +155,29 @@ export const FILTER_COLUMNS: Core.FilterColumns[] = [
   { key: 'is_active', header: 'Pouze aktivní', type: 'checkbox', canSort: true, placeholder: '' }
 ];
 
+// Sjednoceno na klíče bez přípony _flat, aby lícovaly s formulářem
+export const PRODUCT_COLUMNS: Core.ColumnDefinition[] = [
+  { key: 'id', header: 'ID', type: 'text' },
+  { key: 'name', header: 'Produkt', type: 'text' },
+  { key: 'sku', header: 'SKU', type: 'text' },
+  { key: 'category_name', header: 'Kategorie', type: 'text' }, 
+  { key: 'price_czk', header: 'Cena CZK (s DPH)', type: 'currency' }, 
+  { key: 'price_eur', header: 'Cena EUR (s DPH)', type: 'currency' }, 
+  { key: 'stock_quantity', header: 'Skladem', type: 'text' },
+  { key: 'is_active', header: 'Aktivní', type: 'boolean' }
+];
+
+// Sjednoceno na klíče bez přípony _flat
 export const PRODUCT_DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID produktu', type: 'text' },
   { key: 'name', displayName: 'Název', type: 'text' },
   { key: 'slug', displayName: 'Slug (URL)', type: 'text' },
   { key: 'sku', displayName: 'SKU kód', type: 'text' },
-  { key: 'category.name', displayName: 'Kategorie', type: 'text' },
-  { key: 'supplier.name', displayName: 'Dodavatel', type: 'text' },
-  { key: 'price', displayName: 'Základní cena', type: 'currency' }, // Opraveno z 'text' na 'currency'
-  { key: 'stock_quantity', displayName: 'Celkový sklad', type: 'text' }, // Opraveno z 'text' na 'number'
+  { key: 'category_name', displayName: 'Kategorie', type: 'text' },
+  { key: 'supplier_name', displayName: 'Dodavatel', type: 'text' },
+  { key: 'price_czk', displayName: 'Cena CZK (s DPH)', type: 'text' },
+  { key: 'price_eur', displayName: 'Cena EUR (s DPH)', type: 'text' },
+  { key: 'stock_quantity', displayName: 'Celkový sklad', type: 'text' },
   { key: 'description', displayName: 'Popis', type: 'text' },
   { key: 'is_active', displayName: 'Stav aktivace', type: 'boolean' },
   { key: 'is_featured', displayName: 'Doporučený produkt', type: 'boolean' },
