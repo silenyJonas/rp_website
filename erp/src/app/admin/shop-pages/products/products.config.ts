@@ -84,7 +84,7 @@ export const PRODUCT_FORM_FIELDS: Core.InputDefinition[] = [
     show_in_create: true,
   },
   {
-    column_name: 'price_czk', // Odpovídá ngModelu ve formuláři i vlastnosti v komponentě
+    column_name: 'price_czk',
     label: 'Cena CZK (s DPH)',
     type: 'number',
     required: true,
@@ -94,11 +94,21 @@ export const PRODUCT_FORM_FIELDS: Core.InputDefinition[] = [
     show_in_create: true,
   },
   {
-    column_name: 'price_eur', // Odpovídá ngModelu ve formuláři i vlastnosti v komponentě
+    column_name: 'price_eur',
     label: 'Cena EUR (s DPH)',
     type: 'number',
     required: true,
     errorMessage: 'Zadejte cenu v EUR.',
+    editable: true,
+    show_in_edit: true,
+    show_in_create: true,
+  },
+  {
+    column_name: 'price_usd',
+    label: 'Cena USD (s DPH)',
+    type: 'number',
+    required: true,
+    errorMessage: 'Zadejte cenu v USD.',
     editable: true,
     show_in_edit: true,
     show_in_create: true,
@@ -155,19 +165,20 @@ export const FILTER_COLUMNS: Core.FilterColumns[] = [
   { key: 'is_active', header: 'Pouze aktivní', type: 'checkbox', canSort: true, placeholder: '' }
 ];
 
-// Sjednoceno na klíče bez přípony _flat, aby lícovaly s formulářem
+// Sjednoceno s USD
 export const PRODUCT_COLUMNS: Core.ColumnDefinition[] = [
   { key: 'id', header: 'ID', type: 'text' },
   { key: 'name', header: 'Produkt', type: 'text' },
   { key: 'sku', header: 'SKU', type: 'text' },
   { key: 'category_name', header: 'Kategorie', type: 'text' }, 
-  { key: 'price_czk', header: 'Cena CZK (s DPH)', type: 'currency' }, 
-  { key: 'price_eur', header: 'Cena EUR (s DPH)', type: 'currency' }, 
+  { key: 'price_czk', header: 'Cena CZK', type: 'currency' }, 
+  { key: 'price_eur', header: 'Cena EUR', type: 'currency' }, 
+  { key: 'price_usd', header: 'Cena USD', type: 'currency' }, 
   { key: 'stock_quantity', header: 'Skladem', type: 'text' },
   { key: 'is_active', header: 'Aktivní', type: 'boolean' }
 ];
 
-// Sjednoceno na klíče bez přípony _flat
+// Sjednoceno s USD
 export const PRODUCT_DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'id', displayName: 'ID produktu', type: 'text' },
   { key: 'name', displayName: 'Název', type: 'text' },
@@ -177,6 +188,7 @@ export const PRODUCT_DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'supplier_name', displayName: 'Dodavatel', type: 'text' },
   { key: 'price_czk', displayName: 'Cena CZK (s DPH)', type: 'text' },
   { key: 'price_eur', displayName: 'Cena EUR (s DPH)', type: 'text' },
+  { key: 'price_usd', displayName: 'Cena USD (s DPH)', type: 'text' },
   { key: 'stock_quantity', displayName: 'Celkový sklad', type: 'text' },
   { key: 'description', displayName: 'Popis', type: 'text' },
   { key: 'is_active', displayName: 'Stav aktivace', type: 'boolean' },

@@ -122,6 +122,10 @@
               <label>Cena EUR:</label>
               <span class="price">{{ formatCurrency(selectedProductForDetail.price_eur || 0, 'EUR') }}</span>
             </div>
+            <div class="info-row">
+              <label>Cena USD:</label>
+              <span class="price">{{ formatCurrency(selectedProductForDetail.price_usd || 0, 'USD') }}</span>
+            </div>
           </div>
         </div>
 
@@ -161,6 +165,10 @@
                 <div class="row">
                   <div class="label">EUR (s DPH / bez):</div>
                   <div><strong>{{ formatCurrency(v.price_with_vat_eur || 0, 'EUR') }}</strong> / {{ formatCurrency(v.price_without_vat_eur || 0, 'EUR') }}</div>
+                </div>
+                <div class="row">
+                  <div class="label">USD (s DPH / bez):</div>
+                  <div><strong>{{ formatCurrency(v.price_with_vat_usd || 0, 'USD') }}</strong> / {{ formatCurrency(v.price_without_vat_usd || 0, 'USD') }}</div>
                 </div>
                 <div class="row">
                   <div class="label">Sazba DPH:</div>
@@ -282,17 +290,18 @@
             </div>
           </fieldset>
 
-          <!-- POUZE CZK A EUR VYPSANÉ V MŘÍŽCE -->
+          <!-- CENÍK S CZK, EUR A USD -->
           <fieldset>
-            <legend>Ceník produktu (CZK a EUR)</legend>
+            <legend>Ceník produktu (CZK, EUR a USD)</legend>
             
             <div class="multi-currency-grid">
               <!-- CZK -->
               <div class="currency-row-inputs">
                 <span class="currency-indicator-label">CZK (Kč)</span>
                 <div class="form-group">
-                  <label>Prodejní cena</label>
-                  <input type="number" [(ngModel)]="editingProduct.price_czk" name="price_czk" min="0" step="0.01">
+                  <label>Prodejní cena (s DPH)</label>
+                  <input type="number" [(ngModel)]="editingProduct.price_czk" name="price_czk" min="0" step="0.01" 
+                         (change)="onMainPriceWithVATChange()">
                 </div>
                 <div class="form-group">
                   <label>Nákupní cena</label>
@@ -304,12 +313,27 @@
               <div class="currency-row-inputs">
                 <span class="currency-indicator-label">EUR (€)</span>
                 <div class="form-group">
-                  <label>Prodejní cena</label>
-                  <input type="number" [(ngModel)]="editingProduct.price_eur" name="price_eur" min="0" step="0.01">
+                  <label>Prodejní cena (s DPH)</label>
+                  <input type="number" [(ngModel)]="editingProduct.price_eur" name="price_eur" min="0" step="0.01"
+                         (change)="onMainPriceWithVATChange()">
                 </div>
                 <div class="form-group">
                   <label>Nákupní cena</label>
                   <input type="number" [(ngModel)]="editingProduct.cost_price_eur" name="cost_price_eur" min="0" step="0.01">
+                </div>
+              </div>
+
+              <!-- USD -->
+              <div class="currency-row-inputs">
+                <span class="currency-indicator-label">USD ($)</span>
+                <div class="form-group">
+                  <label>Prodejní cena (s DPH)</label>
+                  <input type="number" [(ngModel)]="editingProduct.price_usd" name="price_usd" min="0" step="0.01"
+                         (change)="onMainPriceWithVATChange()">
+                </div>
+                <div class="form-group">
+                  <label>Nákupní cena</label>
+                  <input type="number" [(ngModel)]="editingProduct.cost_price_usd" name="cost_price_usd" min="0" step="0.01">
                 </div>
               </div>
             </div>
@@ -408,13 +432,14 @@
               <input type="text" [(ngModel)]="variant.sku_variant" placeholder="SKU-BLK-M" [disabled]="!!variant._delete">
             </div>
 
-            <!-- POUZE CZK A EUR PRO VARIANTU -->
+            <!-- CENY & DPH PRO VARIANTU (CZK, EUR, USD) -->
             <div class="vat-calculator">
-              <h4>💰 Ceny & DPH varianty (CZK a EUR)</h4>
+              <h4>💰 Ceny & DPH varianty</h4>
               
               <div class="form-group" style="margin-bottom: 15px; max-width: 200px;">
-                <label>DPH (%) společné pro měny</label>
-                <input type="number" [(ngModel)]="variant.vat_rate" placeholder="21" min="0" max="100" [disabled]="!!variant._delete">
+                <label>DPH (%) společné pro všechny měny</label>
+                <input type="number" [(ngModel)]="variant.vat_rate" placeholder="21" min="0" max="100" 
+                       [disabled]="!!variant._delete" (change)="onVATRateChange(variant)">
               </div>
 
               <div class="multi-currency-variant-paths">
@@ -423,11 +448,13 @@
                   <span class="currency-badge-static">CZK</span>
                   <div class="form-group">
                     <label>S DPH</label>
-                    <input type="number" [(ngModel)]="variant.price_with_vat_czk" placeholder="0" step="0.01" [disabled]="!!variant._delete">
+                    <input type="number" [(ngModel)]="variant.price_with_vat_czk" placeholder="0" step="0.01" 
+                           [disabled]="!!variant._delete" (change)="onPriceWithVATChange(variant)">
                   </div>
                   <div class="form-group">
-                    <label>Bez DPH</label>
-                    <input type="number" [(ngModel)]="variant.price_without_vat_czk" placeholder="0" step="0.01" [disabled]="!!variant._delete">
+                    <label>Bez DPH <span class="hint">(automaticky)</span></label>
+                    <input type="number" [(ngModel)]="variant.price_without_vat_czk" placeholder="0" step="0.01" 
+                           [disabled]="true" class="auto-calculated">
                   </div>
                 </div>
 
@@ -436,11 +463,28 @@
                   <span class="currency-badge-static">EUR</span>
                   <div class="form-group">
                     <label>S DPH</label>
-                    <input type="number" [(ngModel)]="variant.price_with_vat_eur" placeholder="0" step="0.01" [disabled]="!!variant._delete">
+                    <input type="number" [(ngModel)]="variant.price_with_vat_eur" placeholder="0" step="0.01" 
+                           [disabled]="!!variant._delete" (change)="onPriceWithVATChange(variant)">
                   </div>
                   <div class="form-group">
-                    <label>Bez DPH</label>
-                    <input type="number" [(ngModel)]="variant.price_without_vat_eur" placeholder="0" step="0.01" [disabled]="!!variant._delete">
+                    <label>Bez DPH <span class="hint">(automaticky)</span></label>
+                    <input type="number" [(ngModel)]="variant.price_without_vat_eur" placeholder="0" step="0.01" 
+                           [disabled]="true" class="auto-calculated">
+                  </div>
+                </div>
+
+                <!-- USD VARIANT -->
+                <div class="variant-currency-row">
+                  <span class="currency-badge-static">USD</span>
+                  <div class="form-group">
+                    <label>S DPH</label>
+                    <input type="number" [(ngModel)]="variant.price_with_vat_usd" placeholder="0" step="0.01" 
+                           [disabled]="!!variant._delete" (change)="onPriceWithVATChange(variant)">
+                  </div>
+                  <div class="form-group">
+                    <label>Bez DPH <span class="hint">(automaticky)</span></label>
+                    <input type="number" [(ngModel)]="variant.price_without_vat_usd" placeholder="0" step="0.01" 
+                           [disabled]="true" class="auto-calculated">
                   </div>
                 </div>
               </div>

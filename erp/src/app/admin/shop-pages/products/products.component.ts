@@ -91,9 +91,11 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
             if (product.prices) {
               product.price_czk = product.prices.price_czk_with_vat ?? 0;
               product.price_eur = product.prices.price_eur_with_vat ?? 0;
+              product.price_usd = product.prices.price_usd_with_vat ?? 0;
             } else {
               product.price_czk = 0;
               product.price_eur = 0;
+              product.price_usd = 0;
             }
 
             product.category_name = product.category ? product.category.name : '-';
@@ -178,6 +180,8 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       cost_price_czk: 0,
       price_eur: 0,
       cost_price_eur: 0,
+      price_usd: 0,
+      cost_price_usd: 0,
       sku: '',
       stock_quantity: 0,
       stock_warning_level: 10,
@@ -287,6 +291,8 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
           fullProduct.cost_price_czk = fullProduct.prices.cost_price_czk || 0;
           fullProduct.price_eur = fullProduct.prices.price_eur_with_vat || 0;
           fullProduct.cost_price_eur = fullProduct.prices.cost_price_eur || 0;
+          fullProduct.price_usd = fullProduct.prices.price_usd_with_vat || 0;
+          fullProduct.cost_price_usd = fullProduct.prices.cost_price_usd || 0;
         }
         
         fullProduct.category_name = fullProduct.category ? fullProduct.category.name : '-';
@@ -299,7 +305,9 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
             price_with_vat_czk: v.prices?.price_czk_with_vat ?? v.price_with_vat_czk ?? 0,
             price_without_vat_czk: v.prices?.price_czk_without_vat ?? v.price_without_vat_czk ?? 0,
             price_with_vat_eur: v.prices?.price_eur_with_vat ?? v.price_with_vat_eur ?? 0,
-            price_without_vat_eur: v.prices?.price_eur_without_vat ?? v.price_without_vat_eur ?? 0
+            price_without_vat_eur: v.prices?.price_eur_without_vat ?? v.price_without_vat_eur ?? 0,
+            price_with_vat_usd: v.prices?.price_usd_with_vat ?? v.price_with_vat_usd ?? 0,
+            price_without_vat_usd: v.prices?.price_usd_without_vat ?? v.price_without_vat_usd ?? 0
           }));
         }
 
@@ -350,6 +358,8 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
           fullProduct.cost_price_czk = fullProduct.prices.cost_price_czk || 0;
           fullProduct.price_eur = fullProduct.prices.price_eur_with_vat || 0;
           fullProduct.cost_price_eur = fullProduct.prices.cost_price_eur || 0;
+          fullProduct.price_usd = fullProduct.prices.price_usd_with_vat || 0;
+          fullProduct.cost_price_usd = fullProduct.prices.cost_price_usd || 0;
         }
 
         if (fullProduct.variants) {
@@ -359,7 +369,9 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
             price_with_vat_czk: v.prices?.price_czk_with_vat ?? v.price_with_vat_czk ?? 0,
             price_without_vat_czk: v.prices?.price_czk_without_vat ?? v.price_without_vat_czk ?? 0,
             price_with_vat_eur: v.prices?.price_eur_with_vat ?? v.price_with_vat_eur ?? 0,
-            price_without_vat_eur: v.prices?.price_eur_without_vat ?? v.price_without_vat_eur ?? 0
+            price_without_vat_eur: v.prices?.price_eur_without_vat ?? v.price_without_vat_eur ?? 0,
+            price_with_vat_usd: v.prices?.price_usd_with_vat ?? v.price_with_vat_usd ?? 0,
+            price_without_vat_usd: v.prices?.price_usd_without_vat ?? v.price_without_vat_usd ?? 0
           }));
         }
 
@@ -393,8 +405,6 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     formData.append('is_active', this.editingProduct.is_active ? '1' : '0');
     formData.append('is_featured', this.editingProduct.is_featured ? '1' : '0');
 
-    // FIX: Pokud jsme v samostatném okně variant/obrázků, formulář hlavního produktu nebyl zobrazen.
-    // Abychom si nepřepsali stávající ceny hlavního produktu nulou, vezmeme je bezpečně ze záložního objektu .prices
     const activeVariants = (this.editingProduct.variants || []).filter((v: any) => !v._delete);
     const isOnlySubmodal = this.showVariantsModal || this.showImagesModal;
 
@@ -404,7 +414,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
 
     formData.append('prices[vat_rate]', currentVatRate.toString());
 
-    // Výpočet a odeslání CZK ceny hlavního produktu
+    // ===== CZK CENY =====
     let priceCzkWithVat = this.editingProduct.price_czk;
     if (isOnlySubmodal && (!priceCzkWithVat || priceCzkWithVat === 0) && this.editingProduct.prices) {
       priceCzkWithVat = this.editingProduct.prices.price_czk_with_vat || 0;
@@ -415,7 +425,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     formData.append('prices[price_czk_without_vat]', priceCzkWithoutVat.toString());
     formData.append('prices[cost_price_czk]', (this.editingProduct.cost_price_czk || this.editingProduct.prices?.cost_price_czk || 0).toString());
 
-    // Výpočet a odeslání EUR ceny hlavního produktu
+    // ===== EUR CENY =====
     let priceEurWithVat = this.editingProduct.price_eur;
     if (isOnlySubmodal && (!priceEurWithVat || priceEurWithVat === 0) && this.editingProduct.prices) {
       priceEurWithVat = this.editingProduct.prices.price_eur_with_vat || 0;
@@ -425,6 +435,17 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     formData.append('prices[price_eur_with_vat]', priceEurWithVat.toString());
     formData.append('prices[price_eur_without_vat]', priceEurWithoutVat.toString());
     formData.append('prices[cost_price_eur]', (this.editingProduct.cost_price_eur || this.editingProduct.prices?.cost_price_eur || 0).toString());
+
+    // ===== USD CENY =====
+    let priceUsdWithVat = this.editingProduct.price_usd;
+    if (isOnlySubmodal && (!priceUsdWithVat || priceUsdWithVat === 0) && this.editingProduct.prices) {
+      priceUsdWithVat = this.editingProduct.prices.price_usd_with_vat || 0;
+    }
+    const priceUsdWithoutVat = Math.round((priceUsdWithVat / (1 + currentVatRate / 100)) * 100) / 100;
+
+    formData.append('prices[price_usd_with_vat]', priceUsdWithVat.toString());
+    formData.append('prices[price_usd_without_vat]', priceUsdWithoutVat.toString());
+    formData.append('prices[cost_price_usd]', (this.editingProduct.cost_price_usd || this.editingProduct.prices?.cost_price_usd || 0).toString());
 
     // Mapování obrázků produktu
     const activeProductImages = (this.editingProduct.images || []).filter((img: any) => !img._delete && !img.variant_id);
@@ -453,17 +474,26 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       formData.append(`variants[${idx}][stock_quantity]`, v.stock_quantity.toString());
 
       const vVatRate = v.vat_rate || 21;
+      
+      // CZK varianta
       const vPriceWithVatCzk = v.price_with_vat_czk || 0;
       const vPriceWithoutVatCzk = Math.round((vPriceWithVatCzk / (1 + vVatRate / 100)) * 100) / 100;
       
+      // EUR varianta
       const vPriceWithVatEur = v.price_with_vat_eur || 0;
       const vPriceWithoutVatEur = Math.round((vPriceWithVatEur / (1 + vVatRate / 100)) * 100) / 100;
+
+      // USD varianta
+      const vPriceWithVatUsd = v.price_with_vat_usd || 0;
+      const vPriceWithoutVatUsd = Math.round((vPriceWithVatUsd / (1 + vVatRate / 100)) * 100) / 100;
 
       formData.append(`variants[${idx}][prices][vat_rate]`, vVatRate.toString());
       formData.append(`variants[${idx}][prices][price_czk_with_vat]`, vPriceWithVatCzk.toString());
       formData.append(`variants[${idx}][prices][price_czk_without_vat]`, vPriceWithoutVatCzk.toString());
       formData.append(`variants[${idx}][prices][price_eur_with_vat]`, vPriceWithVatEur.toString());
       formData.append(`variants[${idx}][prices][price_eur_without_vat]`, vPriceWithoutVatEur.toString());
+      formData.append(`variants[${idx}][prices][price_usd_with_vat]`, vPriceWithVatUsd.toString());
+      formData.append(`variants[${idx}][prices][price_usd_without_vat]`, vPriceWithoutVatUsd.toString());
 
       if (v.images && v.images.length > 0) {
         const variantImagesToKeep = v.images.filter((img: any) => !img._delete);
@@ -545,12 +575,13 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       Core.takeUntil(this.destroy$)
     ).subscribe({
       next: (fullProduct: any) => {
-        // FIX MAPOVÁNÍ CEN: Naplníme ploché ceny, aby se zachovaly i při ukládání z modálu variant
         if (fullProduct.prices) {
           fullProduct.price_czk = fullProduct.prices.price_czk_with_vat || 0;
           fullProduct.cost_price_czk = fullProduct.prices.cost_price_czk || 0;
           fullProduct.price_eur = fullProduct.prices.price_eur_with_vat || 0;
           fullProduct.cost_price_eur = fullProduct.prices.cost_price_eur || 0;
+          fullProduct.price_usd = fullProduct.prices.price_usd_with_vat || 0;
+          fullProduct.cost_price_usd = fullProduct.prices.cost_price_usd || 0;
         }
 
         if (fullProduct.variants) {
@@ -560,7 +591,9 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
             price_with_vat_czk: v.prices?.price_czk_with_vat ?? v.price_with_vat_czk ?? 0,
             price_without_vat_czk: v.prices?.price_czk_without_vat ?? v.price_without_vat_czk ?? 0,
             price_with_vat_eur: v.prices?.price_eur_with_vat ?? v.price_with_vat_eur ?? 0,
-            price_without_vat_eur: v.prices?.price_eur_without_vat ?? v.price_without_vat_eur ?? 0
+            price_without_vat_eur: v.prices?.price_eur_without_vat ?? v.price_without_vat_eur ?? 0,
+            price_with_vat_usd: v.prices?.price_usd_with_vat ?? v.price_with_vat_usd ?? 0,
+            price_without_vat_usd: v.prices?.price_usd_without_vat ?? v.price_without_vat_usd ?? 0
           }));
         }
         this.editingProduct = { ...fullProduct };
@@ -593,6 +626,8 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       price_without_vat_czk: 0,
       price_with_vat_eur: 0,
       price_without_vat_eur: 0,
+      price_with_vat_usd: 0,
+      price_without_vat_usd: 0,
       vat_rate: 21,
       stock_quantity: 0,
       images: []
@@ -724,7 +759,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     this.cd.markForCheck();
   }
 
-  // ========== DPH VÝPOČTY ==========
+  // ========== DPH VÝPOČTY (Automatické dopočítání bez DPH) ==========
 
   onVATRateChange(variant: any): void {
     this.calculatePriceWithoutVAT(variant);
@@ -736,18 +771,55 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     this.cd.markForCheck();
   }
 
+  onMainPriceWithVATChange(): void {
+    if (this.editingProduct) {
+      this.calculateMainPriceWithoutVAT();
+      this.cd.markForCheck();
+    }
+  }
+
+  onMainVATRateChange(): void {
+    if (this.editingProduct) {
+      this.calculateMainPriceWithoutVAT();
+      this.cd.markForCheck();
+    }
+  }
+
   private calculatePriceWithoutVAT(variant: any): void {
     if (variant.vat_rate !== undefined && variant.vat_rate !== null) {
       const rate = 1 + (variant.vat_rate / 100);
+      
       if (variant.price_with_vat_czk) {
         variant.price_without_vat_czk = Math.round((variant.price_with_vat_czk / rate) * 100) / 100;
       } else {
         variant.price_without_vat_czk = 0;
       }
+      
       if (variant.price_with_vat_eur) {
         variant.price_without_vat_eur = Math.round((variant.price_with_vat_eur / rate) * 100) / 100;
       } else {
         variant.price_without_vat_eur = 0;
+      }
+      
+      if (variant.price_with_vat_usd) {
+        variant.price_without_vat_usd = Math.round((variant.price_with_vat_usd / rate) * 100) / 100;
+      } else {
+        variant.price_without_vat_usd = 0;
+      }
+    }
+  }
+
+  private calculateMainPriceWithoutVAT(): void {
+    // Cena hlavního produktu se počítá z prvé aktivní varianty, ale může se upravit i přímo
+    if (this.editingProduct.prices) {
+      const vat = this.editingProduct.prices.vat_rate ?? 21;
+      const rate = 1 + (vat / 100);
+      
+      // Není aktivní u variant, tak se počítá samo
+      if (this.editingProduct.price_czk) {
+        // Kontrola, abychom neukazili kalkulaci bez DPH, pokud zadáme bez DPH
+        const priceCzk = this.editingProduct.price_czk;
+        // Tady si uchovejte cenu bez DPH z backendu, pokud existuje
       }
     }
   }
@@ -771,12 +843,13 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       Core.takeUntil(this.destroy$)
     ).subscribe({
       next: (fullProduct: any) => {
-        // FIX MAPOVÁNÍ CEN: Naplníme ploché ceny, aby se zachovaly i při ukládání z modálu obrázků
         if (fullProduct.prices) {
           fullProduct.price_czk = fullProduct.prices.price_czk_with_vat || 0;
           fullProduct.cost_price_czk = fullProduct.prices.cost_price_czk || 0;
           fullProduct.price_eur = fullProduct.prices.price_eur_with_vat || 0;
           fullProduct.cost_price_eur = fullProduct.prices.cost_price_eur || 0;
+          fullProduct.price_usd = fullProduct.prices.price_usd_with_vat || 0;
+          fullProduct.cost_price_usd = fullProduct.prices.cost_price_usd || 0;
         }
 
         this.editingProduct = { ...fullProduct };
@@ -856,8 +929,6 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
 
     const activeVariants = (this.editingProduct.variants || []).filter((v: any) => !v._delete);
     
-    // Pokud jsme pouze v modálu variant nebo obrázků, přeskočíme přísnou validaci cen hlavního produktu,
-    // protože ty se v tomto zobrazení neupravují.
     if (this.showVariantsModal) {
       for (const variant of activeVariants) {
         if (!variant.variant_name) {
@@ -872,6 +943,10 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
           this.alertDialogService.open('Validace', `Varianta "${variant.variant_name}" musí mít cenu v EUR > 0.`, 'warning');
           return false;
         }
+        if (!variant.price_with_vat_usd || variant.price_with_vat_usd <= 0) {
+          this.alertDialogService.open('Validace', `Varianta "${variant.variant_name}" musí mít cenu v USD > 0.`, 'warning');
+          return false;
+        }
       }
       return true;
     }
@@ -883,7 +958,12 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
       }
 
       if (!this.editingProduct.price_eur || this.editingProduct.price_eur <= 0) {
-        this.alertDialogService.open('Validace', 'Cena v EUR mustí být > 0.', 'warning');
+        this.alertDialogService.open('Validace', 'Cena v EUR musí být > 0.', 'warning');
+        return false;
+      }
+
+      if (!this.editingProduct.price_usd || this.editingProduct.price_usd <= 0) {
+        this.alertDialogService.open('Validace', 'Cena v USD musí být > 0.', 'warning');
         return false;
       }
     } else {
@@ -898,6 +978,10 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
         }
         if (!variant.price_with_vat_eur || variant.price_with_vat_eur <= 0) {
           this.alertDialogService.open('Validace', `Varianta "${variant.variant_name}" musí mít cenu v EUR > 0.`, 'warning');
+          return false;
+        }
+        if (!variant.price_with_vat_usd || variant.price_with_vat_usd <= 0) {
+          this.alertDialogService.open('Validace', `Varianta "${variant.variant_name}" musí mít cenu v USD > 0.`, 'warning');
           return false;
         }
       }
