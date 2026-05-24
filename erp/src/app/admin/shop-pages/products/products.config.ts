@@ -23,7 +23,7 @@ export const TOOLBAR_BUTTONS: Core.Button[] = [
     showIf: true
   },
   {
-    action: 'toggleTable',
+    action: 'toggleTrash',
     label: 'Koš',
     icon: '🗑️',
     class: 'btn-trash',

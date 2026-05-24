@@ -36,6 +36,8 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   editingVariantIdx: number | null = null;
   editingVariantImages: ProductImage[] = [];
 
+  // 1. PŘIDEJ PROSTŘEDNÍK PRO DATA KOŠE DO KLASY (k ostatním show... proměnným)
+  override trashData: Product[] = [];
   private isProcessing = false;
 
   filters: Core.FilterParams = {
@@ -75,7 +77,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   }
 
   // ========== ASYNCHRONNÍ TRANSFORMACE DAT PRO PLOCHÉ KLÍČE TABULKY ==========
-  override fetchPaginatedData(
+override fetchPaginatedData(
     isTrash: boolean, 
     page: number, 
     perPage: number, 
@@ -84,18 +86,16 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     
     return super.fetchPaginatedData(isTrash, page, perPage, filters).pipe(
       Core.map((response: Core.PaginatedResponse<Product>) => {
-        if (!isTrash && response && response.data) {
+        if (response && response.data) {
           response.data = response.data.map((product: any) => {
             
             // Bezpečné mapování cen na sjednocené ploché klíče bez _flat
             if (product.prices) {
               product.price_czk = product.prices.price_czk_with_vat ?? 0;
               product.price_eur = product.prices.price_eur_with_vat ?? 0;
-              product.price_usd = product.prices.price_usd_with_vat ?? 0;
             } else {
               product.price_czk = 0;
               product.price_eur = 0;
-              product.price_usd = 0;
             }
 
             product.category_name = product.category ? product.category.name : '-';
@@ -104,7 +104,12 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
             return product;
           });
 
-          this.data = response.data;
+          // FIX: Rozdělení kam se data uloží podle toho, zda načítáme koš nebo aktivní data
+          if (isTrash) {
+            this.trashData = response.data;
+          } else {
+            this.data = response.data;
+          }
         }
         return response;
       }),
@@ -125,9 +130,11 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
   // ========== TOOLBAR ACTIONS ==========
 
   handleToolbarAction(action: string): void {
+console.log('Kliknuto na akci z toolbaru:', action);
     if (this.isProcessing) return;
     
     const actions: { [key: string]: () => void } = {
+      
       toggleFilters: () => this.toggleFilters(),
       handleCreateFormOpened: () => this.handleCreateFormOpened(),
       toggleTrash: () => this.toggleTrash(),
@@ -157,7 +164,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     this.cd.markForCheck();
   }
 
-  toggleTrash(): void {
+toggleTrash(): void {
     this.showTrashTable = !this.showTrashTable;
     if (this.showTrashTable) {
       const trashFilters = { ...this.filters, only_trashed: 'true' };
@@ -165,6 +172,7 @@ export class ProductsComponent extends BaseDataComponent<Product> implements OnI
     } else {
       this.refreshData();
     }
+    this.cd.markForCheck(); // Zajistí, že Angular ihned zareaguje na změnu showTrashTable
   }
 
   handleCreateFormOpened(): void {
