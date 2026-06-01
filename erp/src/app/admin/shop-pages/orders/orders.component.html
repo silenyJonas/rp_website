@@ -1,9 +1,7 @@
 <div class="orders-container">
-  <!-- Error Banner -->
   <div *ngIf="errorMessage" class="error-banner">⚠️ {{ errorMessage }}</div>
 
   <div *ngIf="!errorMessage">
-    <!-- TOOLBAR -->
     <div class="toolbar-section">
       <div class="toolbar-header">
         <h1>Objednávky</h1>
@@ -16,31 +14,14 @@
       </div>
     </div>
 
-    <!-- PŘIDÁNO: PŘEPÍNAČ REŽIMŮ (TABY) -->
-    <div class="table-mode-tabs">
-      <button 
-        class="tab-btn" 
-        [class.active]="currentMode === 'all'" 
-        (click)="setTableMode('all')">
-        📦 Všechny objednávky
-      </button>
-      <button 
-        class="tab-btn" 
-        [class.active]="currentMode === 'pending_tasks'" 
-        (click)="setTableMode('pending_tasks')">
-        ⏳ K vyřízení
-      </button>
-      <button 
-        class="tab-btn" 
-        [class.active]="currentMode === 'trash'" 
-        (click)="setTableMode('trash')">
-        🗑️ Koš
-      </button>
-    </div>
+<div class="table-mode-tabs">
+  <app-button-builder 
+    [configs]="tabButtonsConfigs" 
+    (actionTriggered)="setTableMode($event)">
+  </app-button-builder>
+</div>
 
-    <!-- MAIN LAYOUT: FILTER + TABLE -->
     <div class="main-content-layout">
-      <!-- FILTER PANEL -->
       <div class="filter-side-panel" [class.active]="showFiltersPanel">
         <app-filter-form-builder
           [filterColumns]="filterColumns"
@@ -51,9 +32,7 @@
         </app-filter-form-builder>
       </div>
 
-      <!-- TABLE CONTAINER -->
       <div class="table-and-pagination-container">
-        <!-- ACTIVE TABLE (Zobrazuje se pro 'all' a 'pending_tasks') -->
         <app-table-builder #activeTable 
           *ngIf="currentMode !== 'trash'"
           [buttons]="buttons"
@@ -69,7 +48,6 @@
           (viewDetailsOpened)="handleViewDetails($event)">
         </app-table-builder>
 
-        <!-- TRASH TABLE (Zobrazuje se jen pro 'trash') -->
         <app-trash-table-builder 
           *ngIf="currentMode === 'trash'"
           [data]="trashData"
@@ -80,7 +58,6 @@
           (itemPermanentlyDeleted)="refreshData()">
         </app-trash-table-builder>
 
-        <!-- PAGINATION -->
         <div class="pagination-container">
           <app-pagination-buttons-builder
             [currentPage]="currentMode === 'trash' ? trashCurrentPage : currentPage"
@@ -97,7 +74,6 @@
   </div>
 </div>
 
-<!-- ============= MODAL: DETAIL OBJEDNÁVKY (ZŮSTÁVÁ STEJNÝ) ============= -->
 <ng-container *ngIf="showDetailsModal && selectedOrderForDetail">
   <div class="modal-overlay" (click)="closeDetailsModal()">
     <div class="modal-content modal-detail" (click)="$event.stopPropagation()">
@@ -107,7 +83,6 @@
       </div>
 
       <div class="modal-body">
-        <!-- Zákazník -->
         <div class="detail-section">
           <h3>Zákazník</h3>
           <div class="info-grid">
@@ -130,7 +105,6 @@
           </div>
         </div>
 
-        <!-- Stav objednávky -->
         <div class="detail-section">
           <h3>Stav objednávky</h3>
           <div class="info-grid">
@@ -157,7 +131,6 @@
           </div>
         </div>
 
-        <!-- Částky -->
         <div class="detail-section">
           <h3>Částky</h3>
           <div class="amount-grid">
@@ -180,7 +153,6 @@
           </div>
         </div>
 
-        <!-- Položky -->
         <div class="detail-section" *ngIf="getVisibleItems(selectedOrderForDetail).length > 0">
           <h3>Položky ({{ getVisibleItems(selectedOrderForDetail).length }})</h3>
           <div class="items-table">
@@ -199,7 +171,6 @@
           </div>
         </div>
 
-        <!-- Adresa dopravy -->
         <div class="detail-section">
           <h3>Adresa doručení</h3>
           <div class="address-box">
@@ -209,13 +180,11 @@
           </div>
         </div>
 
-        <!-- Poznámky -->
         <div class="detail-section" *ngIf="selectedOrderForDetail.notes">
           <h3>Poznámky</h3>
           <p class="notes-text">{{ selectedOrderForDetail.notes }}</p>
         </div>
 
-        <!-- Metadata -->
         <div class="detail-section">
           <h3>Metadata</h3>
           <div class="info-grid">
@@ -247,7 +216,6 @@
   </div>
 </ng-container>
 
-<!-- ============= MODAL: FORM OBJEDNÁVKY (ZŮSTÁVÁ STEJNÝ) ============= -->
 <ng-container *ngIf="showOrderForm && editingOrder">
   <div class="modal-overlay" (click)="closeOrderForm()">
     <div class="modal-content modal-form" (click)="$event.stopPropagation()">
@@ -258,7 +226,6 @@
 
       <div class="modal-body">
         <form class="order-form">
-          <!-- Zákazník a Platba -->
           <fieldset>
             <legend>Základní údaje</legend>
             <div class="form-row-2">
@@ -291,36 +258,32 @@
                   <option *ngFor="let sm of shippingMethods" [value]="sm.id">{{ sm.name }} ({{ formatCurrency(sm.base_price) }})</option>
                 </select>
               </div>
-             <div class="form-group">
-  <label>Slevový kupón</label>
-  
-  <!-- Přidán [disabled] pokud editujeme (máme id objednávky) -->
-  <select [(ngModel)]="editingOrder.coupon_id" 
-          name="coupon_id" 
-          (change)="recalculateTotals()"
-          [ngClass]="getCouponValidationClass()"
-          [disabled]="!!editingOrder.id"
-          class="form-control"
-          [class.disabled-coupon]="editingOrder.id">
-    <option value="">-- Bez kupónu --</option>
-    <option *ngFor="let coup of coupons" [value]="coup.id">
-      {{ coup.code }} ({{ getCouponDisplayValue(coup) }})
-    </option>
-  </select>
+              <div class="form-group">
+                <label>Slevový kupón</label>
+                <select [(ngModel)]="editingOrder.coupon_id" 
+                        name="coupon_id" 
+                        (change)="recalculateTotals()"
+                        [ngClass]="getCouponValidationClass()"
+                        [disabled]="!!editingOrder.id"
+                        class="form-control"
+                        [class.disabled-coupon]="editingOrder.id">
+                  <option value="">-- Bez kupónu --</option>
+                  <option *ngFor="let coup of coupons" [value]="coup.id">
+                    {{ coup.code }} ({{ getCouponDisplayValue(coup) }})
+                  </option>
+                </select>
 
-  <!-- Info hláška pro administrátora -->
-  <div *ngIf="editingOrder.id && editingOrder.coupon_id" class="text-muted small mt-1">
-    ℹ️ Kupón u existující objednávky již nelze měnit.
-  </div>
+                <div *ngIf="editingOrder.id && editingOrder.coupon_id" class="text-muted small mt-1">
+                  ℹ️ Kupón u existující objednávky již nelze měnit.
+                </div>
 
-  <div *ngIf="editingOrder.coupon_id && !couponValidation.valid" class="coupon-error-msg">
-    ⚠️ {{ couponValidation.error }}
-  </div>
-</div>
+                <div *ngIf="editingOrder.coupon_id && !couponValidation.valid" class="coupon-error-msg">
+                  ⚠️ {{ couponValidation.error }}
+                </div>
+              </div>
             </div>
           </fieldset>
 
-          <!-- Stavy -->
           <fieldset>
             <legend>Stavy objednávky</legend>
             <div class="form-row-2">
@@ -339,7 +302,6 @@
             </div>
           </fieldset>
 
-          <!-- Adresa doručení -->
           <fieldset>
             <legend>Adresa doručení</legend>
             <div class="form-group">
@@ -364,7 +326,6 @@
             </div>
           </fieldset>
 
-          <!-- Položky objednávky -->
           <fieldset>
             <legend>Položky objednávky</legend>
             <div *ngIf="getVisibleItems(editingOrder).length === 0" class="empty-state">Žádné položky</div>
@@ -429,7 +390,6 @@
             <button type="button" class="btn btn-secondary" (click)="addOrderItem()">➕ Přidat položku</button>
           </fieldset>
 
-          <!-- Souhrn částek -->
           <fieldset class="summary-section">
             <legend>Souhrn cen</legend>
             <div class="summary-grid">
@@ -473,7 +433,6 @@
             </div>
           </fieldset>
 
-          <!-- Poznámky -->
           <fieldset>
             <legend>Poznámky</legend>
             <div class="form-group">

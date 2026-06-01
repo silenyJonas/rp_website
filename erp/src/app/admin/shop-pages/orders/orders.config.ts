@@ -172,3 +172,9 @@ export const ORDER_DETAILS_COLUMNS: Core.ItemDetailsColumns[] = [
   { key: 'paid_at', displayName: 'Zaplaceno', type: 'date', format: 'medium' },
   { key: 'shipped_at', displayName: 'Odesláno', type: 'date', format: 'medium' },
 ];
+
+export const ORDER_TAB_BUTTONS: Core.Button[] = [
+  { action: 'all', label: 'Všechny objednávky', icon: '📦', class: 'btn-filter', isActive: true },
+  { action: 'pending_tasks', label: 'K vyřízení', icon: '⏳', class: 'btn-filter', isActive: false },
+  { action: 'trash', label: 'Koš', icon: '🗑️', isActive: false, class: 'btn-trash', permission: 'view-deleted' }
+];

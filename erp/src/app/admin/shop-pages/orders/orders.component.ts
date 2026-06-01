@@ -39,6 +39,13 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
   // 2. PŘIDÁNO: Stav aktuálního tabu
   currentMode: TableMode = 'all';
 
+  // Statická konfigurace pro přepínač režimů (taby) splňující Core.Button rozhraní
+  private orderTabButtons: Core.Button[] = [
+    { action: 'all', label: 'Všechny objednávky', icon: '📦', class: 'btn-filter', isActive: true },
+    { action: 'pending_tasks', label: 'K vyřízení', icon: '⏳', class: 'btn-filter', isActive: false },
+    { action: 'trash', label: 'Koš', icon: '🗑️', class: 'btn-filter', isActive: false }
+  ];
+
   // Data
   customers: Customer[] = [];
   products: Product[] = [];
@@ -90,6 +97,14 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
     super(dataHandler, cd, genericTableService);
   }
 
+  // Getter pro transformaci konfigurace tabů s aktuálním stavem aktivity
+  get tabButtonsConfigs(): Core.Button[] {
+    return this.orderTabButtons.map(btn => ({
+      ...btn,
+      isActive: this.currentMode === btn.action
+    }));
+  }
+
   override ngOnInit(): void {
     super.ngOnInit();
     this.initWithAuthCheck(this.router);
@@ -113,7 +128,8 @@ export class OrdersComponent extends BaseDataComponent<Order> implements OnInit,
   // ========== 3. PŘIDÁNO: LOGIKA PŘEPÍNÁNÍ TABŮ ==========
 
   // Upravte metodu setTableMode následovně:
-setTableMode(mode: TableMode): void {
+// Změň parametr z (mode: TableMode) na (mode: any)
+setTableMode(mode: any): void {
   this.currentMode = mode;
   this.currentPage = 1;
   
@@ -131,17 +147,13 @@ setTableMode(mode: TableMode): void {
     delete this.filters['only_trashed'];
     
     if (mode === 'pending_tasks') {
-      // 2. Oprava: Pokud backend očekává pole, pošleme to takto, 
-      // pokud očekává string oddělený čárkou, ponecháme string.
-      // Většina Laravel query builderů bere 'status' jako jeden parametr, 
-      // proto zkusíme poslat konkrétní stavy, které definují "Na vyřízení"
       this.filters['status'] = 'pending,confirmed,processing,shipped';
     }
   }
 
-  // 3. KLÍČOVÉ: Explicitní vynucení refresh a detekce změn (řeší double click)
+  // 3. KLÍČOVÉ: Explicitní vynucení refresh a detekce změn
   this.refreshData();
-  this.cd.detectChanges(); // detectChanges je silnější než markForCheck
+  this.cd.detectChanges();
 }
 
   // ========== LOAD DEPENDENCIES ==========
