@@ -21,7 +21,6 @@ export class PaymentMethodsComponent extends BaseDataComponent<any> implements C
   buttons = Config.PAYMENT_BUTTONS;
   formFields = Config.PAYMENT_FORM_FIELDS;
   columns = Config.PAYMENT_COLUMNS;
-  trashColumns = Config.PAYMENT_TRASH_COLUMNS;
   filterColumns = Config.PAYMENT_FILTER_COLUMNS;
   detailsColumns = Config.PAYMENT_DETAILS_COLUMNS;
 
@@ -53,13 +52,6 @@ export class PaymentMethodsComponent extends BaseDataComponent<any> implements C
           updatedBtn.label = this.isFilterVisible ? 'Skrýt' : 'Filtry';
           updatedBtn.isActive = this.isFilterVisible;
           break;
-        case 'handleCreateFormOpened':
-        case 'exportActiveTable':
-          if (updatedBtn.showIf !== false) updatedBtn.showIf = !this.showTrashTable;
-          break;
-        case 'toggleTable':
-          updatedBtn.label = this.showTrashTable ? 'Aktivní' : 'Koš';
-          break;
       }
       return updatedBtn;
     });
@@ -68,9 +60,7 @@ export class PaymentMethodsComponent extends BaseDataComponent<any> implements C
   handleToolbarAction(action: string): void {
     const actions: { [key: string]: () => void } = {
       toggleFilters: () => this.toggleFilters(),
-      handleCreateFormOpened: () => this.handleCreateFormOpened(),
-      exportActiveTable: () => this.exportActiveTable(),
-      toggleTable: () => this.toggleTable()
+      exportActiveTable: () => this.exportActiveTable()
     };
     if (actions[action]) actions[action]();
   }
@@ -101,22 +91,21 @@ export class PaymentMethodsComponent extends BaseDataComponent<any> implements C
     if (this.activeTable) this.activeTable.exportToCSV();
   }
 
-  handleCreateFormOpened(): void {
-    this.selectedItemForEdit = null;
-    this.showCreateForm = true;
-  }
-
   handleEditFormOpened(item: any): void {
     this.selectedItemForEdit = { ...item };
     this.showCreateForm = true;
   }
 
   handleFormSubmitted(formData: any): void {
-    const request$ = formData.id ? this.updateData(formData.id, formData) : this.postData(formData);
-    request$.pipe(Core.finalize(() => { this.showCreateForm = false; this.cd.markForCheck(); })).subscribe({
-      next: () => this.refreshData(),
-      error: (err: any) => this.alertDialogService.open('Chyba', err.error?.message || 'Akce selhala.', 'danger')
-    });
+    if (!formData.id) return;
+    
+    // Použijeme update metodu z BaseDataComponent
+    this.updateData(formData.id, formData)
+      .pipe(Core.finalize(() => { this.showCreateForm = false; this.cd.markForCheck(); }))
+      .subscribe({
+        next: () => this.refreshData(),
+        error: (err: any) => this.alertDialogService.open('Chyba', err.error?.message || 'Aktualizace selhala.', 'danger')
+      });
   }
 
   handleViewDetails(item: any): void {
@@ -129,6 +118,4 @@ export class PaymentMethodsComponent extends BaseDataComponent<any> implements C
 
   handleCloseDetails(): void { this.selectedItemForDetails = null; this.showDetails = false; }
   onCancelForm(): void { this.showCreateForm = false; this.selectedItemForEdit = null; this.cd.markForCheck(); }
-  handleItemRestored(): void { this.refreshData(); }
-  handleItemDeleted(): void { this.refreshData(); }
 }

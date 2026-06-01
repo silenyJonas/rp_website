@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrateg
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LocalizationService } from '../../../../shared/services/localization.service';
+import { PublicDataService } from '../../../../shared/services/public-data.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -31,7 +32,6 @@ export class ShopFooterComponent implements OnInit, OnDestroy {
   footerLegalLinks: FooterNavLink[] = [];
   paymentMethods: PaymentMethod[] = [];
 
-  // Ikony sociálních sítí
   tt_link: string = 'assets/images/icons/tik-tok.png';
   ig_link: string = 'assets/images/icons/ig.png';
 
@@ -39,6 +39,7 @@ export class ShopFooterComponent implements OnInit, OnDestroy {
 
   constructor(
     private localizationService: LocalizationService,
+    private publicDataService: PublicDataService, // 👈 Vstříknutí nové servisy
     private cdr: ChangeDetectorRef
   ) {
     this.currentYear = new Date().getFullYear();
@@ -57,7 +58,7 @@ export class ShopFooterComponent implements OnInit, OnDestroy {
 
           this.loadFooterNavLinks();
           this.loadFooterLegalLinks();
-          this.loadPaymentMethods();
+          this.loadPaymentMethods(); // Načte data přes API
 
           this.cdr.markForCheck();
         }
@@ -65,7 +66,6 @@ export class ShopFooterComponent implements OnInit, OnDestroy {
   }
 
   private loadFooterNavLinks(): void {
-    // Pročištěný seznam – pouze důležité rychlé odkazy
     const navLinkKeys = [
       { route: '/home', key: 'navigation.home', ext: false },
       { route: '/faq', key: 'navigation.faq_full', ext: false }
@@ -79,11 +79,10 @@ export class ShopFooterComponent implements OnInit, OnDestroy {
   }
 
   private loadFooterLegalLinks(): void {
-    // Specifické právní odkazy pro e-shop
     const legalLinkKeys = [
       { route: '/tos', key: 'legal.terms_of_service' },
       { route: '/privacy-policy', key: 'legal.privacy_policy' },
-      { route: '/claims', key: 'legal.claims_policy' } // Přidej si případně do překladů, nebo použije fallback
+      { route: '/claims', key: 'legal.claims_policy' }
     ];
 
     this.footerLegalLinks = legalLinkKeys.map(link => ({
@@ -94,14 +93,19 @@ export class ShopFooterComponent implements OnInit, OnDestroy {
   }
 
   private loadPaymentMethods(): void {
-    // Placeholdery pro ikony platebních metod
-    this.paymentMethods = [
-      { name: 'Visa', icon: 'assets/images/icons/visa.png' },
-      { name: 'Mastercard', icon: 'assets/images/icons/card.png' },
-      { name: 'PayPal', icon: 'assets/images/icons/paypal.png' },
-      { name: 'Apple Pay', icon: 'assets/images/icons/apple-pay.png' },
-      { name: 'Google Pay', icon: 'assets/images/icons/google-pay.png' }
-    ];
+    // Načtení reálných aktivních metod z databáze přes API
+    this.publicDataService.getPaymentMethods()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (methods) => {
+          this.paymentMethods = methods.map(m => ({
+            name: m.name,
+            icon: m.image_url // Laravel API vrátí plnou URL k assetu
+          }));
+          this.cdr.markForCheck(); // Nutné kvůli ChangeDetectionStrategy.OnPush
+        },
+        error: (err) => console.error('Chyba při načítání platebních metod do footeru:', err)
+      });
   }
 
   private getFallbackLegalText(route: string): string {

@@ -29,7 +29,7 @@ class ShopPublicController extends Controller
     }
 
     /**
-     * ZÍSKÁNÍ VEŘEJNÝCH PLATEBNÍCH METOD
+     * ZÍSKÁNÍ VEŘEJNÝCH PLATEBNÍCH METOD (Filtrované a seřazené)
      */
     public function getPaymentMethods(Request $request): JsonResponse
     {
@@ -37,22 +37,20 @@ class ShopPublicController extends Controller
             ->orderBy('sort_order', 'asc')
             ->get();
 
+        // Obalíme data resource třídou, která zajistí správné URL pro frontend
         return response()->json(ShopPaymentMethodResource::collection($methods));
     }
 
     /**
      * RYCHLÉ OVĚŘENÍ DOSTUPNOSTI MNOŽSTVÍ NA SKLADĚ (S CACHE)
-     * Přesunuto z původního CheckoutControlleru pro zachování čisté logiky veřejného API
      */
     public function checkStock(Request $request, $id): JsonResponse
     {
         $variantId = $request->query('variant_id');
         $requestedQuantity = (int)$request->query('quantity');
 
-        // Unikátní klíč cache pro daný produkt / variantu
         $cacheKey = "product_stock_{$id}" . ($variantId ? "_v{$variantId}" : "");
 
-        // Načteme hodnotu z cache, případně z DB na 2 minuty
         $stockQuantity = Cache::remember($cacheKey, now()->addMinutes(2), function () use ($id, $variantId) {
             $product = ShopProduct::find($id);
             if (!$product) return 0;

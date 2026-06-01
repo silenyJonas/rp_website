@@ -9,9 +9,12 @@ class ShopPaymentMethod extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'shop_payment_methods';
+
     protected $fillable = [
         'code',
         'name',
+        'image_path',
         'description',
         'price',
         'provider',
@@ -23,6 +26,7 @@ class ShopPaymentMethod extends Model
         'variable_symbol_type',
         'is_active',
         'sort_order',
+        'config',
     ];
 
     protected $casts = [
@@ -30,5 +34,6 @@ class ShopPaymentMethod extends Model
         'is_external' => 'boolean',
         'price' => 'decimal:2',
         'sort_order' => 'integer',
+        'config' => 'array',
     ];
 }

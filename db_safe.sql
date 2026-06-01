@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 05, 2026 at 05:21 PM
+-- Generation Time: Jun 01, 2026 at 06:48 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -32,6 +32,16 @@ CREATE TABLE `cache` (
   `value` mediumtext NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cache`
+--
+
+INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
+('laravel-cache-5c785c036466adea360111aa28563bfd556b5fba', 'i:1;', 1780331233),
+('laravel-cache-5c785c036466adea360111aa28563bfd556b5fba:timer', 'i:1780331233;', 1780331233),
+('laravel-cache-f6e1126cedebf23e1463aee73f9df08783640400', 'i:2;', 1780332436),
+('laravel-cache-f6e1126cedebf23e1463aee73f9df08783640400:timer', 'i:1780332436;', 1780332436);
 
 -- --------------------------------------------------------
 
@@ -250,7 +260,7 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (87, 'App\\Models\\User', 59, 'access-token', 'c58f7b40a4862562dc033216ec4ba476336d5cc77af42b57e8a6721e0c735545', '[\"*\"]', '2026-02-15 22:41:38', '2026-02-15 23:11:38', '2026-02-15 22:41:38', '2026-02-15 22:41:38'),
 (134, 'App\\Models\\User', 62, 'access-token', '696da6ddfce759f43fcd6c430016ffff654238b4bd746c50642599a4b68a1cd7', '[\"*\"]', '2026-02-18 02:12:13', '2026-02-18 03:12:09', '2026-02-18 02:12:09', '2026-02-18 02:12:13'),
 (172, 'App\\Models\\User', 77, 'access-token', 'f783051fdb88711a863e9ccd4e5176a5a3f2a3606204c816754c3227d07698f8', '[\"*\"]', '2026-02-25 00:08:53', '2026-02-25 00:42:29', '2026-02-24 23:42:29', '2026-02-25 00:08:53'),
-(345, 'App\\Models\\User', 25, 'access-token', '033ec44e78e0463de845adf93f94b548eddac4e88a0a6318aab54f33153686aa', '[\"*\"]', '2026-05-05 15:18:18', '2026-05-05 16:10:48', '2026-05-05 15:10:48', '2026-05-05 15:18:18');
+(353, 'App\\Models\\User', 25, 'access-token', 'd50f1a5d877f99ce91ffee0157c8b79056e3e7da249f6ff0cde24f2ab39ad6da', '[\"*\"]', '2026-06-01 16:46:16', '2026-06-01 17:46:16', '2026-06-01 16:46:16', '2026-06-01 16:46:16');
 
 -- --------------------------------------------------------
 
@@ -272,7 +282,7 @@ CREATE TABLE `refresh_tokens` (
 --
 
 INSERT INTO `refresh_tokens` (`id`, `user_id`, `token`, `expires_at`, `created_at`, `updated_at`) VALUES
-(344, 25, '5ada60c17d2784d9853ee99bd4057aa6aedb2dee4b41f8f2516d2d92cb2c8930', '2026-05-12 15:10:48', '2026-05-05 15:10:48', '2026-05-05 15:10:48');
+(352, 25, 'e48a698bfee252a27ab0c9e475cc48c33ca0fb9e6c10c8a199fa9ee1d3651407', '2026-06-08 16:46:16', '2026-06-01 16:46:16', '2026-06-01 16:46:16');
 
 -- --------------------------------------------------------
 
@@ -307,6 +317,13 @@ CREATE TABLE `shop_categories` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `shop_categories`
+--
+
+INSERT INTO `shop_categories` (`id`, `name`, `slug`, `description`, `parent_id`, `image_path`, `is_active`, `sort_order`, `created_at`, `updated_at`) VALUES
+(52, 'test', 'test', NULL, NULL, NULL, 1, 0, '2026-05-22 12:21:48', '2026-05-22 12:21:52');
 
 -- --------------------------------------------------------
 
@@ -378,6 +395,38 @@ CREATE TABLE `shop_logs` (
   `user_id_plain` varchar(255) DEFAULT NULL,
   `user_plain` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `shop_logs`
+--
+
+INSERT INTO `shop_logs` (`id`, `created_at`, `origin`, `event_type`, `module`, `description`, `affected_entity_type`, `affected_entity_id`, `user_id`, `context_data`, `user_id_plain`, `user_plain`) VALUES
+(1, '2026-05-22 14:21:48', '127.0.0.1', 'create', 'ShopCategory', 'Vytvořena kategorie: test', 'ShopCategory', 52, 25, '\"{\\\"name\\\":\\\"test\\\",\\\"parent_id\\\":null,\\\"is_active\\\":false,\\\"slug\\\":\\\"test\\\"}\"', '25', 'Jonáš Bučina'),
+(2, '2026-05-22 14:21:52', '127.0.0.1', 'update', 'ShopCategory', 'Aktualizace kategorie ID: 52', 'ShopCategory', 52, 25, '\"{\\\"id\\\":52,\\\"name\\\":\\\"test\\\",\\\"slug\\\":\\\"test\\\",\\\"description\\\":null,\\\"parent_id\\\":null,\\\"image_path\\\":null,\\\"is_active\\\":true,\\\"sort_order\\\":0,\\\"products_count\\\":0,\\\"created_at\\\":\\\"2026-05-22T14:21:48+02:00\\\",\\\"updated_at\\\":\\\"2026-05-22T14:21:48+02:00\\\",\\\"parent_name\\\":null,\\\"children\\\":[],\\\"directChildrenCount\\\":0,\\\"totalRecursiveCount\\\":0,\\\"isExpanded\\\":false}\"', '25', 'Jonáš Bučina'),
+(3, '2026-05-22 14:22:07', '127.0.0.1', 'create', 'ShopSupplier', 'Vytvořen dodavatel: Fonetický Express', 'ShopSupplier', 6, 25, '\"{\\\"name\\\":\\\"Fonetick\\u00fd Express\\\",\\\"ico\\\":null,\\\"contact_person\\\":null,\\\"email\\\":null,\\\"phone\\\":null,\\\"address\\\":null,\\\"city\\\":null,\\\"postal_code\\\":null,\\\"country\\\":null,\\\"payment_terms\\\":null,\\\"is_active\\\":\\\"1\\\",\\\"notes\\\":null}\"', '25', 'Jonáš Bučina'),
+(4, '2026-05-22 14:30:21', '127.0.0.1', 'create', 'ShopProduct', 'Vytvořen produkt: test prod', 'ShopProduct', 15, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"test prod\\\",\\\"slug\\\":\\\"test-prod\\\",\\\"description\\\":\\\"sdfsdf\\\",\\\"short_description\\\":\\\"sdfdsf\\\",\\\"sku\\\":\\\"sdfd\\\",\\\"stock_quantity\\\":\\\"0\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"908.26\\\",\\\"cost_price\\\":\\\"100\\\"}}\"', '25', 'Jonáš Bučina'),
+(5, '2026-05-22 14:35:26', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: test prod', 'ShopProduct', 15, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"test prod\\\",\\\"slug\\\":\\\"test-prod\\\",\\\"description\\\":\\\"sdfsdf\\\",\\\"short_description\\\":\\\"sdfdsf\\\",\\\"sku\\\":\\\"sdfd\\\",\\\"stock_quantity\\\":\\\"0\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"cost_price\\\":\\\"0\\\"},\\\"variants\\\":[{\\\"variant_name\\\":\\\"var_1\\\",\\\"attribute_1_name\\\":\\\"klk\\\",\\\"attribute_1_value\\\":\\\"lkjlkj\\\",\\\"attribute_2_name\\\":\\\"kljlkjlk\\\",\\\"attribute_2_value\\\":\\\"jlk\\\",\\\"sku_variant\\\":\\\"klj\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"908.26\\\"}}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(6, '2026-05-24 22:24:49', '127.0.0.1', 'create', 'ShopProduct', 'Vytvořen produkt: kljlkj', 'ShopProduct', 16, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"kljlkj\\\",\\\"slug\\\":\\\"kljkl\\\",\\\"description\\\":\\\"lkm\\\",\\\"short_description\\\":\\\"jlkjmlkm\\\",\\\"sku\\\":\\\"jlk\\\",\\\"stock_quantity\\\":\\\"0\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1000\\\",\\\"price_czk_without_vat\\\":\\\"826.45\\\",\\\"cost_price_czk\\\":\\\"100\\\",\\\"price_eur_with_vat\\\":\\\"1000\\\",\\\"price_eur_without_vat\\\":\\\"826.45\\\",\\\"cost_price_eur\\\":\\\"10\\\"}}\"', '25', 'Jonáš Bučina'),
+(7, '2026-05-24 22:28:26', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: kljlkj', 'ShopProduct', 16, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"kljlkj\\\",\\\"slug\\\":\\\"kljkl\\\",\\\"description\\\":\\\"lkm\\\",\\\"short_description\\\":\\\"jlkjmlkm\\\",\\\"sku\\\":\\\"jlk\\\",\\\"stock_quantity\\\":\\\"0\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\",\\\"cost_price_eur\\\":\\\"0\\\"},\\\"variants\\\":[{\\\"variant_name\\\":\\\"asdasd\\\",\\\"attribute_1_name\\\":\\\"lkmlkmlk\\\",\\\"attribute_1_value\\\":\\\"mlkmlkm\\\",\\\"attribute_2_name\\\":\\\"lkmlkmllk\\\",\\\"attribute_2_value\\\":\\\"mlkn\\\",\\\"sku_variant\\\":\\\"jlnln,\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"1000\\\",\\\"price_eur_with_vat\\\":\\\"1000\\\",\\\"price_eur_without_vat\\\":\\\"100\\\"}}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(8, '2026-05-24 22:32:27', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: kljlkj', 'ShopProduct', 16, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"kljlkj\\\",\\\"slug\\\":\\\"kljkl\\\",\\\"description\\\":\\\"lkm\\\",\\\"short_description\\\":\\\"jlkjmlkm\\\",\\\"sku\\\":\\\"jlk\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\",\\\"cost_price_eur\\\":\\\"0\\\"},\\\"images\\\":[{\\\"alt_text\\\":null,\\\"is_primary\\\":\\\"1\\\",\\\"sort_order\\\":\\\"0\\\",\\\"file\\\":{}}],\\\"variants\\\":[{\\\"id\\\":\\\"25\\\",\\\"variant_name\\\":\\\"asdasd\\\",\\\"attribute_1_name\\\":\\\"lkmlkmlk\\\",\\\"attribute_1_value\\\":\\\"mlkmlkm\\\",\\\"attribute_2_name\\\":\\\"lkmlkmllk\\\",\\\"attribute_2_value\\\":\\\"mlkn\\\",\\\"sku_variant\\\":\\\"jlnln,\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\"}}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(9, '2026-05-24 22:33:07', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: kljlkj', 'ShopProduct', 16, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"kljlkj\\\",\\\"slug\\\":\\\"kljkl\\\",\\\"description\\\":\\\"lkm\\\",\\\"short_description\\\":\\\"jlkjmlkm\\\",\\\"sku\\\":\\\"jlk\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\",\\\"cost_price_eur\\\":\\\"0\\\"},\\\"images\\\":[{\\\"id\\\":\\\"40\\\",\\\"alt_text\\\":\\\"kljlkj\\\",\\\"is_primary\\\":\\\"1\\\",\\\"sort_order\\\":\\\"0\\\"}],\\\"variants\\\":[{\\\"id\\\":\\\"25\\\",\\\"variant_name\\\":\\\"asdasd\\\",\\\"attribute_1_name\\\":\\\"lkmlkmlk\\\",\\\"attribute_1_value\\\":\\\"mlkmlkm\\\",\\\"attribute_2_name\\\":\\\"lkmlkmllk\\\",\\\"attribute_2_value\\\":\\\"mlkn\\\",\\\"sku_variant\\\":\\\"jlnln,\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1009\\\",\\\"price_czk_without_vat\\\":\\\"1000\\\",\\\"price_eur_with_vat\\\":\\\"1000\\\",\\\"price_eur_without_vat\\\":\\\"10\\\"}}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(10, '2026-05-24 22:33:25', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: JOOO', 'ShopProduct', 16, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"JOOO\\\",\\\"slug\\\":\\\"kljkl\\\",\\\"description\\\":\\\"lkm\\\",\\\"short_description\\\":\\\"jlkjmlkm\\\",\\\"sku\\\":\\\"jlk\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\",\\\"cost_price_eur\\\":\\\"0\\\"},\\\"images\\\":[{\\\"id\\\":\\\"40\\\",\\\"alt_text\\\":\\\"kljlkj\\\",\\\"is_primary\\\":\\\"1\\\",\\\"sort_order\\\":\\\"0\\\"}],\\\"variants\\\":[{\\\"id\\\":\\\"25\\\",\\\"variant_name\\\":\\\"asdasd\\\",\\\"attribute_1_name\\\":\\\"lkmlkmlk\\\",\\\"attribute_1_value\\\":\\\"mlkmlkm\\\",\\\"attribute_2_name\\\":\\\"lkmlkmllk\\\",\\\"attribute_2_value\\\":\\\"mlkn\\\",\\\"sku_variant\\\":\\\"jlnln,\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1009\\\",\\\"price_czk_without_vat\\\":\\\"1000\\\",\\\"price_eur_with_vat\\\":\\\"1000\\\",\\\"price_eur_without_vat\\\":\\\"10\\\"}}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(11, '2026-05-24 22:50:54', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: JOOO', 'ShopProduct', 16, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"JOOO\\\",\\\"slug\\\":\\\"kljkl\\\",\\\"description\\\":\\\"lkm\\\",\\\"short_description\\\":\\\"jlkjmlkm\\\",\\\"sku\\\":\\\"jlk\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\",\\\"cost_price_eur\\\":\\\"0\\\"},\\\"images\\\":[{\\\"id\\\":\\\"40\\\",\\\"alt_text\\\":\\\"kljlkj\\\",\\\"is_primary\\\":\\\"1\\\",\\\"sort_order\\\":\\\"0\\\"}],\\\"variants\\\":[{\\\"id\\\":\\\"25\\\",\\\"variant_name\\\":\\\"asdasd\\\",\\\"attribute_1_name\\\":\\\"lkmlkmlk\\\",\\\"attribute_1_value\\\":\\\"mlkmlkm\\\",\\\"attribute_2_name\\\":\\\"lkmlkmllk\\\",\\\"attribute_2_value\\\":\\\"mlkn\\\",\\\"sku_variant\\\":\\\"jlnln,\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1009\\\",\\\"price_czk_without_vat\\\":\\\"99\\\",\\\"price_eur_with_vat\\\":\\\"1000\\\",\\\"price_eur_without_vat\\\":\\\"10\\\"}}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(12, '2026-05-24 22:51:06', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: JOOO', 'ShopProduct', 16, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"JOOO\\\",\\\"slug\\\":\\\"kljkl\\\",\\\"description\\\":\\\"lkm\\\",\\\"short_description\\\":\\\"jlkjmlkm\\\",\\\"sku\\\":\\\"jlk\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\",\\\"cost_price_eur\\\":\\\"0\\\"},\\\"delete_images\\\":[\\\"40\\\"],\\\"variants\\\":[{\\\"id\\\":\\\"25\\\",\\\"variant_name\\\":\\\"asdasd\\\",\\\"attribute_1_name\\\":\\\"lkmlkmlk\\\",\\\"attribute_1_value\\\":\\\"mlkmlkm\\\",\\\"attribute_2_name\\\":\\\"lkmlkmllk\\\",\\\"attribute_2_value\\\":\\\"mlkn\\\",\\\"sku_variant\\\":\\\"jlnln,\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\"}}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(13, '2026-05-24 22:51:14', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: JOOO', 'ShopProduct', 16, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"JOOO\\\",\\\"slug\\\":\\\"kljkl\\\",\\\"description\\\":\\\"lkm\\\",\\\"short_description\\\":\\\"jlkjmlkm\\\",\\\"sku\\\":\\\"jlk\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\",\\\"cost_price_eur\\\":\\\"0\\\"},\\\"images\\\":[{\\\"alt_text\\\":null,\\\"is_primary\\\":\\\"1\\\",\\\"sort_order\\\":\\\"0\\\",\\\"file\\\":{}}],\\\"variants\\\":[{\\\"id\\\":\\\"25\\\",\\\"variant_name\\\":\\\"asdasd\\\",\\\"attribute_1_name\\\":\\\"lkmlkmlk\\\",\\\"attribute_1_value\\\":\\\"mlkmlkm\\\",\\\"attribute_2_name\\\":\\\"lkmlkmllk\\\",\\\"attribute_2_value\\\":\\\"mlkn\\\",\\\"sku_variant\\\":\\\"jlnln,\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\"}}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(14, '2026-05-24 22:51:37', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: JOOO', 'ShopProduct', 16, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"JOOO\\\",\\\"slug\\\":\\\"kljkl\\\",\\\"description\\\":\\\"lkm\\\",\\\"short_description\\\":\\\"jlkjmlkm\\\",\\\"sku\\\":\\\"jlk\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\",\\\"cost_price_eur\\\":\\\"0\\\"},\\\"images\\\":[{\\\"id\\\":\\\"41\\\",\\\"alt_text\\\":\\\"JOOO\\\",\\\"is_primary\\\":\\\"1\\\",\\\"sort_order\\\":\\\"0\\\"}],\\\"variants\\\":[{\\\"id\\\":\\\"25\\\",\\\"variant_name\\\":\\\"asdasd\\\",\\\"attribute_1_name\\\":\\\"lkmlkmlk\\\",\\\"attribute_1_value\\\":\\\"mlkmlkm\\\",\\\"attribute_2_name\\\":\\\"lkmlkmllk\\\",\\\"attribute_2_value\\\":\\\"mlkn\\\",\\\"sku_variant\\\":\\\"jlnln,\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"1099\\\",\\\"price_eur_with_vat\\\":\\\"1099\\\",\\\"price_eur_without_vat\\\":\\\"1099\\\"},\\\"images\\\":[{\\\"alt_text\\\":\\\"asdasd\\\",\\\"is_primary\\\":\\\"0\\\",\\\"sort_order\\\":\\\"0\\\",\\\"file\\\":{}}]}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(15, '2026-05-24 23:11:54', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: JOOO', 'ShopProduct', 16, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"JOOO\\\",\\\"slug\\\":\\\"kljkl\\\",\\\"description\\\":\\\"lkm\\\",\\\"short_description\\\":\\\"jlkjmlkm\\\",\\\"sku\\\":\\\"jlk\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"908.26\\\",\\\"cost_price_czk\\\":\\\"1099\\\",\\\"price_eur_with_vat\\\":\\\"1099\\\",\\\"price_eur_without_vat\\\":\\\"908.26\\\",\\\"cost_price_eur\\\":\\\"1099\\\"},\\\"images\\\":[{\\\"id\\\":\\\"41\\\",\\\"alt_text\\\":\\\"JOOO\\\",\\\"is_primary\\\":\\\"1\\\",\\\"sort_order\\\":\\\"0\\\"}],\\\"variants\\\":[{\\\"id\\\":\\\"25\\\",\\\"variant_name\\\":\\\"asdasd\\\",\\\"attribute_1_name\\\":\\\"lkmlkmlk\\\",\\\"attribute_1_value\\\":\\\"mlkmlkm\\\",\\\"attribute_2_name\\\":\\\"lkmlkmllk\\\",\\\"attribute_2_value\\\":\\\"mlkn\\\",\\\"sku_variant\\\":\\\"jlnln,\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"1099\\\",\\\"price_eur_with_vat\\\":\\\"1099\\\",\\\"price_eur_without_vat\\\":\\\"1099\\\"},\\\"images\\\":[{\\\"id\\\":\\\"42\\\",\\\"alt_text\\\":\\\"asdasd\\\",\\\"is_primary\\\":\\\"0\\\",\\\"sort_order\\\":\\\"0\\\"}]}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(16, '2026-05-24 23:13:01', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: test prod', 'ShopProduct', 15, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"test prod\\\",\\\"slug\\\":\\\"test-prod\\\",\\\"description\\\":\\\"sdfsdf\\\",\\\"short_description\\\":\\\"sdfdsf\\\",\\\"sku\\\":\\\"sdfd\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\",\\\"cost_price_eur\\\":\\\"0\\\"},\\\"variants\\\":[{\\\"id\\\":\\\"24\\\",\\\"variant_name\\\":\\\"var_1\\\",\\\"attribute_1_name\\\":\\\"klk\\\",\\\"attribute_1_value\\\":\\\"lkjlkj\\\",\\\"attribute_2_name\\\":\\\"kljlkjlk\\\",\\\"attribute_2_value\\\":\\\"jlk\\\",\\\"sku_variant\\\":\\\"klj\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"908.26\\\",\\\"price_eur_with_vat\\\":\\\"1099\\\",\\\"price_eur_without_vat\\\":\\\"1099\\\"}}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(17, '2026-05-24 23:13:13', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: test prod', 'ShopProduct', 15, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"test prod\\\",\\\"slug\\\":\\\"test-prod\\\",\\\"description\\\":\\\"sdfsdf\\\",\\\"short_description\\\":\\\"sdfdsf\\\",\\\"sku\\\":\\\"sdfd\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"109\\\",\\\"price_czk_without_vat\\\":\\\"90.08\\\",\\\"cost_price_czk\\\":\\\"109\\\",\\\"price_eur_with_vat\\\":\\\"109\\\",\\\"price_eur_without_vat\\\":\\\"90.08\\\",\\\"cost_price_eur\\\":\\\"109\\\"},\\\"variants\\\":[{\\\"id\\\":\\\"24\\\",\\\"variant_name\\\":\\\"var_1\\\",\\\"attribute_1_name\\\":\\\"klk\\\",\\\"attribute_1_value\\\":\\\"lkjlkj\\\",\\\"attribute_2_name\\\":\\\"kljlkjlk\\\",\\\"attribute_2_value\\\":\\\"jlk\\\",\\\"sku_variant\\\":\\\"klj\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"908.26\\\",\\\"price_eur_with_vat\\\":\\\"1099\\\",\\\"price_eur_without_vat\\\":\\\"1099\\\"}}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(18, '2026-05-24 23:15:35', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: test prod', 'ShopProduct', 15, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"test prod\\\",\\\"slug\\\":\\\"test-prod\\\",\\\"description\\\":\\\"sdfsdf\\\",\\\"short_description\\\":\\\"sdfdsf\\\",\\\"sku\\\":\\\"sdfd\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\",\\\"cost_price_eur\\\":\\\"0\\\"},\\\"variants\\\":[{\\\"id\\\":\\\"24\\\",\\\"variant_name\\\":\\\"var_1\\\",\\\"attribute_1_name\\\":\\\"klk\\\",\\\"attribute_1_value\\\":\\\"lkjlkj\\\",\\\"attribute_2_name\\\":\\\"kljlkjlk\\\",\\\"attribute_2_value\\\":\\\"jlk\\\",\\\"sku_variant\\\":\\\"klj\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"908.26\\\",\\\"price_eur_with_vat\\\":\\\"1099\\\",\\\"price_eur_without_vat\\\":\\\"1099\\\"}},{\\\"variant_name\\\":\\\"FONETICKA\\\",\\\"attribute_1_name\\\":\\\"adasd\\\",\\\"attribute_1_value\\\":\\\"assdas\\\",\\\"attribute_2_name\\\":\\\"sads\\\",\\\"attribute_2_value\\\":\\\"dsf\\\",\\\"sku_variant\\\":null,\\\"stock_quantity\\\":\\\"0\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"10999\\\",\\\"price_eur_with_vat\\\":\\\"1000\\\",\\\"price_eur_without_vat\\\":\\\"100\\\"}}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(19, '2026-05-24 23:16:07', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: JOOOawd', 'ShopProduct', 16, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"JOOOawd\\\",\\\"slug\\\":\\\"kljkl\\\",\\\"description\\\":\\\"lkm\\\",\\\"short_description\\\":\\\"jlkjmlkm\\\",\\\"sku\\\":\\\"jlk\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"0\\\",\\\"price_czk_without_vat\\\":\\\"0\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"0\\\",\\\"price_eur_without_vat\\\":\\\"0\\\",\\\"cost_price_eur\\\":\\\"0\\\"},\\\"images\\\":[{\\\"id\\\":\\\"41\\\",\\\"alt_text\\\":\\\"JOOO\\\",\\\"is_primary\\\":\\\"1\\\",\\\"sort_order\\\":\\\"0\\\"}],\\\"variants\\\":[{\\\"id\\\":\\\"25\\\",\\\"variant_name\\\":\\\"asdasd\\\",\\\"attribute_1_name\\\":\\\"lkmlkmlk\\\",\\\"attribute_1_value\\\":\\\"mlkmlkm\\\",\\\"attribute_2_name\\\":\\\"lkmlkmllk\\\",\\\"attribute_2_value\\\":\\\"mlkn\\\",\\\"sku_variant\\\":\\\"jlnln,\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"1099\\\",\\\"price_eur_with_vat\\\":\\\"1099\\\",\\\"price_eur_without_vat\\\":\\\"1099\\\"},\\\"images\\\":[{\\\"id\\\":\\\"42\\\",\\\"alt_text\\\":\\\"asdasd\\\",\\\"is_primary\\\":\\\"0\\\",\\\"sort_order\\\":\\\"0\\\"}]}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(20, '2026-05-24 23:18:25', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: JOOOawd', 'ShopProduct', 16, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"JOOOawd\\\",\\\"slug\\\":\\\"kljkl\\\",\\\"description\\\":\\\"lkm\\\",\\\"short_description\\\":\\\"jlkjmlkm\\\",\\\"sku\\\":\\\"jlk\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"100\\\",\\\"price_czk_without_vat\\\":\\\"82.64\\\",\\\"cost_price_czk\\\":\\\"100\\\",\\\"price_eur_with_vat\\\":\\\"100\\\",\\\"price_eur_without_vat\\\":\\\"82.64\\\",\\\"cost_price_eur\\\":\\\"100\\\"},\\\"images\\\":[{\\\"id\\\":\\\"41\\\",\\\"alt_text\\\":\\\"JOOO\\\",\\\"is_primary\\\":\\\"1\\\",\\\"sort_order\\\":\\\"0\\\"}],\\\"variants\\\":[{\\\"id\\\":\\\"25\\\",\\\"variant_name\\\":\\\"asdasd\\\",\\\"attribute_1_name\\\":\\\"lkmlkmlk\\\",\\\"attribute_1_value\\\":\\\"mlkmlkm\\\",\\\"attribute_2_name\\\":\\\"lkmlkmllk\\\",\\\"attribute_2_value\\\":\\\"mlkn\\\",\\\"sku_variant\\\":\\\"jlnln,\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"908.26\\\",\\\"price_eur_with_vat\\\":\\\"1099\\\",\\\"price_eur_without_vat\\\":\\\"908.26\\\"},\\\"images\\\":[{\\\"id\\\":\\\"42\\\",\\\"alt_text\\\":\\\"asdasd\\\",\\\"is_primary\\\":\\\"0\\\",\\\"sort_order\\\":\\\"0\\\"}]}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(21, '2026-05-24 23:18:43', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: JOOOawd', 'ShopProduct', 16, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"JOOOawd\\\",\\\"slug\\\":\\\"kljkl\\\",\\\"description\\\":\\\"lkm\\\",\\\"short_description\\\":\\\"jlkjmlkm\\\",\\\"sku\\\":\\\"jlk\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"100\\\",\\\"price_czk_without_vat\\\":\\\"82.64\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"100\\\",\\\"price_eur_without_vat\\\":\\\"82.64\\\",\\\"cost_price_eur\\\":\\\"0\\\"},\\\"images\\\":[{\\\"id\\\":\\\"41\\\",\\\"alt_text\\\":\\\"JOOO\\\",\\\"is_primary\\\":\\\"1\\\",\\\"sort_order\\\":\\\"0\\\"}],\\\"variants\\\":[{\\\"id\\\":\\\"25\\\",\\\"variant_name\\\":\\\"asdasd\\\",\\\"attribute_1_name\\\":\\\"lkmlkmlk\\\",\\\"attribute_1_value\\\":\\\"mlkmlkm\\\",\\\"attribute_2_name\\\":\\\"lkmlkmllk\\\",\\\"attribute_2_value\\\":\\\"mlkn\\\",\\\"sku_variant\\\":\\\"jlnln,\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"908.26\\\",\\\"price_eur_with_vat\\\":\\\"1099\\\",\\\"price_eur_without_vat\\\":\\\"908.26\\\"},\\\"images\\\":[{\\\"id\\\":\\\"42\\\",\\\"alt_text\\\":\\\"asdasd\\\",\\\"is_primary\\\":\\\"0\\\",\\\"sort_order\\\":\\\"0\\\"}]},{\\\"variant_name\\\":\\\"FONER\\\",\\\"attribute_1_name\\\":\\\"skd\\\",\\\"attribute_1_value\\\":\\\"lkdlfk\\\",\\\"attribute_2_name\\\":\\\"mdlkf\\\",\\\"attribute_2_value\\\":\\\"kldfg\\\",\\\"sku_variant\\\":\\\"kdfgl\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"908.26\\\",\\\"price_eur_with_vat\\\":\\\"1099\\\",\\\"price_eur_without_vat\\\":\\\"908.26\\\"}}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(22, '2026-05-24 23:28:53', '127.0.0.1', 'soft_delete', 'ShopProduct', 'Smazání produktu ID: 15', 'ShopProduct', 15, 25, '\"[]\"', '25', 'Jonáš Bučina'),
+(23, '2026-05-24 23:28:56', '127.0.0.1', 'soft_delete', 'ShopProduct', 'Smazání produktu ID: 16', 'ShopProduct', 16, 25, '\"[]\"', '25', 'Jonáš Bučina'),
+(24, '2026-05-24 23:29:43', '127.0.0.1', 'create', 'ShopProduct', 'Vytvořen produkt: test', 'ShopProduct', 17, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"test\\\",\\\"slug\\\":\\\"test\\\",\\\"description\\\":\\\"tests\\\",\\\"short_description\\\":\\\"test\\\",\\\"sku\\\":\\\"test\\\",\\\"stock_quantity\\\":\\\"0\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"908.26\\\",\\\"cost_price_czk\\\":\\\"100\\\",\\\"price_eur_with_vat\\\":\\\"109\\\",\\\"price_eur_without_vat\\\":\\\"90.08\\\",\\\"cost_price_eur\\\":\\\"109\\\",\\\"price_usd_with_vat\\\":\\\"178\\\",\\\"price_usd_without_vat\\\":\\\"147.11\\\",\\\"cost_price_usd\\\":\\\"109\\\"}}\"', '25', 'Jonáš Bučina'),
+(25, '2026-05-24 23:30:36', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: test', 'ShopProduct', 17, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"test\\\",\\\"slug\\\":\\\"test\\\",\\\"description\\\":\\\"tests\\\",\\\"short_description\\\":\\\"test\\\",\\\"sku\\\":\\\"test\\\",\\\"stock_quantity\\\":\\\"0\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"908.26\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"109\\\",\\\"price_eur_without_vat\\\":\\\"90.08\\\",\\\"cost_price_eur\\\":\\\"0\\\",\\\"price_usd_with_vat\\\":\\\"178\\\",\\\"price_usd_without_vat\\\":\\\"147.11\\\",\\\"cost_price_usd\\\":\\\"0\\\"},\\\"variants\\\":[{\\\"variant_name\\\":\\\"mm\\\",\\\"attribute_1_name\\\":\\\"jlkj\\\",\\\"attribute_1_value\\\":\\\"kjlkj\\\",\\\"attribute_2_name\\\":\\\"j,bkh\\\",\\\"attribute_2_value\\\":\\\"kj\\\",\\\"sku_variant\\\":\\\"hjk\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"250\\\",\\\"price_czk_without_vat\\\":\\\"206.61\\\",\\\"price_eur_with_vat\\\":\\\"12.9\\\",\\\"price_eur_without_vat\\\":\\\"10.66\\\",\\\"price_usd_with_vat\\\":\\\"109\\\",\\\"price_usd_without_vat\\\":\\\"90.08\\\"}}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina'),
+(26, '2026-05-24 23:46:46', '127.0.0.1', 'update', 'ShopProduct', 'Aktualizace produktu: test', 'ShopProduct', 17, 25, '\"{\\\"category_id\\\":\\\"52\\\",\\\"supplier_id\\\":\\\"6\\\",\\\"name\\\":\\\"test\\\",\\\"slug\\\":\\\"test\\\",\\\"description\\\":\\\"tests\\\",\\\"short_description\\\":\\\"test\\\",\\\"sku\\\":\\\"test\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"stock_warning_level\\\":\\\"10\\\",\\\"is_active\\\":true,\\\"is_featured\\\":false,\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"1099\\\",\\\"price_czk_without_vat\\\":\\\"908.26\\\",\\\"cost_price_czk\\\":\\\"0\\\",\\\"price_eur_with_vat\\\":\\\"109\\\",\\\"price_eur_without_vat\\\":\\\"90.08\\\",\\\"cost_price_eur\\\":\\\"0\\\",\\\"price_usd_with_vat\\\":\\\"178\\\",\\\"price_usd_without_vat\\\":\\\"147.11\\\",\\\"cost_price_usd\\\":\\\"0\\\"},\\\"variants\\\":[{\\\"id\\\":\\\"28\\\",\\\"variant_name\\\":\\\"mm\\\",\\\"attribute_1_name\\\":\\\"jlkj\\\",\\\"attribute_1_value\\\":\\\"kjlkj\\\",\\\"attribute_2_name\\\":\\\"j,bkh\\\",\\\"attribute_2_value\\\":\\\"kj\\\",\\\"sku_variant\\\":\\\"hjk\\\",\\\"stock_quantity\\\":\\\"12\\\",\\\"prices\\\":{\\\"vat_rate\\\":\\\"21\\\",\\\"price_czk_with_vat\\\":\\\"250\\\",\\\"price_czk_without_vat\\\":\\\"206.61\\\",\\\"price_eur_with_vat\\\":\\\"12.9\\\",\\\"price_eur_without_vat\\\":\\\"10.66\\\",\\\"price_usd_with_vat\\\":\\\"109\\\",\\\"price_usd_without_vat\\\":\\\"90.08\\\"},\\\"images\\\":[{\\\"alt_text\\\":\\\"mm\\\",\\\"is_primary\\\":\\\"0\\\",\\\"sort_order\\\":\\\"0\\\",\\\"file\\\":{}}]}],\\\"_method\\\":\\\"PUT\\\"}\"', '25', 'Jonáš Bučina');
 
 -- --------------------------------------------------------
 
@@ -485,8 +534,6 @@ CREATE TABLE `shop_products` (
   `slug` varchar(200) NOT NULL,
   `description` text DEFAULT NULL,
   `short_description` varchar(500) DEFAULT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `cost_price` decimal(10,2) DEFAULT NULL,
   `sku` varchar(50) DEFAULT NULL,
   `stock_quantity` int(11) DEFAULT 0,
   `stock_warning_level` int(11) DEFAULT 10,
@@ -496,6 +543,13 @@ CREATE TABLE `shop_products` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `shop_products`
+--
+
+INSERT INTO `shop_products` (`id`, `category_id`, `supplier_id`, `name`, `slug`, `description`, `short_description`, `sku`, `stock_quantity`, `stock_warning_level`, `is_active`, `is_featured`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(17, 52, 6, 'test', 'test', 'tests', 'test', 'test', 12, 10, 1, 0, '2026-05-24 21:29:43', '2026-05-24 21:30:36', NULL);
 
 -- --------------------------------------------------------
 
@@ -515,6 +569,42 @@ CREATE TABLE `shop_product_images` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `shop_product_images`
+--
+
+INSERT INTO `shop_product_images` (`id`, `product_id`, `variant_id`, `image_path`, `alt_text`, `is_primary`, `sort_order`, `created_at`, `deleted_at`) VALUES
+(43, 17, 28, '466cd706-8c2c-4310-914d-6f4273806cd5.png', 'mm', 0, 0, '2026-05-24 21:46:46', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shop_product_prices`
+--
+
+CREATE TABLE `shop_product_prices` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `product_id` int(10) UNSIGNED NOT NULL,
+  `variant_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'NULL pokud jde o hlavní produkt',
+  `vat_rate` decimal(5,2) NOT NULL DEFAULT 21.00,
+  `price_czk_without_vat` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `price_czk_with_vat` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `price_eur_without_vat` decimal(10,2) DEFAULT NULL,
+  `price_eur_with_vat` decimal(10,2) DEFAULT NULL,
+  `price_usd_without_vat` decimal(10,2) DEFAULT NULL,
+  `price_usd_with_vat` decimal(10,2) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `shop_product_prices`
+--
+
+INSERT INTO `shop_product_prices` (`id`, `product_id`, `variant_id`, `vat_rate`, `price_czk_without_vat`, `price_czk_with_vat`, `price_eur_without_vat`, `price_eur_with_vat`, `price_usd_without_vat`, `price_usd_with_vat`, `created_at`, `updated_at`) VALUES
+(8, 17, NULL, 21.00, 908.26, 1099.00, 90.08, 109.00, 147.11, 178.00, '2026-05-24 21:29:43', '2026-05-24 21:29:43'),
+(9, 17, 28, 21.00, 206.61, 250.00, 10.66, 12.90, 90.08, 109.00, '2026-05-24 21:30:36', '2026-05-24 21:30:36');
+
 -- --------------------------------------------------------
 
 --
@@ -530,14 +620,18 @@ CREATE TABLE `shop_product_variants` (
   `attribute_2_name` varchar(50) DEFAULT NULL COMMENT 'např. "Velikost"',
   `attribute_2_value` varchar(100) DEFAULT NULL COMMENT 'např. "M"',
   `sku_variant` varchar(50) DEFAULT NULL,
-  `price_with_vat` decimal(10,2) DEFAULT 0.00 COMMENT 'Cena S DPH',
-  `price_without_vat` decimal(10,2) DEFAULT 0.00 COMMENT 'Cena BEZ DPH',
-  `vat_rate` decimal(5,2) DEFAULT 21.00 COMMENT 'DPH sazba (%)',
   `stock_quantity` int(11) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `shop_product_variants`
+--
+
+INSERT INTO `shop_product_variants` (`id`, `product_id`, `variant_name`, `attribute_1_name`, `attribute_1_value`, `attribute_2_name`, `attribute_2_value`, `sku_variant`, `stock_quantity`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(28, 17, 'mm', 'jlkj', 'kjlkj', 'j,bkh', 'kj', 'hjk', 12, '2026-05-24 21:30:36', '2026-05-24 21:30:36', NULL);
 
 -- --------------------------------------------------------
 
@@ -620,6 +714,13 @@ CREATE TABLE `shop_suppliers` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `shop_suppliers`
+--
+
+INSERT INTO `shop_suppliers` (`id`, `name`, `ico`, `contact_person`, `email`, `phone`, `address`, `city`, `postal_code`, `country`, `payment_terms`, `is_active`, `notes`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(6, 'Fonetický Express', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2026-05-22 12:22:07', '2026-05-22 12:22:07', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -655,7 +756,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `user_email`, `contact_email`, `full_name`, `birth_date`, `personal_id_num`, `address`, `bank_account`, `health_insurance`, `commission_rate`, `dpp_hours_spent`, `has_tax_declaration`, `phone_number`, `internal_note`, `user_password_hash`, `user_password_salt`, `last_login_at`, `created_at`, `updated_at`, `deleted_at`, `is_deleted`) VALUES
-(25, 'joncl', 'jonasbucina@rpsw.cz', 'Jonáš Bučina', NULL, NULL, NULL, NULL, NULL, 10, 0, 0, NULL, NULL, '$2y$12$rV1ILe7YeW1L1XfWb5DrfuiCYTC.1FZsIU4wtNmA95GaUNwXAtYoa', NULL, '2026-05-03 22:43:44', '2026-02-14 08:12:31', '2026-05-03 22:43:44', NULL, 0),
+(25, 'joncl', 'jonasbucina@rpsw.cz', 'Jonáš Bučina', NULL, NULL, NULL, NULL, NULL, 10, 0, 0, NULL, NULL, '$2y$12$rV1ILe7YeW1L1XfWb5DrfuiCYTC.1FZsIU4wtNmA95GaUNwXAtYoa', NULL, '2026-06-01 18:26:14', '2026-02-14 08:12:31', '2026-06-01 18:26:14', NULL, 0),
 (30, 'prime_admin', NULL, 'Prime Admin', NULL, NULL, NULL, NULL, NULL, 10, 0, 0, NULL, NULL, '$2y$12$NEiDrqVCChulf9S/EUPIpeOHScIM0zwswPTxIFamRDrY4XajgHQOe', NULL, NULL, '2026-02-14 08:12:31', '2026-02-14 08:12:31', NULL, 0),
 (34, 'lindicka', 'lindicka@mazliva.cz', 'Lindička Trýbíčková Mazliva', NULL, NULL, NULL, NULL, NULL, 10, 0, 0, NULL, NULL, '$2y$12$xbMrIDwkEj.ZOnsLe7Glr..2qbca1i7XnSclNnGILENFKlL.Kw9.W', NULL, '2026-02-15 23:39:56', '2026-02-14 08:12:31', '2026-02-20 23:59:34', NULL, 0);
 
@@ -749,7 +850,13 @@ INSERT INTO `web_logs` (`id`, `created_at`, `origin`, `event_type`, `module`, `d
 (20, '2026-04-27 22:28:09', '127.0.0.1', 'DATA_EXPORT', 'shop/products', 'Uživatel exportoval 1 záznamů z tabulky: Seznam produktů.', 'collection', NULL, 25, NULL, '25', 'joncl'),
 (21, '2026-04-27 23:20:04', '127.0.0.1', 'login_success', 'Auth', 'Uživatel se úspěšně přihlásil: joncl', 'User', 25, 25, '\"{\\\"ip\\\":\\\"127.0.0.1\\\",\\\"user_agent\\\":\\\"Mozilla\\\\\\/5.0 (X11; Linux x86_64; rv:145.0) Gecko\\\\\\/20100101 Firefox\\\\\\/145.0\\\"}\"', '25', 'joncl'),
 (22, '2026-05-03 22:28:10', '127.0.0.1', 'login_success', 'Auth', 'Uživatel se úspěšně přihlásil: joncl', 'User', 25, 25, '\"{\\\"ip\\\":\\\"127.0.0.1\\\",\\\"user_agent\\\":\\\"Mozilla\\\\\\/5.0 (X11; Linux x86_64; rv:145.0) Gecko\\\\\\/20100101 Firefox\\\\\\/145.0\\\"}\"', '25', 'joncl'),
-(23, '2026-05-03 22:43:44', '127.0.0.1', 'login_success', 'Auth', 'Uživatel se úspěšně přihlásil: joncl', 'User', 25, 25, '\"{\\\"ip\\\":\\\"127.0.0.1\\\",\\\"user_agent\\\":\\\"Mozilla\\\\\\/5.0 (X11; Linux x86_64; rv:145.0) Gecko\\\\\\/20100101 Firefox\\\\\\/145.0\\\"}\"', '25', 'joncl');
+(23, '2026-05-03 22:43:44', '127.0.0.1', 'login_success', 'Auth', 'Uživatel se úspěšně přihlásil: joncl', 'User', 25, 25, '\"{\\\"ip\\\":\\\"127.0.0.1\\\",\\\"user_agent\\\":\\\"Mozilla\\\\\\/5.0 (X11; Linux x86_64; rv:145.0) Gecko\\\\\\/20100101 Firefox\\\\\\/145.0\\\"}\"', '25', 'joncl'),
+(24, '2026-05-21 19:05:48', '127.0.0.1', 'login_success', 'Auth', 'Uživatel se úspěšně přihlásil: joncl', 'User', 25, 25, '\"{\\\"ip\\\":\\\"127.0.0.1\\\",\\\"user_agent\\\":\\\"Mozilla\\\\\\/5.0 (X11; Linux x86_64; rv:145.0) Gecko\\\\\\/20100101 Firefox\\\\\\/145.0\\\"}\"', '25', 'joncl'),
+(25, '2026-05-22 15:24:40', '127.0.0.1', 'DATA_EXPORT', 'shop/products', 'Uživatel exportoval 1 záznamů z tabulky: Seznam produktů.', 'collection', NULL, 25, NULL, '25', 'joncl'),
+(26, '2026-05-24 22:13:16', '127.0.0.1', 'login_success', 'Auth', 'Uživatel se úspěšně přihlásil: joncl', 'User', 25, 25, '\"{\\\"ip\\\":\\\"127.0.0.1\\\",\\\"user_agent\\\":\\\"Mozilla\\\\\\/5.0 (X11; Linux x86_64; rv:145.0) Gecko\\\\\\/20100101 Firefox\\\\\\/145.0\\\"}\"', '25', 'joncl'),
+(27, '2026-05-24 23:36:34', '127.0.0.1', 'DATA_EXPORT', 'shop/products', 'Uživatel exportoval 1 záznamů z tabulky: Seznam produktů.', 'collection', NULL, 25, NULL, '25', 'joncl'),
+(28, '2026-05-24 23:39:23', '127.0.0.1', 'DATA_EXPORT', 'shop/products', 'Uživatel exportoval 1 záznamů z tabulky: Seznam produktů.', 'collection', NULL, 25, NULL, '25', 'joncl'),
+(29, '2026-06-01 18:26:14', '127.0.0.1', 'login_success', 'Auth', 'Uživatel se úspěšně přihlásil: joncl', 'User', 25, 25, '\"{\\\"ip\\\":\\\"127.0.0.1\\\",\\\"user_agent\\\":\\\"Mozilla\\\\\\/5.0 (X11; Linux x86_64; rv:145.0) Gecko\\\\\\/20100101 Firefox\\\\\\/145.0\\\"}\"', '25', 'joncl');
 
 -- --------------------------------------------------------
 
@@ -1041,6 +1148,14 @@ ALTER TABLE `shop_product_images`
   ADD KEY `fk_shop_product_images_variant` (`variant_id`);
 
 --
+-- Indexes for table `shop_product_prices`
+--
+ALTER TABLE `shop_product_prices`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_prices_product_id` (`product_id`),
+  ADD KEY `fk_prices_variant_id` (`variant_id`);
+
+--
 -- Indexes for table `shop_product_variants`
 --
 ALTER TABLE `shop_product_variants`
@@ -1162,19 +1277,19 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=346;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=354;
 
 --
 -- AUTO_INCREMENT for table `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=345;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=353;
 
 --
 -- AUTO_INCREMENT for table `shop_categories`
 --
 ALTER TABLE `shop_categories`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `shop_coupons`
@@ -1192,7 +1307,7 @@ ALTER TABLE `shop_customers`
 -- AUTO_INCREMENT for table `shop_logs`
 --
 ALTER TABLE `shop_logs`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `shop_orders`
@@ -1216,19 +1331,25 @@ ALTER TABLE `shop_payment_methods`
 -- AUTO_INCREMENT for table `shop_products`
 --
 ALTER TABLE `shop_products`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `shop_product_images`
 --
 ALTER TABLE `shop_product_images`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+
+--
+-- AUTO_INCREMENT for table `shop_product_prices`
+--
+ALTER TABLE `shop_product_prices`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `shop_product_variants`
 --
 ALTER TABLE `shop_product_variants`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `shop_reviews`
@@ -1246,7 +1367,7 @@ ALTER TABLE `shop_shipping_methods`
 -- AUTO_INCREMENT for table `shop_suppliers`
 --
 ALTER TABLE `shop_suppliers`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -1264,7 +1385,7 @@ ALTER TABLE `web_job_applications`
 -- AUTO_INCREMENT for table `web_logs`
 --
 ALTER TABLE `web_logs`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `web_news`
@@ -1367,6 +1488,13 @@ ALTER TABLE `shop_products`
 ALTER TABLE `shop_product_images`
   ADD CONSTRAINT `fk_shop_product_images_product` FOREIGN KEY (`product_id`) REFERENCES `shop_products` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_shop_product_images_variant` FOREIGN KEY (`variant_id`) REFERENCES `shop_product_variants` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `shop_product_prices`
+--
+ALTER TABLE `shop_product_prices`
+  ADD CONSTRAINT `fk_prices_product_id` FOREIGN KEY (`product_id`) REFERENCES `shop_products` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_prices_variant_id` FOREIGN KEY (`variant_id`) REFERENCES `shop_product_variants` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `shop_product_variants`

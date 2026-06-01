@@ -31,12 +31,14 @@ export class ProductBuilderComponent {
     return 'assets/images/placeholder-product.png';
   }
 
+  // 🛠️ OPRAVENO: Nyní mapuje data správně podle struktury z Laravel Resource
   getFormattedPrice(): string {
-    const price = this.product?.price || 0;
+    const price = this.product?.prices?.price_czk_with_vat || 0;
+    
     return new Intl.NumberFormat('cs-CZ', { 
       style: 'currency', 
       currency: 'CZK',
-      minimumFractionDigits: 0 
+      minimumFractionDigits: 0 // Pokud chceš koruny bez haléřů (např. 1 290 Kč)
     }).format(price);
   }
 }

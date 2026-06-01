@@ -1,14 +1,12 @@
 <div class="product-detail-container" *ngIf="!isLoading() && product(); else loadingTpl">
   <div class="product-main">
     
-    <!-- LEVÁ STRANA: Galerie -->
     <div class="product-gallery">
       <div class="main-image-wrapper">
         <img [src]="activeImage()" [alt]="product()?.name">
         <div class="badge-float" *ngIf="product()?.is_featured">TOP PRODUKT</div>
       </div>
       
-      <!-- Sekce: Fotky konkrétní varianty -->
       <div class="gallery-section" *ngIf="variantImages().length > 0">
         <span class="gallery-label">Barva / Provedení: {{ selectedVariant()?.variant_name }}</span>
         <div class="image-thumbnails">
@@ -22,7 +20,6 @@
         </div>
       </div>
 
-      <!-- Sekce: Obecné produktové foto -->
       <div class="gallery-section" *ngIf="generalImages().length > 0">
         <span class="gallery-label">Produktové náhledy</span>
         <div class="image-thumbnails">
@@ -37,7 +34,6 @@
       </div>
     </div>
 
-    <!-- PRAVÁ STRANA: Info a nákup -->
     <div class="product-purchase-zone">
       <div class="sticky-content">
         <nav class="breadcrumb-trail">
@@ -54,7 +50,6 @@
           </span>
         </div>
 
-        <!-- Výběr varianty -->
         <div class="variant-select-wrapper" *ngIf="product()?.variants?.length > 0">
           <label for="variantSelect" class="section-label">Konfigurace:</label>
           <select 
@@ -63,11 +58,10 @@
             (change)="onVariantChange($event)"
             [value]="selectedVariant()?.id">
             <option *ngFor="let v of product().variants" [value]="v.id">
-              {{ v.variant_name }} — ({{ getFormattedPrice(v.price_with_vat) }})
+              {{ v.variant_name }} — ({{ getFormattedPrice(v.prices?.price_czk_with_vat || 0) }})
             </option>
           </select>
 
-          <!-- Atributy vybrané varianty -->
           <div class="selected-attributes-box" *ngIf="selectedVariant()">
             <div class="attr-row" *ngIf="selectedVariant().attribute_1_name">
               <span class="attr-label">{{ selectedVariant().attribute_1_name }}:</span>
@@ -83,8 +77,9 @@
         <div class="purchase-card">
           <div class="price-section">
             <div class="price-main">{{ getFormattedPrice(currentPrice()) }}</div>
-            <div class="price-no-vat" *ngIf="selectedVariant()">
-              Bez DPH: {{ getFormattedPrice(selectedVariant()?.price_without_vat) }}
+            
+            <div class="price-no-vat">
+              Bez DPH: {{ getFormattedPrice(selectedVariant() ? (selectedVariant()?.prices?.price_czk_without_vat || 0) : (product()?.prices?.price_czk_without_vat || 0)) }}
             </div>
           </div>
 
@@ -98,7 +93,6 @@
             <p class="status-subtext" *ngIf="isAvailable()">Expedujeme do 24h z centrálního skladu.</p>
           </div>
 
-          <!-- VÝBĚR MNOŽSTVÍ -->
           <div class="quantity-selector" *ngIf="isAvailable()">
             <label>Počet kusů:</label>
             <div class="quantity-controls">
@@ -110,7 +104,6 @@
             <small class="max-stock-info" *ngIf="selectedQuantity() >= currentStock()">Max. dostupné množství</small>
           </div>
 
-          <!-- PŘIDAT / UPRAVIT V KOŠÍKU -->
           <div class="action-buttons">
             <button 
               class="btn-buy" 
@@ -128,7 +121,6 @@
             </button>
           </div>
 
-          <!-- ODKAZ NA KOŠÍK -->
           <a routerLink="/shop/cart" class="btn-view-cart">
             Jít na košík ({{ cartService.cartCount() }})
           </a>
@@ -142,7 +134,6 @@
     </div>
   </div>
 
-  <!-- Taby s popisem -->
   <div class="product-tabs">
     <div class="tab-header">
       <button class="active">Kompletní specifikace</button>

@@ -44,8 +44,16 @@ export class CheckoutComponent implements OnInit {
     agreeToTerms: false
   };
 
+  // 🛡️ BEZPEČNÁ REKAPITULACE: Všechny finanční operace striktně izolujeme do CZK
   orderSummary = computed(() => {
-    const productsTotal = Number(this.cartService.subtotal() || 0);
+    const cartItems = this.cartService.cartItems() || [];
+    
+    // Výpočet mezisoučtu produktů striktně z CZK hodnoty, ignorujeme nespolehlivá globální pole
+    const productsTotal = cartItems.reduce((acc, item) => {
+      const priceCzk = item.prices?.price_czk_with_vat ?? item.unit_price ?? 0;
+      return acc + (Number(priceCzk) * Number(item.quantity || 0));
+    }, 0);
+
     const coupon = this.appliedCoupon();
     
     let discount = 0;
@@ -61,12 +69,12 @@ export class CheckoutComponent implements OnInit {
 
     let totalBaseAfterDiscount = 0;
     const vatBreakdown: { [key: number]: { amount: number; baseAmount: number } } = {};
-    const cartItems = this.cartService.cartItems() || [];
     
     cartItems.forEach(item => {
-      const itemUnitPrice = Number(item.unit_price || 0);
+      // 🛡️ Ochrana: Prioritně bereme zanořené CZK, až pak fallback
+      const itemUnitPrice = Number(item.prices?.price_czk_with_vat ?? item.unit_price ?? 0);
       const itemQuantity = Number(item.quantity || 0);
-      const itemVatRate = Number(item.vat_rate || 21);
+      const itemVatRate = Number(item.prices?.vat_rate ?? item.vat_rate ?? 21);
 
       const lineTotalAfterDiscount = (itemQuantity * itemUnitPrice) * discountFactor;
       const itemVat = lineTotalAfterDiscount * (itemVatRate / (100 + itemVatRate));
@@ -167,7 +175,8 @@ export class CheckoutComponent implements OnInit {
   applyCoupon(): void {
     if (!this.couponCode.trim()) return;
 
-    this.shopPublicService.validateCoupon(this.couponCode, this.cartService.subtotal()).subscribe({
+    // Pro validaci kupónu předáme přepočítaný bezpečný CZK mezisoučet
+    this.shopPublicService.validateCoupon(this.couponCode, this.orderSummary().productsTotal).subscribe({
       next: (response) => {
         this.appliedCoupon.set(response.coupon);
         this.couponStatus.set(`✓ Kód aktivován: ${response.coupon.code}`);
@@ -179,17 +188,28 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
+  // 🛡️ EXTRA BEZPEČNÉ ODESLÁNÍ DO BANKY / BACKENDU
   simulatePayment(): void {
     if (!this.isFormValid()) return;
     this.isProcessing.set(true);
 
-    const formattedItems = (this.cartService.cartItems() || []).map(item => ({
-      product_id: Number(item.product_id || item.id), 
-      product_variant_id: item.product_variant_id ? Number(item.product_variant_id) : null,
-      quantity: Number(item.quantity),
-      unit_price: Number(item.unit_price),
-      vat_rate: item.vat_rate ? Number(item.vat_rate) : 21
-    }));
+    const formattedItems = (this.cartService.cartItems() || []).map(item => {
+      // Tvrdošíjně vytáhneme cenu v CZK. Pokud tam není, dojde k chybě, čímž zabráníme poslání špatné měny
+      const confirmedCzkPrice = item.prices?.price_czk_with_vat ?? item.unit_price;
+
+      if (!confirmedCzkPrice || confirmedCzkPrice <= 0) {
+        this.isProcessing.set(false);
+        throw new Error(`Kritická chyba měny: Produkt ${item.product_name} nemá platnou CZK cenu!`);
+      }
+
+      return {
+        product_id: Number(item.product_id || item.id), 
+        product_variant_id: item.product_variant_id ? Number(item.product_variant_id) : null,
+        quantity: Number(item.quantity),
+        unit_price: Number(confirmedCzkPrice), // Zde posíláme explicitně ověřenou CZK cenu
+        vat_rate: item.prices?.vat_rate ? Number(item.prices.vat_rate) : (item.vat_rate ? Number(item.vat_rate) : 21)
+      };
+    });
 
     const payload = {
       email: this.formData.email,
@@ -204,6 +224,8 @@ export class CheckoutComponent implements OnInit {
       payment_method_id: Number(this.formData.paymentMethodId),
       shipping_method_id: Number(this.formData.shippingMethodId),
       coupon_code: this.appliedCoupon()?.code || null,
+      currency: 'CZK', // 🛡️ Explicitní příznak měny pro backendovou kontrolu
+      total_amount: Number(this.orderSummary().finalAmount), // Kontrolní finální částka
       notes: null,
       items: formattedItems
     };
@@ -226,7 +248,7 @@ export class CheckoutComponent implements OnInit {
             this.alertDialogService.open('Chyba', errorMsg, 'danger');
           }
           this.isProcessing.set(false);
-        }
+          }
       });
   }
 
@@ -240,17 +262,5 @@ export class CheckoutComponent implements OnInit {
       currency: 'CZK',
       minimumFractionDigits: 2
     }).format(price);
-  }
-
-  getPaymentIcon(code: string): string {
-    const basePath = 'assets/images/icons/';
-    const icons: { [key: string]: string } = {
-      'card': `${basePath}visa.png`,
-      'bank_transfer': `${basePath}bank-transfer.svg`,
-      'paypal': `${basePath}paypal.png`,
-      'apple_pay': `${basePath}apple-pay.png`,
-      'google_pay': `${basePath}google-pay.png`
-    };
-    return icons[code] || `${basePath}generic-cash.svg`;
   }
 }

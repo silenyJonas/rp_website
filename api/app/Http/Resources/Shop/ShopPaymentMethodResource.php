@@ -13,6 +13,8 @@ class ShopPaymentMethodResource extends JsonResource
             'id' => $this->id,
             'code' => $this->code,
             'name' => $this->name,
+            'image_path' => $this->image_path,
+            'image_url' => $this->image_path ? asset('storage/' . $this->image_path) : null,
             'description' => $this->description,
             'price' => $this->price,
             'provider' => $this->provider,
@@ -24,6 +26,7 @@ class ShopPaymentMethodResource extends JsonResource
             'variable_symbol_type' => $this->variable_symbol_type,
             'is_active' => (bool)$this->is_active,
             'sort_order' => (int)$this->sort_order,
+            'config' => $this->config ?? [],
             
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),

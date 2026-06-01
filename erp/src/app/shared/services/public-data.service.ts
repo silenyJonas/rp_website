@@ -12,6 +12,12 @@ export class PublicDataService {
 
   constructor(private http: HttpClient) { }
 
+  // Nová metoda pro načtení aktivních platebních metod z e-shopu
+  getPaymentMethods(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/shop/public/payment-methods`)
+      .pipe(catchError(this.handleError));
+  }
+
   submitContactForm(formData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/raw_request_commissions`, formData)
       .pipe(catchError(this.handleError));

@@ -25,36 +25,26 @@
       </div>
 
       <div class="table-and-pagination-container">
-        <app-table-builder #activeTable *ngIf="!showTrashTable"
+        <app-table-builder #activeTable
           [buttons]="buttons"
           [data]="data"
           [columns]="columns"
           [currentFilters]="filters"
           [inputDefinitions]="formFields"
           [isFullWidth]="isTableFullWidth"
-          [tableCaption]="'Seznam aktivních platebních metod'"
+          [tableCaption]="'Seznam systémových platebních metod'"
           [apiEndpoint]="apiEndpoint"
-          (itemDeleted)="handleItemDeleted()"
-          (createFormOpened)="handleCreateFormOpened()"
           (editFormOpened)="handleEditFormOpened($event)"
           (viewDetailsOpened)="handleViewDetails($event)">
         </app-table-builder>
 
-        <app-trash-table-builder *ngIf="showTrashTable"
-          [data]="trashData"
-          [columns]="trashColumns"
-          [tableCaption]="'Smazané platební metody'"
-          [apiEndpoint]="apiEndpoint"
-          (itemRestored)="handleItemRestored()">
-        </app-trash-table-builder>
-
         <div class="flex justify-between items-center mt-4">
           <app-pagination-buttons-builder
-            [currentPage]="showTrashTable ? trashCurrentPage : currentPage"
-            [totalPages]="showTrashTable ? trashTotalPages : totalPages"
-            [totalItems]="showTrashTable ? trashTotalItems : totalItems"
-            [itemsPerPage]="showTrashTable ? trashItemsPerPage : itemsPerPage"
-            [dataLength]="showTrashTable ? trashData.length : data.length"
+            [currentPage]="currentPage"
+            [totalPages]="totalPages"
+            [totalItems]="totalItems"
+            [itemsPerPage]="itemsPerPage"
+            [dataLength]="data.length"
             (pageChange)="handlePageChange($event)"
             (itemsPerPageChange)="handleItemsPerPageChange($event)">
           </app-pagination-buttons-builder>

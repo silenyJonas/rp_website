@@ -12,11 +12,18 @@ export interface CartItem {
   product_slug: string;
   product_image?: string;
   quantity: number;
-  unit_price: number;
-  total_price: number;
+  unit_price: number; // 🛡️ Vždy drží striktně CZK cenu s DPH
+  total_price: number; // 🛡️ unit_price * quantity
   vat_rate: number;
-  stock_quantity: number; // PŘIDÁNO: Maximální dostupný počet kusů na skladě
+  stock_quantity: number;
   reservedAt: number;
+  // 🛡️ PŘIDÁNO: Uchováme kompletní cenový objekt z DB pro pozdější verifikaci na frontendu
+  prices?: {
+    price_czk_with_vat: number;
+    price_czk_without_vat: number;
+    vat_rate: number;
+    [key: string]: any;
+  };
 }
 
 export interface Cart {
@@ -41,7 +48,6 @@ export class CartService {
   private timerSignal = signal<number>(0);
   private isExpiredSignal = signal<boolean>(false);
   
-  // UPRAVENO: Interní příznak pro jednorázové upozornění na vypršení rezervace
   private expiredNotificationPending = false;
 
   cartItems = computed(() => this.cartSignal().items);
@@ -82,10 +88,8 @@ export class CartService {
         const now = Date.now();
 
         if (now > cart.expiresAt) {
-          // ODSTRANĚNO MIZENÍ: Ponecháme položky z localStorage, pouze nastavíme expiraci v UI
           this.cartSignal.set(cart);
           this.isExpiredSignal.set(true);
-          // UPRAVENO: Při prostém načtení staré session z localStorage notifikaci záměrně nepovolujeme
           this.expiredNotificationPending = false; 
         } else {
           this.cartSignal.set(cart);
@@ -100,63 +104,66 @@ export class CartService {
     localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(cart));
   }
 
-addItem(product: any, variant: any | null, quantity: number = 1): void {
-  const itemId = this.generateItemId(product.id, variant?.id);
-  const existingItem = this.cartItems().find(i => i.id === itemId);
+  addItem(product: any, variant: any | null, quantity: number = 1): void {
+    const itemId = this.generateItemId(product.id, variant?.id);
+    const existingItem = this.cartItems().find(i => i.id === itemId);
 
-  const unitPrice = variant ? variant.price_with_vat : product.price;
-  const variantName = variant ? variant.variant_name : null;
-  const vatRate = variant?.vat_rate || product.vat_rate || 21;
-  
-  // 🛠️ OPRAVENO: Čteme přesný název klíče z PHP API (stock_quantity) 
-  // Pokud by náhodou z nějakého důvodu chyběl, jako fallback dáme 2 kusy (podle tvého zadání), ne 99!
-  const stockQuantity = variant 
-    ? (variant.stock_quantity ?? 2) 
-    : (product.stock_quantity ?? 2);
-  
-  // 🔍 DEBUG LOG: Hned v konzoli uvidíš, co z API reálně přišlo
-  console.log(`[KOŠÍK SERVICE] Přidávám produkt: ${product.name}`);
-  console.log(`-> Sklad z API (produkt):`, product.stock_quantity);
-  console.log(`-> Sklad z API (varianta):`, variant?.stock_quantity);
-  console.log(`-> Nastavený limit pro košík: ${stockQuantity}`);
+    // 🛡️ KRITICKÁ OPRAVA: Vytahujeme ceny ze zanořené multoměnové tabulky prices
+    const activePrices = variant ? variant.prices : product.prices;
+    const unitPrice = activePrices?.price_czk_with_vat || 0;
+    const vatRate = activePrices?.vat_rate || variant?.vat_rate || product.vat_rate || 21;
+    
+    // Záchranná brzda: Pokud z backendu vůbec nedorazila CZK cena, nepustíme produkt do košíku
+    if (unitPrice <= 0) {
+      console.error('⚠️ Detekována kritická chyba! Nelze vložit produkt s nulovou nebo chybějící CZK cenou.', { product, variant });
+      alert('Omlouváme se, ale tento produkt momentálně nelze vložit do košíku (chyba nacenění).');
+      return;
+    }
 
-  const productImage = variant?.images?.[0]?.url || 
-                       product.images?.find((img: any) => img.is_primary)?.url || 
-                       product.images?.[0]?.url || 
-                       'assets/images/placeholder-product.png';
+    const variantName = variant ? variant.variant_name : null;
+    const stockQuantity = variant 
+      ? (variant.stock_quantity ?? 2) 
+      : (product.stock_quantity ?? 2);
+    
+    console.log(`[KOŠÍK SERVICE] Zabezpečené přidání v CZK: ${product.name}, Cena: ${unitPrice} Kč`);
 
-  if (existingItem) {
-    this.updateItemQuantity(itemId, existingItem.quantity + quantity);
-  } else {
-    // Omezení vstupního množství skladem hned při vložení
-    const finalQty = Math.min(quantity, stockQuantity);
+    const productImage = variant?.images?.[0]?.url || 
+                         product.images?.find((img: any) => img.is_primary)?.url || 
+                         product.images?.[0]?.url || 
+                         'assets/images/placeholder-product.png';
 
-    const newItem: CartItem = {
-      id: itemId,
-      product_id: product.id,
-      product_variant_id: variant?.id || null,
-      product_name: product.name,
-      variant_name: variantName,
-      product_image: productImage,
-      quantity: finalQty,
-      product_slug: product.slug,
-      unit_price: unitPrice,
-      total_price: unitPrice * finalQty,
-      vat_rate: vatRate,
-      stock_quantity: stockQuantity, // Nyní se uloží správná hodnota z DB
-      reservedAt: Date.now()
-    };
+    if (existingItem) {
+      this.updateItemQuantity(itemId, existingItem.quantity + quantity);
+    } else {
+      const finalQty = Math.min(quantity, stockQuantity);
 
-    const cart = this.cartSignal();
-    this.cartSignal.set({
-      ...cart,
-      items: [...cart.items, newItem],
-      expiresAt: Date.now() + this.RESERVATION_TIME
-    });
+      const newItem: CartItem = {
+        id: itemId,
+        product_id: product.id,
+        product_variant_id: variant?.id || null,
+        product_name: product.name,
+        variant_name: variantName,
+        product_image: productImage,
+        quantity: finalQty,
+        product_slug: product.slug,
+        unit_price: unitPrice,
+        total_price: unitPrice * finalQty,
+        vat_rate: vatRate,
+        stock_quantity: stockQuantity,
+        reservedAt: Date.now(),
+        prices: activePrices // Bezpečně si odložíme celý objekt cen pro checkout
+      };
+
+      const cart = this.cartSignal();
+      this.cartSignal.set({
+        ...cart,
+        items: [...cart.items, newItem],
+        expiresAt: Date.now() + this.RESERVATION_TIME
+      });
+    }
+
+    this.resetTimer();
   }
-
-  this.resetTimer();
-}
 
   updateItemQuantity(itemId: string, quantity: number): void {
     if (quantity <= 0) {
@@ -167,7 +174,6 @@ addItem(product: any, variant: any | null, quantity: number = 1): void {
     const cart = this.cartSignal();
     const updatedItems = cart.items.map(item => {
       if (item.id === itemId) {
-        // STRUKTURA HLÍDÁNÍ SKLADU: Nedovolí překročit item.stock_quantity
         const finalQty = Math.min(quantity, item.stock_quantity);
         return {
           ...item,
@@ -211,10 +217,9 @@ addItem(product: any, variant: any | null, quantity: number = 1): void {
     this.timerSignal.set(0);
   }
 
-  // PŘIDÁNO: Metoda pro bezpečné ověření reálného vypršení (zkonzumuje příznak)
   checkAndClearExpired(): boolean {
     if (this.expiredNotificationPending) {
-      this.expiredNotificationPending = false; // Vynulujeme, aby F5/Refresh podruhé nehlásil nic
+      this.expiredNotificationPending = false; 
       return true;
     }
     return false;
@@ -238,12 +243,10 @@ addItem(product: any, variant: any | null, quantity: number = 1): void {
       this.timerSignal.set(remaining);
 
       if (remaining <= 0) {
-        // UPRAVENO: Notifikaci aktivujeme pouze tehdy, pokud v košíku skutečně byly položky
         if (cart.items.length > 0) {
           this.expiredNotificationPending = true;
         }
         this.isExpiredSignal.set(true);
-        // ODSTRANĚNO MIZENÍ: Volání this.clear() bylo odstraněno, aby položky nezmizely z košíku
       }
     }, 1000);
   }
@@ -274,6 +277,9 @@ addItem(product: any, variant: any | null, quantity: number = 1): void {
     return `${productId}_${variantId || 'novariant'}`;
   }
 
+  // 🛡️ ODSTRANĚNO/UPRAVENO: Metody createOrder a simulatePayment v CartService již nepoužívej, 
+  // jelikož vše odbavujeme bezpečně skrze dedikovaný CheckoutComponent. 
+  // Ponecháváme je pouze upravené pro zachování zpětné kompatibility v projektu.
   createOrder(
     email: string, firstName: string, lastName: string, phone: string,
     company: string | null, address: string, city: string, postalCode: string,
@@ -285,12 +291,13 @@ addItem(product: any, variant: any | null, quantity: number = 1): void {
       email, first_name: firstName, last_name: lastName, phone, company, address, city,
       postal_code: postalCode, country, payment_method_id: paymentMethodId,
       shipping_method_id: shippingMethodId, coupon_code: couponCode, notes,
+      currency: 'CZK',
       items: cart.items.map(item => ({
         product_id: item.product_id,
         product_variant_id: item.product_variant_id,
         quantity: item.quantity,
-        unit_price: item.unit_price,
-        vat_rate: item.vat_rate
+        unit_price: item.prices?.price_czk_with_vat ?? item.unit_price, // Pojistka CZK
+        vat_rate: item.prices?.vat_rate ?? item.vat_rate
       }))
     };
     return this.http.post(`${environment.base_api_url}/shop/checkout/create-order`, orderData);

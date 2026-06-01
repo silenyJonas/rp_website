@@ -13,6 +13,7 @@ class StoreShopPaymentMethodRequest extends FormRequest
         return [
             'code' => 'required|string|max:50|unique:shop_payment_methods,code',
             'name' => 'required|string|max:100',
+            'image_path' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'provider' => 'required|string|max:50',
@@ -24,6 +25,7 @@ class StoreShopPaymentMethodRequest extends FormRequest
             'variable_symbol_type' => 'required|in:order_number,phone_number,none',
             'is_active' => 'boolean',
             'sort_order' => 'integer',
+            'config' => 'nullable|array',
         ];
     }
 }

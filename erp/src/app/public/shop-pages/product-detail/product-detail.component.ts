@@ -28,9 +28,17 @@ export class ProductDetailComponent implements OnInit {
     return allImgs.filter((img: any) => !img.variant_id);
   });
 
+  // 🛠️ OPRAVENO: Dynamické přepínání ceny zanořeného multoměnového objektu prices
   currentPrice = computed(() => {
     const variant = this.selectedVariant();
-    return variant ? variant.price_with_vat : (this.product()?.price || 0);
+    
+    if (variant) {
+      // Varianta má své vlastní ceny z tabulky shop_product_prices navázané přes variant_id
+      return variant.prices?.price_czk_with_vat || 0;
+    }
+    
+    // Hlavní produkt má cenu v objektu prices (kde variant_id je null)
+    return this.product()?.prices?.price_czk_with_vat || 0;
   });
 
   currentStock = computed(() => {
@@ -155,8 +163,6 @@ export class ProductDetailComponent implements OnInit {
       return;
     }
 
-    // Pojištění: Získání slugu přímo z aktivního parametru URL (ActivatedRoute), 
-    // pokud by v objektu 'product' z nějakého důvodu chyběl.
     if (!product.slug) {
       product.slug = this.route.snapshot.paramMap.get('slugOrId');
     }
